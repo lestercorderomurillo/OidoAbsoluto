@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap');
+
+$global-page-min-width: 600px;
+
+$global-color-text: hsl(229, 73%, 6%);
+$global-color-background: hsl(265, 30%, 29%);
+$global-color-background-content: hsl(0, 0%, 100%);
+
+$global-color-info: hsl(204, 42%, 75%);
+$global-color-success: hsl(118, 27%, 55%);
+$global-color-warning: hsl(49, 81%, 77%);
+$global-color-danger: hsl(0, 51%, 38%);
+
+$global-color-accent: hsl(247, 25%, 35%);
+$global-color-accent-hover: hsl(249, 65%, 45%);
+$global-color-accent-text: hsl(202, 11%, 86%);
+
+$global-color-accent-secondary: hsl(264, 13%, 30%);
+$global-color-accent-secondary-text: hsl(264, 13%, 30%);
+
+$global-font-size: 12px;
+$global-font-button-size: 12px;
+$global-font-family: 'Noto Sans JP', sans-serif;

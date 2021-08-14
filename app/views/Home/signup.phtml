@@ -1,0 +1,133 @@
+<v-view title="Registro de usuario en el proyecto">
+    <v-card size="12" maxWidth="600px">
+        <v-title-icon img="signup.png" text="Registro de usuario">
+        <v-form route="signup_submit">
+            <v-row>
+                <v-col size="6">
+                    <v-label for="first_name">Nombre</v-label>  
+                    <v-textbox bind="first_name">
+                </v-col>
+                <v-col size="6">
+                    <v-label for="last_name">Apellidos</v-label>  
+                    <v-textbox bind="last_name">
+                </v-col>
+            </v-row>
+            <v-label for="email">Correo Electrónico</v-label>  
+            <v-textbox bind="email">
+            <v-label for="password">Contraseña</v-label>   
+            <v-password>
+            <v-hint>La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -</v-hint><br><br>
+            <v-label for="confirm_password">Confirmar contraseña</v-label>   
+            <v-password bind="confirm_password">
+            <v-label for="country">País de nacimiento</v-label> 
+            <v-select bind="country" arrayName="countries">
+            <v-row>
+                <v-col size="6">
+                    <v-label for="birth_day">Fecha de nacimiento</v-label>  
+                    <v-date bind="birth_day">
+                    <v-error for="birth_day">
+                </v-col>
+                <v-col size="6">
+                    <v-label for="phone">Teléfono</v-label>  
+                    <v-textbox bind="phone">
+                </v-col>
+            </v-row>
+            <v-label for="gender">Género</v-label> 
+            <v-radio bind="gender" text="Masculino" value="M">
+            <v-radio bind="gender" text="Femenino" value="F">
+            <v-radio bind="gender" text="Otro" value="O">
+            <v-radio bind="gender" text="No responder" value="-">
+            <v-error for="gender">
+            <v-submit-button>Registrarse</v-submit-button>
+        </v-form>
+    </v-card>
+</v-view>
+<script> 
+    $('#signup_submit').submit(function() {
+        event.preventDefault();
+        validateDate("birth_day");
+        if($(this).valid()) {
+            disableDateForSubmit("birth_day");
+            return true;
+        }
+        return false;
+    });
+    $(document).ready(function() {
+        $("#signup_submit").validate({
+            rules: {
+                first_name : {
+                    required: true,
+                    minlength: 3
+                },
+                last_name: {
+                    required: true,
+                    minlength: 4
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 7,
+                    maxlength: 24
+                },
+                confirm_password: {
+                    required: true,
+                    equalTo: "#password",
+                    minlength: 7,
+                    maxlength: 24
+                },
+                phone: {
+                    required: true,
+                    number: true,
+                    minlength: 7,
+                    maxlength: 13
+                },
+                gender: {
+                    required: true
+                },
+                country: {
+                    required: true
+                }
+            },
+            messages : {
+                first_name: {
+                    required: "El campo del nombre no puede estar vacio",
+                    minlength: "El nombre debe de ser al menos de 3 carácteres"
+                },
+                last_name: {
+                    required: "El campo del apellido no puede estar vacio",
+                    minlength: "El nombre debe de ser al menos de 3 carácteres"
+                },
+                email: {
+                    required: "El campo del email no puede estar vacio",
+                    email: "El formato correcto es: abc@domain.com"
+                },
+                password: {
+                    required: "La contraseña no puede estar vacio",
+                    minlength: "La contraseña debe ser de al menos de 7 carácteres",
+                    maxlength: "Demasiada extenso"
+                },
+                confirm_password: {
+                    required: "La contraseña no puede estar vacio",
+                    equalTo: "Ambas contraseñas deben coincidir",
+                    minlength: "La contraseña debe ser de al menos de 7 carácteres",
+                    maxlength: "Demasiada extenso"
+                },
+                phone: {
+                    required: "El campo de teléfono no puede estar vacio",
+                    number: "Debe ser un valor numérico",
+                    minlength: "Demasiado corto",
+                    maxlength: "Demasiado extenso"
+                },
+                gender: {
+                    required: "Debe seleccionar una opción"
+                },
+                country: {
+                    required: "Debe seleccionar una opción"
+                }
+            }
+        });
+    });
+</script>

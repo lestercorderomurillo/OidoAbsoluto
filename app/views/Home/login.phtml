@@ -1,0 +1,45 @@
+<v-view title="Inicio de sesión">
+    <v-card size="8" maxWidth="600px">
+        <v-title-icon img="profile.png" text="Inicio de sesión">
+        <v-persistent-message>
+        <v-form route="login_submit">
+            <v-span>Sírvase de acceder al servicio para realizar o consultar su historial de pruebas</v-span>
+            <v-label for="email">Correo Electrónico</v-label>  
+            <v-textbox bind="email">
+            <v-label for="password">Contraseña</v-label>   
+            <v-password>
+            <v-submit-button>Acceder al Proyecto</v-submit-button>
+            <v-action-button route="signup">O bien, Crear cuenta</v-action-button><br><br>
+            <v-span>¿Olvidó su contraseña o no puede acceder a su cuenta?</v-span>
+            <v-action-link route="reset_request">Haga click en este enlace para recuperar su contraseña</v-action-link>
+        </v-form>
+    </v-card>
+</v-view>
+<script> 
+    $(document).ready(function() {
+        $("#login_submit").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 7,
+                    maxlength: 24
+                }
+            },
+            messages : {
+                email: {
+                    required: "El campo debe contener un correo electrónico",
+                    email: "El formato correcto es: abc@domain.com"
+                },
+                password: {
+                    required: "El campo de contraseña no puede estar vacio",
+                    minlength: "La contraseña debe ser de al menos de 7 carácteres",
+                    maxlength: "Demasiada extenso"
+                }
+            }
+        });
+    });
+</script>

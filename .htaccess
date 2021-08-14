@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI}  /web/.+(gif|png|jpg|jpeg|mp3|js|css)$
+RewriteRule .* - [L]
+
+RewriteCond %{REQUEST_URI}  /src/VIP/Include/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
+RewriteRule .* - [L]
+
+RewriteRule .* app/startup.php [L]

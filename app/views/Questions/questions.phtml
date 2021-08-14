@@ -1,0 +1,103 @@
+<v-view title="Piano Interactivo">
+        <v-card size="8" padding="4">
+            <v-bold-title text="Piano Interactivo">
+            <h5>Instrucciones</h5><br>
+            <v-span font-size="14px">
+                Una vez usted escucha una nota músical, tiene un intervalo de 3 segundos para
+                identificar y marcar la nota que escuchó en el piano interactivo. Las notas
+                pueden ser marcadas adicionalmente mediante el uso de teclas. 
+                Para el caso de notas blancas, utilice las teclas [QWERTYU] y
+                para las negras utilice [12345]. Cuando se reproduzcan 30 sonidos de la primera etapa, se 
+                pasará automaticamente a la etapa.
+            </v-span>
+            <v-col text-position="center">
+                <v-piano>
+                    <v-piano-key-white note="C">
+                    <v-piano-key-black note="C#">
+                    <v-piano-key-white note="D">
+                    <v-piano-key-black note="D#">
+                    <v-piano-key-white note="E">
+                    <v-piano-key-white note="F">
+                    <v-piano-key-black note="F#">
+                    <v-piano-key-white note="G">
+                    <v-piano-key-black note="G#">
+                    <v-piano-key-white note="A">
+                    <v-piano-key-black note="A#">
+                    <v-piano-key-white note="B">
+                </v-piano>
+            </v-col>
+        </v-card>
+        <v-card size="4" padding="4">
+
+            <v-bold-title text="Prueba Auditiva">
+            <h6 style="font-weight: bold;">Nota 1 de 30</h6>
+           
+            <br>
+            <h6 style="font-weight: bold;">Etapa Actual (1 de 2)</h6>
+            <h6>Sonidos Puros</h6>
+            <br><br>
+            <h6 style="font-weight: bold;">Tiempo Total</h6>
+            <div>00 : 00 : 00</div>
+            <br>
+
+            <v-script-button script="start">Comenzar prueba</v-script-button>
+            <br><br><br>
+
+            <v-bold-title text="Historial de Notas"><br><br>
+
+            <v-card id="piano_log" size="4" padding="1" bg-accent="secondary">
+                <v-card padding="2">( 0.23ms ) Do </v-card>
+                <v-card padding="2">( 0.16ms ) Re </v-card>
+            </card>
+
+        </v-card>
+</v-view>
+<script> 
+/*
+
+
+    dos folders 
+    var modo sostenido, repite todo el proceso
+    dos arreglos, ok.!
+
+    var lista de los audios cargados en memoria
+    
+    luego se crea una arreglo de size notas por reproducir, supuestamente lo mismo que los cargados en memoria,
+    contiene n pero luego se le hace shuffle de la nota que debe reproducir, contiene indice y lo jala luego de la memoria directamente
+    otro arreglo con nota presionada por el usuario
+
+    var contadoractual, cada end of note, pasa y usa el current note como value
+
+
+        function shuffle(array) {
+    var currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+    }
+
+    // Used like so
+    var arr = [2, 11, 37, 42];
+    shuffle(arr);
+    console.log(arr);
+
+    al completar suba tiempo total,
+    y las notas presionadas enteras como arreglo, cada duración se guarda en otro arreglo
+    mixear los dos arreglos supongo? y enviarlos como json y recibirlo en el back end,
+
+    cada nota crea elemento en el historial
+
+    luego, reproduce
+    */
+</script>
