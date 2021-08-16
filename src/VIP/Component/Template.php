@@ -5,6 +5,7 @@ namespace VIP\Component;
 use VIP\Core\StaticLoaderInterface;
 use VIP\Core\BaseObject;
 use VIP\Core\ContainerInterface;
+use VIP\FileSystem\BasePath;
 use VIP\FileSystem\FileSystem;
 use VIP\FileSystem\DirectoryPath;
 use VIP\Utilities\ArrayHelper;
@@ -16,8 +17,8 @@ class Template extends BaseObject implements StaticLoaderInterface, ContainerInt
 
     public static function onStaticLoad(): void
     {
-        $native_components_file_names = FileSystem::find(new DirectoryPath(DirectoryPath::DIR_INCLUDE, "private/components/", "php"));
-        $user_components_file_names = FileSystem::find(new DirectoryPath(DirectoryPath::DIR_APP, "components/", "php"));
+        $native_components_file_names = FileSystem::find(new DirectoryPath(BasePath::DIR_INCLUDE, "private/components/", "php"));
+        $user_components_file_names = FileSystem::find(new DirectoryPath(BasePath::DIR_APP, "components/", "php"));
         $components_to_include = ArrayHelper::merge($user_components_file_names, $native_components_file_names);
 
         self::$components = [];

@@ -61,7 +61,7 @@ class Component extends HTMLObject implements RenderableInterface
         $html_system_tokens = [];
         $html_final_tokens = [];
 
-        $object_separator = "";
+        $object_separator = "\r\n";
 
         // Load component defaults values from templates
         for ($depth = $this->getTransverseDepth(); $depth >= 0; $depth--) {

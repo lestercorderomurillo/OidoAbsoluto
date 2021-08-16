@@ -8,6 +8,7 @@ use VIP\FileSystem\DirectoryPath;
 use VIP\FileSystem\WebPath;
 
 use ScssPhp\ScssPhp\Compiler as SCSSCompiler;
+use VIP\FileSystem\BasePath;
 use VIP\FileSystem\WebDirectory;
 
 class PreProcessor extends AbstractService implements InstanceLoaderInterface
@@ -29,7 +30,7 @@ class PreProcessor extends AbstractService implements InstanceLoaderInterface
     {
         if ($this->recompile == true) {
             $page_scss_folder = (new WebDirectory())->toString();
-            $prefab_scss_folder = (new DirectoryPath(DirectoryPath::DIR_INCLUDE, "public/"))->toWebDirectory()->toString();
+            $prefab_scss_folder = (new DirectoryPath(BasePath::DIR_INCLUDE, "public/"))->toWebDirectory()->toString();
             $scss_folders = [$prefab_scss_folder, $page_scss_folder];
             $output_folder = (new WebDirectory("web/css/"))->toString();
             $scss_compiler = new SCSSCompiler();

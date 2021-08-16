@@ -3,13 +3,17 @@
 namespace VIP\HTTP\Common;
 
 use App\Controllers;
+use HotswapVM;
+use VIP\App\App;
 use VIP\Controller\BaseController;
 use VIP\Core\BaseObject;
 use VIP\HTTP\Common\Request;
 use VIP\HTTP\Common\Route;
 use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\BasePath;
 use VIP\FileSystem\FilePath;
 use VIP\FileSystem\FileSystem;
+use VIP\Hotswap\VM;
 use VIP\HTTP\Server\Response\AbstractResponse;
 use VIP\HTTP\Server\Response\Response;
 
@@ -19,12 +23,21 @@ class Router extends BaseObject
 
     public function __construct()
     {
-        FileSystem::requireFromFile(new FilePath(FilePath::DIR_APP, "routes", "php"));
+        FileSystem::requireFromFile(new FilePath(BasePath::DIR_APP, "routes", "php"));
     }
 
     public function handle(Request $request)
     {
-        $system_controller_path = (new FilePath(FilePath::DIR_CONTROLLERS, "SystemController", "php"))->toString();
+        if (App::$app->hasHotswapEnabled()) {
+            if ($request->getPath() == "/__HOTSWAP" && strtolower($request->getMethod()) == "get") {
+                if (isset($request->getParameters()["page"]) && isset($request->getParameters()["timestamp"])) {
+                    die(VM::requested($request->getParameters()["page"], $request->getParameters()["timestamp"]));
+                }
+            }
+        }
+
+        $system_controller_path = (new FilePath(BasePath::DIR_CONTROLLERS, "SystemController", "php"))->toString();
+
         if (file_exists($system_controller_path)) {
             require_once($system_controller_path);
         }
@@ -40,7 +53,7 @@ class Router extends BaseObject
 
                 $class_name = $route->getControllerName() . "Controller";
                 $controller_name = $route->getControllerName();
-                $resolve_path = (new FilePath(FilePath::DIR_CONTROLLERS, $class_name, "php"))->toString();
+                $resolve_path = (new FilePath(BasePath::DIR_CONTROLLERS, $class_name, "php"))->toString();
 
                 if (file_exists($resolve_path)) {
 

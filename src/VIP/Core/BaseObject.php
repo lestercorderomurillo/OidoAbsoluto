@@ -45,4 +45,9 @@ abstract class BaseObject
     {
         return (isset($var) ? $var : $default);
     }
+
+    public static function staticTryGet(&$var, $default = NULL)
+    {
+        return (isset($var) ? $var : $default);
+    }
 }

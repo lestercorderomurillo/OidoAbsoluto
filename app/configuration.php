@@ -12,8 +12,10 @@
         "pass"=> "",
         "database" => "oidoabsoluto"
     ],
-    "debugging" => [
-        "render_log" => false,
-        "process_scss" => true
+    "settings" => [
+        "logging" => true,
+        "errorLogging" => true,
+        "compileSCSS" => true,
+        "hotswap" => true,
     ]
 ];

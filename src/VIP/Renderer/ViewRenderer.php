@@ -2,34 +2,35 @@
 
 namespace VIP\Renderer;
 
+use Directory;
+use VIP\App\App;
 use VIP\Core\InternalResult;
 use VIP\Component\Template;
 use VIP\HTTP\Server\Response\View;
 use VIP\Factory\ComponentFactory;
 use VIP\Factory\HTMLFactory;
-use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\BasePath;
+use VIP\FileSystem\DirectoryPath;
 use VIP\FileSystem\FilePath;
 use VIP\Service\AbstractService;
 use VIP\FileSystem\FileSystem;
+use VIP\Utilities\StringHelper;
 
 class ViewRenderer extends AbstractService
 {
     private View $view;
 
     private string $application_name;
-    private string $debugging_mode;
 
     private int $counter;
     private bool $rendering_closures;
 
-    public function __construct(string $application_name, string $debugging_mode)
+    public function __construct(string $application_name)
     {
         parent::__construct("ViewRenderer");
         $this->application_name = $application_name;
         $this->rendering_closures = false;
-        $this->debugging_mode = $debugging_mode;
         $this->counter = 0;
-
         Template::onStaticLoad();
     }
 
@@ -55,8 +56,7 @@ class ViewRenderer extends AbstractService
 
     public function execute(): void
     {
-        $view = $this->view;
-        $result = $this->compileBody($view);
+        $result = $this->compileBody();
         $title = $result->getData("title") . " - " . $this->application_name;
         $output = $this->compileBegin();
         $output .= $this->compileHeaders($title);
@@ -67,35 +67,55 @@ class ViewRenderer extends AbstractService
 
     private function compileBegin(): string
     {
-        return
-            "<!DOCTYPE html>\n" .
-            "<html lang='en'>\n" .
-            "<head>\n" .
-            "<meta charset='UTF-8'>\n" .
-            "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n";
+        return <<<HTML
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        HTML;
     }
 
     private function compileHeaders(string $title): string
     {
-        $headers = FileSystem::includeAsString(new FilePath(FilePath::DIR_INCLUDE, "private/headers", "php"));
+        $headers = FileSystem::includeAsString(new FilePath(BasePath::DIR_INCLUDE, "private/layout", "php"));
 
-        return
-            "<title>$title</title>\n" .
-            $headers . "\n" .
-            "</head>\n" .
-            "<body>\n" .
-            "<br><br>\n" .
-            "<div class='container'>\n";
+        if (App::$app->hasHotswapEnabled()) {
+            $timestamp = $this->view->getTimestamp();
+            $path = (new FilePath(
+                BasePath::DIR_VIEWS,
+                $this->view->getCallbackControllerName() . "/" .
+                $this->view->getViewName()
+            , "phtml"))->toString();
+
+            $page = md5($path);
+            $headers .= <<<HTML
+                \n
+                <meta name="page" content="$page">
+                <meta name="timestamp" content="$timestamp">
+            HTML;
+        }
+
+        return <<<HTML
+        <title>
+        $title
+        </title>
+        $headers
+        </head>
+        <body>
+        <br><br>
+        <div class='container'>\n
+        HTML;
     }
 
     private function compileEnd(): string
     {
-        return
-            "\n" .
-            "</div>\n" .
-            "<br><br>\n" .
-            "</body>\n" .
-            "</html>\n";
+        return <<<HTML
+        </div>
+        <br><br>
+        </body>
+        </html>
+        HTML;
     }
 
     private function matchVirtualPattern(string $html, string $opening, string $closure): InternalResult
@@ -168,25 +188,26 @@ class ViewRenderer extends AbstractService
         return $html;
     }
 
-    private function compileBody(View $view): InternalResult
+    private function compileBody(): InternalResult
     {
-        $result = $this->includeDependencies($view);
+        $result = $this->includeDependencies($this->view);
         $result = $this->compileBodyJSDOM($result);
         $result = $this->compileBodyParameters($result);
         $result = $this->compileBodyComponents($result);
+        
         return $result;
     }
 
-    private function includeDependencies(View $view): InternalResult
+    private function includeDependencies(): InternalResult
     {
-        $html = $view->getSourceHTML();
-        $js_path = new FilePath($view->getDirectory()->getBase() . $view->getControllerName() . "/", $view->getViewName(), "js");
+        $html = $this->view->getSourceHTML();
+        $js_path = new FilePath($this->view->getDirectory()->getBase() . $this->view->getControllerName() . "/", $this->view->getViewName(), "js");
         if (FileSystem::exists($js_path)) {
             $js = "<script type=\"text/javascript\">" . FileSystem::includeAsString($js_path) . "</script>";
             $html .= "\n$js";
         }
 
-        return new InternalResult(["html" => $html, "view" => $view]);
+        return new InternalResult(["html" => $html, "view" => $this->view]);
     }
 
     private function compileBodyJSDOM(InternalResult $result): InternalResult

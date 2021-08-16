@@ -35,8 +35,12 @@ class JSON extends AbstractResponse{
         echo($json);
     }
 
-    public function toString(){
+    public function toJavascriptString(){
         return addslashes(json_encode($this->value, $this->hints));
+    }
+
+    public function toString(){
+        return json_encode($this->value, $this->hints);
     }
 
 }

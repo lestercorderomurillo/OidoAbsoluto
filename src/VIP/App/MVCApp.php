@@ -13,10 +13,10 @@ abstract class MVCApp extends App
     protected function prepareAppInternal(): void
     {
         if ($this->inDevelopmentMode()) {
-            $this->services->getContainer()->add(new PreProcessor($this->configuration["debugging"]["process_scss"]));
+            $this->services->getContainer()->add(new PreProcessor($this->configuration["settings"]["compileSCSS"]));
         }
 
-        $this->services->getContainer()->add(new ViewRenderer($this->configuration["application"]["name"], $this->configuration["debugging"]["render_log"]));
+        $this->services->getContainer()->add(new ViewRenderer($this->configuration["application"]["name"]));
     }
 
     protected function processRequest(): void

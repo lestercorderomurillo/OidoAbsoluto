@@ -3,7 +3,6 @@
 namespace VIP\App;
 
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerInterface;
 use VIP\Core\BaseObject;
 use VIP\Service\ServiceManager;
 use VIP\HTTP\Common\Session;
@@ -15,6 +14,8 @@ abstract class App extends BaseObject
 
     public static $app;
     public $configuration;
+    
+    public static $failure = false;
 
     protected Session $session;
     protected ServiceManager $services;
@@ -43,9 +44,34 @@ abstract class App extends BaseObject
         App::$app->instanceRun();
     }
 
-    protected function inDevelopmentMode(): bool
+    public function inDevelopmentMode(): bool
     {
         return $this->configuration["application"]["development"];
+    }
+
+    public function hasHotswapEnabled(): bool
+    {
+        return $this->configuration["settings"]["hotswap"];
+    }
+
+    public function setFailure(): void
+    {
+        self::$failure = true;
+    }
+
+    public function hasFailed(): bool
+    {
+        return self::$failure;
+    }
+
+    public function shouldLogNormalEvents(): bool
+    {
+        return $this->configuration["settings"]["logging"];
+    }
+
+    public function shouldLogErrorEvents(): bool
+    {
+        return $this->configuration["settings"]["errorLogging"];
     }
 
     public function getSession(): Session

@@ -2,6 +2,7 @@
 
 namespace VIP\Utilities;
 
+use DOMDocument;
 use VIP\Security\Cryptography;
 
 class StringHelper

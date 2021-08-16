@@ -2,6 +2,7 @@
 
 namespace VIP\Factory;
 
+use VIP\App\App;
 use VIP\Controller\BaseController;
 use VIP\HTTP\Server\Response\AbstractResponse;
 use VIP\HTTP\Server\Response\Response;
@@ -14,6 +15,7 @@ class ResponseFactory implements FactoryInterface
     public static function createError(int $code = 200, string $message = ""): AbstractResponse
     {
         BaseController::setSystemController();
+        App::$app->setFailure();
         if ($message == "") {
             $message = AbstractResponse::CODES[$code];
         }

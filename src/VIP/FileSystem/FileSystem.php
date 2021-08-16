@@ -56,6 +56,7 @@ class FileSystem
         return $exposed_paths;
     }
 
+
     public static function includeAsString(FilePath $path, bool $crash_on_failure = true): string
     {
         if (!file_exists($path->toString())) {
@@ -65,11 +66,12 @@ class FileSystem
                 return NULL;
             }
         }
+
         ob_start();
         include($path->toString());
-        $var = ob_get_contents();
+        $output_html = ob_get_contents();
         ob_end_clean();
-        return preg_replace("/\s+/", " ", $var);
+        return $output_html;
     }
 
     public static function requireFromFile(FilePath $path)

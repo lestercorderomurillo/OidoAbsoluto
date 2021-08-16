@@ -7,6 +7,7 @@ use App\Models\UserInfo;
 
 use VIP\Controller\BaseController;
 use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\BasePath;
 use VIP\FileSystem\FilePath;
 use VIP\FileSystem\FileSystem;
 use VIP\HTTP\Server\Response\Response;
@@ -37,7 +38,7 @@ class HomeController extends BaseController
 
     function signup()
     {
-        $countries = FileSystem::requireFromFile(new FilePath(FilePath::DIR_COMMON, "countries", "php"));
+        $countries = FileSystem::requireFromFile(new FilePath(BasePath::DIR_COMMON, "countries", "php"));
         return new View("signup", ["countries" => $countries]);
     }
 

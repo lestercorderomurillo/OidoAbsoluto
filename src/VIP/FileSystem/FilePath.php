@@ -13,13 +13,18 @@ class FilePath extends AbstractLocalPath
         $this->extension = $extension;
 
         if ($path[0] == "/" || substr($path, -1) == "/") {
-            $this->logger->error("File paths CANNOT start or end with /");
+            $this->logger->error("File paths CANNOT start or end with / on $base : $path");
         }
     }
 
     public function toString(): string
     {
         return $this->base . $this->path . ".$this->extension";
+    }
+
+    public function getExtension(): string
+    {
+        return $this->extension;
     }
 
     public function toWebPath(): WebPath
