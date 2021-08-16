@@ -3,8 +3,8 @@
 namespace VIP\Factory;
 
 use VIP\Component\HTMLObject;
-use VIP\Utilities\StringHelper;
 use VIP\Utilities\ArrayHelper;
+use VIP\Utilities\StringHelper;
 
 class HTMLFactory implements FactoryInterface
 {

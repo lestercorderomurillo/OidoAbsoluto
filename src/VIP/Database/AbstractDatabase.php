@@ -2,6 +2,7 @@
 
 namespace VIP\Database;
 
+use Psr\Log\LoggerAwareTrait;
 use VIP\Core\InternalResult;
 use VIP\Model\AbstractModel;
 use VIP\Service\AbstractService;
@@ -9,8 +10,11 @@ use VIP\Adapter\Adapter;
 use VIP\Database\Common\Query;
 use VIP\Database\Common\ConnectionString;
 
+use function VIP\Core\Logger;
+
 abstract class AbstractDatabase extends AbstractService
 {
+    use LoggerAwareTrait;
     protected Adapter $adapter;
     private array $queries;
 
@@ -20,6 +24,7 @@ abstract class AbstractDatabase extends AbstractService
         $this->adapter = $adapter;
         $this->adapter->setConnectionString($connection_string);
         $this->queries = [];
+        $this->setLogger(Logger());
     }
 
     public function addQuery(string $query, array $query_data = []): void

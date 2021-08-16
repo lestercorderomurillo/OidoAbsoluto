@@ -4,7 +4,7 @@ namespace VIP\Factory;
 
 use VIP\Component\Component;
 
-class ComponentFactory
+class ComponentFactory implements FactoryInterface
 {
     public static function create(string $string_input, array $array_input = []): Component
     {

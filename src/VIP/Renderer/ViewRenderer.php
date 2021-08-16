@@ -7,6 +7,8 @@ use VIP\Component\Template;
 use VIP\HTTP\Server\Response\View;
 use VIP\Factory\ComponentFactory;
 use VIP\Factory\HTMLFactory;
+use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\FilePath;
 use VIP\Service\AbstractService;
 use VIP\FileSystem\FileSystem;
 
@@ -75,7 +77,7 @@ class ViewRenderer extends AbstractService
 
     private function compileHeaders(string $title): string
     {
-        $headers = FileSystem::includeAsString(__RDIR__ . "/src/VIP/Include/headers.php");
+        $headers = FileSystem::includeAsString(new FilePath(FilePath::DIR_INCLUDE, "private/headers", "php"));
 
         return
             "<title>$title</title>\n" .
@@ -178,9 +180,9 @@ class ViewRenderer extends AbstractService
     private function includeDependencies(View $view): InternalResult
     {
         $html = $view->getSourceHTML();
-        $js = $view->getDirectoryName() . $view->getViewName() . ".js";
-        if (FileSystem::exists($js)) {
-            $js = "<script type=\"text/javascript\">" . FileSystem::includeAsString($js) . "</script>";
+        $js_path = new FilePath($view->getDirectory()->getBase() . $view->getControllerName() . "/", $view->getViewName(), "js");
+        if (FileSystem::exists($js_path)) {
+            $js = "<script type=\"text/javascript\">" . FileSystem::includeAsString($js_path) . "</script>";
             $html .= "\n$js";
         }
 
@@ -204,6 +206,8 @@ class ViewRenderer extends AbstractService
                 $html = str_replace("%$key%", "$value", "$html");
             }
         }
+
+
         return new InternalResult(["html" => $html]);
     }
 

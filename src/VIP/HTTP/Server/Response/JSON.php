@@ -2,6 +2,7 @@
 
 namespace VIP\HTTP\Server\Response;
 
+use VIP\Controller\BaseController;
 use VIP\HTTP\Server\Response\AbstractResponse;
 
 class JSON extends AbstractResponse{
@@ -21,7 +22,17 @@ class JSON extends AbstractResponse{
     }
 
     protected function handleOperation(){
-        echo(addslashes(json_encode($this->value, $this->hints)));
+        $json = addslashes(json_encode($this->value, $this->hints));
+        $this->logger->debug(
+            "{0} responded with '{1}' : '{2}'",
+            [
+                BaseController::getFQCurrentControllerName(),
+                $this->getStatusCode(),
+                $json
+            ]
+        );
+
+        echo($json);
     }
 
     public function toString(){

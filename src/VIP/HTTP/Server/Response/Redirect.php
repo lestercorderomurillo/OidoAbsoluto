@@ -2,6 +2,7 @@
 
 namespace VIP\HTTP\Server\Response;
 
+use VIP\Controller\BaseController;
 use VIP\HTTP\Server\Response\AbstractResponse;
 
 class Redirect extends AbstractResponse
@@ -15,6 +16,8 @@ class Redirect extends AbstractResponse
 
     protected function handleOperation()
     {
+        $fq = BaseController::getFQCurrentControllerName();
+        $this->logger->debug("{0} route redirection to '{1}'", [$fq, $this->new_path]);
         $this->setHeader("Location", __URL__ . $this->new_path);
     }
 }

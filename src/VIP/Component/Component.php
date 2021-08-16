@@ -5,8 +5,9 @@ namespace VIP\Component;
 use VIP\Component\HTMLObject;
 use VIP\Core\RenderableInterface;
 use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\WebDirectory;
 use VIP\Utilities\ArrayHelper;
-use VIP\Utilities\StringHelper;
+use VIP\Security\Cryptography;
 
 use function VIP\Core\Services;
 
@@ -74,15 +75,15 @@ class Component extends HTMLObject implements RenderableInterface
         // Load system replace tokens we just created
         if ($this->getTransverseDepth() == 0) {
             $this->addSystemReplaceToken([
-                "@random-unique" => StringHelper::randomString(8),
-                "@content" => __WEB__,
+                "@random-unique" => Cryptography::computeRandomKey(8),
+                "@content" => (new WebDirectory(__WEB_NAME__ . "/"))->toString(),
                 "@url" => __URL__,
                 "@counter" => Services("ViewRenderer")->getCurrentCounter()
             ]);
         }
 
         $this->addSystemReplaceToken([
-            "@random" => StringHelper::randomString(8)
+            "@random" => Cryptography::computeRandomKey(8)
         ]);
 
         $html_system_tokens = $this->getSystemReplaceTokens();

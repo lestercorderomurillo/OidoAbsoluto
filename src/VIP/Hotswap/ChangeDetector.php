@@ -1,11 +1,13 @@
 <?php
 
-namespace Vendor\Scope;
+namespace VIP\Hotswap;
 
-class SampleClass 
+use VIP\FileSystem\FileSystem;
+
+class ChangeDetector 
 {
     public function __construct()
     {
-        echo("Hello World");
+        //FileSystem::find("/");
     }
 }

@@ -4,7 +4,11 @@ namespace VIP\Renderer;
 
 use VIP\Service\AbstractService;
 use VIP\Core\InstanceLoaderInterface;
+use VIP\FileSystem\DirectoryPath;
+use VIP\FileSystem\WebPath;
+
 use ScssPhp\ScssPhp\Compiler as SCSSCompiler;
+use VIP\FileSystem\WebDirectory;
 
 class PreProcessor extends AbstractService implements InstanceLoaderInterface
 {
@@ -24,12 +28,14 @@ class PreProcessor extends AbstractService implements InstanceLoaderInterface
     public function execute()
     {
         if ($this->recompile == true) {
-            $page_scss_folder = __LWEB__;
-            $prefab_scss_folder = __RDIR__ . "/src/VIP/Include/style/";
+            $page_scss_folder = (new WebDirectory())->toString();
+            $prefab_scss_folder = (new DirectoryPath(DirectoryPath::DIR_INCLUDE, "public/"))->toWebDirectory()->toString();
             $scss_folders = [$prefab_scss_folder, $page_scss_folder];
-            $output_folder = __LWEB__."css/";
+            $output_folder = (new WebDirectory("web/css/"))->toString();
             $scss_compiler = new SCSSCompiler();
+            
             $scss_compiler->setImportPaths($scss_folders);
+            
             if (!file_exists($output_folder)) {
                 mkdir($output_folder, 0777, true);
             }

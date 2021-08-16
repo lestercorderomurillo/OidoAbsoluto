@@ -3,6 +3,7 @@
 namespace VIP\FileSystem;
 
 use VIP\Factory\ResponseFactory;
+use VIP\Factory\WebPathFactory;
 
 class FileSystem
 {
@@ -15,15 +16,22 @@ class FileSystem
         return $files;
     }
 
-    private static function findInPath(string $base_path, string $format): array
+    public static function exists(AbstractPath $path): bool
     {
+        return file_exists($path->toString());
+    }
+
+    public static function find(DirectoryPath $folder_path, string $format = "php"): array
+    {
+
+        $path = $folder_path->toString();
         $paths = [];
 
-        if (substr($base_path, -1) != "/") {
-            $base_path .= "/";
+        if (substr($path, -1) != "/") {
+            $path .= "/";
         }
 
-        $search_path = $base_path . "*.$format";
+        $search_path = $path . "*.$format";
         foreach (self::recursiveGlob($search_path) as $file) {
             $paths[] = $file;
         }
@@ -31,51 +39,49 @@ class FileSystem
         return $paths;
     }
 
-    public static function exists(string $path): bool
-    {
-        return file_exists($path);
-    }
 
-    public static function find(string $base_path, string $format = "php"): array
+    public static function findRoutesFromInternal(DirectoryPath $folder_path, string $format): array
     {
-        return self::findInPath(__RDIR__ . $base_path, $format);
-    }
-
-    public static function findWebExposed(string $base_path, string $format): array
-    {
-        $format = strtolower($format);
-        if ($format == "php") {
+        $exposed_paths = [];
+        if (($format = strtolower($format)) == "php") {
             return ResponseFactory::createError(403);
         }
 
-        $composed_path = __LWEB__ . $base_path;
-        $internal_paths = self::findInPath($composed_path, $format);
-        $exposed_paths = [];
+        $internal_paths = self::find($folder_path, $format);
+
         foreach ($internal_paths as $path) {
-            $exposed_paths[] = str_replace(__LWEB__, __URL__ . __FWEB__ . "/", $path);
+            $exposed_paths[] = WebPathFactory::create($path)->toString();
         }
 
         return $exposed_paths;
     }
 
-    public static function includeAsString(string $path, bool $crash_on_failure = true): string
+    public static function includeAsString(FilePath $path, bool $crash_on_failure = true): string
     {
-        if (!file_exists($path)) {
+        if (!file_exists($path->toString())) {
             if ($crash_on_failure) {
-                ResponseFactory::createError("Invalid resource name. Check your controller files.", 500)->handle();
+                ResponseFactory::createError(500, "Invalid resource name to include as string. Check your API files.")->handle();
             } else {
                 return NULL;
             }
         }
         ob_start();
-        include($path);
+        include($path->toString());
         $var = ob_get_contents();
         ob_end_clean();
         return preg_replace("/\s+/", " ", $var);
     }
 
-    public static function include(string $file_name)
+    public static function requireFromFile(FilePath $path)
     {
-        return require_once(__RDIR__ . "/src/VIP/Include/$file_name.php");
+        if (!file_exists($path->toString())) {
+            ResponseFactory::createError(500, "Invalid resource name to require. Check your controller files.")->handle();
+        }
+        return require_once($path->toString());
+    }
+
+    public static function writeToDisk(FilePath $path, string $value, int $mode = FILE_APPEND): void
+    {
+        file_put_contents($path->toString(), $value . "\n", $mode);
     }
 }

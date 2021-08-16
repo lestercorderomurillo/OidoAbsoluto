@@ -1,0 +1,14 @@
+{
+    "files.autoSave": "afterDelay",
+    "php.validate.enable" : true,
+    "php.executablePath": "C:\\wamp64\\bin\\php\\php7.4.9\\php.exe",
+    "php.validate.executablePath": "C:\\wamp64\\bin\\php\\php7.4.9\\php.exe",
+    "files.associations": {
+        "*.pexec": "php"
+    },
+    "intelephense.files.associations": [
+        "*.php",
+        "*.phtml"
+    ],
+    "debug.allowBreakpointsEverywhere": true
+}

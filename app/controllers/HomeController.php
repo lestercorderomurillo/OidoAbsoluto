@@ -5,12 +5,13 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Models\UserInfo;
 
-use VIP\Core\BaseController;
+use VIP\Controller\BaseController;
 use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\FilePath;
 use VIP\FileSystem\FileSystem;
 use VIP\HTTP\Server\Response\Response;
 use VIP\HTTP\Server\Response\View;
-use VIP\Utilities\StringHelper;
+use VIP\Security\Cryptography;
 
 use function VIP\Core\Session;
 use function VIP\Core\Services;
@@ -20,6 +21,7 @@ class HomeController extends BaseController
     function test()
     {
         $db = Services("SQLDatabase");
+
         $models = $db->findAll(UserInfo::class, ["gender" => "M"]);
         var_dump($models);
         $result = $db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
@@ -35,7 +37,7 @@ class HomeController extends BaseController
 
     function signup()
     {
-        $countries = FileSystem::include("common/countries");
+        $countries = FileSystem::requireFromFile(new FilePath(FilePath::DIR_COMMON, "countries", "php"));
         return new View("signup", ["countries" => $countries]);
     }
 
@@ -75,7 +77,7 @@ class HomeController extends BaseController
 
             $user = new User();
             $user->email = $email;
-            $user->salt = StringHelper::randomString(32);
+            $user->salt = Cryptography::computeRandomKey(32);
             $user->password = password_hash($user->salt . $password, PASSWORD_BCRYPT);
             $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
             $user->activated = 1;

@@ -2,6 +2,8 @@
 
 namespace VIP\Core;
 
+use Psr\Container;
+
 interface ContainerInterface
 {
     public function get(string $id);

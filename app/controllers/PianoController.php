@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
-use VIP\Core\BaseController;
+use VIP\Controller\BaseController;
 use VIP\FileSystem\FileSystem;
+use VIP\FileSystem\DirectoryPath;
 use VIP\HTTP\Server\Response\JSON;
 use VIP\HTTP\Server\Response\View;
 use VIP\HTTP\Server\Response\Redirect;
@@ -20,9 +21,10 @@ class PianoController extends BaseController
             return new Redirect("login");
         }
 
-        $audiosSources = (new JSON(FileSystem::findWebExposed("audio/", "mp3")))->toString();
+        $audios_sources = FileSystem::findRoutesFromInternal(new DirectoryPath(DirectoryPath::DIR_WEB, "audio/"), "mp3");
+        $audios_sources_json = (new JSON($audios_sources))->toString();
 
-        return new View("piano", ["mode" => $mode, "audiosSources" => $audiosSources]);
+        return new View("piano", ["mode" => $mode, "audios_sources" => $audios_sources_json]);
     }
 
     function submitHearingTest(string $mode, string $expected_notes,  string $selected_notes)

@@ -4,7 +4,7 @@ namespace VIP\Model;
 
 use VIP\Core\BaseObject;
 use VIP\Factory\ResponseFactory;
-use VIP\Utilities\StringHelper;
+use VIP\Security\Cryptography;
 
 abstract class AbstractModel extends BaseObject
 {

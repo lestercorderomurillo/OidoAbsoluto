@@ -15,6 +15,7 @@ class Authorization extends AbstractMiddleware
         if(!Session()->has("logged")){
             Session()->store("message-type", "danger");
             Session()->store("message", "Debes haber iniciado sesión para acceder a esta vista.");
+            $this->stopRequestForwarding();
             $response = new Redirect("login");
             $response->handle();
         }

@@ -2,10 +2,14 @@
 
 namespace VIP\Core;
 
+use Psr\Log\LoggerAwareTrait;
+
 require_once("Accessor.php");
 
 abstract class BaseObject
 {
+    use LoggerAwareTrait;
+
     private string $id;
 
     public function setObjectID(string $id)

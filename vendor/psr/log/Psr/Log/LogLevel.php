@@ -13,6 +13,6 @@ class LogLevel
     const ERROR     = 'error';
     const WARNING   = 'warning';
     const NOTICE    = 'notice';
-    const INFO      = 'info';
-    const DEBUG     = 'debug';
+    const INFO      = 'information';
+    const DEBUG     = 'developer';
 }

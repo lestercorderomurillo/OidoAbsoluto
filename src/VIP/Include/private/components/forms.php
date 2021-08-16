@@ -77,6 +77,9 @@ return
             "name" => "[bind]",
             "class" => "form-control v-textbox",
             "concat" => [
+                "function-parameters" => [
+                    "array_name" => "[arrayName]"
+                ],
                 "function" => function ($view_data, $params) {
                     $content = "<option disabled selected>Seleccione una opción...</option>\n";
                     if (isset($params["array_name"])) {
@@ -89,10 +92,7 @@ return
                         }
                     }
                     return NULL;
-                },
-                "function-parameters" => [
-                    "array_name" => "[arrayName]"
-                ]
+                }
             ],
             "closure",
             "new-line"

@@ -1,0 +1,32 @@
+06:56:45 >> App\Controllers\PianoController has been requested an response from 'hearingTest' action
+06:56:45 >> App\Controllers\PianoController responded with '200' : '(View)'
+06:56:45 >> App\Controllers\PianoController has been requested an response from 'hearingTest' action
+06:56:45 >> App\Controllers\PianoController responded with '200' : '(View)'
+06:56:45 >> App\Controllers\PianoController has been requested an response from 'hearingTest' action
+06:56:45 >> App\Controllers\PianoController responded with '200' : '(View)'
+06:56:45 >> App\Controllers\PianoController has been requested an response from 'hearingTest' action
+06:56:45 >> App\Controllers\PianoController responded with '200' : '(View)'
+06:56:48 >> App\Middlewares\Authorization catch the request. Forwarding in pipeline stopped.
+06:56:48 >> App\Middlewares\Authorization route redirection to 'login'
+06:56:48 >> App\Controllers\HomeController has been requested an response from 'login' action
+06:56:48 >> App\Controllers\HomeController responded with '200' : '(View)'
+06:56:49 >> App\Controllers\HomeController has been requested an response from 'signup' action
+06:56:49 >> App\Controllers\HomeController responded with '200' : '(View)'
+06:56:51 >> App\Controllers\HomeController has been requested an response from 'login' action
+06:56:51 >> App\Controllers\HomeController responded with '200' : '(View)'
+06:56:51 >> App\Controllers\HomeController has been requested an response from 'resetRequest' action
+06:56:51 >> App\Controllers\HomeController responded with '200' : '(View)'
+06:56:58 >> App\Controllers\HomeController has been requested an response from 'resetPassword' action
+06:56:58 >> App\Controllers\SystemController responded with '500' : 'Invalid password reset token.'
+06:56:58 >> App\Controllers\SystemController responded with '500' : '(View)'
+07:04:39 >> App\Controllers\HomeController has been requested an response from 'resetPassword' action
+07:04:39 >> App\Controllers\SystemController responded with '500' : 'Invalid password reset token.'
+07:04:39 >> App\Controllers\SystemController responded with '500' : '(View)'
+07:04:42 >> App\Controllers\HomeController has been requested an response from 'login' action
+07:04:42 >> App\Controllers\HomeController responded with '200' : '(View)'
+08:44:30 >> App\Controllers\HomeController has been requested an response from 'login' action
+08:44:30 >> App\Controllers\HomeController responded with '200' : '(View)'
+08:44:31 >> App\Controllers\HomeController has been requested an response from 'signup' action
+08:44:31 >> App\Controllers\HomeController responded with '200' : '(View)'
+08:44:34 >> App\Controllers\HomeController has been requested an response from 'login' action
+08:44:34 >> App\Controllers\HomeController responded with '200' : '(View)'

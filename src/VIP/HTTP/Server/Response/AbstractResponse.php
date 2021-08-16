@@ -4,9 +4,11 @@ namespace VIP\HTTP\Server\Response;
 
 use VIP\Core\BaseObject;
 
-abstract class AbstractResponse extends BaseObject
+use function VIP\Core\Logger;
+
+abstract class AbstractResponse extends BaseObject 
 {
-    private int $status_code;
+    private int $status_code = 200;
     private string $protocol = "1.1";
 
     abstract protected function handleOperation();
@@ -19,30 +21,35 @@ abstract class AbstractResponse extends BaseObject
         return $this;
     }
 
-    public function setHeader(string $header, string $value)
+    public function setHeader(string $header, $values)
     {
-        header("$header: $value");
+        if(is_array($values)){
+            header("$header: " . implode(", ", $values));
+        }else{
+            header("$header: $values");
+        }
         return $this;
     }
 
-    public function setProtocol(string $protocol)
+    public function setProtocol(string $protocol) : AbstractResponse
     {
         $this->protocol = $protocol;
         return $this;
     }
 
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
 
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->status_code;
     }
 
-    public function handle()
+    public function handle(): void
     {
+        $this->setLogger(Logger());
         $this->handleOperation();
         exit();
     }

@@ -3,7 +3,7 @@
 namespace VIP\HTTP\Server;
 
 use VIP\HTTP\Common\Request;
-use VIP\Utilities\StringHelper;
+use VIP\Security\Cryptography;
 
 class IncomingRequest extends Request
 {
@@ -20,11 +20,11 @@ class IncomingRequest extends Request
 
         if ($this->method == "GET") {
             foreach ($_GET as $parameter => $value) {
-                $this->parameters["$parameter"] = StringHelper::sanitizeString($value);
+                $this->parameters["$parameter"] = Cryptography::sanitizeString($value);
             }
         } else if ($this->method == "POST") {
             foreach ($_POST as $parameter => $value) {
-                $this->parameters["$parameter"] = StringHelper::sanitizeString($value);
+                $this->parameters["$parameter"] = Cryptography::sanitizeString($value);
             }
         }
     }

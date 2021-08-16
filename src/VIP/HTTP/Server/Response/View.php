@@ -2,9 +2,11 @@
 
 namespace VIP\HTTP\Server\Response;
 
-use VIP\Core\BaseController;
+use VIP\Controller\BaseController;
+use VIP\FileSystem\FilePath;
 use VIP\HTTP\Server\Response\AbstractResponse;
 use VIP\FileSystem\FileSystem;
+use VIP\FileSystem\DirectoryPath;
 
 use function VIP\Core\Services;
 
@@ -20,12 +22,12 @@ class View extends AbstractResponse
         $this->controller = BaseController::getCurrentControllerName();
         $this->name = $name;
         $this->parameters = $parameters;
-        $this->html = FileSystem::includeAsString(__RDIR__ . "/app/views/" . $this->controller . "/" . $name . ".phtml");
+        $this->html = FileSystem::includeAsString(new FilePath(FilePath::DIR_VIEWS, $this->controller . "/" . $name, "phtml"));
     }
 
-    public function getDirectoryName(): string
+    public function getDirectory(): DirectoryPath
     {
-        return __RDIR__ . "/app/views/" . $this->controller . "/";
+        return new DirectoryPath(DirectoryPath::DIR_VIEWS, "$this->controller/");
     }
 
     public function getSourceHTML(): string
@@ -53,5 +55,14 @@ class View extends AbstractResponse
         $view_renderer = Services("ViewRenderer");
         $view_renderer->setView($this);
         $view_renderer->execute();
+
+        $this->logger->debug(
+            "{0} responded with '{1}' : '{2}'",
+            [
+                BaseController::getFQCurrentControllerName(),
+                $this->getStatusCode(),
+                "(View)"
+            ]
+        );
     }
 }

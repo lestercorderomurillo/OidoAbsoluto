@@ -2,10 +2,12 @@
 
 namespace VIP\Factory;
 
-use VIP\Core\BaseController;
+use VIP\Controller\BaseController;
 use VIP\HTTP\Server\Response\AbstractResponse;
 use VIP\HTTP\Server\Response\Response;
 use VIP\HTTP\Server\Response\View;
+
+use function VIP\Core\Logger;
 
 class ResponseFactory implements FactoryInterface
 {
@@ -14,6 +16,17 @@ class ResponseFactory implements FactoryInterface
         BaseController::setSystemController();
         if ($message == "") {
             $message = AbstractResponse::CODES[$code];
+        }
+
+        if ($code >= 500) {
+            Logger()->debug(
+                "{0} responded with '{1}' : '{2}'",
+                [
+                    BaseController::getFQCurrentControllerName(),
+                    $code,
+                    $message
+                ]
+            );
         }
         return (new View("error", ["code" => "$code", "message" => "$message"]))->setStatusCode($code);
     }

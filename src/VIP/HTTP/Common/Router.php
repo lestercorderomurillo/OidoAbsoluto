@@ -3,12 +3,15 @@
 namespace VIP\HTTP\Common;
 
 use App\Controllers;
+use VIP\Controller\BaseController;
 use VIP\Core\BaseObject;
 use VIP\HTTP\Common\Request;
 use VIP\HTTP\Common\Route;
+use VIP\Factory\ResponseFactory;
+use VIP\FileSystem\FilePath;
+use VIP\FileSystem\FileSystem;
 use VIP\HTTP\Server\Response\AbstractResponse;
 use VIP\HTTP\Server\Response\Response;
-use VIP\Factory\ResponseFactory;
 
 class Router extends BaseObject
 {
@@ -16,12 +19,12 @@ class Router extends BaseObject
 
     public function __construct()
     {
-        require_once(__RDIR__ . "/app/routes.php");
+        FileSystem::requireFromFile(new FilePath(FilePath::DIR_APP, "routes", "php"));
     }
 
     public function handle(Request $request)
     {
-        $system_controller_path = __RDIR__ . "/app/controllers/SystemController.php";
+        $system_controller_path = (new FilePath(FilePath::DIR_CONTROLLERS, "SystemController", "php"))->toString();
         if (file_exists($system_controller_path)) {
             require_once($system_controller_path);
         }
@@ -31,12 +34,13 @@ class Router extends BaseObject
             if ($route->matchPath($request)) {
 
                 foreach ($route->getMiddlewares() as $middleware) {
+                    BaseController::setCurrentMiddleware($middleware->getClassName());
                     $request = $middleware->handle($request);
                 }
 
                 $class_name = $route->getControllerName() . "Controller";
                 $controller_name = $route->getControllerName();
-                $resolve_path = __RDIR__ . "/app/controllers/$class_name.php";
+                $resolve_path = (new FilePath(FilePath::DIR_CONTROLLERS, $class_name, "php"))->toString();
 
                 if (file_exists($resolve_path)) {
 
@@ -44,6 +48,11 @@ class Router extends BaseObject
                     $action_name = $route->getActionName();
                     $fully_qualified_class_name = "App\\Controllers\\" . $class_name;
                     $controller = new $fully_qualified_class_name($controller_name);
+
+                    $controller->getLogger()->debug(
+                        "{0} has been requested an response from '{1}' action",
+                        [$fully_qualified_class_name, $action_name]
+                    );
 
                     if (method_exists($controller, $action_name)) {
 

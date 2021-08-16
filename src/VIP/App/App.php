@@ -2,12 +2,17 @@
 
 namespace VIP\App;
 
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use VIP\Core\BaseObject;
-use VIP\HTTP\Common\Session;
 use VIP\Service\ServiceManager;
+use VIP\HTTP\Common\Session;
+use VIP\Logger\Logger;
 
 abstract class App extends BaseObject
 {
+    use LoggerAwareTrait;
+
     public static $app;
     public $configuration;
 
@@ -21,9 +26,12 @@ abstract class App extends BaseObject
 
     public function __construct()
     {
-        define("__RDIR__", dirname(__DIR__, 3));
-        $this->configuration = require_once(__RDIR__ . "/app/configuration.php");
-        $this->defineConstants();
+        define("__ROOT__", str_replace("\\", "/",dirname(__DIR__, 3) . "\\"));
+        $this->configuration = require_once(__ROOT__ . "/app/configuration.php");
+        define("__URL__", $this->configuration["application"]["url"]);
+        define("__WEB_NAME__", $this->configuration["application"]["content"]);
+
+        $this->setLogger(new Logger());
 
         $this->session = new Session();
         $this->services = new ServiceManager();
@@ -40,14 +48,6 @@ abstract class App extends BaseObject
         return $this->configuration["application"]["development"];
     }
 
-    protected function defineConstants(): void
-    {
-        define("__URL__", $this->configuration["application"]["url"]);
-        define("__WEB__", __URL__ . $this->configuration["application"]["content"] . "/");
-        define("__FWEB__", $this->configuration["application"]["content"]);
-        define("__LWEB__", __RDIR__ . "/" . $this->configuration["application"]["content"] . "/");
-    }
-
     public function getSession(): Session
     {
         return $this->session;
@@ -56,5 +56,10 @@ abstract class App extends BaseObject
     public function getServices(): ServiceManager
     {
         return $this->services;
+    }
+
+    public function getLogger(): Logger
+    {
+        return $this->logger;
     }
 }

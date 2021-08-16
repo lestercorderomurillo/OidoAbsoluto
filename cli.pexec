@@ -1,0 +1,103 @@
+<?php
+
+$framework_vendor = "VIP";
+
+if ($argc == 1) {
+    echo ("To start, please write a command.");
+    help();
+}
+
+function help()
+{
+    $data = <<<TEXT
+    
+    List of all valid CLI commands:
+    php cli.pexec help
+    php cli.pexec model [name]
+    php cli.pexec view [name]
+    php cli.pexec controller [name]
+    \n
+    TEXT;
+    echo ($data);
+}
+
+if ($argc > 1) {
+    switch (strtolower($argv[1])) {
+        case "help":
+            help();
+            break;
+        case "controller":
+            if ($argc > 2) {
+                createController($argv[2], "App");
+            } else {
+                invalidArgsNumber();
+            }
+            break;
+        default:
+            invalidArgsNumber();
+            break;
+    }
+}
+
+function invalidArgsNumber()
+{
+    echo ("Error: Invalid number of arguments.");
+    help();
+}
+
+function createController(string $controller_name, string $vendor)
+{
+    $controller_name = ucwords($controller_name . "Controller");
+    createTemplateFile(
+        __DIR__ . "/app/controllers/$controller_name",
+        $vendor,
+        "Controllers",
+        $controller_name,
+        "actionMethod",
+        "return new View(\"view_name\");",
+        ["HTTP\Server\Response\View"]
+    );
+}
+
+function createTemplateFile(
+    string $path,
+    string $vendor = "Vendor",
+    string $scope = "Scope",
+    string $class_name = "SampleClass",
+    string $function_name = "__construct",
+    string $function_content = "echo(\"Hello World\");",
+    array $imports = []
+) {
+    $file = fopen("$path.php", "w") or die("Unable to open file!");
+
+    $vendor = ucwords($vendor);
+    $scope = ucwords($scope);
+    $class_name = ucwords($class_name);
+
+    $imports_text = "";
+    foreach ($imports as $import) {
+        $imports_text = "use VIP\\$import;\n";
+    }
+
+    if ($imports_text != "") {
+        $imports_text = "\n" . $imports_text;
+    }
+
+    $data = <<<TEXT
+    <?php 
+    
+    namespace $vendor\\$scope;
+    $imports_text
+    class $class_name 
+    {
+        public function $function_name()
+        {
+           $function_content
+        }
+    }
+    TEXT;
+
+    fwrite($file, "" . $data);
+    fclose($file);
+    echo ("$class_name has been created successfully.");
+}
