@@ -4,61 +4,65 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Models\UserInfo;
+use Pipeline\Controller\Controller;
+use Pipeline\Database\AbstractDatabase;
+use Pipeline\FileSystem\FileSystem;
+use Pipeline\Security\Cryptography;
+use Pipeline\Factory\ResponseFactory;
+use Pipeline\FileSystem\Path\BasePath;
+use Pipeline\FileSystem\Path\Local\FilePath;
+use function Pipeline\Accessors\Dependency;
+use function Pipeline\Accessors\Session;
 
-use VIP\Controller\BaseController;
-use VIP\Factory\ResponseFactory;
-use VIP\FileSystem\BasePath;
-use VIP\FileSystem\FilePath;
-use VIP\FileSystem\FileSystem;
-use VIP\HTTP\Server\Response\Response;
-use VIP\HTTP\Server\Response\View;
-use VIP\Security\Cryptography;
-
-use function VIP\Core\Session;
-use function VIP\Core\Services;
-
-class HomeController extends BaseController
+class HomeController extends Controller
 {
+    private AbstractDatabase $db;
+
+    function __construct(){
+        $this->db = Dependency("Db");
+    }
+
     function test()
     {
-        $db = Services("SQLDatabase");
 
-        $models = $db->findAll(UserInfo::class, ["gender" => "M"]);
+        $models = $this->db->findAll(UserInfo::class, ["gender" => "M"]);
+
         var_dump($models);
-        $result = $db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
-        var_dump($result->getInternalResult());
 
-        return new Response();
+        $result = $this->db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
+
+        var_dump($result->getAllData());
+
+        return "fuckit";
     }
 
     function login()
     {
-        return new View("login");
+        return $this->view("login");
     }
 
     function signup()
     {
         $countries = FileSystem::requireFromFile(new FilePath(BasePath::DIR_COMMON, "countries", "php"));
-        return new View("signup", ["countries" => $countries]);
+        return $this->view("signup", ["countries" => $countries]);
     }
 
     function resetPassword(string $token)
     {
         if ($token == "") {
-            return ResponseFactory::createError(500, "Invalid password reset token.");
+            return ResponseFactory::createServerResponse(500, "Invalid password reset token.");
         }
-        return new View("reset-password");
+        return $this->view("reset-password");
     }
 
     function resetRequest()
     {
-        return new View("reset-request");
+        return $this->view("reset-request");
     }
 
     function loginSubmit(string $email, string $password)
     {
-
-        return new View("login");
+        return $this->view("login");
     }
 
     function signupSubmit(
@@ -74,49 +78,52 @@ class HomeController extends BaseController
     ) {
 
         if (!$this->userExists($email) && $password == $confirm_password) {
-            $db = services("SQLDatabase");
 
             $user = new User();
+
             $user->email = $email;
             $user->salt = Cryptography::computeRandomKey(32);
             $user->password = password_hash($user->salt . $password, PASSWORD_BCRYPT);
             $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
             $user->activated = 1;
-            $db->save($user);
+
+            $this->db->save($user);
 
             $info = new UserInfo();
+
             $info->first_name = $first_name;
             $info->last_name = $last_name;
             $info->country = $country;
             $info->birth_day = $birth_day;
             $info->phone = $phone;
             $info->gender = $gender;
-            $db->save($info);
-            $db->commit();
 
-            Session()->store("type", "success");
-            Session()->store("message", "Su usuario se ha registrado correctamente. 
-            Pruebe a iniciar sesión con sus nuevos credenciales.");
+            $this->db->save($info);
+            $this->db->commit();
 
-            return new View("login");
+            Session("type", "success");
+            Session("message", "Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales.");
+
+            return $this->view("login");
+
         } else {
 
-            Session()->store("type", "danger");
-            Session()->store("message", "No se puede registrar el usuario ingresado.");
+            Session("type", "danger");
+            Session("message", "No se puede registrar el usuario ingresado.");
 
-            return new View("submit");
+            return $this->view("submit");
         }
     }
 
     function userExists(string $email)
     {
-        $db = services("SQLDatabase");
-        $result = $db->find(User::class, ["email" => "$email"]);
-        $result->getInternalResult();
+        $result = $this->db->find(User::class, ["email" => "$email"]);
+        $result->getAllData();
         return ($result != NULL);
     }
 
-    function profile(){
-        return new View("profile");
+    function profile()
+    {
+        return $this->view("profile");
     }
 }

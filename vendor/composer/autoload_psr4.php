@@ -6,13 +6,14 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'VIP\\' => array($baseDir . '/src/VIP'),
     'ScssPhp\\ScssPhp\\' => array($vendorDir . '/scssphp/scssphp/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Server\\' => array($vendorDir . '/psr/http-server-handler/src', $vendorDir . '/psr/http-server-middleware/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'Pipeline\\' => array($baseDir . '/src/Pipeline'),
+    'Mimey\\' => array($vendorDir . '/ralouphie/mimey/src'),
     'App\\Models\\' => array($baseDir . '/app/models'),
     'App\\Middlewares\\' => array($baseDir . '/app/middlewares'),
     'App\\Controllers\\' => array($baseDir . '/app/controllers'),

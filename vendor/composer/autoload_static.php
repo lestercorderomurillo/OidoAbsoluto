@@ -7,10 +7,6 @@ namespace Composer\Autoload;
 class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
 {
     public static $prefixLengthsPsr4 = array (
-        'V' => 
-        array (
-            'VIP\\' => 4,
-        ),
         'S' => 
         array (
             'ScssPhp\\ScssPhp\\' => 16,
@@ -22,6 +18,11 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
+            'Pipeline\\' => 9,
+        ),
+        'M' => 
+        array (
+            'Mimey\\' => 6,
         ),
         'A' => 
         array (
@@ -32,10 +33,6 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
     );
 
     public static $prefixDirsPsr4 = array (
-        'VIP\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/VIP',
-        ),
         'ScssPhp\\ScssPhp\\' => 
         array (
             0 => __DIR__ . '/..' . '/scssphp/scssphp/src',
@@ -60,6 +57,14 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Pipeline\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Pipeline',
+        ),
+        'Mimey\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ralouphie/mimey/src',
         ),
         'App\\Models\\' => 
         array (

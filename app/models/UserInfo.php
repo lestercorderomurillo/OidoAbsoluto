@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use VIP\Model\AbstractModel;
+use Pipeline\Model\Model;
 
-class UserInfo extends AbstractModel
+class UserInfo extends Model
 {
     const table = "users_info";
 

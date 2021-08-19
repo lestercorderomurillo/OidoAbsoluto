@@ -1,21 +1,16 @@
 <?php return
 [
-    "application" => [
-        "name"=>"VIP PHP",
-        "url"=> "http://www.oidoabsoluto.dev.com/",
-        "content"=> "web",
-        "development" => true
-    ],
-    "connection" => [
-        "server"=>"localhost",
-        "user"=> "root",
-        "pass"=> "",
-        "database" => "oidoabsoluto"
-    ],
-    "settings" => [
-        "logging" => true,
-        "errorLogging" => true,
-        "compileSCSS" => true,
-        "hotswap" => true,
-    ]
+    "application.https" => true,
+    "application.name" => "Oido Absoluto",
+    "application.url" => "www.oidoabsoluto.dev.com",
+    "application.webroot" => "web",
+    "application.production" => false,
+    "database.mysql.server" => "localhost",
+    "database.mysql.user" => "root",
+    "database.mysql.pass" => "",
+    "database.mysql.db" => "oidoabsoluto",
+    "development.logging" => true,
+    "development.errorLogging" => true,
+    "development.compileSCSS" => true,
+    "development.hotswap" => true,
 ];

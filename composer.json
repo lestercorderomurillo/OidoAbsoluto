@@ -1,10 +1,10 @@
 {
-    "name": "vip/framework",
+    "name": "pipeline/framework",
     "description": "Composed-based framework. Includes complex view templating, classic routing and common day utilities, using a MVC pattern.",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "VIP\\": "src/VIP/",
+            "Pipeline\\": "src/Pipeline/",
             "App\\Controllers\\": "app/controllers/",
             "App\\Models\\": "app/models/",
             "App\\Middlewares\\": "app/middlewares/"
@@ -22,6 +22,7 @@
         "psr/http-client": "*",
         "psr/http-server-middleware": "*",
         "psr/container": "*",
-        "psr/log": "*"
+        "psr/log": "*",
+        "ralouphie/mimey": "^2.1"
     }
 }
