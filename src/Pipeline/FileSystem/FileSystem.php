@@ -2,11 +2,11 @@
 
 namespace Pipeline\FileSystem;
 
-use Pipeline\Factory\PathFactory;
-use Pipeline\Factory\ResponseFactory;
 use Pipeline\FileSystem\Path\AbstractPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Web\WebPath;
+use Pipeline\HTTP\Server\ServerResponse;
 
 class FileSystem
 {
@@ -45,13 +45,13 @@ class FileSystem
     {
         $exposed_paths = [];
         if (($format = strtolower($format)) == "php") {
-            ResponseFactory::createServerResponse(403)->sendAndDiscard();
+            ServerResponse::create(403)->sendAndExit();
         }
 
         $internal_paths = self::find($folder_path, $format);
 
         foreach ($internal_paths as $path) {
-            $exposed_paths[] = PathFactory::createWebPath($path)->toString();
+            $exposed_paths[] = WebPath::create($path)->toString();
         }
 
         return $exposed_paths;
@@ -61,10 +61,8 @@ class FileSystem
     {
         if (!file_exists($path)) {
             if ($crash_on_failure) {
-                ResponseFactory::createServerResponse(
-                    500,
-                    "Invalid resource name [$path] to include as string. Check your API files."
-                )->sendAndDiscard();
+                ServerResponse::create(500,"Invalid resource name [$path] to include as string. 
+                Check your API files.")->sendAndExit();
             } else {
                 return NULL;
             }
@@ -80,7 +78,7 @@ class FileSystem
     public static function requireFromFile(FilePath $path)
     {
         if (!file_exists($path->toString())) {
-            ResponseFactory::createServerResponse(500, "Invalid resource name to require. Check your controller files.")->sendAndDiscard();
+            ServerResponse::create(500, "Invalid resource name to require. Check your controller files.")->sendAndExit();
         }
         return require_once($path->toString());
     }

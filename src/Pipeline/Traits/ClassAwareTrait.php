@@ -37,28 +37,26 @@ trait ClassAwareTrait
     {
         return $this->getProperties(\ReflectionProperty::IS_PROTECTED);
     }
-}
 
-
-
-
-/*
-
-getFullQualifiedParentClassName
-get_class(object $object = ?) to get name from instance variable
-
-getParentClassName
-
-
-getFullQualifiedClassName
-get_class(object $object = ?) to get name from instance variable
-
-getClassName
-
-
-
-    public static function hasTrait(string $class_name, string $trait_filter): bool
+    public function hasTrait(string $trait, $class_or_object): bool
     {
-        $traits = class_uses($class_name);
-        return isset($traits[$trait_filter]);
+        if ($class_or_object == null) {
+            $class_or_object = $this;
+        }
+        $traits = class_uses($class_or_object);
+        return isset($traits[$trait]);
     }
+
+    public function getFullyQualifiedClassName($object = null): string
+    {
+        if ($object == null) {
+            $object = $this;
+        }
+        return get_class($this);
+    }
+
+    public function getClassName($object = null): string
+    {
+        return ((new \ReflectionClass($object)))->getShortName();
+    }
+}

@@ -171,7 +171,7 @@ body {
   -ms-user-select: none;
   user-select: none;
   min-width: 600px;
-  background-color: #463460 !important;
+  background-color: #585275 !important;
   font-size: 12px;
   font-family: 'Noto Sans JP', sans-serif;
   opacity: 0%;
@@ -183,34 +183,40 @@ body {
 a {
   color: #3f28bd;
   font-weight: bold;
-  text-decoration: underline;
+  text-decoration: none !important;
   font-size: 12px;
 }
 a:hover {
-  color: #484370;
+  color: #4e487a;
   text-decoration: underline;
 }
 .text-read {
   color: #04081a !important;
 }
 .text-accent-primary {
-  color: #d7dcdf !important;
+  color: #e8ecee !important;
 }
 .text-accent-secondary {
   color: #4b4356 !important;
+}
+.text-accent-excel {
+  color: #03160e !important;
 }
 .bg-accent-primary {
   background-color: white !important;
 }
 .bg-accent-secondary {
-  background-color: #4b4356 !important;
+  background-color: #49484c !important;
+}
+.bg-accent-excel {
+  background-color: #135333 !important;
 }
 .v-textbox {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   background: transparent !important;
   border: none;
-  border-bottom: 1px solid #484370;
+  border-bottom: 1px solid #4e487a;
   border-radius: 0 !important;
   color: #04081a !important;
   outline: none;
@@ -223,8 +229,8 @@ a:hover {
 .v-button {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  color: #d7dcdf !important;
-  background-color: #484370;
+  color: #e8ecee !important;
+  background-color: #4e487a;
   padding: 12px;
   font-size: 12px;
   font-weight: bolder;
@@ -259,7 +265,7 @@ a:hover {
   height: 15px;
   top: 0px;
   left: -1px;
-  background-color: #484370;
+  background-color: #4e487a;
 }
 input[type='radio']:checked:after {
   width: 21px !important;

@@ -2,7 +2,6 @@
 
 namespace Pipeline\Hotswap;
 
-use Pipeline\App\App;
 use Pipeline\Core\ResultInterface;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Hotswap\ChangeDetector;

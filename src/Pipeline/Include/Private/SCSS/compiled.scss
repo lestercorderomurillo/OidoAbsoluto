@@ -12,12 +12,20 @@
     color: $global-color-accent-secondary-text !important;
 }
 
+.text-accent-excel{
+    color: hsl(155, 76%, 5%) !important;
+}
+
 .bg-accent-primary{
     background-color: $global-color-background-content !important;
 }
 
 .bg-accent-secondary{
     background-color: $global-color-accent-secondary !important;
+}
+
+.bg-accent-excel{
+    background-color: hsl(150, 62%, 20%) !important;
 }
 
 @mixin component{

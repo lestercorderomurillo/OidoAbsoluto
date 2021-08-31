@@ -2,7 +2,7 @@
     <v-card size="8" maxWidth="600px">
         <v-title-icon img="profile.png" text="Inicio de sesión">
         <v-persistent-message>
-        <v-form route="login_submit">
+        <v-form route="login/submit">
             <v-span>Sírvase de acceder al servicio para realizar o consultar su historial de pruebas</v-span>
             <v-label for="email">Correo Electrónico</v-label>  
             <v-textbox bind="email">
@@ -11,13 +11,13 @@
             <v-submit-button>Acceder al Proyecto</v-submit-button>
             <v-action-button route="signup">O bien, Crear cuenta</v-action-button><br><br>
             <v-span>¿Olvidó su contraseña o no puede acceder a su cuenta?</v-span>
-            <v-action-link route="reset_request">Haga click en este enlace para recuperar su contraseña</v-action-link>
+            <v-action-link route="forgot">Haga click en este enlace para recuperar su contraseña</v-action-link>
         </v-form>
     </v-card>
 </v-view>
 <script> 
     $(document).ready(function() {
-        $("#login_submit").validate({
+        $("#form").validate({
             rules: {
                 email: {
                     required: true,

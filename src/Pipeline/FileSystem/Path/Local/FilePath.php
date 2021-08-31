@@ -8,6 +8,12 @@ class FilePath extends AbstractLocalPath
 {
     private string $extension;
 
+    public static function create(string $base, string $path, string $extension)
+    {
+        $instance = new FilePath($base, $path, $extension);
+        return $instance;
+    }
+
     public function __construct(string $base, string $path, string $extension)
     {
         parent::__construct($base);

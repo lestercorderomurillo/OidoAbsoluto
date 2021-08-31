@@ -1,7 +1,7 @@
 <v-view title="Registro de usuario en el proyecto">
     <v-card size="12" maxWidth="600px">
         <v-title-icon img="signup.png" text="Registro de usuario">
-        <v-form route="signup_submit">
+        <v-form route="signup/submit">
             <v-row>
                 <v-col size="6">
                     <v-label for="first_name">Nombre</v-label>  
@@ -43,7 +43,7 @@
     </v-card>
 </v-view>
 <script> 
-    $('#signup_submit').submit(function() {
+    $('#form').submit(function() {
         event.preventDefault();
         validateDate("birth_day");
         if($(this).valid()) {
@@ -53,7 +53,7 @@
         return false;
     });
     $(document).ready(function() {
-        $("#signup_submit").validate({
+        $("#form").validate({
             rules: {
                 first_name : {
                     required: true,

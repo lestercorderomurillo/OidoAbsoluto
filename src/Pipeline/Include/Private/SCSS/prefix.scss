@@ -89,7 +89,7 @@ body{
 a{
     color: $global-color-accent-hover;
     font-weight: bold;
-    text-decoration: underline;
+    text-decoration: none !important;
     font-size: $global-font-size;
 }
 

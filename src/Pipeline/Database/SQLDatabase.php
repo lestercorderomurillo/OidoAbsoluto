@@ -2,11 +2,11 @@
 
 namespace Pipeline\Database;
 
-use Pipeline\Core\InternalResult;
 use Pipeline\Adapter\Adapter;
+use Pipeline\Database\Common\ConnectionString;
+use Pipeline\Database\SQL\QueryResult;
 use Pipeline\Model\Model;
 use Pipeline\Utilities\ArrayHelper;
-use Pipeline\Database\Common\ConnectionString;
 
 class SQLDatabase extends AbstractDatabase
 {
@@ -15,43 +15,36 @@ class SQLDatabase extends AbstractDatabase
         parent::__construct($adapter, $connection_string, $service_id);
     }
 
-    public function find(string $class_name, array $where = []): InternalResult
+    public function find(string $class_name, array $where = []): QueryResult
     {
         $result = $this->findAll($class_name, $where, "LIMIT 1");
-        if ($result->getStatus() == InternalResult::FAILURE) {
-            return new InternalResult([], InternalResult::FAILURE);
-        }
-        $models = $result->getData("models");
-        return new InternalResult($models, InternalResult::SUCCESS);
+        $models = $result->get("models");
+        return new QueryResult($models);
     }
 
-    public function findAll(string $class_name, array $where = [], string $append = ""): InternalResult
+    public function findAll(string $class_name, array $where = [], string $append = ""): QueryResult
     {
         $models = array();
         $table_name = (new $class_name())->getTableName();
 
         if ($where == []) {
-            $this->addQuery(trim("SELECT * FROM `$table_name` $append"));
+            $this->addQuery("SELECT * FROM `$table_name` $append");
         } else {
             $array = ArrayHelper::placeholderCreateArray($where);
             $where = implode(" AND ", $array[0]);
-            $this->addQuery(trim("SELECT * FROM `$table_name` WHERE $where $append"), $array[1]);
+            $this->addQuery("SELECT * FROM `$table_name` WHERE $where $append", $array[1]);
         }
 
         $internal_result = $this->execute();
 
-        if ($internal_result->getStatus() == InternalResult::FAILURE) {
-            return new InternalResult([], InternalResult::FAILURE);
-        }
-
-        foreach ($internal_result->getAllData() as $row) {
+        foreach ($internal_result->expose() as $row) {
             $model = new $class_name();
-            $model->set($row);
-            $model->setObjectID($row["id"]);
+            $model->setValues($row);
+            $model->setId($row["id"]);
             $models[] = $model;
         }
 
-        return new InternalResult(["models" => $models], InternalResult::SUCCESS);
+        return new QueryResult(["models" => $models]);
     }
 
     public function save(Model $model): void

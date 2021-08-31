@@ -40,7 +40,7 @@ return
             "id" => "[id]",
             "class" => "p-1 col col-12 col-sm-12 col-md-12 col-lg-[size] col-xl-[size] mx-auto text-center",
             "style" => "max-width: [maxWidth];",
-            "concat" => [
+            "concatElement" => [
                 "prototype" => "div",
                 "class" => "shadow shadow-lg text-left bg-accent-[accent] p-[padding] rounded w-100 h-[overflow]",
                 "style" => "font-size: [fontSize];"

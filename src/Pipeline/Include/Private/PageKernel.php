@@ -1,6 +1,5 @@
 <?php
 
-use Pipeline\App\App;
 use Pipeline\FileSystem\Path\BasePath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Web\WebDirectoryPath;
@@ -28,7 +27,7 @@ $web = (new WebDirectoryPath(__WEB_NAME__ . "/"))->toString();
 <link href='<?= $public . "bootstrap-4.6.0/bootstrap.css" ?>' rel="stylesheet">
 <link href='<?= $public . "font-awesome-4.7.0/font-awesome.css" ?>' rel="stylesheet">
 
-<link rel='stylesheet' href="<?= $web . "css/compiled" ?>">
+<link rel='stylesheet' href="<?= $web . "css/compiled.css" ?>">
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -49,11 +48,12 @@ $web = (new WebDirectoryPath(__WEB_NAME__ . "/"))->toString();
 
         if (enabled) {
 
-            var time = 300;
             <?php
-            if (App()->getRuntimeEnvironment()->hasFailed()) {
-                echo ("time = 3000;");
-            }
+                if (App()->getRuntimeEnvironment()->hasFailed()) {
+                    echo ("var time = 3000;");
+                }else{
+                    echo ("var time = 300;");
+                }
             ?>
 
             window.setTimeout(function() {
@@ -84,7 +84,7 @@ $web = (new WebDirectoryPath(__WEB_NAME__ . "/"))->toString();
         return array.sort(() => Math.random() - 0.5);
     }
 
-    function createTemplateSynchronizer(func) {
+    function createTemplateSynchronizer(functionCallback) {
         var handler = {};
         var jsdom = ObservableSlim.create(handler, true, function(changes) {
             for (var i = 0; i < changes.length; i++) {
@@ -94,8 +94,8 @@ $web = (new WebDirectoryPath(__WEB_NAME__ . "/"))->toString();
             }
         });
 
-        func(jsdom);
-        setInterval(func, 15, jsdom);
+        functionCallback(jsdom);
+        setInterval(functionCallback, 15, jsdom);
 
         return jsdom;
     }
@@ -181,7 +181,6 @@ $web = (new WebDirectoryPath(__WEB_NAME__ . "/"))->toString();
             }, 0);
 
         }
-
         return valid;
     }
 </script>

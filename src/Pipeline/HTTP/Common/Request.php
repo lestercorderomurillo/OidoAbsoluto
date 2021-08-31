@@ -2,15 +2,18 @@
 
 namespace Pipeline\HTTP\Common;
 
-abstract class Request
+use Pipeline\HTTP\Message;
+
+abstract class Request extends Message
 {
     protected string $protocol;
     protected string $host;
-    protected $user;
-    protected $password;
     protected string $path;
     protected string $method;
     protected array $parameters;
+    
+    protected $user;
+    protected $password;
 
     public function getProtocol(): string
     {

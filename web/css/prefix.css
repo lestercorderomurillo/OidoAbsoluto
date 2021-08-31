@@ -171,7 +171,7 @@ body {
   -ms-user-select: none;
   user-select: none;
   min-width: 600px;
-  background-color: #463460 !important;
+  background-color: #585275 !important;
   font-size: 12px;
   font-family: 'Noto Sans JP', sans-serif;
   opacity: 0%;
@@ -183,10 +183,10 @@ body {
 a {
   color: #3f28bd;
   font-weight: bold;
-  text-decoration: underline;
+  text-decoration: none !important;
   font-size: 12px;
 }
 a:hover {
-  color: #484370;
+  color: #4e487a;
   text-decoration: underline;
 }

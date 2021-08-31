@@ -10,6 +10,7 @@ class WebServer
 
     public function __construct()
     {
+        Session::__initialize();
         $this->router = new URIRouter();
         $this->session = new Session();
         $this->request = new IncomingRequest();

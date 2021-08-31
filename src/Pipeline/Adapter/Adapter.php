@@ -2,7 +2,7 @@
 
 namespace Pipeline\Adapter;
 
-use Pipeline\Core\InternalResult;
+use Pipeline\Database\SQL\QueryResult;
 use Pipeline\Database\Common\ConnectionString;
 
 abstract class Adapter
@@ -17,5 +17,5 @@ abstract class Adapter
 
     public abstract function openConnection(): void;
     public abstract function closeConnection(): void;
-    public abstract function executePDO(string $prepared_query, array $values): InternalResult;
+    public abstract function executePDO(string $prepared_query, array $values): QueryResult;
 }

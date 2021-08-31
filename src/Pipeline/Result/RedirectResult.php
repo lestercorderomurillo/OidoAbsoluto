@@ -2,10 +2,8 @@
 
 namespace Pipeline\Result;
 
-use Pipeline\Logger\Logger;
 use Pipeline\Core\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
-use function Pipeline\Accessors\Dependency;
 
 class RedirectResult implements ResultInterface
 {
@@ -16,11 +14,10 @@ class RedirectResult implements ResultInterface
         $this->new_path = $new_path;
     }
 
-    public function handle(): void
+    public function toResponse(): ServerResponse
     {
-        Dependency(Logger::class)->debug("{0} route redirection to '{1}'", [static::class, $this->new_path]);
         $response = new ServerResponse();
         $response->addHeader("Location",  __URL__ . $this->new_path);
-        $response->send();
+        return $response;
     }
 }

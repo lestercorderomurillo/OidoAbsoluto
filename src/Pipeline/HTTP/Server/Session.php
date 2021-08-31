@@ -2,14 +2,14 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Core\StaticLoaderInterface;
+use Pipeline\Core\StaticObjectInterface;
 use Pipeline\Traits\DefaultAccessorTrait;
 
-class Session implements StaticLoaderInterface
+class Session implements StaticObjectInterface
 {
     use DefaultAccessorTrait;
 
-    public static function __static(): void
+    public static function __initialize(): void
     {
         session_start();
         session_regenerate_id();

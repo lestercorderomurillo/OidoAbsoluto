@@ -2,28 +2,44 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\App\App;
 use Pipeline\Logger\Logger;
-use Pipeline\Core\ResultInterface;
-use Pipeline\Factory\ResponseFactory;
-use Pipeline\Result\ContentResult;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\BasePath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\Hotswap\ChangeDispatcher;
 use Pipeline\HTTP\Common\Request;
 use Pipeline\HTTP\Common\Route;
+use Pipeline\HTTP\InvalidMessage;
+use Pipeline\HTTP\NullMessage;
+use Pipeline\Middleware\ForceSSL;
 
 use function Pipeline\Accessors\App;
+use function Pipeline\Accessors\Configuration;
 use function Pipeline\Accessors\Dependency;
 
 class URIRouter
 {
     private static array $routes;
+    private static array $middlewares;
 
     public function __construct()
     {
         FileSystem::requireFromFile(new FilePath(BasePath::DIR_APP, "routes", "php"));
+    }
+
+    public static function setMiddlewares($array_or_one): void
+    {
+        if (is_array($array_or_one)) {
+            foreach ($array_or_one as $middleware) {
+                foreach (self::$routes as $route) {
+                    $route->setMiddlewares($middleware);
+                }
+            }
+        } else {
+            foreach (self::$routes as $route) {
+                $route->setMiddlewares($array_or_one);
+            }
+        }
     }
 
     public function handle(Request $request)
@@ -32,29 +48,41 @@ class URIRouter
 
             if ($request->getPath() == "/__HOTSWAP" && strtolower($request->getMethod()) == "get") {
                 if (isset($request->getParameters()["page"]) && isset($request->getParameters()["timestamp"])) {
-                    ChangeDispatcher::requested($request->getParameters()["page"], $request->getParameters()["timestamp"])->handle();
+                    $result = ChangeDispatcher::requested($request->getParameters()["page"], $request->getParameters()["timestamp"]);
+                    $result->toResponse()->sendAndExit();
                 }
             }
+        }
+
+        // Global default middlewares
+        if (Configuration("application.https")) {
+            self::setMiddlewares(ForceSSL::class);
         }
 
         foreach (self::$routes as $route) {
 
             if ($route->matchPath($request)) {
 
+                $message = $request;
                 foreach ($route->getMiddlewares() as $middleware) {
-                    $request = $middleware->handle($request);
+                    $message = $middleware->handle($message);
+
+                    if ($message instanceof ServerResponse) {
+                        $message->sendAndExit();
+                    }
                 }
 
-                $class_name = $route->getControllerName() . "Controller";
+                $controller_class_name = $route->getControllerName() . "Controller";
                 $controller_name = $route->getControllerName();
 
-                $resolve_path = (new FilePath(BasePath::DIR_CONTROLLERS, $class_name, "php"))->toString();
+                $controller_path = FilePath::create(BasePath::DIR_CONTROLLERS, $controller_class_name, "php")->toString();
 
-                if (file_exists($resolve_path)) {
+                if (file_exists($controller_path)) {
 
-                    require_once($resolve_path);
+                    require_once($controller_path);
+
                     $action_name = $route->getActionName();
-                    $fully_qualified_class_name = "App\\Controllers\\" . $class_name;
+                    $fully_qualified_class_name = "App\\Controllers\\" . $controller_class_name;
                     $controller = new $fully_qualified_class_name($controller_name);
 
                     Dependency(Logger::class)->debug(
@@ -75,33 +103,36 @@ class URIRouter
                                 }
                             }
 
-                            $result = call_user_func_array([$controller, $action_name], $union);
+                            $anything_from_controller = call_user_func_array([$controller, $action_name], $union);
+                            $response = $controller->handle($anything_from_controller);
 
-                            if (!isset($result)) {
-                                ResponseFactory::createServerResponse(500, "At " . $controller_name . "Controller: 
-                                the function \"$action_name()\" must return a value.")->sendAndDiscard();
-                            } else if (is_string($result) || is_int($result)) {
-                                $result = new ContentResult("$result");
-                            } else if ($result instanceof ResultInterface) {
-                                $result->handle();
-                            } else {
-                                ResponseFactory::createServerResponse(500, "At " . $controller_name . "Controller: 
-                                the function \"$action_name()\" must return a valid ResultInterface instance.")->sendAndDiscard();
+                            if ($response instanceof InvalidMessage) {
+                                ServerResponse::create(500, "At " . $controller_name . "Controller: 
+                                the function \"$action_name()\" must return a valid ResultInterface instance.")->sendAndExit();
+                            }else if ($response instanceof NullMessage) {
+                                ServerResponse::create(500, "At " . $controller_name . "Controller: 
+                                the function \"$action_name()\" must return a value.")->sendAndExit();
                             }
+
+                            $response->send();
+
                         } else {
-                            ResponseFactory::createServerResponse(500, "Parameter number mismatch (in Routes)")->sendAndDiscard();
+
+                            ServerResponse::create(500, "Parameter number mismatch (in Routes)")->sendAndExit();
                         }
+
                     } else {
 
-                        ResponseFactory::createServerResponse(500, "View Not Found (in Routes)")->sendAndDiscard();
+                        ServerResponse::create(500, "View Not Found (in Routes)")->sendAndExit();
                     }
+
                 } else {
-                    ResponseFactory::createServerResponse(500, "Controller Not Found (in Routes)")->sendAndDiscard();
+                    ServerResponse::create(500, "Controller Not Found (in Routes)")->sendAndExit();
                 }
             }
         }
 
-        return (ResponseFactory::createServerResponse(404))->send();
+        return (ServerResponse::create(404))->send();
     }
 
     public static function get(string $match, string $controller_name, string $action_name, $parameters = [])

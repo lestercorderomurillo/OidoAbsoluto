@@ -17,7 +17,7 @@ return
             "include" => [
                 "href" => "[@url][route]",
             ],
-            "concat" => [
+            "concatElement" => [
                 "prototype" => "button",
                 "class" => "small text-uppercase btn v-button rounded-0 m-1 text-accent-[accent] bg-accent-[accent]",
                 "type" => "button"

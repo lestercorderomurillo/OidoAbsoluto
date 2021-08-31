@@ -2,14 +2,19 @@
 
 namespace Pipeline\Core\Types;
 
-use Pipeline\Traits\SerializableTrait;
+use Pipeline\Traits\StringableTrait;
 
 class JSON 
 {
-    use SerializableTrait;
+    use StringableTrait;
     
     private int $hints;
     private $value;
+
+    public static function create($value, int $hints = 0){
+        $instance = new JSON($value, $hints);
+        return $instance;
+    }
 
     public function __construct($value, int $hints = 0)
     {

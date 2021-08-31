@@ -1,0 +1,343 @@
+{
+    "question": "Recursive test survey file",
+    "type": "text",
+    "questions": [
+        {
+            "question": "¿Cuál fue el primer idioma que aprendió a hablar?",
+            "type": "text"
+        },
+        {
+            "question": "¿Habla varios idiomas?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ]
+        },
+        {
+            "question": "Mencione los otros idiomas que habla y a qué edad empezó a aprenderlos",
+            "type": "text"
+        },
+        {
+            "question": "¿Vivió en otros países cuando era niño?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "question": "Indique paises y edad de cuando sucedio",
+                "answer-type": "text"
+            }
+        },
+        {
+            "question": "¿Ha recibido usted educación musical formal?",
+            "answer-type": "choice-single",
+            "choices": [
+                "Sí",
+                "No pase a 17"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "questions": [
+                    {
+                        "question": "¿Por qué motivo? (decisión de los padres, decisión propia, etc)",
+                        "answer-type": "text"
+                    },
+                    {
+                        "question": "¿A qué edad inició su entrenamiento musical formal? (Clase de música)",
+                        "answer-type": "number"
+                    },
+                    {
+                        "question": "¿Cuántos años de entrenamiento ha tenido?",
+                        "answer-type": "number"
+                    },
+                    {
+                        "question": "¿Cuál es su intensidad de entrenamiento en promedio de horas por semana? Si ha cambiado en el tiempo describirlo.",
+                        "answer-type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "question": "¿Ha realizado entrenamiento de oído musical?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ]
+        },
+        {
+            "question": "¿A qué edad realizó el entrenamiento de oído musical?",
+            "type": "text"
+        },
+        {
+            "question": "Ha estudiado con el método Suzuki?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "questions": [
+                    {
+                        "question": "¿A qué edad estudió con el método Suzuki?",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "question": "¿Cuál fue el primer instrumento que empezó a tocar?",
+            "type": "text"
+        },
+        {
+            "question": "¿Cuáles instrumentos toca hoy en día?",
+            "type": "text"
+        },
+        {
+            "question": "¿Cómo designa preferiblemente las notas?",
+            "type": "choice-single",
+            "choices": [
+                "Do, Re, Mi, Fa, Sol, La, Si",
+                "C, D, E, F, G, A, B"
+            ]
+        },
+        {
+            "question": "¿Ha intentado entrenar para desarrollar oído absoluto?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No",
+                "Otros"
+            ],
+            "optional": {
+                "rule-not-equal": "No",
+                "questions": [
+                    {
+                        "question": "Describa que otros método/justifique",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "question": "¿Es usted un profesional de la música?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "questions": [
+                    {
+                        "question": "Indique su profesión",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "question": "¿Participa usted en algún grupo u organización musical?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "questions": [
+                    {
+                        "question": "Explique/justifique",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "question": "¿Tiene usted oído absoluto?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No sé",
+                "No"
+            ],
+            "optional": {
+                "rule-not-equal": "No",
+                "questions": [
+                    {
+                        "question": "¿Está su habilidad de identificación de notas influenciada o limitada por el instrumento que toca?",
+                        "type": "choice-single",
+                        "choices": [
+                            "Sí",
+                            "No"
+                        ],
+                        "optional": {
+                            "rule-equal": "Sí",
+                            "question": "Explique (Ejemplo: Oído absoluto sólo para piano)",
+                            "type": "text"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "question": "¿Cómo clasificaría su habilidad de identificar notas?",
+            "type": "choice-single",
+            "choices": [
+                "Correctamente menos de la mitad del tiempo",
+                "Correctamente la mitad del tiempo",
+                "Mayoría correctas, con algunos errores",
+                "No fallo casi nunca"
+            ]
+        },
+        {
+            "question": "¿Aproximadamente qué tan rápido puede identificar una nota?",
+            "type": "choice-single",
+            "choices": [
+                "Instantáneamente",
+                "En 3 segundos",
+                "En 15 segundos",
+                "En un minuto",
+                "Otros"
+            ],
+            "optional": {
+                "rule-equal": "Otros",
+                "question": "Explique/justifique",
+                "type": "text"
+            }
+        },
+        {
+            "question": "¿A qué edad se dio cuenta de que tenía oído absoluto?",
+            "type": "number"
+        },
+        {
+            "question": "¿Cómo se dio cuenta?",
+            "type": "text"
+        },
+        {
+            "question": "¿En qué instrumentos puede identificar las notas?",
+            "type": "choice-multiple",
+            "choices": [
+                "Piano",
+                "Violín",
+                "Voz",
+                "Cualquier instrumento",
+                "Otros"
+            ],
+            "optional": {
+                "rule-equal": "Otros",
+                "question": "Explique/justifique",
+                "type": "text"
+            }
+        },
+        {
+            "question": "¿Puede identificar tonos no musicales? (como el pito de un carro, por ejemplo)",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ]
+        },
+        {
+            "question": "¿Puede producir con su voz una nota sin referencia? (ej. si le dicen \"cante un re sostenido\")",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ]
+        },
+        {
+            "question": "¿Ha notado alguna disminución en su capacidad de identificar notas con la edad?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "question": "¿A qué edad empezaron los cambios?",
+                "type": "text"
+            }
+        },
+        {
+            "question": " ¿Ha notado alguna alteración en su capacidad de identificar notas con algún medicamento?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "question": "Explique/justifique",
+                "type": "text"
+            }
+        },
+        {
+            "rule-gender": "female",
+            "question": "¿Ha notado alguna alteración en su capacidad de identificar notas con las fases del ciclo menstrual",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ]
+        },
+        {
+            "question": "¿Cuántos hermanos y hermanas tiene usted?",
+            "type": "number"
+        },
+        {
+            "question": "¿Tiene algún familiar oído absoluto?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No"
+            ],
+            "optional": {
+                "rule-equal": "Sí",
+                "question": "Explique con detalle quiénes son",
+                "type": "text"
+            }
+        },
+        {
+            "question": "¿Tiene usted sinestesia? (mezcla de los sentidos, ejemplo: sentir un sabor al ver un color)",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No",
+                "No sé"
+            ]
+        },
+        {
+            "question": "¿Con qué mano escribe?",
+            "type": "choice-single",
+            "choices": [
+                "Derecha",
+                "Izquierda",
+                "Soy ambidiestro"
+            ]
+        },
+        {
+            "question": "¿Cómo clasificaría su habilidad para aprender idiomas?",
+            "type": "choice-single",
+            "choices": [
+                "Alta",
+                "Promedio",
+                "Baja",
+                "Desconocida"
+            ]
+        },
+        {
+            "question": "¿Ha sido diagnosticado usted o algún familiar con algún desorden del espectro de autismo, como autismo o síndrome de Asperger?",
+            "type": "choice-single",
+            "choices": [
+                "Sí",
+                "No",
+                "Prefiero no responder"
+            ]
+        }
+    ]
+}

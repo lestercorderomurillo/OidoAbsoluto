@@ -2,11 +2,10 @@
 
 namespace Pipeline\Result;
 
-use Pipeline\View\View;
+use Pipeline\Pype\View;
+use Pipeline\Pype\ViewRenderer;
 use Pipeline\Core\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
-use Pipeline\Logger\Logger;
-use Pipeline\Renderer\ViewRenderer;
 use function Pipeline\Accessors\Dependency;
 
 class ViewResult implements ResultInterface
@@ -18,17 +17,13 @@ class ViewResult implements ResultInterface
         $this->view = $view;
     }
 
-    public function handle(): void
+    public function toResponse(): ServerResponse
     {
         $view_renderer = Dependency(ViewRenderer::class);
         $view_renderer->setView($this->view);
-        $html = $view_renderer->renderView();
-
         $response = new ServerResponse();
         $response->addHeader("Content-Type", "text/html");
-        $response->setBody($html);
-        $response->send();
-
-        Dependency(Logger::class)->debug("{0} responded with '{1}' : '{2}'", [static::class, $response->getStatusCode(), self::class]);
+        $response->setBody($view_renderer->renderView());
+        return $response;
     }
 }

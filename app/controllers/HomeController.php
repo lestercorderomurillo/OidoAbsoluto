@@ -11,6 +11,8 @@ use Pipeline\Security\Cryptography;
 use Pipeline\Factory\ResponseFactory;
 use Pipeline\FileSystem\Path\BasePath;
 use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\HTTP\Server\ServerResponse;
+
 use function Pipeline\Accessors\Dependency;
 use function Pipeline\Accessors\Session;
 
@@ -21,36 +23,29 @@ class HomeController extends Controller
     function __construct(){
         $this->db = Dependency("Db");
     }
-
-    function test()
-    {
-
-        $models = $this->db->findAll(UserInfo::class, ["gender" => "M"]);
-
-        var_dump($models);
-
-        $result = $this->db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
-
-        var_dump($result->getAllData());
-
-        return "fuckit";
-    }
-
+    
     function login()
     {
         return $this->view("login");
     }
 
-    function signup()
+    function loginSubmit(string $email, string $password)
     {
-        $countries = FileSystem::requireFromFile(new FilePath(BasePath::DIR_COMMON, "countries", "php"));
-        return $this->view("signup", ["countries" => $countries]);
+        return $this->view("login");
     }
 
     function resetPassword(string $token)
     {
         if ($token == "") {
-            return ResponseFactory::createServerResponse(500, "Invalid password reset token.");
+            return ServerResponse::create(500, "Invalid password reset token.");
+        }
+        return $this->view("reset-password");
+    }
+
+    function resetPasswordSubmit(string $token)
+    {
+        if ($token == "") {
+            return ServerResponse::create(500, "Invalid password reset token.");
         }
         return $this->view("reset-password");
     }
@@ -60,9 +55,15 @@ class HomeController extends Controller
         return $this->view("reset-request");
     }
 
-    function loginSubmit(string $email, string $password)
+    function resetRequestSubmit()
     {
-        return $this->view("login");
+        return $this->view("reset-request");
+    }
+
+    function signup()
+    {
+        $countries = FileSystem::requireFromFile(new FilePath(BasePath::DIR_COMMON, "countries", "php"));
+        return $this->view("signup", ["countries" => $countries]);
     }
 
     function signupSubmit(
@@ -118,12 +119,7 @@ class HomeController extends Controller
     function userExists(string $email)
     {
         $result = $this->db->find(User::class, ["email" => "$email"]);
-        $result->getAllData();
-        return ($result != NULL);
-    }
-
-    function profile()
-    {
-        return $this->view("profile");
+        $result->expose();
+        return ($result != []);
     }
 }

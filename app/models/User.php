@@ -13,4 +13,5 @@ class User extends Model
     public string $password;
     public string $token;
     public string $activated;
+    public string $role;
 }

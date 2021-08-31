@@ -2,11 +2,9 @@
 
 namespace Pipeline\App;
 
-use Pipeline\Component\Template;
+use Pipeline\Logger\Logger;
 use Pipeline\Core\Environment;
 use Pipeline\DependencyInjection\DependencyManager;
-use Pipeline\HTTP\Server\Session;
-use Pipeline\Logger\Logger;
 
 require_once(dirname(__DIR__) . "/Core/Accessors.php");
 
@@ -30,10 +28,9 @@ abstract class App
         $this->getDependencyManager()->add(Logger::class, new Logger());
     }
 
-    public function createHost()
+    public function createHostEnvironment()
     {
         $this->environment = new Environment();
-
         define("__URL__", $this->environment->getConfiguration("application.url"));
         define("__WEB_NAME__", $this->environment->getConfiguration("application.webroot"));
     }
@@ -50,7 +47,7 @@ abstract class App
 
     public static function deploy($app): void
     {
-        $app->createHost();
+        $app->createHostEnvironment();
         $app->internalConfigure();
         $app->configure();
         $app->initializeApplication();

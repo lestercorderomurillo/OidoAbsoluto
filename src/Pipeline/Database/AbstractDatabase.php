@@ -2,11 +2,13 @@
 
 namespace Pipeline\Database;
 
-use Pipeline\Core\InternalResult;
 use Pipeline\Model\Model;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\Query;
 use Pipeline\Database\Common\ConnectionString;
+use Pipeline\Database\SQL\QueryResult;
+use Pipeline\Exceptions\SQLFailureException;
+use Pipeline\HTTP\Server\ServerResponse;
 
 abstract class AbstractDatabase
 {
@@ -22,20 +24,21 @@ abstract class AbstractDatabase
 
     public function addQuery(string $query, array $query_data = []): void
     {
-        $this->queries[] = new Query($query, $query_data);
+        $this->queries[] = new Query(trim($query), $query_data);
     }
 
-    public function execute(): InternalResult
+    public function execute(): QueryResult
     {
         $results = [];
         $this->adapter->openConnection();
 
-        foreach ($this->queries as $query) {
-            $temp = $this->adapter->executePDO($query->getQuery(), $query->getData());
-            if ($temp->getStatus() == InternalResult::FAILURE) {
-                return new InternalResult([], InternalResult::FAILURE);
+        try {
+            foreach ($this->queries as $query) {
+                $temp = $this->adapter->executePDO($query->getQuery(), $query->getData());
+                $results[] = $temp;
             }
-            $results[] = $temp;
+        } catch (SQLFailureException $e) {
+            ServerResponse::create(500, "SQL Failure: " . $e->getMessage())->sendAndExit();
         }
 
         $this->adapter->closeConnection();
@@ -45,21 +48,21 @@ abstract class AbstractDatabase
             $results = $results[0];
         }
 
-        return new InternalResult($results, InternalResult::SUCCESS);
+        return new QueryResult($results);
     }
 
-    public function commit(): InternalResult
+    public function commit(): QueryResult
     {
         return $this->execute();
     }
 
-    public abstract function find(string $class_name, array $where): InternalResult;
+    public abstract function find(string $class_name, array $where): QueryResult;
 
     public abstract function save(Model $model): void;
 
     public abstract function delete(Model $model): void;
 
-    public abstract function findAll(string $class_name, array $where, string $append = ""): InternalResult;
+    public abstract function findAll(string $class_name, array $where, string $append = ""): QueryResult;
 
     public abstract function saveAll(array $models): void;
 

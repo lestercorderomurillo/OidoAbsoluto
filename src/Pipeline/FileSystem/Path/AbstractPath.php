@@ -3,12 +3,12 @@
 namespace Pipeline\FileSystem\Path;
 
 use Pipeline\Logger\Logger;
-use Pipeline\Traits\SerializableTrait;
+use Pipeline\Traits\StringableTrait;
 use function Pipeline\Accessors\Dependency;
 
 abstract class AbstractPath
 {
-    use SerializableTrait;
+    use StringableTrait;
     
     protected string $base;
     protected string $path;

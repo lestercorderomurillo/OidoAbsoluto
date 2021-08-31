@@ -13,8 +13,13 @@ class Route
     private array $parameters;
     private array $middlewares;
 
-    public function __construct(string $method, string $path, string $controller_name, string $action_name, array $parameters = [])
-    {
+    public function __construct(
+        string $method,
+        string $path,
+        string $controller_name,
+        string $action_name,
+        array $parameters = []
+    ) {
         $this->method = $method;
         $this->path = $path;
         $this->controller_name = $controller_name;
@@ -41,7 +46,8 @@ class Route
 
     public function matchPath(Request $request): bool
     {
-        return (strtolower($this->method) == strtolower($request->getMethod()) && strtolower($this->path) == strtolower($request->getPath()));
+        return (strtolower($this->method) == strtolower($request->getMethod())
+             && strtolower($this->path)   == strtolower($request->getPath()));
     }
 
     public function getPath(): string

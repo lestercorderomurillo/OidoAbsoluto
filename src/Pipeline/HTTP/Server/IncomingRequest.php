@@ -9,7 +9,12 @@ class IncomingRequest extends Request
 {
     public function __construct()
     {
-        $url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $protocol = "http";
+        if (isset($_SERVER['HTTPS'])) {
+            $protocol = "https";
+        }
+
+        $url = "$protocol://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $this->protocol = parse_url($url, PHP_URL_SCHEME);
         $this->host = $_SERVER["HTTP_HOST"];
         $this->user = parse_url($url, PHP_URL_USER);

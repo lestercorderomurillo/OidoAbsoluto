@@ -2,11 +2,9 @@
 
 namespace Pipeline\Result;
 
-use Pipeline\Logger\Logger;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Core\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
-use function Pipeline\Accessors\Dependency;
 
 class JSONResult implements ResultInterface
 {
@@ -17,15 +15,11 @@ class JSONResult implements ResultInterface
         $this->json = $json;
     }
 
-    public function handle(): void
+    public function toResponse(): ServerResponse
     {
-        $json = ($this->json);
-
         $response = new ServerResponse();
         $response->addHeader("Content-Type", "application/json");
-        $response->setBody($json);
-        $response->send();
-
-        Dependency(Logger::class)->debug(static::class);
+        $response->setBody($this->json);
+        return $response;
     }
 }

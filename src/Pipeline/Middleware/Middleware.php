@@ -2,17 +2,11 @@
 
 namespace Pipeline\Middleware;
 
-use Pipeline\Logger\Logger;
-use Pipeline\HTTP\Common\Request;
+use Pipeline\HTTP\Message;
+use Pipeline\HTTP\Common\BaseActions;
+use Pipeline\HTTP\Common\RequestHandlerInterface;
 
-use function Pipeline\DependencyInjection\Dependency;
-
-abstract class Middleware
+abstract class Middleware extends BaseActions implements RequestHandlerInterface
 {
-    public function stopRequestForwarding()
-    {
-        Dependency(Logger::class)->debug("{0} catch the request. Will not forward to the next handler.", [static::class]);
-    }
-
-    public abstract function handle(Request $request): Request;
+    public abstract function handle($request): Message;
 }

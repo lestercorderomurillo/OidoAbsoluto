@@ -7,7 +7,7 @@ return
             "id" => "[id]",
             "class" => "v-icon d-inline",
             "include" => ["src" => "[@content]img/[img]"],
-            "concat" => [
+            "concatElement" => [
                 "prototype" => "h3",
                 "class" => "d-inline pl-2",
                 "content" => "[text]",

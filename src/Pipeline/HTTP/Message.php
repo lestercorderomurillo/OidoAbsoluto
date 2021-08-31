@@ -7,14 +7,14 @@ use Pipeline\HTTP\Exceptions\InvalidBodyException;
 
 abstract class Message
 {
-    protected string $protocol;
+    protected string $protocol_version;
     protected string $status_code;
     protected string $body;
     protected array $headers;
 
-    public function __construct(int $status_code = 200, string $protocol = "1.1")
+    public function __construct(int $status_code = 200, string $protocol_version = "1.1")
     {
-        $this->protocol = $protocol;
+        $this->protocol_version = $protocol_version;
         $this->status_code = $status_code;
         $this->headers = [];
         $this->body = "";
@@ -30,14 +30,14 @@ abstract class Message
         return $this->status_code;
     }
 
-    public function setProtocolVersion(int $protocol): void
+    public function setProtocolVersion(int $version): void
     {
-        $this->protocol = $protocol;
+        $this->protocol_version = $version;
     }
 
     public function getProtocolVersion(): string
     {
-        return $this->protocol;
+        return $this->protocol_version;
     }
 
     public function hasHeader(string $header): bool

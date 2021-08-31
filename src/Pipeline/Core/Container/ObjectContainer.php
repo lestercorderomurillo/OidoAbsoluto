@@ -2,7 +2,7 @@
 
 namespace Pipeline\Core\Container;
 
-use Pipeline\Core\IdentificableObject;
+use Pipeline\Core\IdentifiableObject;
 use Pipeline\Traits\DefaultAccessorTrait;
 
 class ObjectContainer implements ContainerInterface
@@ -44,7 +44,7 @@ class ObjectContainer implements ContainerInterface
     public function add($object, string $forced_id = ""): void
     {
         if ($forced_id == "") {
-            if ($object instanceof IdentificableObject) {
+            if ($object instanceof IdentifiableObject) {
                 $this->set($object->getId(), $object);
             } else {
                 $this->set(get_class($object), $object);

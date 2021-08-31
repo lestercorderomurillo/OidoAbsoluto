@@ -8,6 +8,11 @@ class WebPath extends AbstractPath
 {
     private string $extension;
 
+    public static function create(string $string_input): WebPath
+    {
+        return new WebPath(str_replace(__ROOT__, "", $string_input));
+    }
+
     public function __construct(string $path, string $extension = "")
     {
         parent::__construct(__URL__);

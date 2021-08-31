@@ -2,7 +2,9 @@
 
 namespace Pipeline\Core;
 
+use Pipeline\HTTP\Server\ServerResponse;
+
 interface ResultInterface
 {
-    public function handle(): void;
+    public function toResponse(): ServerResponse;
 }

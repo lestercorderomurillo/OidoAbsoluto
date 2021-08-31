@@ -2,13 +2,15 @@
 
 namespace Pipeline\Model;
 
-use Pipeline\Core\IdentificableObject;
+use Pipeline\Core\IdentifiableObject;
 use Pipeline\HTTP\Exceptions\InvalidModelException;
 use Pipeline\Traits\ClassAwareTrait;
+use Pipeline\Traits\ValuesSetterTrait;
 
-abstract class Model extends IdentificableObject
+abstract class Model extends IdentifiableObject
 {
     use ClassAwareTrait;
+    use ValuesSetterTrait;
 
     public function __construct()
     {
@@ -37,7 +39,7 @@ abstract class Model extends IdentificableObject
     {
         $const = $this->getConstant("table");
         if ($const === false) {
-            throw new InvalidModelException("All models should have the table name const.");
+            throw new InvalidModelException("All models should have the table name constant.");
         }
         return $const;
     }

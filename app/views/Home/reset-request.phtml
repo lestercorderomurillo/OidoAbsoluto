@@ -1,7 +1,7 @@
 <v-view title="Recuperación de Contraseña">
     <v-card size="12" maxWidth="600px">
         <v-title-icon img="profile.png" text="Recuperación de Contraseña">
-        <v-form route="reset_request_submit">
+        <v-form route="forgot/submit">
             <h6>¿Problemas para acceder a su cuenta?</h6>
             <v-spacing size="2">
             <v-label for="email">Correo Electrónico</v-label>  
@@ -17,7 +17,7 @@
 </v-view>
 <script> 
     $(document).ready(function() {
-        $("#reset_request_submit").validate({
+        $("#form").validate({
             rules: {
                 email: {
                     required: true,

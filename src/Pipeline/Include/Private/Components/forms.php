@@ -6,22 +6,22 @@ return
     [
         "form" => [
             "required" => ["route"],
-            "defaults" => ["method" => "post"],
+            "defaults" => ["id" => "form", "method" => "post"],
             "prototype" => "form",
-            "id" => "[route]",
+            "id" => "[id]",
             "include" => ["action" => "[@url][route]", "method" => "[method]", "autocomplete" => "[@random]"]
         ],
         "alert" => [
             "prototype" => "div",
             "defaults" => ["type" => "warning"],
             "class" => "alert alert-[type] alert-dismissible fade show",
-            "concat" => [
+            "concatElement" => [
                 "before" => "<strong>Oops!</strong> [message]",
                 "prototype" => "button",
                 "class" => "close",
                 "type" => "button",
                 "include" => ["data-dismiss" => "alert", "aria-label" => "Close"],
-                "concat" => [
+                "concatElement" => [
                     "prototype" => "span",
                     "content" => "<small>&times;<small>",
                     "closure"
@@ -33,7 +33,7 @@ return
         ],
         "span" => [
             "prototype" => "label",
-            "class" => "v-label w-100 text-color pb-2",
+            "class" => "v-label w-100 text-color pb-2 text-[textPosition] [classList]",
             "style" => "font-size:[fontSize];",
             "defaults" => ["fontSize" => "12px"]
         ],
@@ -76,7 +76,7 @@ return
             "id" => "[bind]",
             "name" => "[bind]",
             "class" => "form-control v-textbox",
-            "concat" => [
+            "concatElement" => [
                 "function-parameters" => [
                     "array_name" => "[arrayName]"
                 ],
@@ -104,14 +104,14 @@ return
             "id" => "[bind]",
             "name" => "[bind]",
             "type" => "hidden",
-            "concat" => [
+            "concatElement" => [
                 "prototype" => "input",
                 "id" => "[bind]_dd",
                 "name" => "[bind]_dd",
                 "class" => "[_template_class]",
                 "style" => "max-width: 50px;",
                 "include" => ["maxlength" => "2", "placeholder" => "DD"],
-                "concat" => [
+                "concatElement" => [
                     "before" => "[_template_separator]",
                     "prototype" => "input",
                     "id" => "[bind]_mm",
@@ -119,7 +119,7 @@ return
                     "class" => "[_template_class]",
                     "style" => "max-width: 50px;",
                     "include" => ["maxlength" => "2", "placeholder" => "MM"],
-                    "concat" => [
+                    "concatElement" => [
                         "before" => "[_template_separator]",
                         "prototype" => "input",
                         "id" => "[bind]_yy",
@@ -140,7 +140,7 @@ return
             "type" => "radio",
             "class" => "v-radio p-1 ml-1",
             "include" => ["value" => "[value]"],
-            "concat" => [
+            "concatElement" => [
                 "prototype" => "label",
                 "class" => "pl-2",
                 "include" => ["for" => "[bind]-[@counter]"],
