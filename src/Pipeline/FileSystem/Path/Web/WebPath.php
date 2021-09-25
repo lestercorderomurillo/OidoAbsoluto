@@ -3,6 +3,7 @@
 namespace Pipeline\FileSystem\Path\Web;
 
 use Pipeline\FileSystem\Path\AbstractPath;
+use Pipeline\Utilities\StringHelper;
 
 class WebPath extends AbstractPath
 {
@@ -26,10 +27,15 @@ class WebPath extends AbstractPath
 
     public function toString(): string
     {
+        $base = $this->base;
+        if(StringHelper::startsWith($this->path, "https")){
+            $base = "";
+        }
+
         if ($this->extension == "") {
-            return $this->base . $this->path;
+            return $base . $this->path;
         } else {
-            return $this->base . $this->path . ".$this->extension";
+            return $base . $this->path . ".$this->extension";
         }
     }
 }

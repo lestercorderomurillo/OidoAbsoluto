@@ -6,7 +6,7 @@ use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\AbstractDatabase;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\BasePath;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use function Pipeline\Accessors\Dependency;
 use function Pipeline\Accessors\Session;
@@ -29,7 +29,7 @@ class UserController extends Controller
             return $this->redirect("login");
         }
 
-        $audios_sources = FileSystem::findRoutesFromInternal(new DirectoryPath(BasePath::DIR_WEB, "audio/"), "mp3");
+        $audios_sources = FileSystem::findWebPaths(new DirectoryPath(SystemPath::WEB, "audio/"), "mp3");
         $audios_sources_json = JSON::create($audios_sources)->toJavascriptString();
 
         $test_type = "Piano Interactivo";

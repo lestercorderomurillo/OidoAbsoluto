@@ -65,13 +65,13 @@ class Crunched extends Formatter
     }
 
     /**
-     * Output block selectors
+     * Output block Selections
      *
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
      */
-    protected function blockSelectors(OutputBlock $block)
+    protected function blockSelections(OutputBlock $block)
     {
-        assert(! empty($block->selectors));
+        assert(! empty($block->Selections));
 
         $inner = $this->indentStr();
 
@@ -79,7 +79,7 @@ class Crunched extends Formatter
             $inner
             . implode(
                 $this->tagSeparator,
-                str_replace([' > ', ' + ', ' ~ '], ['>', '+', '~'], $block->selectors)
+                str_replace([' > ', ' + ', ' ~ '], ['>', '+', '~'], $block->Selections)
             )
             . $this->open . $this->break
         );

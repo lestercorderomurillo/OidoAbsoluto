@@ -4,7 +4,6 @@ namespace Pipeline\Database;
 
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\ConnectionString;
-use Pipeline\Database\SQL\QueryResult;
 use Pipeline\Model\Model;
 use Pipeline\Utilities\ArrayHelper;
 
@@ -15,17 +14,19 @@ class SQLDatabase extends AbstractDatabase
         parent::__construct($adapter, $connection_string, $service_id);
     }
 
-    public function find(string $class_name, array $where = []): QueryResult
+    public function find(string $model_class_name, array $where = [])
     {
-        $result = $this->findAll($class_name, $where, "LIMIT 1");
-        $models = $result->get("models");
-        return new QueryResult($models);
+        $models = $this->findAll($model_class_name, $where, "LIMIT 1");
+        if ($models == []) {
+            return null;
+        }
+        return $models[0];
     }
 
-    public function findAll(string $class_name, array $where = [], string $append = ""): QueryResult
+    public function findAll(string $model_class_name, array $where = [], string $append = "")
     {
-        $models = array();
-        $table_name = (new $class_name())->getTableName();
+        $models = [];
+        $table_name = (new $model_class_name())->getTableName();
 
         if ($where == []) {
             $this->addQuery("SELECT * FROM `$table_name` $append");
@@ -38,13 +39,13 @@ class SQLDatabase extends AbstractDatabase
         $internal_result = $this->execute();
 
         foreach ($internal_result->expose() as $row) {
-            $model = new $class_name();
+            $model = new $model_class_name();
             $model->setValues($row);
             $model->setId($row["id"]);
             $models[] = $model;
         }
 
-        return new QueryResult(["models" => $models]);
+        return $models;
     }
 
     public function save(Model $model): void

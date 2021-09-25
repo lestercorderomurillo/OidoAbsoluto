@@ -213,7 +213,7 @@ if ($sourceMap) {
         $sourceMapFile = $outputFile . '.map';
         $sourceMapOptions['sourceMapWriteTo'] = $sourceMapFile;
         $sourceMapOptions['sourceMapURL'] = basename($sourceMapFile);
-        $sourceMapOptions['sourceMapBasepath'] = getcwd();
+        $sourceMapOptions['sourceMapSystemPath'] = getcwd();
         $sourceMapOptions['sourceMapFilename'] = basename($outputFile);
 
         $scss->setSourceMap(Compiler::SOURCE_MAP_FILE);

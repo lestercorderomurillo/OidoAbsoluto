@@ -54,7 +54,7 @@ class Block
     /**
      * @var array|null
      */
-    public $selectors;
+    public $Selections;
 
     /**
      * @var array

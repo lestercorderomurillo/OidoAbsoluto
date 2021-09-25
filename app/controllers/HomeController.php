@@ -9,7 +9,7 @@ use Pipeline\Database\AbstractDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\Security\Cryptography;
 use Pipeline\Factory\ResponseFactory;
-use Pipeline\FileSystem\Path\BasePath;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\HTTP\Server\ServerResponse;
 
@@ -62,7 +62,7 @@ class HomeController extends Controller
 
     function signup()
     {
-        $countries = FileSystem::requireFromFile(new FilePath(BasePath::DIR_COMMON, "countries", "php"));
+        $countries = FileSystem::requireFromFile(new FilePath(SystemPath::COMMON, "countries", "php"));
         return $this->view("signup", ["countries" => $countries]);
     }
 

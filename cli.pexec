@@ -82,7 +82,7 @@ class CLI
         $controller_name = ucwords($controller_name . "Controller");
 
         $this->createTemplateFile(
-            __DIR__ . "/app/controllers/$controller_name",
+            __DIR__ . "/app/Controllers/$controller_name",
             $vendor,
             "Controllers",
             $controller_name,

@@ -1,0 +1,37 @@
+class JSHelper {
+
+    static shuffleArray(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    static numericalToHHMMSS(value) {
+        var sec_num = parseInt(value, 10);
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+
+        return hours + ':' + minutes + ':' + seconds;
+    }
+}
+
+$(document).ready(function() {
+    $(".error").hide();
+
+    $(".app-focuseable").keyup(function() {
+        if (this.value.length == this.maxLength) {
+            $(this).next('.app-focuseable').focus();
+        }
+    });
+
+    $("body").addClass('body-loaded');
+});

@@ -24,6 +24,10 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         array (
             'Mimey\\' => 6,
         ),
+        'G' => 
+        array (
+            'Gajus\\Dindent\\' => 14,
+        ),
         'A' => 
         array (
             'App\\Models\\' => 11,
@@ -65,6 +69,10 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'Mimey\\' => 
         array (
             0 => __DIR__ . '/..' . '/ralouphie/mimey/src',
+        ),
+        'Gajus\\Dindent\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gajus/dindent/src',
         ),
         'App\\Models\\' => 
         array (

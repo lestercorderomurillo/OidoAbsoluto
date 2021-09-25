@@ -2,12 +2,12 @@
 
 namespace Pipeline\Controller;
 
-use Pipeline\Pype\View;
 use Pipeline\Core\ResultInterface;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\Message;
 use Pipeline\HTTP\NullMessage;
 use Pipeline\HTTP\Server\ServerResponse;
+use Pipeline\PypeEngine\View;
 use Pipeline\Result\ContentResult;
 use Pipeline\Result\ViewResult;
 

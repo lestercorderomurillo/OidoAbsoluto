@@ -6,7 +6,7 @@ use Pipeline\App\App;
 use Psr\Log\LogLevel;
 use Psr\Log\AbstractLogger;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\BasePath;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\Utilities\ArrayHelper;
 
@@ -20,7 +20,7 @@ class Logger extends AbstractLogger
         $time = date("H:i:s");
 
         $string = ArrayHelper::parameterReplace($message, $context, "{", "}");
-        $path = new FilePath(BasePath::DIR_LOGS, "$level.$date", "log");
+        $path = new FilePath(SystemPath::LOGS, "$level.$date", "log");
 
         if ($level == LogLevel::ERROR || $level == LogLevel::EMERGENCY || $level == LogLevel::CRITICAL) {
             if (App()->getRuntimeEnvironment()->hasErrorLoggingEnabled()) {

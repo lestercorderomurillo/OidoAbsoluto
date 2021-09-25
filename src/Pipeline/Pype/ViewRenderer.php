@@ -4,11 +4,14 @@ namespace Pipeline\Pype;
 
 use Pipeline\Core\FunctionPipeline;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\BasePath;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\Pype\Component\Component;
 use Pipeline\Pype\Component\HTMLObject;
 use Pipeline\Pype\Template\ComponentDefinition;
+use Pipeline\Pype\Template\DataFragment;
+use Pipeline\Pype\Template\ViewFragment;
+use Pipeline\PypeEngine\View;
 use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Utilities\ArrayHelper;
 use function Pipeline\Accessors\App;
@@ -32,7 +35,8 @@ class ViewRenderer
 
     public function __construct()
     {
-        ComponentDefinition::__initialize();
+        //ComponentDefinition::preparedInitialize();
+        
         $this->application_name = Configuration("application.name");
 
         $this->counter = 0;
@@ -104,12 +108,12 @@ class ViewRenderer
 
     private function compileHeaders(string $title): string
     {
-        $headers = FileSystem::includeAsString(new FilePath(BasePath::DIR_INCLUDE, "Private/PageKernel", "php"));
+        $headers = FileSystem::includeAsString(new FilePath(SystemPath::DIR_INCLUDE, "Private/PageKernel", "php"));
 
         if (App()->getRuntimeEnvironment()->hasHotswapEnabled()) {
 
             $timestamp = $this->view->getTimestamp();
-            $page = $this->view->getViewHashIdentifier();
+            $page = $this->view->getViewGUID();
 
             $timestamp = $this->tryGet($this->meta_tags["timestamp"], $timestamp);
             $page = $this->tryGet($this->meta_tags["page"], $page);

@@ -78,7 +78,7 @@ class ArrayHelper
         return [$prepare, $values];
     }
 
-    public static function parameterReplace($array_or_string, array $replacers, string $match_start = "[", string $match_end = "]")
+    public static function parameterReplace($array_or_string, array $replacers, string $match_start = "{", string $match_end = "}")
     {
         if (is_array($array_or_string)) {
             $replaced_array = $array_or_string;
@@ -87,6 +87,9 @@ class ArrayHelper
         }
         if (isset($replacers)) {
             foreach ($replaced_array as $key => $value) {
+
+                
+                // we asume value is thing, but if its "thing.som" thy then $value->thatthing!
                 $acumulative_replaced_value = $value;
                 foreach ($replacers as $_key => $_value) {
                     $acumulative_replaced_value = str_replace($match_start . $_key . $match_end, $_value, "$acumulative_replaced_value");

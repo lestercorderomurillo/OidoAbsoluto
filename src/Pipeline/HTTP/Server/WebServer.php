@@ -4,14 +4,14 @@ namespace Pipeline\HTTP\Server;
 
 class WebServer
 {    
-    private URIRouter $router;
+    private Router $router;
     private Session $session;
     private IncomingRequest $request;
 
     public function __construct()
     {
-        Session::__initialize();
-        $this->router = new URIRouter();
+        //Session::preparedInitialize();
+        $this->router = new Router();
         $this->session = new Session();
         $this->request = new IncomingRequest();
     }

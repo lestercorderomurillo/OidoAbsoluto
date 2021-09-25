@@ -2,17 +2,27 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Core\StaticObjectInterface;
+use Pipeline\Core\StaticObjectInitializer;
 use Pipeline\Traits\DefaultAccessorTrait;
 
-class Session implements StaticObjectInterface
+class Session extends StaticObjectInitializer
 {
     use DefaultAccessorTrait;
 
-    public static function __initialize(): void
+    protected static function __initialize(): void
     {
         session_start();
         session_regenerate_id();
+    }
+
+    public function __construct()
+    {
+        $this->initializeOnce();
+    }
+
+    public function expose(): array
+    {
+        return $_SESSION;
     }
 
     public function get(string $key)

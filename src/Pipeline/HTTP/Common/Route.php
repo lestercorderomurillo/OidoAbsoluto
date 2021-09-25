@@ -8,10 +8,11 @@ class Route
 {
     private string $path;
     private string $method;
-    private string $controller_name;
-    private string $action_name;
     private array $parameters;
     private array $middlewares;
+
+    private string $controller_name;
+    private string $action_name;
 
     public function __construct(
         string $method,

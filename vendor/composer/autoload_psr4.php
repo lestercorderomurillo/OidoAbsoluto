@@ -14,6 +14,7 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Pipeline\\' => array($baseDir . '/src/Pipeline'),
     'Mimey\\' => array($vendorDir . '/ralouphie/mimey/src'),
+    'Gajus\\Dindent\\' => array($vendorDir . '/gajus/dindent/src'),
     'App\\Models\\' => array($baseDir . '/app/models'),
     'App\\Middlewares\\' => array($baseDir . '/app/middlewares'),
     'App\\Controllers\\' => array($baseDir . '/app/controllers'),

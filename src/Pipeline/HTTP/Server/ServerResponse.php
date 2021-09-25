@@ -3,8 +3,12 @@
 namespace Pipeline\HTTP\Server;
 
 use Pipeline\HTTP\Message;
-use Pipeline\Pype\View;
-use Pipeline\Pype\ViewRenderer;
+use Pipeline\Logger\Logger;
+use Pipeline\PypeEngine\PypeCompiler;
+use Pipeline\PypeEngine\PypeComponent;
+use Pipeline\PypeEngine\PypeViewRenderer;
+use Pipeline\PypeEngine\View;
+
 use function Pipeline\Accessors\App;
 use function Pipeline\Accessors\Dependency;
 
@@ -23,17 +27,23 @@ class ServerResponse extends Message
 
         $response = new ServerResponse($code);
         $response->addHeader("Content-Type", "text/html");
-
         $response_view = new View("System", "response", ["code" => "$code", "message" => "$message"]);
 
-        $view_renderer = Dependency(ViewRenderer::class);
+        $view_renderer = Dependency(PypeViewRenderer::class);
+
+        $default = PypeCompiler::getDefaultViewData($response_view);
+        $response_view->addViewData($default);
+
         $view_renderer->setView($response_view);
 
-        $old_view = $view_renderer->getContextlessView();
-        $view_renderer->addMetaTags(["timestamp" => $old_view->getTimestamp(), "page" => $old_view->getViewHashIdentifier()]);
-        $html = $view_renderer->renderView();
+        /*$old_view = $view_renderer->getContextlessView();
+        if(!App()->getRuntimeEnvironment()->inProductionMode()){
+            $view_renderer->addMetaTags(["timestamp" => $old_view->getTimestamp(), "page" => $old_view->getViewGUID()]);
+        }
 
-        $response->setBody($html);
+        $html = $view_renderer->renderView();*/
+
+        $response->setBody($view_renderer->render());
         return $response;
     }
 

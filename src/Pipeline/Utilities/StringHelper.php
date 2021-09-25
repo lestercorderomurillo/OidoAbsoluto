@@ -6,6 +6,11 @@ use Pipeline\Security\Cryptography;
 
 class StringHelper
 {
+    public static function contains(string $text, string $check)
+    {
+        return (strpos($text, $check) !== false);
+    }
+
     public static function quotedExplode(string $text, string $delimiters = " ", string $quotes = "\"'"): array
     {
         $clauses[] = '[^' . $delimiters . $quotes . ']';
@@ -34,18 +39,18 @@ class StringHelper
         return  $launch;
     }
 
-    public static function startsWith(string $haystack, string $needle): bool
+    public static function startsWith(string $string, string $check): bool
     {
-        $length = strlen($needle);
-        return substr($haystack, 0, $length) === $needle;
+        $length = strlen($check);
+        return substr($string, 0, $length) === $check;
     }
 
-    public static function endsWith(string $haystack, string $needle): bool
+    public static function endsWith(string $string, string $check): bool
     {
-        $length = strlen($needle);
+        $length = strlen($check);
         if (!$length) {
             return true;
         }
-        return substr($haystack, -$length) === $needle;
+        return substr($string, -$length) === $check;
     }
 }

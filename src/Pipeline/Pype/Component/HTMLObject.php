@@ -151,11 +151,15 @@ class HTMLObject extends IdentifiableObject implements DOMInterface
                 $attributes_string .= " $key=\"$value\"";
             }
         }
-        
+
         $output = trim($this->tag . $attributes_string);
 
         if ($this->closure) {
             $output = "/" . $output;
+        }
+
+        if (!isset($this->render_inside)) {
+            $this->render_inside = "";
         }
 
         if ($this->append_closure) {

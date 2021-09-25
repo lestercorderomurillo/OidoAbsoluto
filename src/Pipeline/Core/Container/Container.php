@@ -25,9 +25,10 @@ class Container implements ContainerInterface
         return $this->tryGet($this->data[$id]);
     }
 
-    public function set(string $id, $object): void
+    public function &set(string $id, $anything): Container
     {
-        $this->data[$id] = $object;
+        $this->data["$id"] = $anything;
+        return $this;
     }
 
     public function has(string $id): bool
@@ -35,7 +36,12 @@ class Container implements ContainerInterface
         return (isset($this->data[$id]));
     }
 
-    public function expose(): array
+    public function remove(string $id): void
+    {
+        unset($this->data[$id]);
+    }
+
+    public function &expose(): array
     {
         return $this->data;
     }

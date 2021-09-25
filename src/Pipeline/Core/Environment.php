@@ -2,7 +2,8 @@
 
 namespace Pipeline\Core;
 
-use Pipeline\FileSystem\Path\BasePath;
+use ErrorException;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Utilities\StringHelper;
@@ -20,7 +21,7 @@ class Environment
     {
         $this->failure_count = 0;
 
-        $config_path = (new FilePath(BasePath::DIR_APP, "configuration", "php"))->toString();
+        $config_path = (new FilePath(SystemPath::APP, "configuration", "php"))->toString();
         $this->configuration = require_once($config_path);
 
         $url_scheme = "http";
@@ -33,6 +34,12 @@ class Environment
         if (!StringHelper::endsWith($this->configuration["application.url"], "/")) {
             $this->configuration["application.url"] .= "/";
         }
+
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            if (StringHelper::startsWith($errstr, "Undefined index")) {
+                throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+            }
+        });
     }
 
     public function getConfiguration(string $key): string

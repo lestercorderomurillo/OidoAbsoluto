@@ -1,20 +1,23 @@
-<v-view title="Recuperación de Contraseña">
-    <v-card size="12" maxWidth="600px">
-        <v-title-icon img="profile.png" text="Recuperación de Contraseña">
-        <v-form route="forgot/submit">
-            <h6>¿Problemas para acceder a su cuenta?</h6>
-            <v-spacing size="2">
-            <v-label for="email">Correo Electrónico</v-label>  
-            <v-textbox bind="email">
-            <v-span>
-                Si el correo se encuentra previamente registrado en nuestra base de datos, 
-                se le enviará un correo a esa direccion con las instrucciones de recuperación.
-            </v-span> 
-            <v-submit-button>Enviar correo electrónico</v-submit-button>
-            <v-spacing size="2">
-        </v-form>
-    </v-card>
-</v-view>
+<app:view title="Recuperación de Contraseña">
+    <app:row>
+        <app:card columnSize="8" maxWidth="600px">
+            <app:form route="forgot/submit">
+                <app:title-icon imageSource="profile.png" text="Recuperación de Contraseña">
+                <h6>¿Problemas para acceder a su cuenta?</h6>
+                <app:spacing size="2">
+                <app:label for="email">Correo Electrónico</app:label>  
+                <app:textfield bind="email">
+                <app:span>
+                    Si el correo se encuentra previamente registrado en nuestra base de datos, 
+                    se le enviará un correo a esa direccion con las instrucciones de recuperación.
+                </app:span>
+                <app:spacing size="2">
+                <app:submit-button>Enviar correo electrónico</app:submit-button>
+                <app:spacing size="2">
+            </app:form>
+        </app:card>
+    </app:row>
+</app:view>
 <script> 
     $(document).ready(function() {
         $("#form").validate({

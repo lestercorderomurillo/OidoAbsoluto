@@ -2,10 +2,10 @@
 
 namespace Pipeline\Pype;
 
-use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\BasePath;
-use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\Utilities\ArrayHelper;
+use Pipeline\FileSystem\FileSystem;
+use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use function Pipeline\Accessors\Configuration;
 use ScssPhp\ScssPhp\Compiler as SCSSCompiler;
 
@@ -13,14 +13,18 @@ class AssetCompiler
 {
     public function compileProjectStylesheets()
     {
+
         if (Configuration("development.compileSCSS")) {
-            $smart_public_folders = FileSystem::find(new DirectoryPath(BasePath::DIR_PUBLIC), "css");
-            $page_scss_folder = (new DirectoryPath(BasePath::DIR_WEB, "scss/"))->toString();
-            $prefab_scss_folder = (new DirectoryPath(BasePath::DIR_PRIVATE, "SCSS/"))->toString();
 
-            $scss_folders = ArrayHelper::stackLines([$prefab_scss_folder, $page_scss_folder], $smart_public_folders);
+            $smart_public_folders = FileSystem::find(new DirectoryPath(SystemPath::DIR_PUBLIC), "css");
+            $page_scss_folder = (new DirectoryPath(SystemPath::WEB, "scss/"))->toString();
+            $prefab_scss_folder = (new DirectoryPath(SystemPath::DIR_PRIVATE, "SCSS/"))->toString();
+            $scss_folders = ArrayHelper::stackLines(
+                [$prefab_scss_folder, $page_scss_folder],
+                $smart_public_folders
+            );
 
-            $output_folder = (new DirectoryPath(BasePath::DIR_WEB, "css/"))->toString();
+            $output_folder = (new DirectoryPath(SystemPath::WEB, "css/"))->toString();
             $scss_compiler = new SCSSCompiler();
             $scss_compiler->setImportPaths($scss_folders);
 
@@ -40,6 +44,8 @@ class AssetCompiler
                     file_put_contents($output, $string_css);
                 }
             }
+
         }
+
     }
 }

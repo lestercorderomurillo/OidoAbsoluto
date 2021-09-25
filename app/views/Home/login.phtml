@@ -1,20 +1,22 @@
-<v-view title="Inicio de sesión">
-    <v-card size="8" maxWidth="600px">
-        <v-title-icon img="profile.png" text="Inicio de sesión">
-        <v-persistent-message>
-        <v-form route="login/submit">
-            <v-span>Sírvase de acceder al servicio para realizar o consultar su historial de pruebas</v-span>
-            <v-label for="email">Correo Electrónico</v-label>  
-            <v-textbox bind="email">
-            <v-label for="password">Contraseña</v-label>   
-            <v-password>
-            <v-submit-button>Acceder al Proyecto</v-submit-button>
-            <v-action-button route="signup">O bien, Crear cuenta</v-action-button><br><br>
-            <v-span>¿Olvidó su contraseña o no puede acceder a su cuenta?</v-span>
-            <v-action-link route="forgot">Haga click en este enlace para recuperar su contraseña</v-action-link>
-        </v-form>
-    </v-card>
-</v-view>
+<app:view title="Inicio de sesión">
+    <app:row>
+        <app:card columnSize="8" maxWidth="600px">
+            <app:form route="login/submit">
+                <app:title-icon imageSource="profile.png" text="Inicio de sesión">
+                <app:span>Sírvase de acceder al servicio para realizar o consultar su historial de pruebas</app:span>
+                <app:label for="email"> Correo Electrónico</app:label> 
+                <app:textfield bind="email">
+                <app:label for="password">Contraseña</app:label>   
+                <app:passfield>
+                <app:submit-button>Acceder al Proyecto</app:submit-button>
+                <app:action-button route="signup">O bien, Crear cuenta</app:action-button>
+                <app:spacing size="2">
+                <app:span>¿Olvidó su contraseña o no puede acceder a su cuenta?</app:span>
+                <app:action-link route="forgot">Haga click en este enlace para recuperar su contraseña</app:action-link>
+            </app:form>
+        </app:card>
+    </app:row>
+</app:view>
 <script> 
     $(document).ready(function() {
         $("#form").validate({

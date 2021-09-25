@@ -13,7 +13,6 @@ class ForceSSL extends Middleware
 
         if ($request->getProtocol() != "https") {
             return $this->redirect($new_path);
-            
         }
 
         /* Forward request */

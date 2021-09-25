@@ -24,7 +24,7 @@ class FileSystem
         return file_exists($path->toString());
     }
 
-    public static function find(DirectoryPath $folder_path, string $format = "php"): array
+    public static function find(DirectoryPath $folder_path, string $extension = "php"): array
     {
         $path = $folder_path->toString();
         $paths = [];
@@ -33,7 +33,7 @@ class FileSystem
             $path .= "/";
         }
 
-        $search_path = $path . "*.$format";
+        $search_path = $path . "*.$extension";
         foreach (self::recursiveGlob($search_path) as $file) {
             $paths[] = $file;
         }
@@ -41,14 +41,33 @@ class FileSystem
         return $paths;
     }
 
-    public static function findRoutesFromInternal(DirectoryPath $folder_path, string $format): array
+    public static function toWebPaths($array_of_paths): array
     {
         $exposed_paths = [];
-        if (($format = strtolower($format)) == "php") {
+
+        if(!is_array($array_of_paths)){
+            $value = $array_of_paths;
+            $array_of_paths = [];
+            $array_of_paths[0] = $value;
+        }
+
+        foreach ($array_of_paths as $path) {
+            if($path instanceof AbstractPath){
+                $path = $path->toString();
+            }
+            $exposed_paths[] = WebPath::create($path)->toString();
+        }
+        return $exposed_paths;
+    }
+
+    public static function findWebPaths(DirectoryPath $folder_path, string $extension): array
+    {
+        $exposed_paths = [];
+        if (($extension = strtolower($extension)) == "php") {
             ServerResponse::create(403)->sendAndExit();
         }
 
-        $internal_paths = self::find($folder_path, $format);
+        $internal_paths = self::find($folder_path, $extension);
 
         foreach ($internal_paths as $path) {
             $exposed_paths[] = WebPath::create($path)->toString();
@@ -64,6 +83,7 @@ class FileSystem
                 ServerResponse::create(500,"Invalid resource name [$path] to include as string. 
                 Check your API files.")->sendAndExit();
             } else {
+                die("Cannot find: " . $path->toString() . " from: " . debug_backtrace()[1]['function'] . "()");
                 return NULL;
             }
         }

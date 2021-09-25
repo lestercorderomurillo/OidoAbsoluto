@@ -1,7 +1,9 @@
-<v-view title="%code% : %message%">
-    <v-col size="10" textPosition="center">
-        <v-fatal>
-            %code% : %message%
-        </v-fatal>
-    </v-col>
-</v-view>
+<app:view title="{code} : {message}">
+    <app:row>
+        <app:col size="10" textPosition="center">
+            <app:card accent="danger">
+                {code} : {message}
+            </app:card>
+        </app:col>
+    </app:row>
+</app:view>

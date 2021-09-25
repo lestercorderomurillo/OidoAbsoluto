@@ -11,6 +11,7 @@ use function Pipeline\Accessors\Configuration;
 
 class OidoAbsolutoApp extends MVCApp
 {
+ 
     protected function configure(): void
     {
         $connection_string = new ConnectionString(

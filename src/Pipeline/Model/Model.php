@@ -3,7 +3,7 @@
 namespace Pipeline\Model;
 
 use Pipeline\Core\IdentifiableObject;
-use Pipeline\HTTP\Exceptions\InvalidModelException;
+use Pipeline\Model\Exceptions\InvalidModelException;
 use Pipeline\Traits\ClassAwareTrait;
 use Pipeline\Traits\ValuesSetterTrait;
 

@@ -23,6 +23,7 @@
         "psr/http-server-middleware": "*",
         "psr/container": "*",
         "psr/log": "*",
-        "ralouphie/mimey": "^2.1"
+        "ralouphie/mimey": "^2.1",
+        "gajus/dindent": "^2.0"
     }
 }

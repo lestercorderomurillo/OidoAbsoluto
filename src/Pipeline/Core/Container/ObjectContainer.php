@@ -26,9 +26,10 @@ class ObjectContainer implements ContainerInterface
         return $this->tryGet($this->objects[$id]);
     }
 
-    public function set(string $id, $object): void
+    public function set(string $id, $object): ObjectContainer
     {
         $this->objects[$id] = $object;
+        return $this;
     }
 
     public function has(string $id): bool

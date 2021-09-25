@@ -5,6 +5,7 @@ namespace Pipeline\Accessors;
 use Pipeline\App\App;
 use Pipeline\HTTP\Server\WebServer;
 use Pipeline\DependencyInjection\Exceptions\UnavailableDependencyException;
+use Pipeline\HTTP\Server\ServerResponse;
 
 function App()
 {
@@ -13,12 +14,24 @@ function App()
 
 function Dependency(string $dependency_name)
 {
+    try {
+        return tryGetDependency($dependency_name);
+    } catch (UnavailableDependencyException $e) {
+        ServerResponse::create(500, $e->getMessage())->sendAndExit();
+    }
+}
+
+function tryGetDependency(string $dependency_name)
+{
     $container = App()->getDependencyManager()->getContainer();
 
     if ($container->has($dependency_name)) {
         return $container->get($dependency_name);
     } else {
-        throw new UnavailableDependencyException("Unavailable Dependency [$dependency_name]. Check dependency names, classes and traits.");
+        throw new UnavailableDependencyException(
+            "Unavailable Dependency Exception [$dependency_name].
+            Check dependency name classes, uses imports and traits. 
+            Make sure the dependency has been injected before.");
     }
 }
 

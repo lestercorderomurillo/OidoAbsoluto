@@ -84,7 +84,7 @@ class Nested extends Formatter
         static $downLevel;
         static $closeBlock;
         static $previousEmpty;
-        static $previousHasSelector;
+        static $previousHasSelection;
 
         if ($block->type === 'root') {
             $depths = [ 0 ];
@@ -92,12 +92,12 @@ class Nested extends Formatter
             $closeBlock = '';
             $this->depth = 0;
             $previousEmpty = false;
-            $previousHasSelector = false;
+            $previousHasSelection = false;
         }
 
         $isMediaOrDirective = \in_array($block->type, [Type::T_DIRECTIVE, Type::T_MEDIA]);
         $isSupport = ($block->type === Type::T_DIRECTIVE
-            && $block->selectors && strpos(implode('', $block->selectors), '@supports') !== false);
+            && $block->Selections && strpos(implode('', $block->Selections), '@supports') !== false);
 
         while ($block->depth < end($depths) || ($block->depth == 1 && end($depths) == 1)) {
             array_pop($depths);
@@ -105,7 +105,7 @@ class Nested extends Formatter
 
             if (
                 ! $this->depth && ($block->depth <= 1 || (! $this->indentLevel && $block->type === Type::T_COMMENT)) &&
-                (($block->selectors && ! $isMediaOrDirective) || $previousHasSelector)
+                (($block->Selections && ! $isMediaOrDirective) || $previousHasSelection)
             ) {
                 $downLevel = $this->break;
             }
@@ -137,9 +137,9 @@ class Nested extends Formatter
         }
 
         $previousEmpty = ($block->type === Type::T_COMMENT);
-        $previousHasSelector = false;
+        $previousHasSelection = false;
 
-        if (! empty($block->selectors)) {
+        if (! empty($block->Selections)) {
             if ($closeBlock) {
                 $this->write($closeBlock);
                 $closeBlock = '';
@@ -150,7 +150,7 @@ class Nested extends Formatter
                 $downLevel = '';
             }
 
-            $this->blockSelectors($block);
+            $this->blockSelections($block);
 
             $this->indentLevel++;
         }
@@ -187,10 +187,10 @@ class Nested extends Formatter
 
         // reclear to not be spoiled by children if T_DIRECTIVE
         if ($block->type === Type::T_DIRECTIVE) {
-            $previousHasSelector = false;
+            $previousHasSelection = false;
         }
 
-        if (! empty($block->selectors)) {
+        if (! empty($block->Selections)) {
             $this->indentLevel--;
 
             if (! $this->keepSemicolons) {
@@ -207,7 +207,7 @@ class Nested extends Formatter
             }
 
             if (! $isMediaOrDirective) {
-                $previousHasSelector = true;
+                $previousHasSelection = true;
             }
         }
 
@@ -226,7 +226,7 @@ class Nested extends Formatter
     private function hasFlatChild($block)
     {
         foreach ($block->children as $child) {
-            if (empty($child->selectors)) {
+            if (empty($child->Selections)) {
                 return true;
             }
         }

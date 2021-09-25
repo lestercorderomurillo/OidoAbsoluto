@@ -1,3 +1,0 @@
-10:21:47 >> Pipeline\Result\RedirectResult route redirection to ''
-10:21:47 >> App\Controllers\HomeController has been requested a response from 'login' action
-10:21:47 >> Pipeline\Result\ViewResult responded with '200' : 'Pipeline\Result\ViewResult'

@@ -1,57 +1,75 @@
-<v-view title="Registro de usuario en el proyecto">
-    <v-card size="12" maxWidth="600px">
-        <v-title-icon img="signup.png" text="Registro de usuario">
-        <v-form route="signup/submit">
-            <v-row>
-                <v-col size="6">
-                    <v-label for="first_name">Nombre</v-label>  
-                    <v-textbox bind="first_name">
-                </v-col>
-                <v-col size="6">
-                    <v-label for="last_name">Apellidos</v-label>  
-                    <v-textbox bind="last_name">
-                </v-col>
-            </v-row>
-            <v-label for="email">Correo Electrónico</v-label>  
-            <v-textbox bind="email">
-            <v-label for="password">Contraseña</v-label>   
-            <v-password>
-            <v-hint>La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -</v-hint><br><br>
-            <v-label for="confirm_password">Confirmar contraseña</v-label>   
-            <v-password bind="confirm_password">
-            <v-label for="country">País de nacimiento</v-label> 
-            <v-select bind="country" arrayName="countries">
-            <v-row>
-                <v-col size="6">
-                    <v-label for="birth_day">Fecha de nacimiento</v-label>  
-                    <v-date bind="birth_day">
-                    <v-error for="birth_day">
-                </v-col>
-                <v-col size="6">
-                    <v-label for="phone">Teléfono</v-label>  
-                    <v-textbox bind="phone">
-                </v-col>
-            </v-row>
-            <v-label for="gender">Género</v-label> 
-            <v-radio bind="gender" text="Masculino" value="M">
-            <v-radio bind="gender" text="Femenino" value="F">
-            <v-radio bind="gender" text="Otro" value="O">
-            <v-radio bind="gender" text="No responder" value="-">
-            <v-error for="gender">
-            <v-submit-button>Registrarse</v-submit-button>
-        </v-form>
-    </v-card>
-</v-view>
+<app:view title="Registro de usuario en el proyecto">
+    <app:row>
+        <app:card columnSize="8" maxWidth="600px">
+            <app:form route="signup/submit">
+
+                <app:title-icon imageSource="signup.png" text="Registro de usuario">
+                <br>
+                
+                <app:row>
+                    <app:col columnSize="6">
+                        <app:label for="first_name">Nombre</app:label>
+                        <app:textfield bind="first_name">
+                    </app:col>
+                    <app:col columnSize="6">
+                        <app:label for="last_name">Apellidos</app:label>
+                        <app:textfield bind="last_name">
+                    </app:col>
+                </app:row>
+
+                <app:label for="email">Correo Electrónico</app:label>
+                <app:textfield bind="email">
+
+                <app:label for="password">Contraseña</app:label>
+                <app:passfield>
+
+                <app:hint>La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -</app:hint>
+                <app:spacing size="2">
+
+                <app:label for="confirm_password">Contraseña</app:label>
+                <app:passfield bind="confirm_password">
+
+                <app:label for="country">País de nacimiento</app:label> 
+                <app:select bind="country" arrayName="countries">
+                    
+                <app:row>
+                    <app:col columnSize="6">
+                        <app:label for="birth_day">Fecha de nacimiento</app:label>
+                        <app:date bind="birth_day">
+                        <app:error bind="birth_day">
+                    </app:col>
+                    <app:col columnSize="6">
+                        <app:label for="phone">Teléfono</app:label>
+                        <app:textfield bind="phone">
+                    </app:col>
+                </app:row>
+
+                <app:label for="gender">Seleccione su Género</app:label> 
+                <app:radio id="0" bind="gender" text="Masculino" value="M">
+                <app:radio id="1" bind="gender" text="Femenino" value="F">
+                <app:radio id="2" bind="gender" text="Otro" value="O">
+                <app:radio id="3" bind="gender" text="No responder" value="-">
+                <app:error bind="gender">
+
+                <app:submit-button>Registrarse</app:submit-button>
+            </app:form>
+        </app:card>
+    </app:row>
+</app:view>
 <script> 
     $('#form').submit(function() {
         event.preventDefault();
-        validateDate("birth_day");
-        if($(this).valid()) {
-            disableDateForSubmit("birth_day");
-            return true;
+
+        if (PypeValidator.validateDate("birth_day")){
+            if($(this).valid()) {
+                PypeValidator.parseDateForSubmit("birth_day");
+                return true;
+            }
         }
+
         return false;
     });
+
     $(document).ready(function() {
         $("#form").validate({
             rules: {

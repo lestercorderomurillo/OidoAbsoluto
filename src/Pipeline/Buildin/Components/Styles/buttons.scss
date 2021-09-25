@@ -1,0 +1,13 @@
+.app-button{
+    @include component;
+    color: $text-secondary !important;
+    background-color: $bg-secondary;
+    padding: 12px;
+    font-size: $font-button-size;
+    font-weight: bolder;
+}
+
+.app-button:hover{
+    background-color: lighten($bg-secondary, 30);
+    color: $text-primary !important;
+}

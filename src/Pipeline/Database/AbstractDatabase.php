@@ -34,7 +34,7 @@ abstract class AbstractDatabase
 
         try {
             foreach ($this->queries as $query) {
-                $temp = $this->adapter->executePDO($query->getQuery(), $query->getData());
+                $temp = $this->adapter->executePDO($query->getStatement(), $query->getData());
                 $results[] = $temp;
             }
         } catch (SQLFailureException $e) {
@@ -56,15 +56,10 @@ abstract class AbstractDatabase
         return $this->execute();
     }
 
-    public abstract function find(string $class_name, array $where): QueryResult;
-
+    public abstract function find(string $model_class_name, array $where);
+    public abstract function findAll(string $model_class_name, array $where, string $append = "");
     public abstract function save(Model $model): void;
-
     public abstract function delete(Model $model): void;
-
-    public abstract function findAll(string $class_name, array $where, string $append = ""): QueryResult;
-
     public abstract function saveAll(array $models): void;
-
     public abstract function deleteAll(array $models): void;
 }

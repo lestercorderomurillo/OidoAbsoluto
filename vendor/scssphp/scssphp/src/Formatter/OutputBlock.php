@@ -34,7 +34,7 @@ class OutputBlock
     /**
      * @var array|null
      */
-    public $selectors;
+    public $Selections;
 
     /**
      * @var string[]

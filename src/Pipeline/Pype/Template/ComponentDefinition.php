@@ -3,14 +3,14 @@
 namespace Pipeline\Pype\Template;
 
 use Pipeline\Utilities\ArrayHelper;
-use Pipeline\Core\StaticObjectInterface;
+use Pipeline\Core\StaticObjectInitializer;
 use Pipeline\Core\Container\ContainerInterface;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\BasePath;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\Traits\DefaultAccessorTrait;
 
-class ComponentDefinition implements ContainerInterface, StaticObjectInterface
+class ComponentDefinition extends StaticObjectInitializer implements ContainerInterface 
 {
     use DefaultAccessorTrait;
 
@@ -19,14 +19,15 @@ class ComponentDefinition implements ContainerInterface, StaticObjectInterface
 
     public function __construct(string $component_name, int $depth = 0)
     {
+        $this->initializeOnce();
         $this->content = self::$components[$component_name];
         $this->transverseToNextConcat($depth);
     }
 
-    public static function __initialize(): void
+    protected static function __initialize(): void
     {
-        $native_components_file_names = FileSystem::find(new DirectoryPath(BasePath::DIR_INCLUDE, "private/components/", "php"));
-        $user_components_file_names = FileSystem::find(new DirectoryPath(BasePath::DIR_APP, "components/", "php"));
+        $native_components_file_names = FileSystem::find(new DirectoryPath(SystemPath::DIR_INCLUDE, "private/components/", "php"));
+        $user_components_file_names = FileSystem::find(new DirectoryPath(SystemPath::APP, "components/", "php"));
         $components_to_include = ArrayHelper::stackLines($native_components_file_names, $user_components_file_names);
 
         self::$components = [];
@@ -54,6 +55,7 @@ class ComponentDefinition implements ContainerInterface, StaticObjectInterface
 
     public static function isRegistered(string $component_name)
     {
+        self::invokeInitialize();
         return (isset(self::$components[$component_name]));
     }
 
@@ -86,8 +88,9 @@ class ComponentDefinition implements ContainerInterface, StaticObjectInterface
         return $this->tryGet($this->content[$key], $default);
     }
 
-    public function set(string $key, $value = NULL): void
+    public function set(string $key, $value = NULL): ComponentDefinition
     {
         $this->content[$key] = $value;
+        return $this;
     }
 }

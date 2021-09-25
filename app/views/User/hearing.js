@@ -62,6 +62,7 @@ class SelectedNote {
 /* View template synchronizer */
 function createViewSyncronizer() {
     viewSynchronizer = createTemplateSynchronizer(function (onEveryFrame) {
+        
         if (audiosFetched == audiosSources.length && !alreadyLoaded){
             alreadyLoaded = true;
             enableTestButton("Click para comenzar la prueba");

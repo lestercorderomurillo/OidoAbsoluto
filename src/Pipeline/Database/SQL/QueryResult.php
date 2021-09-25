@@ -4,20 +4,22 @@ namespace Pipeline\Database\SQL;
 
 use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Core\Container\ContainerInterface;
+use Pipeline\Exceptions\ReadOnlyException;
 
 class QueryResult implements ContainerInterface
 {
     use DefaultAccessorTrait;
 
-    private array $data;
+    private $data;
 
-    public function __construct(array $data = [])
+    public function __construct($data)
     {
         $this->data = $data;
     }
 
-    public function set(string $id, $value): void
+    public function set(string $id, $value): QueryResult
     {
+        throw new ReadOnlyException();
     }
 
     public function has(string $id): bool
@@ -30,7 +32,7 @@ class QueryResult implements ContainerInterface
         return $this->tryGet($this->data["$id"], NULL);
     }
 
-    public function expose(): array
+    public function expose()
     {
         return $this->data;
     }
