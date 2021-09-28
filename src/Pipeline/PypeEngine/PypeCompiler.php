@@ -9,7 +9,6 @@ use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\Inproc\HTMLStrip;
-use Pipeline\PypeEngine\Inproc\RenderContext;
 use Pipeline\PypeEngine\Inproc\Selection;
 use Pipeline\PypeEngine\Inproc\BodyFinder;
 use Pipeline\PypeEngine\Inproc\HTMLBeautifier;
@@ -25,61 +24,12 @@ class PypeCompiler
     use DefaultAccessorTrait;
     const HTML_KEYWORDS = ["ifdef", "app:", "foreach ", "for ", "this"];
 
-    private static $counter_test = 0;
-
-    public static function getDefaultViewData(View &$view)
+    public static function renderString(string $html, array $context = []): string
     {
-        $packages = [];
-        $scripts = [];
-        $styles = [];
-
-        $packages[] = new FilePath(SystemPath::PACKAGES, "jquery-3.6.0/jquery", "min.js");
-        $packages[] = new FilePath(SystemPath::PACKAGES, "popper-1.16.1/popper", "min.js");
-        $packages[] = new FilePath(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "min.js");
-        $packages[] = new FilePath(SystemPath::PACKAGES, "observable-slim-0.1.5/observable-slim", "min.js");
-        $packages[] = new FilePath(SystemPath::PACKAGES, "jquery-validate-1.11.1/jquery.validate", "min.js");
-
-        $styles[] = "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap";
-        $styles[] = new FilePath(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "css");
-        $styles[] = new FilePath(SystemPath::PACKAGES, "font-awesome-4.7.0/font-awesome", "css");
-        $styles[] = new FilePath(SystemPath::WEB, "build", "css");
-
-        $scripts = ArrayHelper::stackLines($packages, FileSystem::findWebPaths(new DirectoryPath(SystemPath::BUILDIN, "Scripts"), "js"));
-
-        $data = [
-            "headers" =>
-            [
-                [
-                    "name" => "timestamp",
-                    "content" => $view->getTimestamp()
-                ],
-                [
-                    "name" => "page",
-                    "content" => $view->getViewGUID()
-                ]
-            ],
-            "scripts" => FileSystem::toWebPaths($scripts),
-            "styles" => FileSystem::toWebPaths($styles),
-        ];
-
-        return $data;
-    }
-
-    public static function renderString(string $html, array $tokens = [], RenderContext $context = null): string
-    {
-
         try {
-
-            if ($context == null) {
-                $context = new RenderContext();
-            }
-
             // As recursion goes, this will update i, its.. etc, and body will be replaced accordingly
-            $output = ArrayHelper::parameterReplace($html, $tokens);
+            $output = ArrayHelper::parameterReplace($html, $context);
             $offset = 0;
-
-            // Replace tokens inside tokens but only on certain
-            $tokens = ArrayHelper::parameterReplace($tokens, $tokens);
 
             while (($selection = PatternHelper::selectStringByQuotes($output, "<", ">", $offset, 0))->isValid()) {
 
@@ -116,11 +66,10 @@ class PypeCompiler
                                 // Find the body of this for this individual component and its body contents
                                 //$body_finder = new BodyFinder($selection, $output, "app:$domtag");
 
-                                $body_selection = BodyFinder::detectBody($output, "app:".$domtag, $selection->getEndPosition() + 1);
+                                $body_selection = BodyFinder::detectBody($output, "app:" . $domtag, $selection->getEndPosition() + 1);
 
                                 $component->setBody($body_selection->getReducedString());
                                 $selection->setEndPosition($body_selection->getEndPosition() + strlen("</app:$domtag>"));
-
                             }
 
                             // Render this component
@@ -133,30 +82,30 @@ class PypeCompiler
 
                         case "this":
 
-                            $value = ArrayHelper::parameterReplace($context->get("componentClass"), $tokens);
+                            $value = ArrayHelper::parameterReplace($context["this.class"], $context);
                             if ($value != null) {
 
                                 if (!StringHelper::startsWith($value, "app-")) {
                                     $value = "app-$value";
                                 }
 
-                                $context->set("componentClass", $value);
-                                $path = new FilePath(SystemPath::WEB, "build", "css");
+                                $context["this.class"] = $value;
+                                /*$path = new FilePath(SystemPath::WEB, "build", "css");
                                 $css_data = FileSystem::includeAsString($path, false);
                                 $class = "." . $context->get("componentClass");
                                 if (!StringHelper::contains($css_data, $class)) {
-                                    $context->remove("componentClass");
-                                }
+                                    //$context->remove("componentClass");
+                                }*/
                             }
 
-                            $template = new PypeTemplate($tokens["this"]);
+                            $template = new PypeTemplate($context["this"]);
 
                             $attributes = [];
 
                             if (!$closure) {
 
                                 $attributes = self::componentStringToArray($selection->getReducedString())[1];
-                                $attributes["class"] = trim($context->get("componentClass") . " " .
+                                $attributes["class"] = trim($context["this.class"] . " " .
                                     self::staticTryGet($attributes["class"], ""));
 
                                 self::parseMultivalueFields($attributes);
@@ -178,15 +127,15 @@ class PypeCompiler
                                     /*$body_finder = new BodyFinder($selection, $output, "ifdef");
                                     $body_selection = $body_finder->getSelection();*/
 
-                                    $body_selection = BodyFinder::detectBody($output,"ifdef", $selection->getEndPosition() + 1);
+                                    $body_selection = BodyFinder::detectBody($output, "ifdef", $selection->getEndPosition() + 1);
 
                                     // Write the output after has been rendered.
                                     $selection->moveStartPosition(-1);
                                     $selection->setEndPosition($body_selection->getEndPosition() + strlen("</ifdef>"));
 
                                     $ifdef_string = "";
-                                    if ($context->has($check)) {
-                                        $ifdef_string = ltrim(self::renderString($body_selection->getReducedString(), $tokens, $context));
+                                    if (isset($context[$check])) {
+                                        $ifdef_string = ltrim(self::renderString($body_selection->getReducedString(), $context));
                                     }
 
                                     $result = trim($ifdef_string);
@@ -255,8 +204,9 @@ class PypeCompiler
 
                                     // Get foreach attributes
                                     $foreach_from_name = $attributes["from"];
-                                    if (!$context->has("$foreach_from_name")) {
-                                        throw new CompileException("Foreach failure: $foreach_from_name array is missing from RenderContext/ViewData.");
+                                    if (!isset($context["$foreach_from_name"])) {
+                                        var_dump($context);
+                                        throw new CompileException("Foreach failure: $foreach_from_name array is missing from context.");
                                     }
 
                                     // Find the body of this for this foreach loop. Ex: <foreach>...body...</foreach>
@@ -268,9 +218,9 @@ class PypeCompiler
                                     $foreach_string = "";
 
                                     // Execute the foreach loop and render the next components in a recursive fashion
-                                    if (ArrayHelper::is2Dimensional($context->get("$foreach_from_name"))) {
+                                    if (ArrayHelper::is2Dimensional($context["$foreach_from_name"])) {
 
-                                        foreach ($context->get("$foreach_from_name") as $array => $object) {
+                                        foreach ($context["$foreach_from_name"] as $array => $object) {
 
                                             // Register the objects tokens for usage
                                             foreach ($object as $_key => $_value) {
@@ -282,7 +232,7 @@ class PypeCompiler
                                         }
                                     } else {
 
-                                        foreach ($context->get("$foreach_from_name") as $array) {
+                                        foreach ($context["$foreach_from_name"] as $array) {
 
                                             $tokens["$item_name"] = $array;
                                             $foreach_string .= ltrim(self::renderString($body_selection->getReducedString(), $tokens, $context));
@@ -309,14 +259,14 @@ class PypeCompiler
         $output = str_replace("</script>", "</script>\n", $output);
         $html_beautifyr = new HTMLBeautifier();
         $output = $html_beautifyr->beautifyString($output);
+        $offset = 0;
 
-        while (($selection = PatternHelper::selectStringByQuotes($output, "{?", "}", $offset))->isValid()) {
-            $id = substr($selection->getReducedString(), 2, -1);
+        while (($selection = PatternHelper::selectStringByQuotes($output, "{?", "}", $offset, 0))->isValid()) {
+            $id = substr($selection->getReducedString(), 2);
             if ($id != null && strlen($id) > 0) {
                 $initial = self::staticTryGet($tokens["$id"], "");
-                self::writeOnSelection($selection, $output, "<div id=\"app-sync-$id\" class=\"d-inline\">$initial</div>");
+                $output = self::writeOnSelection($selection, $output, "<div class=\"app-sync-$id d-inline pr-1\">$initial</div>");
             }
-
             $offset = $selection->getEndPosition() + 1;
         }
 
@@ -382,116 +332,4 @@ class PypeCompiler
         return [$tag, $attributes];
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    public function export(string $value): void
-    {
-        $this->output .= $value;
-    }
-
-    public function getCompiled(): string
-    {
-        return $this->output;
-    }
-
-    public function renderView(): string
-    {
-        $this->executeRenderingPipeline();
-        return $this->getCompiled();
-    }
-
-    public function executeRenderingPipeline(): void
-    {
-        $context = new RenderContext();
-        $context->set("html", $this->getView()->getSourceHTML());
-        $this->renderDoctype($context);
-    }
-/*
-    public function fetchFragment(): ViewFragment
-    {
-        return new ViewFragment();
-    }*/
-    /*
-    public function compileFragment(RenderContext $context, ViewFragment $fragment): string
-    {
-        return "";
-    }*/
-    /*
-    public function renderDoctype(RenderContext $context): RenderContext 
-    {
-        $html = <<<HTML
-        <!DOCTYPE html>
-        <html lang='en'>
-        <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        HTML;
-
-        $this->export($html);
-        return $context;
-    }
-
-    public function renderHeaders(RenderContext $context): RenderContext
-    {
-        $html = <<<HTML
-        <!DOCTYPE html>
-        <html lang='en'>
-        <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        HTML;
-
-        return $context;
-    }
-
-    public function renderFooter(RenderContext $context): RenderContext
-    {
-        return $context;
-    }
-
-    public function renderScript(RenderContext $context): RenderContext
-    {
-        return $context;
-    }
-
-    public function renderComponents(RenderContext $context): RenderContext
-    {
-        return $context;
-    }
-
-    public function renderResponsiveElements(RenderContext $context): RenderContext
-    {
-        return $context;
-    }
-
-    public function includeMeta(array $meta_tags): void
-    {
-        $this->meta_tags = ArrayHelper::mergeNamedValues($this->meta_tags, $meta_tags);
-    }
-
-    public function getContextlessView(): View
-    {
-        return $this->_view;
-    }
-
-    public function getView(): View
-    {
-        return $this->view;
-    }
-
-    public function setView(View $view): string
-    {
-        return "";
-    }*/
 }

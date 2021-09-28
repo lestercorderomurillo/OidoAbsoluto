@@ -8,8 +8,7 @@ class PypeViewRenderer
 
     public function render(): string
     {
-        $context = $this->view->getRenderContext();
-        return PypeCompiler::renderString($this->view->getSourceHTML(), [], $context);
+        return PypeCompiler::renderString($this->view->getSourceHTML(), $this->view->getContext());
     }
 
     public function &setView(View $view): PypeViewRenderer

@@ -38,6 +38,7 @@ class FilePath extends AbstractLocalPath
     public function toWebPath(): WebPath
     {
         $reroute = str_replace(__ROOT__, "", $this->toString());
+        $reroute = str_replace("." . $this->extension, "", $reroute);
         return new WebPath($reroute, $this->extension);
     }
 }

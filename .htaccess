@@ -3,6 +3,9 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI}  /web/.+(gif|png|jpg|jpeg|mp3|js|css)$
 RewriteRule .* - [L]
 
+RewriteCond %{REQUEST_URI}  /app/Views/.+(js)$
+RewriteRule .* - [L]
+
 RewriteCond %{REQUEST_URI}  /src/Pipeline/Buildin/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 

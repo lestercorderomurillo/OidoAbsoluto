@@ -6,7 +6,7 @@ return
         "prototype" => "label",
         "renderTemplate" => 
         <<<HTML
-        <this class="w-100 text-color pb-2 text-{textPosition}" style="font-size: {fontSize};">
+        <this class="w-100 text-color pb-2 text-{this.textPosition}" style="font-size: {this.fontSize};">
             {this.body}
         </this>
         HTML,
@@ -16,7 +16,7 @@ return
         "prototype" => "label",
         "renderTemplate" => 
         <<<HTML
-        <label for="{for}" class="w-100 text-color {classes}" style="font-size: {fontSize};">
+        <label for="{this.for}" class="w-100 text-color {this.classes}" style="font-size: {this.fontSize};">
             {this.body}
         </label>
         HTML,
@@ -33,7 +33,7 @@ return
         "defaults" => ["type" => "warning"],
         "renderTemplate" => 
         <<<HTML
-        <div class="alert alert-{type} alert-dismissible fade show">
+        <div class="alert alert-{this.type} alert-dismissible fade show">
             <strong>Oops!</strong>{this.body}
             <span data-dismiss="alert" aria-label="Close">
                 <small>

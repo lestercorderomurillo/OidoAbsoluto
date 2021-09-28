@@ -1,51 +1,58 @@
-<v-view title="%title%">
-    <v-card size="8" padding="4">
-        <v-title-primary text="%title%">
-        <v-span fontSize="0.9rem">
-            <v-span textPosition="justify" classList="pl-3 pr-3">
+<app:view title="{view.title}">
+    <app:row>
+        <app:card columnSize="8" padding="4">
+            <app:title-primary text="{view.title}">
+            <app:span fontSize="0.9rem">
                 <strong>Instrucciones de utilización</strong>
-                <v-spacing size="2">
+                <app:spacing size="2">
                 Una vez usted escucha una nota músical, tiene un intervalo breve de 3 segundos para
-                identificar y marcar la nota que cree que escuchó en el %title%.
+                identificar y marcar la nota que cree que escuchó en el {view.title}.
                 Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. 
-                Para el caso de notas blancas, utilice las teclas [QWERTYU] y para las negras utilice [12345]. 
+                Para el caso de notas blancas, utilice las teclas [QWERTYU] y para las negras utilice [12345].
                 <v-spacing size="2">
-                Cuando se reproduzcan %%note_max%% notas consecutivas, se pasará automaticamente a la siguiente etapa.
-            </v-span>
-            <v-spacing size="2">
-        </v-span>
-        <v-col textPosition="center">
-            <v-piano pianoMode="%mode%">
-                <v-piano-key keyColor="white" noteName="C"  pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="black" noteName="C#" pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="white" noteName="D"  pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="black" noteName="D#" pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="white" noteName="E"  pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="white" noteName="F"  pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="black" noteName="F#" pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="white" noteName="G"  pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="black" noteName="G#" pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="white" noteName="A"  pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="black" noteName="A#" pianoMode="%mode%" onClick="selectNote">
-                <v-piano-key keyColor="white" noteName="B"  pianoMode="%mode%" onClick="selectNote">
-            </v-piano>
-        </v-col>
-    </v-card>
-    <v-card size="4" padding="4">
-        <v-title-primary text="Prueba Auditiva">
-        <v-card id="progress_log" padding="3">      
-            Tipo de sonido: %%note_type%%
-            <v-spacing size="2">
-            Reproduciendo la nota %%note_current%% de %%note_max%%
-            <v-spacing size="2">
-            Tiempo total transcurido: %%time_current_string%%
-        </v-card>
-        <v-spacing>
-        <v-script-button id="startOrStop" onClick="startOrStop">%%button_running_string%%</v-script-button>
-        <v-spacing size="2">
-        <v-title-secondary id="piano_log_title" text="Historial de Notas">
-        <v-card id="piano_log" size="4" padding="1" accent="secondary" overflow="auto">
-            <v-card id="note_log_template" padding="2"></v-card>
-        </v-card>
-    </v-card>
-</v-view>
+                Cuando se reproduzcan {?note_max} notas consecutivas, se pasará automaticamente a la siguiente etapa.
+            </app:span>
+            
+            <app:spacing size="2">
+            <app:col textPosition="center">
+                <app:piano pianoMode="{view.mode}">
+                    <app:piano-key keyColor="white" noteName="C"  pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="black" noteName="C#" pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="white" noteName="D"  pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="black" noteName="D#" pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="white" noteName="E"  pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="white" noteName="F"  pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="black" noteName="F#" pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="white" noteName="G"  pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="black" noteName="G#" pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="white" noteName="A"  pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="black" noteName="A#" pianoMode="{view.mode}" function="selectNote">
+                    <app:piano-key keyColor="white" noteName="B"  pianoMode="{view.mode}" function="selectNote">
+                </app:piano>
+            </app:col>
+        </app:card>
+        <app:card columnSize="4" padding="4">
+            <app:title-primary text="Prueba Auditiva">
+            <app:card id="progress_log" padding="3">      
+                Tipo de sonido: {?note_type}
+                <app:spacing size="2">
+                Reproduciendo la nota {?note_current} de {?note_max}
+                <app:spacing size="2">
+                Tiempo total transcurido: {?time_current_string}
+            </app:card>
+
+            <app:spacing>
+            <app:js-button id="startOrStop" function="startOrStop">{?button_running_string}</app:js-button>
+            <app:spacing size="2">
+            <app:title-secondary id="piano_log_title" text="Historial de Notas">
+            <app:card id="piano_log" columnSize="4" padding="1" accent="secondary" overflow="auto">
+                <app:card id="note_log_template" padding="2"></app:card>
+            </app:card>
+
+        </app:card>
+    </app:row>
+</app:view>
+<script type="application/json" id="audios_sources">
+    {view.audios_sources}
+</script>
+<script type="text/javascript" src="{view.base_script}" data-url="{view.url}" data-mode="{view.mode}"></script>

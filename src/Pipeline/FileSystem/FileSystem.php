@@ -10,6 +10,13 @@ use Pipeline\HTTP\Server\ServerResponse;
 
 class FileSystem
 {
+
+    public static function simplifyPath(string $path): string
+    {
+        $last_index = strripos($path, "/");
+        return substr($path, $last_index + 1);
+    }
+
     private static function recursiveGlob($pattern, $flags = 0): array
     {
         $files = glob($pattern, $flags);
@@ -45,14 +52,14 @@ class FileSystem
     {
         $exposed_paths = [];
 
-        if(!is_array($array_of_paths)){
+        if (!is_array($array_of_paths)) {
             $value = $array_of_paths;
             $array_of_paths = [];
             $array_of_paths[0] = $value;
         }
 
         foreach ($array_of_paths as $path) {
-            if($path instanceof AbstractPath){
+            if ($path instanceof AbstractPath) {
                 $path = $path->toString();
             }
             $exposed_paths[] = WebPath::create($path)->toString();
@@ -80,7 +87,7 @@ class FileSystem
     {
         if (!file_exists($path)) {
             if ($crash_on_failure) {
-                ServerResponse::create(500,"Invalid resource name [$path] to include as string. 
+                ServerResponse::create(500, "Invalid resource name [$path] to include as string. 
                 Check your API files.")->sendAndExit();
             } else {
                 die("Cannot find: " . $path->toString() . " from: " . debug_backtrace()[1]['function'] . "()");

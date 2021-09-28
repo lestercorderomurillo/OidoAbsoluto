@@ -27,11 +27,11 @@ class SCSSCompiler
             // Get build style files
             $buildin_scss_folder = (new DirectoryPath(SystemPath::BUILDIN, "SCSS/"))->toString();
 
-            // Get user components style files
-            $user_folder = (new DirectoryPath(SystemPath::USERCOMPONENTS, "Styles/"))->toString();
-
             // Get page style files
             $page_folder = (new DirectoryPath(SystemPath::WEB))->toString();
+
+            // Get user components style files
+            $user_folder = new DirectoryPath(SystemPath::USERCOMPONENTS, "Styles/");
 
             $scss_folders = ArrayHelper::stackLines(
                 $packages_files,
@@ -39,7 +39,7 @@ class SCSSCompiler
                     $page_folder,
                     $buildin_scss_folder,
                     $buildin_components_folder,
-                    $user_folder
+                    $user_folder->toString(),
                 ]
             );
 
@@ -50,6 +50,12 @@ class SCSSCompiler
             $output_scss = (new FilePath(SystemPath::WEB, "build", "css"))->toString();
 
             $string_scss = file_get_contents($entry_scss);
+
+            $user_files = FileSystem::find($user_folder, "scss");
+            foreach($user_files as $user_file){
+                $string_scss .= " @import \"".FileSystem::simplifyPath($user_file)."\";";
+            }
+
             $string_css = $scss_compiler->compile($string_scss);
             file_put_contents($output_scss, $string_css);
         }

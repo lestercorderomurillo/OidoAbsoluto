@@ -8,6 +8,8 @@ use Pipeline\Database\AbstractDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
+use Pipeline\Utilities\ArrayHelper;
+
 use function Pipeline\Accessors\Dependency;
 use function Pipeline\Accessors\Session;
 
@@ -28,16 +30,21 @@ class UserController extends Controller
 
             return $this->redirect("login");
         }
-
+        
         $audios_sources = FileSystem::findWebPaths(new DirectoryPath(SystemPath::WEB, "audio/"), "mp3");
-        $audios_sources_json = JSON::create($audios_sources)->toJavascriptString();
+        $audios_sources_json = JSON::create($audios_sources)->toString();
+
+        $output = ["mode" => $mode, "audios_sources" => $audios_sources_json];
 
         $test_type = "Piano Interactivo";
         if ($mode == "simple") {
             $test_type = "Teclado Interactivo";
+            $output = ArrayHelper::mergeNamedValues($output, ["showKeyText" => true]);
         }
 
-        return $this->view("hearing", ["mode" => $mode, "audios_sources" => $audios_sources_json, "title" => $test_type]);
+        $output = ArrayHelper::mergeNamedValues($output, ["title" => $test_type]);
+
+        return $this->view("hearing", $output);
     }
 
     function submitHearingTest(string $mode, string $expected_notes,  string $selected_notes)
@@ -48,13 +55,13 @@ class UserController extends Controller
         return "Not Implemented $mode $debug1 $debug2";
     }
 
-    function overview()
-    {
-        return $this->view("overview");
-    }
-
     function profile()
     {
         return $this->view("profile");
+    }
+
+    function testResult(int $id)
+    {
+        return $this->view("result");
     }
 }

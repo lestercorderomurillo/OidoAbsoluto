@@ -18,6 +18,12 @@ abstract class Controller extends ControllerBase
         if ($view_name == "") {
             $view_name = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
         }
+
+        foreach($parameters as $key => $value){
+            $parameters["view." . $key] = $value;
+            unset($parameters[$key]);
+        }
+
         $view = new View($this->getControllerName(), $view_name, $parameters);
         $result = new ViewResult($view);
         return $result->toResponse();

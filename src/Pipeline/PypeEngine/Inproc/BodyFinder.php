@@ -15,7 +15,7 @@ class BodyFinder
         $closure_tag_pos = PatternHelper::findByText($search_string, "</$tag>", $body_start_pos);
         $value = true;
 
-        while((($nested_tag_pos = PatternHelper::findByText($search_string, "<$tag>", $body_start_pos)) != false) 
+        while((($nested_tag_pos = PatternHelper::findByText($search_string, "<$tag", $body_start_pos)) != false) 
         && ($nested_tag_pos < $closure_tag_pos) && ($value != false)){
             $value = PatternHelper::findByText($search_string, "</$tag>", $closure_tag_pos + 1);
             if($value != false){

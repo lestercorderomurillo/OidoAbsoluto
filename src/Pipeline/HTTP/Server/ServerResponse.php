@@ -31,9 +31,6 @@ class ServerResponse extends Message
 
         $view_renderer = Dependency(PypeViewRenderer::class);
 
-        $default = PypeCompiler::getDefaultViewData($response_view);
-        $response_view->addViewData($default);
-
         $view_renderer->setView($response_view);
 
         /*$old_view = $view_renderer->getContextlessView();

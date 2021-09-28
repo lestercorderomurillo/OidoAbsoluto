@@ -23,15 +23,3 @@ class JSHelper {
         return hours + ':' + minutes + ':' + seconds;
     }
 }
-
-$(document).ready(function() {
-    $(".error").hide();
-
-    $(".app-focuseable").keyup(function() {
-        if (this.value.length == this.maxLength) {
-            $(this).next('.app-focuseable').focus();
-        }
-    });
-
-    $("body").addClass('body-loaded');
-});

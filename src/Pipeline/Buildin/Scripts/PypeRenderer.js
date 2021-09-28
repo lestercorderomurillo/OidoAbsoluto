@@ -10,21 +10,26 @@ $(document).ready(function() {
     $("body").addClass('body-loaded');
 });
 
-class PypeDOM {
+class PypeRenderer {
 
     constructor(){
         this.handler = {};
+        this.once = false;
         this.state = ObservableSlim.create(this.handler, true, function (changes) {
             for (var i = 0; i < changes.length; i++) {
                 if (changes[i]["type"] == "add" || changes[i]["type"] == "update") {
-                    $("#app-sync-" + changes[i]["property"]).html(changes[i]["newValue"]);
+                    var name = "app-sync-" + changes[i]["property"];
+                    $("div[class*='" + name + "']").html(changes[i]["newValue"]);
                 }
             }
         });
     }
 
     onStart(functionCallback) {
-        functionCallback(this.state);
+        if(!this.once){
+            this.once = true;
+            functionCallback(this.state);
+        }
         return this.state;
     }
 
@@ -33,11 +38,16 @@ class PypeDOM {
         return this.state;
     }
 
-    static renderNow(functionCallback, delay = 1) {
+    render(functionCallback) {
+        functionCallback(this.state);
+        return this.state;
+    }
+
+    /*static render(functionCallback, delay = 1) {
         setTimeout(function() {
             functionCallback(this.state);
         }, delay);
 
         return this.state;
-    }
+    }*/
 }

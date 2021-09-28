@@ -87,8 +87,6 @@ class ArrayHelper
         }
         if (isset($replacers)) {
             foreach ($replaced_array as $key => $value) {
-
-                
                 // we asume value is thing, but if its "thing.som" thy then $value->thatthing!
                 $acumulative_replaced_value = $value;
                 foreach ($replacers as $_key => $_value) {

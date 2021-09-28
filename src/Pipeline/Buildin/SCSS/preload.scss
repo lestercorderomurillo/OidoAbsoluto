@@ -26,12 +26,12 @@ input[type='number'] {
 }
 
 @mixin noselect{
-    /*-webkit-touch-callout: none;
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;*/
+    user-select: none;
 }
 
 *{
@@ -124,6 +124,30 @@ a:hover{
     color: $text-info !important;
 }
 
+button.accent-primary:hover{
+    background-color: $text-primary !important;
+    color: $bg-primary !important;
+}
+button.accent-secondary:hover{
+    background-color: $text-secondary !important;
+    color: $bg-secondary !important;
+}
+button.accent-success:hover{
+    background-color: $text-success !important;
+    color: $bg-success !important;
+}
+button.accent-warning:hover{
+    background-color: $text-warning !important;
+    color: $bg-warning !important;
+}
+button.accent-danger:hover{
+    background-color: $text-danger !important;
+    color: $bg-danger !important;
+}
+button.accent-info:hover{
+    background-color: $text-info !important;
+    color: $bg-info !important;
+}
 
 // Base Component
 @mixin component{

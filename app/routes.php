@@ -16,14 +16,15 @@ Router::post("/signup/submit", "Home", "signupSubmit",
 
 Router::get("/forgot", "Home", "resetRequest");
 Router::post("/forgot/submit", "Home", "resetRequestSubmit");
-Router::post("/newpass", "Home", "resetPassword", ["token"]);
+Router::get("/newpass", "Home", "resetPassword", ["token"]);
 Router::post("/newpass/submit", "Home", "resetPasswordSubmit");
 
 /* UserController Routes */
-Router::get("/testing/audio", "User", "hearingTest", ["mode"]);
-Router::post("/testing/audio/submit", "User", "submitHearingTest", ["mode", "expected_notes", "selected_notes"]);
-Router::get("/testing/questions", "User", "questionsTest", ["mode"]);
-Router::get("/user/overview", "User", "overview");
+Router::get("/test/audio", "User", "hearingTest", ["mode"]);
+Router::post("/test/audio/submit", "User", "submitHearingTest", ["mode", "expected_notes", "selected_notes"]);
+Router::get("/test/questions", "User", "questionsTest", ["mode"]);
+/*Router::get("/test/questions/submit", "User", "questionsTest", ["mode"]);*/
+Router::get("/test/result", "User", "testResult", ["id"]);
 Router::get("/profile", "User", "profile");
 
 /* AdminstratorController Routes */

@@ -75,6 +75,8 @@ $piano-log-height: 250px;
     width: $piano-key-width;
     height: $piano-key-height;
 
+    margin-left: -6px;
+
     @media (max-width: $piano-breakpoint) {
         width: $piano-key-width*$piano-downscale;
         height: $piano-key-height*$piano-downscale;

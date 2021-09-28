@@ -24,7 +24,7 @@ return
         "prototype" => "div",
         "renderTemplate" => 
         <<<HTML
-        <this class="pb-2 col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-{columnSize} mx-auto text-{textPosition} {classes}">
+        <this class="pb-2 col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-{this.columnSize} mx-auto text-{this.textPosition} {this.classes}">
             {this.body}
         </this>
         HTML
@@ -34,7 +34,7 @@ return
         "inlineComponent",
         "renderTemplate" => 
         <<<HTML
-        <for start="1" end="{size}">
+        <for start="1" end="{this.size}">
             <br>
         </for>
         HTML
@@ -51,8 +51,8 @@ return
         "prototype" => "div",
         "renderTemplate" => 
         <<<HTML
-        <this id&name="{id}" class="p-1 col col-12 col-sm-12 col-md-12 col-lg-{columnSize} col-xl-{columnSize} mx-auto text-center" style="max-width: {maxWidth};">
-            <div class="shadow shadow-lg text-left accent-{accent} p-{padding} rounded w-100 h-{overflow}" style="font-size: {fontSize};">
+        <this id&name="{this.id}" class="p-1 col col-12 col-sm-12 col-md-12 col-lg-{this.columnSize} col-xl-{this.columnSize} mx-auto text-center" style="max-width: {this.maxWidth};">
+            <div class="shadow shadow-lg text-left accent-{this.accent} p-{this.padding} rounded w-100 h-{this.overflow}" style="font-size: {this.fontSize};">
                 {this.body}
             </div>
         </this>

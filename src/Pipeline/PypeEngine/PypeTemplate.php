@@ -3,7 +3,6 @@
 namespace Pipeline\PypeEngine;
 
 use Pipeline\Traits\DefaultAccessorTrait;
-use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\Exceptions\CompileException;
 use Pipeline\Utilities\ArrayHelper;
 
@@ -47,10 +46,16 @@ class PypeTemplate
         $this->defaults = ArrayHelper::mergeNamedValues([
             "id" => "",
             "name" => "",
-            "classes" => ""
+            "classes" => "",
+            "accent" => "secondary"
         ], $this->defaults);
 
-        $this->preserve = $this->tryGet($source["preserve"], []);
+        foreach ($this->defaults as $key => $value){
+            $this->defaults["this." . $key] = $value;
+            unset($this->defaults[$key]);
+        }
+
+        //$this->preserve = $this->tryGet($source["preserve"], []);
 
         $this->component_class = trim($this->tryGet($source["componentClass"], "{this}"));
 

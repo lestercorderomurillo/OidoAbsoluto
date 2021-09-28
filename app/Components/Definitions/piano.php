@@ -1,17 +1,27 @@
 <?php
 return
     [
-        "piano" => [
+        "piano"  => [
             "required" => ["pianoMode"],
-            "prototype" => "div",
-            "class" => "v-piano-[pianoMode] text-center"
+            "componentClass" => "piano-{this.pianoMode}",
+            "renderTemplate" => 
+            <<<HTML
+            <this class="text-center">
+                {this.body}
+            </this>
+            HTML,
         ],
-        "piano-key" => [
-            "required" => ["noteName", "keyColor", "pianoMode", "onClick"],
-            "prototype" => "div",
-            "id" => "[noteName]",
-            "class" => "v-piano-key-[keyColor]-[pianoMode]",
-            "include" => ["onclick" => "[onClick]('[noteName]')"],
-            "closure"
+        "piano-key"  => [
+            "required" => ["noteName", "keyColor", "pianoMode", "function"],
+            "inlineComponent",
+            "componentClass" => "piano-key-{this.keyColor}-{this.pianoMode}",
+            "renderTemplate" => 
+            <<<HTML
+            <this id="{this.noteName}" class="text-center" onclick="{this.function}('{this.noteName}')">
+                <ifdef check="view.showKeyText">
+                    {this.noteName}
+                </ifdef>
+            </this>
+            HTML,
         ]
     ];

@@ -13,6 +13,8 @@ use Pipeline\HTTP\Common\RouteInterface;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\NullMessage;
 use Pipeline\Middleware\ForceSSL;
+use ReflectionFunction;
+use ReflectionObject;
 
 use function Pipeline\Accessors\App;
 use function Pipeline\Accessors\Configuration;
@@ -104,6 +106,19 @@ class Router
                                 }
                             }
 
+                            $reflection_object = new ReflectionObject($controller);
+                            $reflection_method = $reflection_object->getMethod($action_name);
+
+                            $reflection_params = $reflection_method->getParameters();
+                            $i = 0;
+                            foreach ($union as $key => $value) {
+                                if($reflection_params[$i++]->getType() == "int"){
+                                    $union[$key] = (int)$value;
+                                }
+
+                            }
+                            /*var_dump($union);
+                            die();*/
                             $anything_from_controller = call_user_func_array([$controller, $action_name], $union);
                             $response = $controller->handle($anything_from_controller);
 

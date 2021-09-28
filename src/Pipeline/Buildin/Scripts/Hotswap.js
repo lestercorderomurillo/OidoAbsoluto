@@ -1,13 +1,15 @@
-var arguments = $('script[src*=Hotswap]');
+$(document).ready(function() {
+    var arguments = $('script[src*=Hotswap]');
 
-var enabled = arguments.attr('data-enabled');
-var origin = arguments.attr('data-origin');
-var timeout = arguments.attr('data-timeout');
+    var enabled = arguments.attr('data-enabled');
+    var origin = arguments.attr('data-origin');
+    var timeout = arguments.attr('data-timeout');
 
-if (enabled == false){
-    var hotswap = Hotswap(origin, timeout);
-    hotswap.sync();
-}
+    if (enabled == false){
+        var hotswap = Hotswap(origin, timeout);
+        hotswap.sync();
+    }
+});
 
 class Hotswap {
 

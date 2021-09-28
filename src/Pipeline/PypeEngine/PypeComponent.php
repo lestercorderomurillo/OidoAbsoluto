@@ -2,11 +2,11 @@
 
 namespace Pipeline\PypeEngine;
 
-use Pipeline\Pype\Exceptions\CompileException;
-use Pipeline\PypeEngine\Inproc\RenderContext;
+
 use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\ArrayHelper;
 use Pipeline\Traits\StringableTrait;
+use Pipeline\PypeEngine\Exceptions\CompileException;
 
 use function Pipeline\Accessors\Dependency;
 use function Pipeline\Accessors\Session;
@@ -14,31 +14,23 @@ use function Pipeline\Accessors\Session;
 class PypeComponent
 {
     use StringableTrait;
+
     private PypeTemplate $template;
-    private RenderContext $context;
+    private array $context;
+
     private array $attributes;
     private string $inner_body;
 
-    public static function create(string $input, $context = null): PypeComponent
+    public static function create(string $input, array $context = []): PypeComponent
     {
-        if($context == null){
-            $context = new RenderContext();
-        }else if(is_array($context)){
-            $context = new RenderContext($context);
-        }
-
         $parsed = PypeCompiler::componentStringToArray($input);
         $template = new PypeTemplate($parsed[0]);
 
         return new PypeComponent($template, $parsed[1], $context);
     }
 
-    public function __construct(PypeTemplate $template, array $attributes = [], RenderContext $context = null)
+    public function __construct(PypeTemplate $template, array $attributes = [], array $context = [])
     {
-        if($context == null){
-            $context = new RenderContext();
-        }
-
         $this->compiler = Dependency(PypeCompiler::class);
         $this->template = $template;
         $this->attributes = $attributes;
@@ -67,31 +59,28 @@ class PypeComponent
 
     public function render(): string
     {
+        $defaults = $this->template->getDefaultAttributes();
+        $viewtokens = [];
+        $atokens = [];
+
         $systokens =
-            [
-                "url" => __URL__,
-                "random" => Cryptography::computeRandomKey(8),
-                "this" => $this->template->getComponentName(),
-                "this.body" => $this->inner_body,
-            ];
+        [
+            "this" => $this->template->getComponentName(),
+            "this.body" => $this->inner_body,
+            "this.class" => $this->template->getComponentClass()
+        ];
 
         foreach(Session()->expose() as $key => $value){
             $systokens["session.$key"] = $value;
         }
 
-        $defaults = $this->template->getDefaultAttributes();
-
-        foreach ($this->context->expose() as $key => $value) {
-            if(!isset($this->attributes[$key])){
-                $this->attributes[$key] = $value;
-            }
+        foreach($this->attributes as $key => $value){
+            $atokens["this.$key"] = $value;
         }
 
-        $domtokens = $this->attributes;
-        $tokens = ArrayHelper::mergeNamedValues($systokens, $defaults, $domtokens);
-        $this->context->set("componentClass", $this->template->getComponentClass()); 
-
-        return PypeCompiler::renderString($this->template->getRenderTemplateString(), $tokens, $this->context);
+        $this->context = ArrayHelper::mergeNamedValues($this->context, $viewtokens, $defaults, $atokens, $systokens);
+        ksort($this->context);
+        return PypeCompiler::renderString($this->template->getRenderTemplateString(), $this->context);
     }
 
     public function toString(): string {
