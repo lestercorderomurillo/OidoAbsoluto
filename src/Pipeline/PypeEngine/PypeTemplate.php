@@ -22,10 +22,6 @@ class PypeTemplate
 
     public function __construct(string $component_name)
     {
-        if ($component_name[0] == ".") {
-            $component_name = substr($component_name, 1);
-        }
-
         if (!PypeTemplateBatch::isRegistered($component_name)) {
             throw new CompileException("Trying to render the component \"$component_name\" failed. <br>
             Unregistered component. Check your view/components files.", 500);
@@ -39,28 +35,20 @@ class PypeTemplate
     {
         $this->prototype = $this->tryGet($source["prototype"], "div");
         $this->template = trim($source["renderTemplate"]);
-
         $this->required = $this->tryGet($source["required"], []);
-        $this->defaults = $this->tryGet($source["defaults"], []);
-
-        $this->defaults = ArrayHelper::mergeNamedValues([
-            "id" => "",
-            "name" => "",
-            "classes" => "",
-            "accent" => "secondary"
-        ], $this->defaults);
-
-        foreach ($this->defaults as $key => $value){
-            $this->defaults["this." . $key] = $value;
-            unset($this->defaults[$key]);
-        }
-
-        //$this->preserve = $this->tryGet($source["preserve"], []);
-
-        $this->component_class = trim($this->tryGet($source["componentClass"], "{this}"));
-
+        $this->component_class = trim($this->tryGet($source["componentClass"], $this->component_name));
         $this->new_lines = $this->tryGet($source["newLine"], 0);
         $this->require_closure = !($this->hasKey($source, "inlineComponent"));
+
+        $this->defaults = ArrayHelper::merge2DArray(true, [
+            "id" => "",
+            "name" => "",
+            "class" => $this->component_class,
+            "classes" => "",
+            "accent" => "secondary"
+        ], $this->tryGet($source["defaults"], []));
+
+        ArrayHelper::appendKeyPrefix("this", $this->defaults);
     }
 
     public function hasKey(array $source, string $attribute): bool

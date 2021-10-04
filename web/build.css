@@ -251,16 +251,6 @@ input[type='radio']:checked:after {
     height: 118.8px !important;
   }
 }
-.app-piano-key-white-full:active {
-  transition-duration: 0.05s;
-  filter: brightness(0.8);
-  background: linear-gradient(to right, white, #e3e3e3);
-}
-.app-piano-key-black-full:active {
-  transition-duration: 0.05s;
-  filter: brightness(0.6);
-  background: linear-gradient(-45deg, #242424, #141414);
-}
 /* Simple piano */
 .app-piano-key-white-simple, .app-piano-key-black-simple {
   margin: 4px;
@@ -283,6 +273,6 @@ input[type='radio']:checked:after {
     line-height: 60px;
   }
 }
-.app-piano-key-white-simple:active, .app-piano-key-black-simple:active {
-  background: linear-gradient(#e3e3e3, white);
+.app-piano-toggleable {
+  background: linear-gradient(#e3e3e3, gray) !important;
 }

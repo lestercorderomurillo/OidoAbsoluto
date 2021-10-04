@@ -2,11 +2,12 @@
 
 namespace Pipeline\Traits;
 
-use Pipeline\Security\Cryptography;
+use Pipeline\Utilities\StringHelper;
 
 trait ClassAwareTrait
 {
-    private function defaultIfNeeded($class_or_object = null){
+    private function defaultIfNeeded($class_or_object = null)
+    {
         if ($class_or_object == null) {
             $class_or_object = $this;
         }
@@ -30,7 +31,7 @@ trait ClassAwareTrait
         $reflection_class = new \ReflectionClass($class_or_object);
 
         foreach ($reflection_class->getProperties($visibility) as $property) {
-            $value = Cryptography::sanitizeString($this->{$property->getName()});
+            $value = StringHelper::sanitizeString($this->{$property->getName()});
             $attributes[$property->getName()] = $value;
         }
         return $attributes;

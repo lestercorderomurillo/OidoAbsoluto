@@ -55,7 +55,8 @@ class PypeValidator{
 
             $(`#error_${pype_id}`).html(reason);
 
-            PypeRenderer.render(function(state) {
+            var renderer = new PypeRenderer();
+            renderer.render(function() {
                 $(`#error_${pype_id}`).show();
             });
 

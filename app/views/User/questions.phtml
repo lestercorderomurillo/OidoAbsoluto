@@ -1,0 +1,21 @@
+<app:view title="Recolección de información">
+    <app:row>
+        <app:card columnSize="10">
+            <app:title-primary text="Recolección de información">
+            <app:title-secondary text="Se le pedirá que conteste el siguiente formulario sinceramente:">
+            <foreach name="question" from="view:questions">
+                <app:card padding="2">
+                    <div>{question:subject}</div>
+                    <div>Tipo: {question:type}</div>
+
+                    <ifdef check="question:choices">
+                        <a>Tiene choices:</a>
+                        <foreach name="choice" from="question:choices">
+                            <div>Choice: {choice}</div>
+                        </foreach>
+                    </ifdef>
+                </app:card>
+            </foreach>
+        </app:card>
+    </app:row>
+</app:view>

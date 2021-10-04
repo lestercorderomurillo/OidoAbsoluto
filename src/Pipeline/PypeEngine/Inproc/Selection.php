@@ -37,7 +37,7 @@ class Selection
         return $this;
     }
 
-    public function &moveStartPosition(int $offset): Selection
+    public function &moveStartPosition(int $offset = 1): Selection
     {
         $this->start += $offset;
         $this->start = max($this->start, 0);

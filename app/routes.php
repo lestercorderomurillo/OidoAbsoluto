@@ -22,13 +22,12 @@ Router::post("/newpass/submit", "Home", "resetPasswordSubmit");
 /* UserController Routes */
 Router::get("/test/audio", "User", "hearingTest", ["mode"]);
 Router::post("/test/audio/submit", "User", "submitHearingTest", ["mode", "expected_notes", "selected_notes"]);
-Router::get("/test/questions", "User", "questionsTest", ["mode"]);
+Router::get("/test/questions", "User", "questionsTest");
 /*Router::get("/test/questions/submit", "User", "questionsTest", ["mode"]);*/
 Router::get("/test/result", "User", "testResult", ["id"]);
 Router::get("/profile", "User", "profile");
 
 /* AdminstratorController Routes */
-Router::get("/admin/graph", "Admin", "graph");
 Router::get("/admin/overview", "Admin", "overview");
 
 /* DeveloperController Routes */

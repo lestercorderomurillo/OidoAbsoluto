@@ -2,10 +2,13 @@
 
 namespace Pipeline\Utilities;
 
-use Pipeline\Security\Cryptography;
-
 class StringHelper
 {
+    public static function sanitizeString(string $string): string
+    {
+        return preg_replace('[A-Za-z0-9@.\/\-#]', '', trim($string));
+    }
+
     public static function contains(string $text, string $check)
     {
         return (strpos($text, $check) !== false);
@@ -16,7 +19,7 @@ class StringHelper
         $clauses[] = '[^' . $delimiters . $quotes . ']';
 
         foreach (str_split($quotes) as $quote) {
-            $quote = Cryptography::sanitizeString($quote);
+            $quote = self::sanitizeString($quote);
             $clauses[] = "[$quote][^$quote]*[$quote]";
         }
 

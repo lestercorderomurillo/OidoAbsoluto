@@ -117,18 +117,6 @@ $piano-log-height: 250px;
     border-width: 1px;
 }
 
-.app-piano-key-white-full:active{
-    transition-duration: 0.05s;
-    filter: brightness(0.80);
-    background: linear-gradient(to right, $piano-wk-color-bg, $piano-wk-color-bg-end);
-}
-
-.app-piano-key-black-full:active{
-    transition-duration: 0.05s;
-    filter: brightness(0.60);
-    background: linear-gradient(-45deg, $piano-bk-color-bg, $piano-bk-color-bg-end);
-}
-
 /* Simple piano */
 .app-piano-key-white-simple, .app-piano-key-black-simple{
     margin: 4px;
@@ -154,6 +142,6 @@ $piano-log-height: 250px;
     border-width: 1px;
 }
 
-.app-piano-key-white-simple:active, .app-piano-key-black-simple:active{
-    background: linear-gradient($piano-wk-color-bg-end, $piano-wk-color-bg);
+.app-piano-toggleable{
+    background: linear-gradient($piano-wk-color-bg-end, gray) !important;
 }

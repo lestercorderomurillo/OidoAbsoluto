@@ -1,0 +1,15 @@
+<app:view title="Perfil de Usuario">
+    <app:row>
+        <app:card columnSize="10">
+            <app:title-primary text="Información General">
+            <app:title-secondary text="Despliega información de todos los usuarios">
+            <app:row>
+                <for start="0" end="{view:numberOfCharts}">
+                    <app:col columnSize="6" classes="pb-5">
+                        <app:chart id="{view:id:{i}}" title="{view:title:{i}}" subTitle="{view:subTitle:{i}}" dataSource="data:{i}">
+                    </app:col>
+                </for>
+            </app:row>
+        </app:card>
+    </app:row>
+</app:view>

@@ -1,33 +1,35 @@
-<app:view title="{view.title}">
+<app:view title="{view:title}">
     <app:row>
         <app:card columnSize="8" padding="4">
-            <app:title-primary text="{view.title}">
+            <app:title-primary text="{view:title}">
             <app:span fontSize="0.9rem">
                 <strong>Instrucciones de utilización</strong>
                 <app:spacing size="2">
                 Una vez usted escucha una nota músical, tiene un intervalo breve de 3 segundos para
-                identificar y marcar la nota que cree que escuchó en el {view.title}.
-                Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. 
-                Para el caso de notas blancas, utilice las teclas [QWERTYU] y para las negras utilice [12345].
+                identificar y marcar la nota que cree que escuchó en el {view:title}.
+                <ifdef check="view:showKeyBinds">
+                    Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. 
+                    Para el caso de notas blancas, utilice las teclas [ZXCVBNM] y para las negras utilice [SDGHJ].
+                </ifdef>
                 <v-spacing size="2">
                 Cuando se reproduzcan {?note_max} notas consecutivas, se pasará automaticamente a la siguiente etapa.
             </app:span>
             
             <app:spacing size="2">
             <app:col textPosition="center">
-                <app:piano pianoMode="{view.mode}">
-                    <app:piano-key keyColor="white" noteName="C"  pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="black" noteName="C#" pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="white" noteName="D"  pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="black" noteName="D#" pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="white" noteName="E"  pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="white" noteName="F"  pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="black" noteName="F#" pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="white" noteName="G"  pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="black" noteName="G#" pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="white" noteName="A"  pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="black" noteName="A#" pianoMode="{view.mode}" function="selectNote">
-                    <app:piano-key keyColor="white" noteName="B"  pianoMode="{view.mode}" function="selectNote">
+                <app:piano pianoMode="{view:mode}">
+                    <app:piano-key keyColor="white" noteName="C"  pianoMode="{view:mode}">
+                    <app:piano-key keyColor="black" noteName="CX" pianoMode="{view:mode}">
+                    <app:piano-key keyColor="white" noteName="D"  pianoMode="{view:mode}">
+                    <app:piano-key keyColor="black" noteName="DX" pianoMode="{view:mode}" >
+                    <app:piano-key keyColor="white" noteName="E"  pianoMode="{view:mode}">
+                    <app:piano-key keyColor="white" noteName="F"  pianoMode="{view:mode}">
+                    <app:piano-key keyColor="black" noteName="FX" pianoMode="{view:mode}">
+                    <app:piano-key keyColor="white" noteName="G"  pianoMode="{view:mode}">
+                    <app:piano-key keyColor="black" noteName="GX" pianoMode="{view:mode}">
+                    <app:piano-key keyColor="white" noteName="A"  pianoMode="{view:mode}">
+                    <app:piano-key keyColor="black" noteName="AX" pianoMode="{view:mode}">
+                    <app:piano-key keyColor="white" noteName="B"  pianoMode="{view:mode}">
                 </app:piano>
             </app:col>
         </app:card>
@@ -53,6 +55,6 @@
     </app:row>
 </app:view>
 <script type="application/json" id="audios_sources">
-    {view.audios_sources}
+    {view:audios_sources}
 </script>
-<script type="text/javascript" src="{view.base_script}" data-url="{view.url}" data-mode="{view.mode}"></script>
+<script type="text/javascript" src="{view:base_script}" data-url="{view:url}" data-mode="{view:mode}"></script>

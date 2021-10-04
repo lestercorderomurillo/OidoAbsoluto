@@ -2,12 +2,9 @@
 
 namespace Pipeline\PypeEngine;
 
-
-use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\ArrayHelper;
 use Pipeline\Traits\StringableTrait;
 use Pipeline\PypeEngine\Exceptions\CompileException;
-
 use function Pipeline\Accessors\Dependency;
 use function Pipeline\Accessors\Session;
 
@@ -17,7 +14,6 @@ class PypeComponent
 
     private PypeTemplate $template;
     private array $context;
-
     private array $attributes;
     private string $inner_body;
 
@@ -60,26 +56,24 @@ class PypeComponent
     public function render(): string
     {
         $defaults = $this->template->getDefaultAttributes();
-        $viewtokens = [];
-        $atokens = [];
 
-        $systokens =
+        $tokens =
         [
             "this" => $this->template->getComponentName(),
-            "this.body" => $this->inner_body,
-            "this.class" => $this->template->getComponentClass()
+            "this:body" => $this->inner_body,
         ];
 
         foreach(Session()->expose() as $key => $value){
-            $systokens["session.$key"] = $value;
+            $tokens["session.$key"] = $value;
         }
 
         foreach($this->attributes as $key => $value){
-            $atokens["this.$key"] = $value;
+            $tokens["this:$key"] = $value;
         }
 
-        $this->context = ArrayHelper::mergeNamedValues($this->context, $viewtokens, $defaults, $atokens, $systokens);
+        $this->context = ArrayHelper::mergeNamedValues($this->context, $defaults, $tokens);
         ksort($this->context);
+        
         return PypeCompiler::renderString($this->template->getRenderTemplateString(), $this->context);
     }
 

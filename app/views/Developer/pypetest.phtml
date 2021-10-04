@@ -1,22 +1,12 @@
-<app:row>
-    PARTE 1
-</app:row>
-<app:row>
-    PARTE 2
+<app:view title="Recolección de información">
     <app:row>
-        PARTE 3
-        <app:row>
-            PARTE 4
-            <app:card columnSize="3" padding="1">
-                PARTE 5
-                <app:card columnSize="3" padding="1">
-                    PARTE 6
-                </app:card>
-                PARTE 7
-            </app:card>
-            PARTE 8
-        </app:row>
-        PARTE 9
+        <app:card columnSize="10">
+            <app:title-primary text="Recolección de información">
+            <app:title-secondary text="Se le pedirá que conteste el siguiente formulario sinceramente:">
+            <foreach name="question" from="view:questions">
+                <div>Pregunta: {question:subject}</div>
+                <div>Tipo: {question:type}</div>
+            </foreach>
+        </app:card>
     </app:row>
-    PARTE 10
-</app:row>
+</app:view>

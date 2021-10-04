@@ -42,7 +42,7 @@ $(document).ready(function () {
     var selectedSinNotes = [];
 
     // Loads mp3 in memory
-    window.loadAudiosFromRemote = function() {
+    window.loadAudiosFromRemote = function () {
         for (const source of audiosSources) {
             var audioElement = document.createElement('audio');
             audioElement.setAttribute('src', source);
@@ -55,7 +55,7 @@ $(document).ready(function () {
     }
 
     // Build expected notes
-    window.buildExpectedNotes = function() {
+    window.buildExpectedNotes = function () {
         var temporal = [];
 
         for (const audioElement of audiosInMemory) {
@@ -71,7 +71,8 @@ $(document).ready(function () {
     }
 
     // User just pressed a note
-    window.selectNote = function(noteName) {
+    window.selectNote = function (noteName) {
+        animatePianoKey(noteName);
         noteNameSelected = noteName;
 
         reactionTime = (Date.now() - timeReference) * 0.97;
@@ -81,7 +82,7 @@ $(document).ready(function () {
     }
 
     // Play current note
-    window.playNote = function(index) {
+    window.playNote = function (index) {
         if (noteType == noteTypePiano) {
             expectedPianoNotes[index].audioElement.play();
         } else if (noteType == noteTypeSin) {
@@ -90,7 +91,7 @@ $(document).ready(function () {
     }
 
     // Stop current note
-    window.stopNote = function(index) {
+    window.stopNote = function (index) {
         if (noteType == noteTypePiano) {
             expectedPianoNotes[index].pause();
             expectedPianoNotes[index].currentTime = 0;
@@ -101,7 +102,7 @@ $(document).ready(function () {
     }
 
     // When a next Note is triggered
-    window.nextNote = function() {
+    window.nextNote = function () {
         noteIndex++;
 
         logNote(noteNameSelected, reactionTime);
@@ -118,7 +119,7 @@ $(document).ready(function () {
     }
 
     // Log one note to the Note Logger
-    window.logNote = function(noteName, reactionTime = 0) {
+    window.logNote = function (noteName, reactionTime = 0) {
 
         if (noteType == noteTypePiano) {
             selectedPianoNotes.push(new SelectedNote(noteName, reactionTime));
@@ -128,6 +129,8 @@ $(document).ready(function () {
 
         $("#piano_log").css("opacity", "100%");
         $("#piano_log_title").css("opacity", "100%");
+
+        noteName = noteName.replace("X", " Sostenido");
 
         template = $("#note_log_template").clone();
         template.attr("id", "note_log_" + loggedNotes++);
@@ -148,14 +151,14 @@ $(document).ready(function () {
     }
 
     // When a phase is completed
-    window.phaseCompleted = function() {
+    window.phaseCompleted = function () {
         if (noteType == noteTypePiano) {
             noteIndex = 0;
             noteType = noteTypeSin;
             playNote(noteIndex);
         } else if (noteType == noteTypeSin) {
 
-            renderer.render(function(state){
+            renderer.render(function (state) {
                 state.note_current = noteMax;
             });
 
@@ -164,7 +167,7 @@ $(document).ready(function () {
     }
 
     // Start or stop the test
-    window.startOrStop = function() {
+    window.startOrStop = function () {
         if (!isDone) {
             isRunning = !isRunning;
             if (isRunning) {
@@ -174,9 +177,9 @@ $(document).ready(function () {
             }
         }
     }
-    
+
     // Starts the test
-    window.startTest = function() {
+    window.startTest = function () {
 
         if (shouldRestart) {
 
@@ -190,7 +193,7 @@ $(document).ready(function () {
             noteIndex = 0;
             notesType = noteTypePiano;
 
-            renderer.render(function(state){
+            renderer.render(function (state) {
                 state.button_running_string = "Detener la prueba";
             });
 
@@ -203,7 +206,7 @@ $(document).ready(function () {
     }
 
     // Stops the test
-    window.stopTest = function() {
+    window.stopTest = function () {
         for (i = 0; i < audiosInMemory.length; i++) {
             audiosInMemory[i].currentTime = 0;
             audiosInMemory[i].pause();
@@ -211,17 +214,25 @@ $(document).ready(function () {
 
         shouldRestart = true;
 
-        renderer.render(function(state){
+        renderer.render(function (state) {
             state.button_running_string = "Reintentar la prueba";
         });
     }
 
+    window.animatePianoKey = function (id) {
+        id = "#" + id;
+        $(id).toggleClass("app-piano-toggleable");
+        setTimeout(function () {
+            $(id).toggleClass("app-piano-toggleable");
+        }, 60, id);
+    }
+
     // How the engine should prepare the piano
-    window.loadPiano = function() {
+    window.loadPiano = function () {
         loadAudiosFromRemote();
         buildExpectedNotes();
-        
-        renderer.onStart(function(state){
+
+        renderer.onStart(function (state) {
             state.note_type = 1;
             disableTestButton("Cargando notas...");
             state.note_current = 1;
@@ -229,12 +240,12 @@ $(document).ready(function () {
             state.time_current_string = JSHelper.numericalToHHMMSS(Math.floor(0));
         });
 
-        renderer.onUpdate(function(state){
-            if (audiosFetched == audiosSources.length && !alreadyLoaded){
+        renderer.onUpdate(function (state) {
+            if (audiosFetched == audiosSources.length && !alreadyLoaded) {
                 alreadyLoaded = true;
                 enableTestButton("Click para comenzar la prueba");
             }
-    
+
             if (isRunning && !isDone) {
                 var timeDelta = Date.now() - timeStart;
                 timeCurrent = timeDelta / 1000;
@@ -245,13 +256,54 @@ $(document).ready(function () {
 
         });
 
+        $(document).off().on("keypress", function (event) {
+            switch (event.code) {
+                case "KeyZ":
+                    $("#C").click();
+                    break;
+                case "KeyS":
+                    $("#CX").click();
+                    break;
+                case "KeyX":
+                    $("#D").click();
+                    break;
+                case "KeyD":
+                    $("#DX").click();
+                    break;
+                case "KeyC":
+                    $("#E").click();
+                    break;
+                case "KeyV":
+                    $("#F").click();
+                    break;
+                case "KeyG":
+                    $("#FX").click();
+                    break;
+                case "KeyB":
+                    $("#G").click();
+                    break;
+                case "KeyH":
+                    $("#GX").click();
+                    break;
+                case "KeyN":
+                    $("#A").click();
+                    break;
+                case "KeyJ":
+                    $("#AX").click();
+                    break;
+                case "KeyM":
+                    $("#B").click();
+                    break;
+            }
+        });
+
         $("#note_log_template").hide();
         $("#button_pause").hide();
     }
 
 
     // Upload the test
-    window.uploadTest = function() {
+    window.uploadTest = function () {
         isDone = true;
         disableTestButton("Subiendo resultados...");
 
@@ -262,8 +314,8 @@ $(document).ready(function () {
             type: "post",
             url: url + "test/audio/submit",
             contentType: 'application/x-www-form-urlencoded',
-            data: {mode: mode, expected_notes: expectedNotes, selected_notes: selectedNotes},
-            success: function(response) {
+            data: { mode: mode, expected_notes: expectedNotes, selected_notes: selectedNotes },
+            success: function (response) {
                 // he expects a JSON with the response of the token id to redirect to result
                 console.log(response);
             },
@@ -271,21 +323,21 @@ $(document).ready(function () {
     }
 
     // Disable button with text
-    window.disableTestButton = function(text) {
+    window.disableTestButton = function (text) {
         $("#startOrStop").addClass("bg-dark");
         $("#startOrStop").attr("disabled", true);
 
-        renderer.render(function(state){
+        renderer.render(function (state) {
             state.button_running_string = text;
         });
     }
 
     // Enable button with text
-    window.enableTestButton = function(text) {
+    window.enableTestButton = function (text) {
         $("#startOrStop").removeClass("bg-dark");
         $("#startOrStop").attr("disabled", false);
 
-        renderer.render(function(state){
+        renderer.render(function (state) {
             state.button_running_string = text;
         });
     }

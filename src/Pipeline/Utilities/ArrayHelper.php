@@ -28,15 +28,46 @@ class ArrayHelper
         return false;
     }
 
+    public static function appendKeyPrefix(string $prefix, array &$array, bool $after = false)
+    {
+        foreach ($array as $key => $value) {
+            if (!$after) {
+                $array["$prefix:" . $key] = $value;
+            } else {
+                $array[$key . ":$prefix"] = $value;
+            }
+            unset($array[$key]);
+        }
+        return $array;
+    }
+
+    public static function merge2DArray(bool $override_previous = false, ...$arrays_to_mix)
+    {
+        $result_array = [];
+        foreach ($arrays_to_mix as $array) {
+            if ($override_previous) {
+                foreach ($array as $key => $value) {
+                    $result_array[$key] = $value;
+                }
+            } else {
+                foreach ($array as $key => $value) {
+                    if (!isset($result_array[$key])) {
+                        $result_array[$key] = $value;
+                    }
+                }
+            }
+        }
+
+        return $result_array;
+    }
+
     public static function mergeNamedValues(...$arrays_to_mix)
     {
         $result_array = [];
         foreach ($arrays_to_mix as $array) {
-            //if (self::isMultidimensional($array)) {
             foreach ($array as $key => $value) {
                 $result_array[$key] = $value;
             }
-            //}
         }
 
         return $result_array;

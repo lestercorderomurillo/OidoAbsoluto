@@ -3,23 +3,23 @@ return
     [
         "piano"  => [
             "required" => ["pianoMode"],
-            "componentClass" => "piano-{this.pianoMode}",
+            "componentClass" => "piano-{this:pianoMode}",
             "renderTemplate" => 
             <<<HTML
             <this class="text-center">
-                {this.body}
+                {this:body}
             </this>
             HTML,
         ],
         "piano-key"  => [
-            "required" => ["noteName", "keyColor", "pianoMode", "function"],
+            "required" => ["noteName", "keyColor", "pianoMode"],
             "inlineComponent",
-            "componentClass" => "piano-key-{this.keyColor}-{this.pianoMode}",
+            "componentClass" => "piano-key-{this:keyColor}-{this:pianoMode}",
             "renderTemplate" => 
             <<<HTML
-            <this id="{this.noteName}" class="text-center" onclick="{this.function}('{this.noteName}')">
-                <ifdef check="view.showKeyText">
-                    {this.noteName}
+            <this id="{this:noteName}" class="text-center" onclick="selectNote('{this:noteName}')">
+                <ifdef check="view:showKeyText">
+                    {this:noteName}
                 </ifdef>
             </this>
             HTML,

@@ -112,6 +112,9 @@ class FileSystem
 
     public static function writeToDisk(FilePath $path, string $value, int $mode = FILE_APPEND): void
     {
+        if (!file_exists(dirname($path->toString()))) {
+            mkdir(dirname($path->toString()), 0777, true);
+        }
         file_put_contents($path->toString(), $value . "\n", $mode);
     }
 }

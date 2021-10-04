@@ -3,6 +3,7 @@
 namespace Pipeline\Controller;
 
 use Pipeline\Core\ResultInterface;
+use Pipeline\Core\Types\JSON;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\Message;
 use Pipeline\HTTP\NullMessage;
@@ -20,7 +21,10 @@ abstract class Controller extends ControllerBase
         }
 
         foreach($parameters as $key => $value){
-            $parameters["view." . $key] = $value;
+            if($value instanceof JSON){
+                $value = $value->toString();
+            }
+            $parameters["view:" . $key] = $value;
             unset($parameters[$key]);
         }
 

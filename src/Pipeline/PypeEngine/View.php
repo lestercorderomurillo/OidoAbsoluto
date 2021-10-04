@@ -108,13 +108,14 @@ class View
         $packages[] = new FilePath(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "min.js");
         $packages[] = new FilePath(SystemPath::PACKAGES, "observable-slim-0.1.5/observable-slim", "min.js");
         $packages[] = new FilePath(SystemPath::PACKAGES, "jquery-validate-1.11.1/jquery.validate", "min.js");
+        $packages[] = new FilePath(SystemPath::PACKAGES, "canvas-js/canvasjs", "min.js");
 
         $styles[] = "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap";
         $styles[] = new FilePath(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "css");
         $styles[] = new FilePath(SystemPath::PACKAGES, "font-awesome-4.7.0/font-awesome", "css");
         $styles[] = new FilePath(SystemPath::WEB, "build", "css");
 
-        $scripts = ArrayHelper::stackLines($packages, FileSystem::findWebPaths(new DirectoryPath(SystemPath::BUILDIN, "Scripts"), "js"));
+        $scripts = ArrayHelper::stackLines($packages, FileSystem::findWebPaths(new DirectoryPath(SystemPath::BUILDIN, "Scripts/"), "js"));
 
         $view_script = (new FilePath(SystemPath::VIEWS, $this->getControllerName() . "/" . $this->getViewName(), "js"))->toWebPath()->toString();
 
@@ -138,7 +139,7 @@ class View
         ];
 
         foreach($data as $key => $value){
-            $data["view." . $key] = $value;
+            $data["view:" . $key] = $value;
             unset($data[$key]);
         }
 

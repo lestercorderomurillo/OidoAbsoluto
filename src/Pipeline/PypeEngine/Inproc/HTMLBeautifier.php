@@ -227,7 +227,7 @@ class HTMLBeautifier
         return $content;
     }
 
-    //function to record a tag and its parent in this.tags Object
+    //function to record a tag and its parent in this:tags Object
     private function record_tag($tag)
     {
         if (isset($this->tags[$tag . 'count'])) { //check for the existence of this tag type
@@ -237,7 +237,7 @@ class HTMLBeautifier
             $this->tags[$tag . 'count'] = 1;
             $this->tags[$tag . $this->tags[$tag . 'count']] = $this->indent_level; //and record the present indent level
         }
-        $this->tags[$tag . $this->tags[$tag . 'count'] . 'parent'] = $this->tags['parent']; //set the parent (i.e. in the case of a div this.tags.div1parent)
+        $this->tags[$tag . $this->tags[$tag . 'count'] . 'parent'] = $this->tags['parent']; //set the parent (i.e. in the case of a div this:tags.div1parent)
         $this->tags['parent'] = $tag . $this->tags[$tag . 'count']; //and make this the current parent (i.e. in the case of a div 'div1')
     }
 
@@ -374,7 +374,7 @@ class HTMLBeautifier
                 $this->tag_type = 'SINGLE';
             }
         } else if (
-            $tag_check === '_script' /*&&
+            $tag_check === 'script' /*&&
             (strpos($tag_complete, 'type') === false ||
             (strpos($tag_complete, 'type') !== false &&
             preg_match('/\b(text|application)\/(x-)?(javascript|ecmascript|jscript|livescript)/', $tag_complete)))*/
@@ -587,7 +587,7 @@ class HTMLBeautifier
 
     private function get_full_indent($level)
     {
-        $level = $this->indent_level + $level || 0;
+        $level = ($this->indent_level + $level);
         if ($level < 1) {
             return '';
         }

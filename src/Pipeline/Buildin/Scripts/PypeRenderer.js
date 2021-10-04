@@ -10,6 +10,8 @@ $(document).ready(function() {
     $("body").addClass('body-loaded');
 });
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 class PypeRenderer {
 
     constructor(){
@@ -38,16 +40,7 @@ class PypeRenderer {
         return this.state;
     }
 
-    render(functionCallback) {
-        functionCallback(this.state);
-        return this.state;
+    render(functionCallback = null, delayTime = 1) {
+        setTimeout(functionCallback, delayTime, this.state);
     }
-
-    /*static render(functionCallback, delay = 1) {
-        setTimeout(function() {
-            functionCallback(this.state);
-        }, delay);
-
-        return this.state;
-    }*/
 }

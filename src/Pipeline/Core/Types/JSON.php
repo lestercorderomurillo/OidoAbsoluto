@@ -28,11 +28,6 @@ class JSON
         return $this;
     }
 
-    public function toJavascriptString(): string
-    {
-        return addslashes(json_encode($this->value, $this->hints));
-    }
-
     public function toString(): string
     {
         return json_encode($this->value, $this->hints);
