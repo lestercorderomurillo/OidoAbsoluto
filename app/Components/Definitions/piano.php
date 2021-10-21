@@ -3,8 +3,8 @@ return
     [
         "piano"  => [
             "required" => ["pianoMode"],
-            "componentClass" => "piano-{this:pianoMode}",
-            "renderTemplate" => 
+            "class" => "piano-{this:pianoMode}",
+            "render" => 
             <<<HTML
             <this class="text-center">
                 {this:body}
@@ -13,14 +13,14 @@ return
         ],
         "piano-key"  => [
             "required" => ["noteName", "keyColor", "pianoMode"],
-            "inlineComponent",
-            "componentClass" => "piano-key-{this:keyColor}-{this:pianoMode}",
-            "renderTemplate" => 
+            "class" => "piano-key-{this:keyColor}-{this:pianoMode}",
+            "inline",
+            "render" => 
             <<<HTML
             <this id="{this:noteName}" class="text-center" onclick="selectNote('{this:noteName}')">
-                <ifdef check="view:showKeyText">
+                <if value="{view:showKeyText}">
                     {this:noteName}
-                </ifdef>
+                </if>
             </this>
             HTML,
         ]

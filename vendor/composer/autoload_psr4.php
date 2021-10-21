@@ -14,6 +14,8 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Pipeline\\' => array($baseDir . '/src/Pipeline'),
     'Mimey\\' => array($vendorDir . '/ralouphie/mimey/src'),
+    'MathParser\\' => array($vendorDir . '/mossadal/math-parser/src/MathParser'),
+    'LangleyFoxall\\MathEval\\' => array($vendorDir . '/langleyfoxall/math_eval/src'),
     'Gajus\\Dindent\\' => array($vendorDir . '/gajus/dindent/src'),
     'App\\Models\\' => array($baseDir . '/app/models'),
     'App\\Middlewares\\' => array($baseDir . '/app/middlewares'),

@@ -31,4 +31,5 @@ Router::get("/profile", "User", "profile");
 Router::get("/admin/overview", "Admin", "overview");
 
 /* DeveloperController Routes */
-Router::get("/test", "Developer", "testMethod1");
+Router::get("/testMethod1", "Developer", "testMethod1");
+Router::get("/testMethod2", "Developer", "testMethod2");

@@ -8,56 +8,65 @@ use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\Utilities\ArrayHelper;
+use Pipeline\Traits\DefaultAccessorTrait;
 
 class PypeTemplateBatch extends StaticObjectInitializer
 {
-    private static $components;
+    use DefaultAccessorTrait;
+    private static $templates;
+
+    public function __construct()
+    {
+        self::invokeInitialize();
+    }
 
     protected static function __initialize(): void
     {
-        $native_components_file_names = FileSystem::find(new DirectoryPath(SystemPath::COMPONENTS));
-        $user_components_file_names = FileSystem::find(new DirectoryPath(SystemPath::USERCOMPONENTS));
+        $template_file_names = FileSystem::find(new DirectoryPath(SystemPath::COMPONENTS));
+        $user_template_file_names = FileSystem::find(new DirectoryPath(SystemPath::USERCOMPONENTS));
 
-        $components_to_include = ArrayHelper::stackLines($native_components_file_names, $user_components_file_names);
+        $templates_to_include = ArrayHelper::stackLines($template_file_names, $user_template_file_names);
 
-        self::$components = [];
-        foreach ($components_to_include as $file) {
-            $component = require_once($file);
-            if (!is_int($component)) {
-                self::$components = self::customKeyMerge($component, self::$components);
+        $templates_imported = [];
+        foreach ($templates_to_include as $file) {
+            $template = require_once($file);
+            if (!is_int($template)) {
+                $templates_imported = self::joinKeyMerge($template, $templates_imported);
             }
         }
-    }
 
-    public static function getComponentNativeArray(string $component_name): array
-    {
-        self::invokeInitialize();
-        try {
-            return self::$components[$component_name];
-        } catch (Exception $e) {
-            die($e->getMessage());
+        self::$templates = [];
+        foreach ($templates_imported as $name => $definition) {
+            self::$templates[$name] = new PypeTemplate($name, $definition);
         }
     }
 
-    public static function isRegistered(string $component_name)
+    public static function getTemplate(string $component_name): PypeTemplate
     {
         self::invokeInitialize();
-        return (isset(self::$components[$component_name]));
+        return (self::$templates[$component_name]);
     }
 
-    private static function customKeyMerge(array ...$arrays_to_mix)
+    public static function getTemplates(): array
+    {
+        self::invokeInitialize();
+        return self::$templates;
+    }
+
+    public static function isRegistered(string $component_name): bool
+    {
+        self::invokeInitialize();
+        return (isset(self::$templates[$component_name]));
+    }
+
+    private static function joinKeyMerge(array ...$arrays_to_mix): array
     {
         $result_array = [];
         foreach ($arrays_to_mix as $array) {
-            if (is_array($array)) {
-                foreach ($array as $key => $value) {
-                    $result_array["$key"] = $value;
-                }
-            } else {
-                throw new \InvalidArgumentException("Only can merge arrays, not strings.");
+            foreach ($array as $key => $value) {
+                $result_array["$key"] = $value;
             }
         }
-
         return $result_array;
     }
 }

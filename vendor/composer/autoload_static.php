@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
 {
+    public static $files = array (
+        'ba448153faf7ec4e95af3e4f40fcd7bc' => __DIR__ . '/..' . '/langleyfoxall/math_eval/src/math_eval.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
@@ -23,6 +27,11 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'M' => 
         array (
             'Mimey\\' => 6,
+            'MathParser\\' => 11,
+        ),
+        'L' => 
+        array (
+            'LangleyFoxall\\MathEval\\' => 23,
         ),
         'G' => 
         array (
@@ -69,6 +78,14 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'Mimey\\' => 
         array (
             0 => __DIR__ . '/..' . '/ralouphie/mimey/src',
+        ),
+        'MathParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mossadal/math-parser/src/MathParser',
+        ),
+        'LangleyFoxall\\MathEval\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/langleyfoxall/math_eval/src',
         ),
         'Gajus\\Dindent\\' => 
         array (

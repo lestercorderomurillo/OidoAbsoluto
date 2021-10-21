@@ -39,7 +39,7 @@ class PatternHelper
         if (!isset($val)) return false;
         $int = (int)$val;
         if ((string)$int != (string)$val) {
-            throw new Exception("Integer Parse error");
+            throw new Exception("Integer parse error at: " . debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'] . " function call");
         }
         return true;
     }

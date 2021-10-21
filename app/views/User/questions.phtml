@@ -1,21 +1,18 @@
 <app:view title="Recolección de información">
     <app:row>
-        <app:card columnSize="10">
-            <app:title-primary text="Recolección de información">
+        <app:card columnSize="12">
+            <app:title-icon imageSource="question.png" text="Recolección de información">
             <app:title-secondary text="Se le pedirá que conteste el siguiente formulario sinceramente:">
-            <foreach name="question" from="view:questions">
-                <app:card padding="2">
-                    <div>{question:subject}</div>
-                    <div>Tipo: {question:type}</div>
-
-                    <ifdef check="question:choices">
-                        <a>Tiene choices:</a>
-                        <foreach name="choice" from="question:choices">
-                            <div>Choice: {choice}</div>
-                        </foreach>
-                    </ifdef>
-                </app:card>
-            </foreach>
+            <app:paginator id="questions" numberOfPages="4" elementsPerPage="10">
+                <app:row>
+                    <app:col columnSize="6" minHeight="1251px">
+                        <app:survey source="{view:questions}" skip="({this:page}*{this:elementsPerPage})" take="({this:elementsPerPage}/2)">
+                    </app:col>
+                    <app:col columnSize="6" minHeight="1251px">
+                        <app:survey source="{view:questions}" skip="({this:page}*{this:elementsPerPage}+{this:elementsPerPage}/2)" take="({this:elementsPerPage}/2)">
+                    </app:col>
+                </app:row>
+            </app:paginator>
         </app:card>
     </app:row>
 </app:view>

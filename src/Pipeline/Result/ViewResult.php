@@ -5,6 +5,7 @@ namespace Pipeline\Result;
 use Pipeline\Core\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\View;
+use Pipeline\PypeEngine\PypeTemplateBatch;
 use Pipeline\PypeEngine\PypeViewRenderer;
 
 use function Pipeline\Accessors\Dependency;
@@ -21,7 +22,10 @@ class ViewResult implements ResultInterface
     public function toResponse(): ServerResponse
     {
         $renderer = Dependency(PypeViewRenderer::class);
+        $batch = Dependency(PypeTemplateBatch::class);
+
         $renderer->setView($this->view);
+        $renderer->setTemplateBatch($batch);
 
         $response = new ServerResponse();
         $response->addHeader("Content-Type", "text/html");

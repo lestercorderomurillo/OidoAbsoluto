@@ -11,8 +11,8 @@ return
                 "type" => "column"
             ],
             "prototype" => "div",
-            "inlineComponent",
-            "renderTemplate" =>
+            "inline",
+            "render" =>
             <<<HTML
             <this id="{this:id}" style="width: {this:width}; height: {this:height}; min-height: {this:minHeight};"></this>
             <script type="text/javascript">

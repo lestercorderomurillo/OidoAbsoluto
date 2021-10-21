@@ -3,7 +3,6 @@
 namespace Pipeline\PypeEngine\Inproc;
 
 use Pipeline\Utilities\PatternHelper;
-use Pipeline\Utilities\StringHelper;
 
 class BodyFinder
 {
@@ -15,12 +14,13 @@ class BodyFinder
         while (($html_strip = PatternHelper::selectStringByQuotes($input, "<", ">", $offset, 1))->isValid()) {
 
             $closure = false;
+
             if ($input[$html_strip->getStartPosition()] == "/") {
                 $closure = true;
                 $html_strip->moveStartPosition();
             }
 
-            if (StringHelper::startsWith($html_strip->getReducedString(), "$tag")) {
+            if ((explode(" ", $html_strip->getString(), 2)[0]) == $tag) {
                 if ($closure) {
                     if ($level == 0) {
                         return new Selection($initial_offset, $html_strip->getEndPosition() - strlen("</$tag"), $input);

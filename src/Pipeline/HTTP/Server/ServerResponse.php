@@ -6,6 +6,7 @@ use Pipeline\HTTP\Message;
 use Pipeline\Logger\Logger;
 use Pipeline\PypeEngine\PypeCompiler;
 use Pipeline\PypeEngine\PypeComponent;
+use Pipeline\PypeEngine\PypeTemplateBatch;
 use Pipeline\PypeEngine\PypeViewRenderer;
 use Pipeline\PypeEngine\View;
 
@@ -30,8 +31,10 @@ class ServerResponse extends Message
         $response_view = new View("System", "response", ["code" => "$code", "message" => "$message"]);
 
         $view_renderer = Dependency(PypeViewRenderer::class);
+        $batch = Dependency(PypeTemplateBatch::class);
 
         $view_renderer->setView($response_view);
+        $view_renderer->setTemplateBatch($batch);
 
         /*$old_view = $view_renderer->getContextlessView();
         if(!App()->getRuntimeEnvironment()->inProductionMode()){

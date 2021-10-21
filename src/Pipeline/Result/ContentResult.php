@@ -7,16 +7,17 @@ use Pipeline\HTTP\Server\ServerResponse;
 
 class ContentResult implements ResultInterface
 {
-    private $value;
+    private string $value;
 
-    public function __construct($value)
+    public function __construct(string $value)
     {
-        $this->value = "$value";
+        $this->value = $value;
     }
 
     public function toResponse(): ServerResponse
     {
         $response = new ServerResponse();
+        $response->addHeader("Content-Type", "text/html");
         $response->setBody($this->value);
         return $response;
     }

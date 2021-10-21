@@ -7,7 +7,7 @@
     "application.production" => false,
     "database.mysql.server" => "localhost",
     "database.mysql.user" => "root",
-    "database.mysql.pass" => "",
+    "database.mysql.pass" => "localhost",
     "database.mysql.db" => "oidoabsoluto",
     "development.logging" => true,
     "development.errorLogging" => true,

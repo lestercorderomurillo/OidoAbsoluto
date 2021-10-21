@@ -151,15 +151,17 @@ class Router
         }
     }
 
-    public static function get(string $match, string $controller_name, string $action_name, $parameters = []): Route
+    public static function get(string $match, string $controller_name, string $action_name = null, $parameters = []): Route
     {
+        if(!$action_name) $action_name = substr($controller_name, 1);
         $current = new Route(__FUNCTION__, $match, $controller_name, $action_name, $parameters);
         self::$routes[] = $current;
         return $current;
     }
 
-    public static function post(string $match, string $controller_name, string $action_name, $parameters = []): Route
+    public static function post(string $match, string $controller_name, string $action_name = null, $parameters = []): Route
     {
+        if(!$action_name) $action_name = substr($controller_name, 1);
         $current = new Route(__FUNCTION__, $match, $controller_name, $action_name, $parameters);
         self::$routes[] = $current;
         return $current;

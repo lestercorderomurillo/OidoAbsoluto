@@ -1,0 +1,93 @@
+<?php
+
+namespace Pipeline\PypeEngine;
+
+use Pipeline\PypeEngine\Inproc\HTMLBeautifier;
+use Pipeline\PypeEngine\Inproc\HTMLStrip;
+use Pipeline\PypeEngine\Inproc\Selection;
+use Pipeline\Utilities\PatternHelper;
+use Pipeline\Utilities\StringHelper;
+use Pipeline\Traits\DefaultAccessorTrait;
+
+class PypeViewRenderer
+{
+    use DefaultAccessorTrait;
+
+    private View $view;
+
+    static int $auto_id = 0;
+
+    public function render(): string
+    {
+        $output = PypeCompiler::renderString($this->view->getSourceHTML(), $this->view->getContext());
+
+        $offset = 0;
+        while (($position = PatternHelper::findByText($output, "{auto:id}", $offset)) !== false) {
+            $offset = $position;
+            $inline_selection = new Selection($position, $position + strlen("{auto:id}") - 1, $output);
+            $output = PypeCompiler::writeOnSelection($inline_selection, $output, "auto-" . self::$auto_id++);
+        }
+
+        $offset = 0;
+        while (($html_strip = PatternHelper::selectStringByQuotes($output, "<", ">", $offset, 1))->isValid()) {
+
+            $closure = false;
+
+            if ($output[$html_strip->getStartPosition()] == "/") {
+                $closure = true;
+            }
+
+            if (!$closure) {
+                $object = PypeCompiler::componentToObject($html_strip->getString());
+                
+                $prototype = $object[0];
+                $attributes = self::staticTryGet($object[1], []);
+
+                $attributes = StringHelper::parseMultivalueFields($attributes);
+
+                $html_strip->moveStartPosition(-1);
+                $output = PypeCompiler::writeOnSelection($html_strip, $output, (new HTMLStrip($prototype, $attributes))->toString());
+            }
+
+            $offset = $html_strip->getEndPosition();
+        }
+
+        $space = str_repeat(' ', 4);
+        $composedFunctions = "";
+        foreach (PypeCompiler::$stackedStateInitializers as $function){
+            $composedFunctions .= $space . $function . "\n";
+        }
+        foreach (PypeCompiler::$stackedFunctions as $function){
+            $composedFunctions .= $function;
+        }
+
+        $resolvedString = "";
+
+        if(strlen($composedFunctions) > 0) {
+            $resolvedString =
+            <<<HTML
+            <script type="text/javascript">
+            $(function() {
+            $composedFunctions
+            });
+            </script>
+            HTML;
+        }
+
+        $output = str_replace("{view:awakeScripts}", $resolvedString, $output);
+
+        $html_beautifyr = new HTMLBeautifier();
+        return $html_beautifyr->beautifyString($output);
+    }
+
+    public function &setView(View $view): PypeViewRenderer
+    {
+        $this->view = $view;
+        return $this;
+    }
+
+    public function getView(): View
+    {
+        return $this->view;
+    }
+}

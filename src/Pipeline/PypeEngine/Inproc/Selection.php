@@ -4,15 +4,15 @@ namespace Pipeline\PypeEngine\Inproc;
 
 class Selection
 {
-    private $value;
-    private $start;
-    private $end;
+    private string $value;
+    private int $start;
+    private int $end;
 
-    public function __construct($start_position, $end_position, $string_or_null = null)
+    public function __construct(int $start_position, int $end_position, string $value = null)
     {
-        $this->value = $string_or_null;
+        $this->value = $value;
         $this->start = max($start_position, 0);
-        $this->end = $end_position;
+        $this->end = min($end_position, strlen($value));
     }
 
     public function isValid(): bool
@@ -22,7 +22,7 @@ class Selection
 
     public function getString(): string
     {
-        return $this->value;
+        return trim(substr($this->value, $this->start, $this->end - $this->start));
     }
 
     public function &setStartPosition(int $position): Selection
@@ -44,7 +44,7 @@ class Selection
         return $this;
     }
 
-    public function &moveEndPosition(int $offset): Selection
+    public function &moveEndPosition(int $offset = 1): Selection
     {
         $this->end += $offset;
         return $this;
@@ -58,10 +58,5 @@ class Selection
     public function getEndPosition(): int
     {
         return $this->end;
-    }
-
-    public function getReducedString(): string
-    {
-        return trim(substr($this->value, $this->start, $this->end - $this->start));
     }
 }

@@ -167,7 +167,7 @@ $(document).ready(function () {
     }
 
     // Start or stop the test
-    window.startOrStop = function () {
+    window.togglePiano = function () {
         if (!isDone) {
             isRunning = !isRunning;
             if (isRunning) {
@@ -324,8 +324,8 @@ $(document).ready(function () {
 
     // Disable button with text
     window.disableTestButton = function (text) {
-        $("#startOrStop").addClass("bg-dark");
-        $("#startOrStop").attr("disabled", true);
+        $("#piano-button").addClass("bg-dark");
+        $("#piano-button").attr("disabled", true);
 
         renderer.render(function (state) {
             state.button_running_string = text;
@@ -334,8 +334,8 @@ $(document).ready(function () {
 
     // Enable button with text
     window.enableTestButton = function (text) {
-        $("#startOrStop").removeClass("bg-dark");
-        $("#startOrStop").attr("disabled", false);
+        $("#piano-button").removeClass("bg-dark");
+        $("#piano-button").attr("disabled", false);
 
         renderer.render(function (state) {
             state.button_running_string = text;

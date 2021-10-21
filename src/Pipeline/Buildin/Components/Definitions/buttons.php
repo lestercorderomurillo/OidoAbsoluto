@@ -3,7 +3,7 @@ return
     [
     "action-link" => [
         "required" => ["route"],
-        "renderTemplate" => 
+        "render" => 
         <<<HTML
         <a href="{view:url}{this:route}">
             {this:body}
@@ -14,8 +14,8 @@ return
     "action-button" => [
         "required" => ["route"],
         "prototype" => "button",
-        "componentClass" => "button",
-        "renderTemplate" => 
+        "class" => "button",
+        "render" => 
         <<<HTML
         <a id="{this:id}" href="{view:url}{this:route}" class="d-inline-block">
             <this class="small text-uppercase btn rounded-0 m-1 accent-{this:accent}" type="button">
@@ -26,21 +26,21 @@ return
     ],
     "submit-button" => [
         "prototype" => "button",
-        "componentClass" => "button",
-        "renderTemplate" => 
+        "class" => "button",
+        "render" => 
         <<<HTML
         <this id="{this:id}" class="small text-uppercase btn rounded-0 m-1 d-inline-block accent-{this:accent}" type="submit">
             {this:body}
         </this>
         HTML
     ],
-    "js-button" => [
-        "required" => ["function"],
+    "script-button" => [
+        "required" => ["onclick"],
         "prototype" => "button",
-        "componentClass" => "button",
-        "renderTemplate" => 
+        "class" => "button",
+        "render" => 
         <<<HTML
-        <this id="{this:id}" class="small text-uppercase btn rounded-0 m-1 d-inline-block accent-{this:accent}" type="button" onclick="{this:function}()">
+        <this id="{this:id}" class="small text-uppercase btn rounded-0 m-1 d-inline-block accent-{this:accent}" type="button" onclick="{this:onclick}">
             {this:body}
         </this>
         HTML

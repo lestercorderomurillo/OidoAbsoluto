@@ -1,21 +1,16 @@
 {
     "version": "0.2.0",
     "configurations": [
-    {
-        "name": "Listen for Xdebug",
-        "type": "php",
-        "request": "launch",
-        "port": 9003
-    },
         {
-            "name": "Listen for Xdebug",
+            "name": "Xdebug Debugging",
             "type": "php",
             "request": "launch",
-            "port": 9000,
-            "log": true,
-            "pathMappings": {
-                "/app": "${workspaceRoot}/app"
-              }
+            "port": 9003,
+            "xdebugSettings": {
+                "max_children": 999,
+                "max_depth": 10,
+                "max_data": 10240
+            }
         }
     ]
 }

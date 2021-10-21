@@ -42,10 +42,28 @@ class StringHelper
         return  $launch;
     }
 
-    public static function startsWith(string $string, string $check): bool
+    public static function parseMultivalueFields(array &$attributes): array
+    {
+        foreach ($attributes as $attribute => $value) {
+
+            $multivalue = explode("&", $attribute);
+
+            if (count($multivalue) > 1) {
+                unset($attributes[$attribute]);
+                foreach ($multivalue as $multi) {
+                    $attributes[$multi] = $value;
+                }
+            }
+        }
+
+        ksort($attributes);
+        return $attributes;
+    }
+
+    public static function startsWith(string $string, string $check, int $offset = 0): bool
     {
         $length = strlen($check);
-        return substr($string, 0, $length) === $check;
+        return substr($string, $offset, $length) === $check;
     }
 
     public static function endsWith(string $string, string $check): bool

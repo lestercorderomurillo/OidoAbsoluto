@@ -32,9 +32,13 @@ class ArrayHelper
     {
         foreach ($array as $key => $value) {
             if (!$after) {
-                $array["$prefix:" . $key] = $value;
+                if(!StringHelper::startsWith($prefix, $key)) {
+                    $array["$prefix:" . $key] = $value;
+                }
             } else {
-                $array[$key . ":$prefix"] = $value;
+                if(!StringHelper::endsWith($prefix, $key)) {
+                    $array[$key . ":$prefix"] = $value;
+                }
             }
             unset($array[$key]);
         }
@@ -109,7 +113,7 @@ class ArrayHelper
         return [$prepare, $values];
     }
 
-    public static function parameterReplace($array_or_string, array $replacers, string $match_start = "{", string $match_end = "}")
+    public static function parameterReplace($array_or_string, array $replacers, string $match_start = "{", string $match_end = "}", bool $ignore_arrays = false)
     {
         if (is_array($array_or_string)) {
             $replaced_array = $array_or_string;
@@ -118,11 +122,33 @@ class ArrayHelper
         }
         if (isset($replacers)) {
             foreach ($replaced_array as $key => $value) {
-                // we asume value is thing, but if its "thing.som" thy then $value->thatthing!
                 $acumulative_replaced_value = $value;
-                foreach ($replacers as $_key => $_value) {
-                    $acumulative_replaced_value = str_replace($match_start . $_key . $match_end, $_value, "$acumulative_replaced_value");
+
+                if(ArrayHelper::is2Dimensional($replacers)){
+                    foreach ($replacers as $_key => $_value) {
+                        foreach ($_value as $__key => $__value) {
+                            if($ignore_arrays){
+                                if(!is_array($__value)){
+                                    $acumulative_replaced_value = str_replace($match_start . $__key . $match_end, $__value, "$acumulative_replaced_value");
+                                }
+                            }else{
+                                $acumulative_replaced_value = str_replace($match_start . $__key . $match_end, $__value, "$acumulative_replaced_value");
+                            }
+                        }
+                    }
+                }else{
+                    foreach ($replacers as $_key => $_value) {
+                        if($ignore_arrays){
+                            if(!is_array($_value)){
+                                $acumulative_replaced_value = str_replace($match_start . $_key . $match_end, $_value, "$acumulative_replaced_value");
+                            }
+                        }else{
+                            $acumulative_replaced_value = str_replace($match_start . $_key . $match_end, $_value, "$acumulative_replaced_value");
+                        }
+                    }
                 }
+
+                
                 $replaced_array["$key"] = $acumulative_replaced_value;
             }
         }

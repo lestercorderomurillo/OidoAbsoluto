@@ -6,7 +6,8 @@ use Pipeline\App\App;
 use Pipeline\HTTP\Server\WebServer;
 use Pipeline\PypeEngine\PypeCompiler;
 use Pipeline\PypeEngine\PypeViewRenderer;
-use Pipeline\PypeEngine\SCSSCompiler;
+use Pipeline\PypeEngine\Inproc\SCSSCompiler;
+use Pipeline\PypeEngine\PypeTemplateBatch;
 
 use function Pipeline\Accessors\Dependency;
 
@@ -20,6 +21,7 @@ abstract class MVCApp extends App
         //$this->getDependencyManager()->add(ViewRenderer::class, new ViewRenderer());
         $this->getDependencyManager()->add(PypeCompiler::class, new PypeCompiler());
         $this->getDependencyManager()->add(PypeViewRenderer::class, new PypeViewRenderer());
+        $this->getDependencyManager()->add(PypeTemplateBatch::class, new PypeTemplateBatch());
 
         if (!$this->getRuntimeEnvironment()->inProductionMode()) {
             $asset_compiler = new SCSSCompiler();

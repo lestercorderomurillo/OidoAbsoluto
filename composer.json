@@ -24,6 +24,7 @@
         "psr/container": "*",
         "psr/log": "*",
         "ralouphie/mimey": "^2.1",
-        "gajus/dindent": "^2.0"
+        "gajus/dindent": "^2.0",
+        "langleyfoxall/math_eval": "^2.0"
     }
 }

@@ -3,7 +3,6 @@
 namespace Pipeline\PypeEngine;
 
 use Pipeline\Traits\DefaultAccessorTrait;
-use Pipeline\PypeEngine\Exceptions\CompileException;
 use Pipeline\Utilities\ArrayHelper;
 
 class PypeTemplate
@@ -12,56 +11,66 @@ class PypeTemplate
 
     private array $required;
     private array $defaults;
-    private array $preserve;
+    private array $stateful;
+
     private string $prototype;
-    private string $base_class;
     private string $template;
-    private string $component_name;
-    private bool $require_closure;
-    private int $new_lines;
+    
+    private string $class;
+    private string $name;
 
-    public function __construct(string $component_name)
+    private string $scripts;
+    private string $awake;
+
+    private bool $inline;
+
+    public function __construct(string $name, array $definition)
     {
-        if (!PypeTemplateBatch::isRegistered($component_name)) {
-            throw new CompileException("Trying to render the component \"$component_name\" failed. <br>
-            Unregistered component. Check your view/components files.", 500);
-        }
-
-        $this->component_name = $component_name;
-        $this->buildTemplate(PypeTemplateBatch::getComponentNativeArray($component_name));
+        $this->buildTemplate($name, $definition);
     }
 
-    public function buildTemplate(array $source)
+    private function buildTemplate(string $name, array $definition)
     {
-        $this->prototype = $this->tryGet($source["prototype"], "div");
-        $this->template = trim($source["renderTemplate"]);
-        $this->required = $this->tryGet($source["required"], []);
-        $this->component_class = trim($this->tryGet($source["componentClass"], $this->component_name));
-        $this->new_lines = $this->tryGet($source["newLine"], 0);
-        $this->require_closure = !($this->hasKey($source, "inlineComponent"));
+        $this->name = $name;
+
+        $this->required = $this->tryGet($definition["required"], []);
+        $this->stateful = $this->tryGet($definition["stateful"], []);
+
+        $this->prototype = $this->tryGet($definition["prototype"], "div");
+        $this->template = trim($definition["render"]);
+        
+        $this->class = trim($this->tryGet($definition["class"], $this->name));
+        $this->inline = $this->hasKey($definition, "inline");
+        $this->scripts = $this->tryGet($definition["scripts"], "");
+        $this->awake = $this->tryGet($definition["awake"], "");
 
         $this->defaults = ArrayHelper::merge2DArray(true, [
             "id" => "",
             "name" => "",
-            "class" => $this->component_class,
+            "class" => $this->class,
             "classes" => "",
             "accent" => "secondary"
-        ], $this->tryGet($source["defaults"], []));
+        ], $this->tryGet($definition["defaults"], []));
 
         ArrayHelper::appendKeyPrefix("this", $this->defaults);
     }
 
-    public function hasKey(array $source, string $attribute): bool
+    public function hasStatefulKey(string $attribute): bool
+    {
+        return ($this->hasKey($this->stateful, $attribute));
+    }
+
+    private function hasKey(array $source, string $attribute): bool
     {
         foreach ($source as $key => $value) {
             if (is_int($key) && $value == $attribute) {
                 return true;
             }
         }
-        return (isset($this->content[$attribute]));
+        return false;
     }
 
-    public function getRenderTemplateString(): string
+    public function getRenderTemplate(): string
     {
         return $this->template;
     }
@@ -78,7 +87,12 @@ class PypeTemplate
 
     public function getComponentName(): string
     {
-        return $this->component_name;
+        return $this->name;
+    }
+
+    public function getComponentClass(): string
+    {
+        return $this->class;
     }
 
     public function getPrototype(): string
@@ -86,23 +100,23 @@ class PypeTemplate
         return $this->prototype;
     }
 
-    public function getPreservedFields(): array
+    public function getStatefulFields(): array
     {
-        return $this->preserve;
+        return $this->stateful;
     }
 
-    public function getComponentClass(): string
+    public function getScripts(): string
     {
-        return $this->component_class;
+        return $this->scripts;
     }
 
-    public function getNumberOfNewLines(): int
+    public function getAwakeScript(): string
     {
-        return $this->new_lines;
+        return $this->awake;
     }
 
-    public function requireClosure(): bool
+    public function isInlineComponent(): bool
     {
-        return $this->require_closure;
+        return $this->inline;
     }
 }

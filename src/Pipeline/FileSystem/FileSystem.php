@@ -83,10 +83,10 @@ class FileSystem
         return $exposed_paths;
     }
 
-    public static function includeAsString(FilePath $path, bool $crash_on_failure = true): string
+    public static function includeAsString(FilePath $path, bool $crash_with_view = false): string
     {
         if (!file_exists($path)) {
-            if ($crash_on_failure) {
+            if ($crash_with_view) {
                 ServerResponse::create(500, "Invalid resource name [$path] to include as string. 
                 Check your API files.")->sendAndExit();
             } else {

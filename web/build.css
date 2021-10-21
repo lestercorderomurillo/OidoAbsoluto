@@ -124,6 +124,9 @@ button.accent-info:hover {
   background-color: #0a3048 !important;
   color: #a4c5da !important;
 }
+.hide {
+  display: none;
+}
 .app-button {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;

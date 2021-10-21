@@ -4,7 +4,7 @@ return
     "span" => [
         "defaults" => ["fontSize" => "12px", "textPosition" => "left"],
         "prototype" => "label",
-        "renderTemplate" => 
+        "render" => 
         <<<HTML
         <this class="w-100 text-color pb-2 text-{this:textPosition}" style="font-size: {this:fontSize};">
             {this:body}
@@ -14,7 +14,7 @@ return
     "label" => [
         "defaults" => ["fontSize" => "12px"],
         "prototype" => "label",
-        "renderTemplate" => 
+        "render" => 
         <<<HTML
         <label for="{this:for}" class="w-100 text-color {this:classes}" style="font-size: {this:fontSize};">
             {this:body}
@@ -22,7 +22,7 @@ return
         HTML,
     ],
     "hint" => [
-        "renderTemplate" => 
+        "render" => 
         <<<HTML
         <label class="small">
             {this:body}
@@ -31,7 +31,7 @@ return
     ],
     "alert" => [
         "defaults" => ["type" => "warning"],
-        "renderTemplate" => 
+        "render" => 
         <<<HTML
         <div class="alert alert-{this:type} alert-dismissible fade show">
             <strong>Oops!</strong>{this:body}

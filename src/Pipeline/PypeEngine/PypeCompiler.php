@@ -7,7 +7,6 @@ use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\Inproc\HTMLStrip;
 use Pipeline\PypeEngine\Inproc\Selection;
 use Pipeline\PypeEngine\Inproc\BodyFinder;
-use Pipeline\PypeEngine\Inproc\HTMLBeautifier;
 use Pipeline\PypeEngine\Exceptions\CompileException;
 use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\ArrayHelper;
@@ -18,24 +17,44 @@ use Pipeline\Traits\DefaultAccessorTrait;
 class PypeCompiler
 {
     use DefaultAccessorTrait;
-    const HTML_KEYWORDS = ["ifdef", "equal", "notequal", "app:", "foreach ", "for ", "this"];
+    const HTML_KEYWORDS = ["if", "app:", "foreach", "for", "this"];
 
-    public static function createDynamicContext(array &$context, string $base)
+    public static PypeContextFactory $context_factory;
+
+    public static function setContextFactory(PypeContextFactory $context_factory)
     {
+        self::$context_factory = $context_factory;
+    }
 
-        if (ArrayHelper::is2Dimensional($context)) {
+    public static function tryMathEval(&$context): void
+    {
+        if (is_string($context)) {
+            if (StringHelper::startsWith($context, "(") && StringHelper::endsWith($context, ")")) {
+                $context = math_eval($context);
+            }
+        } else if (is_array($context)) {
             foreach ($context as $key => $value) {
-                $context["$base:$key"] = $value;
-                self::createDynamicContext($value, "$base:$key");
+                if (is_string($value)) {
+                    if (StringHelper::startsWith($value, "(") && StringHelper::endsWith($value, ")")) {
+                        $context[$key] = math_eval($value);
+                    }
+                }
             }
         }
     }
 
-    public static function renderString(string $html, array $context = []): string
+    public static function renderString(string $this_html, array $this_context = [], int $depth = 0): string
     {
+        self::tryMathEval($this_context);
+
         try {
 
-            $output = ArrayHelper::parameterReplace($html, $context);
+            $output = ArrayHelper::parameterReplace($this_html, [
+                self::$context_factory->getViewContext(),
+                self::$context_factory->getSessionContext(),
+                $this_context
+            ], "{", "}", true);
+
             $offset = 0;
 
             while (($definition_selection = PatternHelper::selectStringByQuotes($output, "<", ">", $offset, 1))->isValid()) {
@@ -46,11 +65,10 @@ class PypeCompiler
                 }
 
                 $offset = $definition_selection->getEndPosition();
-
                 $keyword = null;
 
                 foreach (self::HTML_KEYWORDS as $find_keyword) {
-                    if (!is_bool(PatternHelper::findByText($definition_selection->getReducedString(), $find_keyword))) {
+                    if (StringHelper::startsWith($definition_selection->getString(), $find_keyword, $closure)) {
                         $keyword = $find_keyword;
                         break;
                     }
@@ -58,49 +76,49 @@ class PypeCompiler
 
                 if ($keyword != null) {
 
-                    $component_object = self::componentToObject($definition_selection->getReducedString());
+                    $component_object = self::componentToObject($definition_selection->getString());
                     $domtag = substr($component_object[0], strlen($keyword) + $closure);
-
                     $attributes = self::staticTryGet($component_object[1], []);
 
                     switch (trim($keyword)) {
+
                         case "app:":
 
-                            $template = new PypeTemplate($domtag);
-                            $component = new PypeComponent($template, $attributes, $context);
+                            $template = PypeTemplateBatch::getTemplate($domtag);
+                            $component = new PypeComponent($template, $attributes, $this_context);
 
-                            if ($template->requireClosure()) {
+                            if (!$template->isInlineComponent()) {
 
                                 $body_selection = BodyFinder::detectBody($output, "app:" . $domtag, $definition_selection->getEndPosition() + 1);
-                                $component->setBody($body_selection->getReducedString());
+                                $component->setBody($body_selection->getString());
+
                                 $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</app:$domtag>"));
                             }
 
-                            $result = $component->render() . "\n";
+                            $result = $component->render();
 
                             $definition_selection->moveStartPosition(-1);
                             $output = self::writeOnSelection($definition_selection, $output, $result);
+
                             break;
 
                         case "this":
 
-                            if (isset($context["this:class"])) {
-                                $value = ArrayHelper::parameterReplace($context["this:class"], $context);
+                            if (isset($this_context["this:class"])) {
+                                $value = ArrayHelper::parameterReplace($this_context["this:class"], $this_context);
                                 if ($value != null) {
                                     if (!StringHelper::startsWith($value, "app-")) {
                                         $value = "app-$value";
                                     }
-                                    $context["this:class"] = $value;
+                                    $this_context["this:class"] = $value;
                                 }
                             }
 
-                            $template = new PypeTemplate($context["this"]);
-
+                            $template = PypeTemplateBatch::getTemplate($this_context["this"]);
                             $prototype = $template->getPrototype();
 
                             if (!$closure) {
-                                $attributes["class"] = trim($context["this:class"] . " " . self::staticTryGet($attributes["class"], ""));
-                                self::parseMultivalueFields($attributes);
+                                $attributes["class"] = trim($this_context["this:class"] . " " . self::staticTryGet($attributes["class"], ""));
                             } else {
                                 $prototype = "/" . $prototype;
                             }
@@ -108,28 +126,89 @@ class PypeCompiler
                             $definition_selection->moveStartPosition(-1);
                             $output = self::writeOnSelection($definition_selection, $output, new HTMLStrip($prototype, $attributes));
 
+                            if (!$closure) {
+                                $id = self::staticTryGet($attributes["id"], "");
+                                if (strlen($id) > 0) {
+                                    foreach ($this_context as $key => $value) {
+                                        if (is_string($value)) {
+                                            $value = "\"$value\"";
+                                        }
+                                        $key = str_replace("this:", "", $key);
+                                        if ($template->hasStatefulKey($key)) {
+                                            self::$context_factory->addStatefulScripts("state('$id', '$key', $value);");
+                                        }
+                                    }
+                                }
+                            }
+
                             break;
 
-                        case "ifdef":
+                        case "if":
 
                             if (!$closure) {
 
-                                $check = self::staticTryGet($attributes["check"], "");
+                                $value = self::staticTryGet($attributes["value"], "");
+                                $equal = self::staticTryGet($attributes["equals"], "");
+                                $notEqual = self::staticTryGet($attributes["notEquals"], "");
 
-                                if (strlen($check) > 0) {
+                                self::tryMathEval($equal);
+                                self::tryMathEval($notEqual);
 
-                                    $body_selection = BodyFinder::detectBody($output, "ifdef", $definition_selection->getEndPosition() + 1);
-                                    
-                                    $ifdef_string = "";
-                                    if (isset($context[$check])) {
-                                        $ifdef_string = ltrim(self::renderString($body_selection->getReducedString(), $context));
+                                if (strlen($value) > 0) {
+
+                                    $body_selection = BodyFinder::detectBody($output, "if", $definition_selection->getEndPosition() + 1);
+
+                                    $if_string = "";
+                                    $applicable = true;
+                                    $compare = "";
+
+                                    $mixed_context = ArrayHelper::merge2DArray(
+                                        true,
+                                        self::$context_factory->getViewContext(),
+                                        self::$context_factory->getSessionContext(),
+                                        $this_context
+                                    );
+
+                                    if(StringHelper::contains($value, ":")){
+                                        if (!StringHelper::startsWith($value, "{") || !StringHelper::endsWith($value, "}")) {
+                                            $applicable = false;
+                                        }else{
+                                            $value = substr($value, 1, -1);
+                                            $compare = self::staticTryGet($mixed_context[$value], "");
+                                        }
+                                    }else{
+                                        $compare = $value;
                                     }
 
-                                    $result = trim($ifdef_string);
+                                    if ($applicable) {
 
-                                    $definition_selection->moveStartPosition(-1);
-                                    $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</ifdef>"));
-                                    $output = self::writeOnSelection($definition_selection, $output, $result);
+                                        if (isset($compare) && strlen($compare) > 0) {
+
+                                            if (strlen($equal) > 0) {
+                                                if ($compare != $equal) {
+                                                    $applicable = false;
+                                                }
+                                            }
+    
+                                            if (strlen($notEqual) > 0) {
+                                                if ($compare == $notEqual) {
+                                                    $applicable = false;
+                                                }
+                                            }
+    
+                                            if ($applicable) {
+                                                $if_string = ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
+                                            }
+                                        }
+    
+                                        $result = trim($if_string);
+    
+                                        $definition_selection->moveStartPosition(-1);
+                                        $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</if>"));
+                                        $output = self::writeOnSelection($definition_selection, $output, $result);
+                                    }else{
+                                        throw new CompileException("\"If\" need a {object} reference in the \"value\" attribute to work.");
+                                    }
                                 }
                             }
 
@@ -141,6 +220,10 @@ class PypeCompiler
 
                                 $item_name = self::staticTryGet($attributes["name"], "i");
 
+                                self::tryMathEval($item_name);
+                                self::tryMathEval($attributes["start"]);
+                                self::tryMathEval($attributes["end"]);
+
                                 if (strlen($item_name) > 0 && PatternHelper::isNumber($attributes["start"]) && PatternHelper::isNumber($attributes["end"])) {
 
                                     $for_start = (int)$attributes["start"];
@@ -151,24 +234,31 @@ class PypeCompiler
                                     $for_string = "";
                                     $step = $for_end - $for_start;
 
+                                    $mixed_context = ArrayHelper::merge2DArray(
+                                        true,
+                                        self::$context_factory->getViewContext(),
+                                        self::$context_factory->getSessionContext(),
+                                        $this_context
+                                    );
+
                                     if ($step > 0) {
                                         for ($i = $for_start; $i <= $for_end; $i++) {
-                                            $context["$item_name"] = $i;
-                                            $context["this:random"] = Cryptography::computeRandomKey(8);
-                                            $for_string .= ltrim(self::renderString($body_selection->getReducedString(), $context));
+                                            $mixed_context["$item_name"] = $i;
+                                            $mixed_context["this:random"] = Cryptography::computeRandomKey(8);
+                                            $for_string .= ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
                                         }
                                     } else {
                                         for ($i = $for_start; $i >= $for_end; $i--) {
-                                            $context["$item_name"] = $i;
-                                            $context["this:random"] = Cryptography::computeRandomKey(8);
-                                            $for_string .= ltrim(self::renderString($body_selection->getReducedString(), $context));
+                                            $mixed_context["$item_name"] = $i;
+                                            $mixed_context["this:random"] = Cryptography::computeRandomKey(8);
+                                            $for_string .= ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
                                         }
                                     }
 
+                                    $result = " " . trim($for_string);
+
                                     $definition_selection->moveStartPosition(-1);
                                     $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</for>"));
-
-                                    $result = " " . trim($for_string);
                                     $output = self::writeOnSelection($definition_selection, $output, $result);
                                 }
                             }
@@ -182,49 +272,84 @@ class PypeCompiler
                                 $item_name = self::staticTryGet($attributes["name"], "");
                                 $from_name = self::staticTryGet($attributes["from"], "");
 
+                                $skip = self::staticTryGet($attributes["skip"], 0);
+                                $take = self::staticTryGet($attributes["take"], 10000);
+
+                                self::tryMathEval($skip);
+                                self::tryMathEval($take);
+
                                 if (strlen($item_name) > 0 && strlen($from_name) > 0) {
 
                                     $body_selection = BodyFinder::detectBody($output, "foreach", $definition_selection->getEndPosition() + 1);
                                     $foreach_string = "";
 
-                                    if (isset($context[$from_name])) {
+                                    $mixed_context = ArrayHelper::merge2DArray(
+                                        true,
+                                        self::$context_factory->getViewContext(),
+                                        self::$context_factory->getSessionContext(),
+                                        $this_context
+                                    );
 
-                                        if (ArrayHelper::is2Dimensional($context[$from_name])) {
+                                    if (StringHelper::startsWith($from_name, "{") && StringHelper::endsWith($from_name, "}")) {
 
-                                            foreach ($context[$from_name] as $array => $object) {
+                                        $from_name = substr($from_name, 1, -1);
+                                        if (isset($mixed_context[$from_name])) {
 
-                                                $local_context = [];
-                                                foreach ($object as $key => $value) {
-                                                    $local_context["$item_name:$key"] = $value;
-                                                }
+                                            if (ArrayHelper::is2Dimensional($mixed_context[$from_name])) {
 
-                                                $keys = array_keys($context);
-                                                foreach ($keys as $key) {
-                                                    if (StringHelper::startsWith($key, "$item_name:") && !isset($local_context[$key])) {;
-                                                        unset($context[$key]);
+                                                $skipped = 0;
+                                                $taken = 0;
+
+                                                foreach ($mixed_context[$from_name] as $array => $object) {
+
+                                                    $local_context = [];
+
+                                                    if ($skipped < $skip) {
+                                                        $skipped++;
+                                                    } else {
+
+                                                        if ($taken < $take) {
+
+                                                            $taken++;
+
+                                                            foreach ($object as $key => $value) {
+                                                                $local_context["$item_name:$key"] = $value;
+                                                            }
+
+                                                            $keys = array_keys($mixed_context);
+                                                            foreach ($keys as $key) {
+                                                                if (StringHelper::startsWith($key, "$item_name:") && !isset($local_context[$key])) {;
+                                                                    unset($mixed_context[$key]);
+                                                                }
+                                                            }
+
+                                                            $mixed_context = ArrayHelper::merge2DArray(true, $mixed_context, $local_context);
+
+                                                            $mixed_context[$item_name] = preg_replace('/\s+/', ' ', trim(var_export($object, true)));
+                                                            $foreach_string .= ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
+                                                        }
                                                     }
                                                 }
+                                            } else {
 
-                                                $context = ArrayHelper::merge2DArray(true, $context, $local_context);
+                                                foreach ($mixed_context[$from_name] as $array) {
 
-                                                $context[$item_name] = preg_replace('/\s+/', ' ', trim(var_export($object, true)));
-                                                $foreach_string .= ltrim(self::renderString($body_selection->getReducedString(), $context));
-                                            }
-                                        } else {
-
-                                            foreach ($context[$from_name] as $array) {
-
-                                                $context[$item_name] = $array;
-                                                $foreach_string .= ltrim(self::renderString($body_selection->getReducedString(), $context));
+                                                    $mixed_context[$item_name] = $array;
+                                                    $foreach_string .= ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
+                                                }
                                             }
                                         }
+
+                                        $definition_selection->moveStartPosition(-1);
+                                        $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</foreach>"));
+
+                                        $result = " " . trim($foreach_string);
+                                        $output = self::writeOnSelection($definition_selection, $output, $result);
+                                    }else{
+                                        throw new CompileException("\"Foreach\" need a {object} reference in the \"from\" attribute to work.");
                                     }
-
-                                    $definition_selection->moveStartPosition(-1);
-                                    $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</foreach>"));
-
-                                    $result = " " . trim($foreach_string);
-                                    $output = self::writeOnSelection($definition_selection, $output, $result);
+                                } else {
+                                    throw new CompileException("\"Foreach\" is missing \"name\" or \"from\" parameters.");
                                 }
                             }
 
@@ -236,53 +361,36 @@ class PypeCompiler
             ServerResponse::create(500, $e->getMessage())->sendAndExit();
         }
 
-        $output = str_replace("</script>", "</script>\n", $output);
-        $html_beautifyr = new HTMLBeautifier();
-        $output = $html_beautifyr->beautifyString($output);
-        $offset = 0;
-
-        while (($definition_selection = PatternHelper::selectStringByQuotes($output, "{?", "}", $offset, 0))->isValid()) {
-            $id = substr($definition_selection->getReducedString(), 2);
-            if ($id != null && strlen($id) > 0) {
-                $initial = self::staticTryGet($context["$id"], "");
-                $output = self::writeOnSelection($definition_selection, $output, "<div class=\"app-sync-$id d-inline pr-1\">$initial</div>");
+        if ($depth == 0) {
+            $offset = 0;
+            while (($definition_selection = PatternHelper::selectStringByQuotes($output, "{?", "}", $offset, 0))->isValid()) {
+                $id = substr($definition_selection->getString(), 2);
+                if ($id != null && strlen($id) > 0) {
+                    $initial = self::staticTryGet($this_context["$id"], "");
+                    $output = self::writeOnSelection($definition_selection, $output, "<div class=\"app-sync-$id d-inline pr-1\">$initial</div>");
+                }
+                $offset = $definition_selection->getEndPosition() + 1;
             }
-            $offset = $definition_selection->getEndPosition() + 1;
         }
 
         return $output;
     }
 
-    private static function writeOnSelection(Selection &$definition_selection, &$source, $replace): string
+    public static function writeOnSelection(Selection &$definition_selection, &$source, $replace): string
     {
         $pre = substr($source, 0, $definition_selection->getStartPosition());
         $post = substr($source, $definition_selection->getEndPosition() + 1);
         return $pre . $replace . $post;
     }
 
-    private static function &parseMultivalueFields(array &$attributes): array
-    {
-        foreach ($attributes as $attribute => $value) {
 
-            $multivalue = explode("&", $attribute);
-
-            if (count($multivalue) > 1) {
-                unset($attributes[$attribute]);
-                foreach ($multivalue as $multi) {
-                    $attributes[$multi] = $value;
-                }
-            }
-        }
-
-        ksort($attributes);
-        return $attributes;
-    }
 
     public static function componentToObject(string $input): array
     {
         $splitted = explode(" ", $input, 2);
         $tag = $splitted[0];
         $attributes = [];
+
         if (isset($splitted[1])) {
             $attributes_split = StringHelper::quotedExplode($splitted[1]);
             foreach ($attributes_split as $attribute) {
