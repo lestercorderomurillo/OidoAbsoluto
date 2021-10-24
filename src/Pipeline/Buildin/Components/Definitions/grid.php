@@ -56,7 +56,7 @@ return
         "render" => 
         <<<HTML
         <this id&name="{this:id}" class="{this:_template} col-lg-{this:columnSize} col-xl-{this:columnSize} mx-auto text-center" style="min-width: {this:minWidth}; max-width: {this:maxWidth}; min-height: {this:minHeight}; max-height: {this:maxHeight};">
-            <div class="shadow shadow-lg text-left accent-{this:accent} p-{this:padding} rounded w-100 h-{this:overflow}" style="font-size: {this:fontSize}">
+            <div class="shadow shadow-lg text-left accent-{this:accent} p-{this:padding} rounded" style="font-size: {this:fontSize}; min-height: {this:minHeight};">
                 {this:body}
             </div>
         </this>

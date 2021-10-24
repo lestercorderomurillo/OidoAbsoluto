@@ -150,9 +150,13 @@ class PypeCompiler
                                 $value = self::staticTryGet($attributes["value"], "");
                                 $equal = self::staticTryGet($attributes["equals"], "");
                                 $notEqual = self::staticTryGet($attributes["notEquals"], "");
+                                $startsWith = self::staticTryGet($attributes["startsWith"], "");
+                                $endsWith = self::staticTryGet($attributes["endsWith"], "");
 
                                 self::tryMathEval($equal);
                                 self::tryMathEval($notEqual);
+                                self::tryMathEval($startsWith);
+                                self::tryMathEval($endWith);
 
                                 if (strlen($value) > 0) {
 
@@ -192,6 +196,18 @@ class PypeCompiler
     
                                             if (strlen($notEqual) > 0) {
                                                 if ($compare == $notEqual) {
+                                                    $applicable = false;
+                                                }
+                                            }
+
+                                            if (strlen($startsWith) > 0) {
+                                                if (!StringHelper::startsWith($compare, $startsWith)) {
+                                                    $applicable = false;
+                                                }
+                                            }
+
+                                            if (strlen($endsWith) > 0) {
+                                                if (!StringHelper::endsWith($compare, $endsWith)) {
                                                     $applicable = false;
                                                 }
                                             }
@@ -387,7 +403,11 @@ class PypeCompiler
 
     public static function componentToObject(string $input): array
     {
+        $input = preg_replace('!\s+!', ' ', $input);
+        //this regex que programe bugea toda la picha
+        //$input = preg_replace("(\s{0,4})=(\s{0,4})\"", '="', $input);
         $splitted = explode(" ", $input, 2);
+        
         $tag = $splitted[0];
         $attributes = [];
 

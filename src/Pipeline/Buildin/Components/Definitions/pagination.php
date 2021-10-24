@@ -30,7 +30,7 @@ return
             this.setPage(id, this.state("currentPage") + 1);
         }
         function setPage(id, currentPage){
-            this.state("currentPage", currentPage.clamp(0, this.state("numberOfPages")));
+            this.state("currentPage", currentPage.clamp(0, this.state("numberOfPages") - 1));
             $(".app-paginator-page").hide();
             $(".app-paginator-page[page=\"" + this.state("currentPage") + "\"]").show();
         }
