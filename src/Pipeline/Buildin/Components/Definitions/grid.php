@@ -30,7 +30,7 @@ return
         HTML
     ],
     "spacing" => [
-        "defaults" => ["size" => 1],
+        "defaults" => ["size" => 2],
         "inline",
         "render" => 
         <<<HTML

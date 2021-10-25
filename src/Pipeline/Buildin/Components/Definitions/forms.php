@@ -10,14 +10,15 @@ return
         <<<JS
         function requireForm(id, value, bind, container){
             $(id).change(function(){
-                console.log(id);
                 if($(id).val() == value){
+                    console.log("show " + bind);
                     $(bind).prop("disabled", false);
                     $(container).show();
                 } 
                 else {
+                    console.log("hide " + bind);
                     $(bind).prop("disabled", true);
-                    $(container).disable();
+                    $(container).hide();
                 };
             }).change(); 
         }
@@ -47,12 +48,17 @@ return
         "inline",
         "render" => 
         <<<HTML
-        <this id&name="{this:bind}" type="{this:type}" class="form-control app-field app-focuseable" 
-        style="max-width: {this:maxWidth};" maxlength="64" autocomplete="{view:random}">
+        <this 
+        id&name="{this:bind}" 
+        type="{this:type}" 
+        class="form-control app-field app-focuseable" 
+        style="max-width: {this:maxWidth};" 
+        maxlength="64" 
+        autocomplete="{view:random}">
         <br>
         <if value="{this:requiredId}" startsWith="{this:requiredPattern}">
             <script type="text/javascript">
-                $(function() { shared_requireForm("#{this:requiredId}", "#{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
+                $(function() { shared_requireForm("#{this:requiredId}", "{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
             </script>
         </if>
         HTML
@@ -89,7 +95,7 @@ return
         <br>
         <if value="{this:requiredId}" startsWith="{this:requiredPattern}">
             <script type="text/javascript">
-                $(function() { shared_requireForm("#{this:requiredId}", "#{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
+                $(function() { shared_requireForm("#{this:requiredId}", "{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
             </script>
         </if>
         HTML,
@@ -111,7 +117,7 @@ return
         <br><br>
         <if value="{this:requiredId}" startsWith="{this:requiredPattern}">
             <script type="text/javascript">
-                $(function() { shared_requireForm("#{this:requiredId}", "#{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
+                $(function() { shared_requireForm("#{this:requiredId}", "{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
             </script>
         </if>
         HTML,

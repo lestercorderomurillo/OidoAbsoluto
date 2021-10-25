@@ -12,7 +12,10 @@ return
         HTML,
     ],
     "label" => [
-        "defaults" => ["fontSize" => "12px"],
+        "defaults" => [
+            "fontSize" => "12px",
+            "for" => ""
+        ],
         "prototype" => "label",
         "render" => 
         <<<HTML

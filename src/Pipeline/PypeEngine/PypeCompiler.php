@@ -173,58 +173,51 @@ class PypeCompiler
                                         $this_context
                                     );
 
-                                    if(StringHelper::contains($value, ":")){
-                                        if (!StringHelper::startsWith($value, "{") || !StringHelper::endsWith($value, "}")) {
-                                            $applicable = false;
-                                        }else{
-                                            $value = substr($value, 1, -1);
-                                            $compare = self::staticTryGet($mixed_context[$value], "");
-                                        }
+                                    if (StringHelper::startsWith($value, "{") && StringHelper::endsWith($value, "}")) {
+                                        $compare = self::staticTryGet($mixed_context[substr($value, 1, -1)], "");
+                                    }else if(StringHelper::contains($value, "{") && StringHelper::contains($value, "}")){
+                                        $applicable = false;
                                     }else{
                                         $compare = $value;
                                     }
+                                    
+                                    if (isset($compare) && strlen($compare) > 0) {
 
-                                    if ($applicable) {
-
-                                        if (isset($compare) && strlen($compare) > 0) {
-
-                                            if (strlen($equal) > 0) {
-                                                if ($compare != $equal) {
-                                                    $applicable = false;
-                                                }
-                                            }
-    
-                                            if (strlen($notEqual) > 0) {
-                                                if ($compare == $notEqual) {
-                                                    $applicable = false;
-                                                }
-                                            }
-
-                                            if (strlen($startsWith) > 0) {
-                                                if (!StringHelper::startsWith($compare, $startsWith)) {
-                                                    $applicable = false;
-                                                }
-                                            }
-
-                                            if (strlen($endsWith) > 0) {
-                                                if (!StringHelper::endsWith($compare, $endsWith)) {
-                                                    $applicable = false;
-                                                }
-                                            }
-    
-                                            if ($applicable) {
-                                                $if_string = ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
+                                        if (strlen($equal) > 0) {
+                                            if ($compare != $equal) {
+                                                $applicable = false;
                                             }
                                         }
-    
-                                        $result = trim($if_string);
-    
-                                        $definition_selection->moveStartPosition(-1);
-                                        $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</if>"));
-                                        $output = self::writeOnSelection($definition_selection, $output, $result);
-                                    }else{
-                                        throw new CompileException("\"If\" need a {object} reference in the \"value\" attribute to work.");
+
+                                        if (strlen($notEqual) > 0) {
+                                            if ($compare == $notEqual) {
+                                                $applicable = false;
+                                            }
+                                        }
+
+                                        if (strlen($startsWith) > 0) {
+                                            if (!StringHelper::startsWith($compare, $startsWith)) {
+                                                $applicable = false;
+                                            }
+                                        }
+
+                                        if (strlen($endsWith) > 0) {
+                                            if (!StringHelper::endsWith($compare, $endsWith)) {
+                                                $applicable = false;
+                                            }
+                                        }
+
+                                        if ($applicable) {
+                                            $if_string = ltrim(self::renderString($body_selection->getString(), $mixed_context, ++$depth));
+                                        }
                                     }
+
+                                    $result = trim($if_string);
+
+                                    $definition_selection->moveStartPosition(-1);
+                                    $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</if>"));
+                                    $output = self::writeOnSelection($definition_selection, $output, $result);
+                                    
                                 }
                             }
 

@@ -16,7 +16,9 @@
     {
         "id": 3,
         "subject": "Mencione los otros idiomas que habla y a qué edad empezó a aprenderlos",
-        "type": "text"
+        "type": "text",
+        "require-id": 2,
+        "require-value": "Sí"
     },
     {
         "id": 4,
@@ -83,7 +85,9 @@
     {
         "id": 12,
         "subject": "¿A qué edad realizó el entrenamiento de oído musical?",
-        "type": "text"
+        "type": "text",
+        "require-id": 11,
+        "require-value": "Sí"
     },
     {
         "id": 13,
@@ -137,7 +141,7 @@
         "subject": "Describa que otros método/justifique",
         "type": "text",
         "require-id": 18,
-        "require-value": "No"
+        "require-value": "Otros"
     },
     {
         "id": 20,
@@ -150,7 +154,7 @@
     },
     {
         "id": 21,
-        "subject": "Indique su profesión",
+        "subject": "Indique su profesión en la música",
         "type": "text",
         "require-id": 20,
         "require-value": "Sí"
@@ -224,14 +228,14 @@
     },
     {
         "id": 29,
-        "subject": "Explique/justifique",
+        "subject": "Explique/justifique el punto anterior",
         "type": "text",
         "require-id": 28,
         "require-value": "Otros"
     },
     {
         "id": 30,
-        "subject": "¿A qué edad se dio cuenta de que tenía oído absoluto?",
+        "subject": "¿A qué edad se dio cuenta (o cree) de que tenía oído absoluto?",
         "type": "number"
     },
     {
@@ -253,7 +257,7 @@
     },
     {
         "id": 33,
-        "subject": "Explique/justifique",
+        "subject": "Explique/justifique el punto anterior",
         "type": "text",
         "require-id": 32,
         "require-value": "Otros"
@@ -303,7 +307,7 @@
     },
     {
         "id": 39,
-        "subject": "Explique/justifique",
+        "subject": "Explique/justifique que medicamentos",
         "type": "text",
         "require-id": 38,
         "require-value": "Sí"

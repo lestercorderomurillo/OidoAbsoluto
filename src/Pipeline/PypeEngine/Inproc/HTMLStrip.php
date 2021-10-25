@@ -30,7 +30,7 @@ class HTMLStrip
             } else {
                 if ($key == "html") {
                     $attributes_string .= " $key";
-                } else if ($key == "id" || $key == "name") {
+                } else if ($key == "id" || $key == "name" || $key == "for") {
                     if (strlen($value) > 0) {
                         $attributes_string .= " $key=\"$value\"";
                     }

@@ -80,10 +80,9 @@ class PypeContextFactory
 
     public function getCompiledComponentScripts(): string 
     {
-        $space = str_repeat(' ', 4);
         $composed = "";
         foreach ($this->components_scripts as $script){
-            $composed .= $space . $script . "\n";
+            $composed .= $script . "\n";
         }
         if(strlen($composed) > 0) {
             $composed =
