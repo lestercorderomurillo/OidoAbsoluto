@@ -2,7 +2,7 @@
 
 namespace Pipeline\Database;
 
-use Pipeline\Model\Model;
+use Pipeline\Core\Model;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\Query;
 use Pipeline\Database\Common\ConnectionString;

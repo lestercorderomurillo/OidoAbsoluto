@@ -2,22 +2,23 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Core\StaticObjectInitializer;
+use Pipeline\Core\Loader;
 use Pipeline\Traits\DefaultAccessorTrait;
 
-class Session extends StaticObjectInitializer
+class Session extends Loader
 {
     use DefaultAccessorTrait;
 
-    protected static function __initialize(): void
+    protected static function __load(): void
     {
-        session_start();
-        session_regenerate_id();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     public function __construct()
     {
-        $this->initializeOnce();
+        Session::load();
     }
 
     public function expose(): array

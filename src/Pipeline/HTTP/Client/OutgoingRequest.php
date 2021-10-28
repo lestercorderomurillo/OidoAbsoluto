@@ -1,12 +1,11 @@
 <?php
-/*
 
 namespace Pipeline\HTTP\Client;
 
-class OutgoingRequest extends Request
+class OutgoingRequest
 {
     public function __construct()
     {
        
     }
-}*/
+}

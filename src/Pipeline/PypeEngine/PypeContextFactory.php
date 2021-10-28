@@ -2,6 +2,7 @@
 
 namespace Pipeline\PypeEngine;
 
+use Pipeline\Core\View;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
@@ -9,7 +10,7 @@ use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\ArrayHelper;
 
-use function Pipeline\Accessors\Session;
+use function Pipeline\Navigate\session;
 
 class PypeContextFactory
 {
@@ -100,13 +101,13 @@ class PypeContextFactory
         return $this->components_scripts;
     }
 
-    public function __construct(PypeTemplateBatch &$batch, View &$view)
+    public function __construct(View &$view)
     {
         $this->buildPackagesContext();
         $this->buildStyleContext();
         $this->buildScriptContext();
         $this->buildViewScriptContext($view);
-        $this->buildComponentScriptContext($batch);
+        $this->buildComponentScriptContext();
 
         $this->buildResultSessionContext();
         $this->buildResultViewContext();
@@ -184,16 +185,15 @@ class PypeContextFactory
 
     private function buildResultSessionContext(){
         date_default_timezone_set("America/Costa_Rica");
-        $this->session_context["session.now"] = date("m/d/Y h:i:s a", mktime());
-        foreach (Session()->expose() as $key => $value) {
-            $this->session_context["session.$key"] = $value;
+        $this->session_context["now"] = date("m/d/Y h:i:s a", mktime());
+        foreach (session()->expose() as $key => $value) {
+            $this->session_context["$key"] = $value;
         }
+        ArrayHelper::appendKeyPrefix("session", $this->session_context);
     }
 
-    private function buildComponentScriptContext(PypeTemplateBatch $batch): void
+    private function buildComponentScriptContext(): void
     {
-        if(!$batch) die("PypeTemplateBatch is not ready to be used.");
-        
         foreach (PypeTemplateBatch::getTemplates() as $template) {
             $name = $template->getComponentName();
             $script = $template->getScripts();

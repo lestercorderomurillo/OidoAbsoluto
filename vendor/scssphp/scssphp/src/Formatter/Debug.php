@@ -71,18 +71,18 @@ class Debug extends Formatter
     /**
      * {@inheritdoc}
      */
-    protected function blockSelections(OutputBlock $block)
+    protected function blockSelectors(OutputBlock $block)
     {
         $indent = $this->indentStr();
 
-        if (empty($block->Selections)) {
-            $this->write("{$indent}block->Selections: []\n");
+        if (empty($block->selectors)) {
+            $this->write("{$indent}block->selectors: []\n");
 
             return;
         }
 
-        foreach ($block->Selections as $index => $Selection) {
-            $this->write("{$indent}block->Selections[{$index}]: $Selection\n");
+        foreach ($block->selectors as $index => $selector) {
+            $this->write("{$indent}block->selectors[{$index}]: $selector\n");
         }
     }
 
@@ -120,7 +120,7 @@ class Debug extends Formatter
 
         $this->currentBlock = $block;
 
-        $this->blockSelections($block);
+        $this->blockSelectors($block);
         $this->blockLines($block);
         $this->blockChildren($block);
     }

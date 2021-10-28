@@ -2,16 +2,13 @@
 
 namespace Pipeline\HTTP\Server;
 
+use Pipeline\Core\View;
 use Pipeline\HTTP\Message;
-use Pipeline\Logger\Logger;
-use Pipeline\PypeEngine\PypeCompiler;
-use Pipeline\PypeEngine\PypeComponent;
-use Pipeline\PypeEngine\PypeTemplateBatch;
+use Pipeline\Trace\Logger;
 use Pipeline\PypeEngine\PypeViewRenderer;
-use Pipeline\PypeEngine\View;
 
-use function Pipeline\Accessors\App;
-use function Pipeline\Accessors\Dependency;
+use function Pipeline\Navigate\app;
+use function Pipeline\Navigate\dependency;
 
 class ServerResponse extends Message
 {
@@ -22,22 +19,20 @@ class ServerResponse extends Message
         }
 
         if ($code >= 500) {
-            App()->getRuntimeEnvironment()->notifyFailure();
-            Dependency(Logger::class)->error("{0} responded with '{1}'", [$code, $message]);
+            app()->getRuntimeEnvironment()->notifyFailure();
+            dependency(Logger::class)->error("{0} responded with '{1}'", [$code, $message]);
         }
 
         $response = new ServerResponse($code);
         $response->addHeader("Content-Type", "text/html");
         $response_view = new View("System", "response", ["code" => "$code", "message" => "$message"]);
 
-        $view_renderer = Dependency(PypeViewRenderer::class);
-        $batch = Dependency(PypeTemplateBatch::class);
+        $view_renderer = dependency(PypeViewRenderer::class);
 
         $view_renderer->setView($response_view);
-        $view_renderer->setTemplateBatch($batch);
 
         /*$old_view = $view_renderer->getContextlessView();
-        if(!App()->getRuntimeEnvironment()->inProductionMode()){
+        if(!app()->getRuntimeEnvironment()->inProductionMode()){
             $view_renderer->addMetaTags(["timestamp" => $old_view->getTimestamp(), "page" => $old_view->getViewGUID()]);
         }
 

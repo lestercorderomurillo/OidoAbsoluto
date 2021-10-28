@@ -2,12 +2,11 @@
 
 namespace Pipeline\PypeEngine;
 
-use Exception;
 use Pipeline\HTTP\Server\ServerResponse;
-use Pipeline\PypeEngine\Inproc\HTMLStrip;
-use Pipeline\PypeEngine\Inproc\Selection;
-use Pipeline\PypeEngine\Inproc\BodyFinder;
-use Pipeline\PypeEngine\Exceptions\CompileException;
+use Pipeline\PypeEngine\HTML\TagStrip;
+use Pipeline\PypeEngine\HTML\BodySelection;
+use Pipeline\PypeEngine\HTML\BodyFinder;
+use Pipeline\Exceptions\CompileException;
 use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\ArrayHelper;
 use Pipeline\Utilities\PatternHelper;
@@ -98,7 +97,7 @@ class PypeCompiler
                             $result = $component->render();
 
                             $definition_selection->moveStartPosition(-1);
-                            $output = self::writeOnSelection($definition_selection, $output, $result);
+                            $output = self::writeOnBodySelection($definition_selection, $output, $result);
 
                             break;
 
@@ -124,7 +123,7 @@ class PypeCompiler
                             }
 
                             $definition_selection->moveStartPosition(-1);
-                            $output = self::writeOnSelection($definition_selection, $output, new HTMLStrip($prototype, $attributes));
+                            $output = self::writeOnBodySelection($definition_selection, $output, new TagStrip($prototype, $attributes));
 
                             if (!$closure) {
                                 $id = self::staticTryGet($attributes["id"], "");
@@ -216,7 +215,7 @@ class PypeCompiler
 
                                     $definition_selection->moveStartPosition(-1);
                                     $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</if>"));
-                                    $output = self::writeOnSelection($definition_selection, $output, $result);
+                                    $output = self::writeOnBodySelection($definition_selection, $output, $result);
                                     
                                 }
                             }
@@ -268,7 +267,7 @@ class PypeCompiler
 
                                     $definition_selection->moveStartPosition(-1);
                                     $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</for>"));
-                                    $output = self::writeOnSelection($definition_selection, $output, $result);
+                                    $output = self::writeOnBodySelection($definition_selection, $output, $result);
                                 }
                             }
 
@@ -353,7 +352,7 @@ class PypeCompiler
                                         $definition_selection->setEndPosition($body_selection->getEndPosition() + strlen("</foreach>"));
 
                                         $result = " " . trim($foreach_string);
-                                        $output = self::writeOnSelection($definition_selection, $output, $result);
+                                        $output = self::writeOnBodySelection($definition_selection, $output, $result);
                                     }else{
                                         throw new CompileException("\"Foreach\" need a {object} reference in the \"from\" attribute to work.");
                                     }
@@ -366,7 +365,7 @@ class PypeCompiler
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ServerResponse::create(500, $e->getMessage())->sendAndExit();
         }
 
@@ -376,7 +375,7 @@ class PypeCompiler
                 $id = substr($definition_selection->getString(), 2);
                 if ($id != null && strlen($id) > 0) {
                     $initial = self::staticTryGet($this_context["$id"], "");
-                    $output = self::writeOnSelection($definition_selection, $output, "<div class=\"app-sync-$id d-inline pr-1\">$initial</div>");
+                    $output = self::writeOnBodySelection($definition_selection, $output, "<div class=\"app-sync-$id d-inline pr-1\">$initial</div>");
                 }
                 $offset = $definition_selection->getEndPosition() + 1;
             }
@@ -385,7 +384,7 @@ class PypeCompiler
         return $output;
     }
 
-    public static function writeOnSelection(Selection &$definition_selection, &$source, $replace): string
+    public static function writeOnBodySelection(BodySelection &$definition_selection, &$source, $replace): string
     {
         $pre = substr($source, 0, $definition_selection->getStartPosition());
         $post = substr($source, $definition_selection->getEndPosition() + 1);

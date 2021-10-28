@@ -29,14 +29,14 @@ class Route
         $this->middlewares = [];
     }
 
-    public function setMiddlewares($array_or_one): void
+    public function setMiddlewares($middlewares): void
     {
-        if (is_array($array_or_one)) {
-            foreach ($array_or_one as $middleware) {
+        if (is_array($middlewares)) {
+            foreach ($middlewares as $middleware) {
                 $this->middlewares[] = new $middleware();
             }
         } else {
-            $this->middlewares[] = new $array_or_one();
+            $this->middlewares[] = new $middlewares();
         }
     }
 

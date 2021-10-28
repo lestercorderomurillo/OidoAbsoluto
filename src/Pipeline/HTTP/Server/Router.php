@@ -2,23 +2,20 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Logger\Logger;
+use Pipeline\Trace\Logger;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\Hotswap\ChangeDispatcher;
-use Pipeline\HTTP\Common\Request;
-use Pipeline\HTTP\Common\Route;
-use Pipeline\HTTP\Common\RouteInterface;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\NullMessage;
-use Pipeline\Middleware\ForceSSL;
-use ReflectionFunction;
-use ReflectionObject;
+use Pipeline\HTTP\Common\Request;
+use Pipeline\HTTP\Common\Route;
+use Pipeline\Buildin\Middleware\ForceSSL;
 
-use function Pipeline\Accessors\App;
-use function Pipeline\Accessors\Configuration;
-use function Pipeline\Accessors\Dependency;
+use function Pipeline\Navigate\app;
+use function Pipeline\Navigate\configuration;
+use function Pipeline\Navigate\dependency;
 
 class Router
 {
@@ -48,7 +45,7 @@ class Router
     {
         $response_sent = false;
 
-        if (App()->getRuntimeEnvironment()->hasHotswapEnabled()) {
+        if (app()->getRuntimeEnvironment()->hasHotswapEnabled()) {
             if ($request->getPath() == "/__HOTSWAP" && strtolower($request->getMethod()) == "get") {
                 if (isset($request->getParameters()["page"]) && isset($request->getParameters()["timestamp"])) {
                     $result = ChangeDispatcher::requested($request->getParameters()["page"], $request->getParameters()["timestamp"]);
@@ -58,7 +55,7 @@ class Router
         }
 
         // Global default middlewares
-        if (Configuration("application.https")) {
+        if (configuration("application.https")) {
             self::setMiddlewares(ForceSSL::class);
         }
 
@@ -69,13 +66,12 @@ class Router
                 $message = $request;
                 foreach ($route->getMiddlewares() as $middleware) {
                     $message = $middleware->handle($message);
-
                     if ($message instanceof ServerResponse) {
                         $message->sendAndExit();
                     }
                 }
 
-                $controller_class_name = $route->getControllerName() . "Controller";
+                $controller_class_name = $route->getControllerName();
                 $controller_name = $route->getControllerName();
 
                 $controller_path = FilePath::create(SystemPath::CONTROLLERS, $controller_class_name, "php")->toString();
@@ -88,7 +84,7 @@ class Router
                     $fully_qualified_class_name = "App\\Controllers\\" . $controller_class_name;
                     $controller = new $fully_qualified_class_name($controller_name);
 
-                    Dependency(Logger::class)->debug(
+                    dependency(Logger::class)->debug(
                         "{0} has been requested a response from '{1}' action",
                         [$fully_qualified_class_name, $action_name]
                     );
@@ -106,19 +102,17 @@ class Router
                                 }
                             }
 
-                            $reflection_object = new ReflectionObject($controller);
+                            $reflection_object = new \ReflectionObject($controller);
                             $reflection_method = $reflection_object->getMethod($action_name);
-
                             $reflection_params = $reflection_method->getParameters();
+
                             $i = 0;
                             foreach ($union as $key => $value) {
-                                if($reflection_params[$i++]->getType() == "int"){
+                                if ($reflection_params[$i++]->getType() == "int") {
                                     $union[$key] = (int)$value;
                                 }
-
                             }
-                            /*var_dump($union);
-                            die();*/
+
                             $anything_from_controller = call_user_func_array([$controller, $action_name], $union);
                             $response = $controller->handle($anything_from_controller);
 
@@ -132,8 +126,9 @@ class Router
 
                             $response_sent = true;
                             $response->send();
-                        } else {
+                            $controller->discardSessionErrors();
 
+                        } else {
                             ServerResponse::create(500, "Parameter number mismatch (in Routes)")->sendAndExit();
                         }
                     } else {
@@ -153,7 +148,7 @@ class Router
 
     public static function get(string $match, string $controller_name, string $action_name = null, $parameters = []): Route
     {
-        if(!$action_name) $action_name = substr($controller_name, 1);
+        if (!$action_name) $action_name = substr($controller_name, 1);
         $current = new Route(__FUNCTION__, $match, $controller_name, $action_name, $parameters);
         self::$routes[] = $current;
         return $current;
@@ -161,7 +156,7 @@ class Router
 
     public static function post(string $match, string $controller_name, string $action_name = null, $parameters = []): Route
     {
-        if(!$action_name) $action_name = substr($controller_name, 1);
+        if (!$action_name) $action_name = substr($controller_name, 1);
         $current = new Route(__FUNCTION__, $match, $controller_name, $action_name, $parameters);
         self::$routes[] = $current;
         return $current;

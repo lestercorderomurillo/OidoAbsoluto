@@ -8,20 +8,19 @@ use Pipeline\Controller\Controller;
 use Pipeline\Database\AbstractDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\Security\Cryptography;
-use Pipeline\Factory\ResponseFactory;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\HTTP\Server\ServerResponse;
 
-use function Pipeline\Accessors\Dependency;
-use function Pipeline\Accessors\Session;
+use function Pipeline\Navigate\Dependency;
+use function Pipeline\Navigate\session;
 
 class HomeController extends Controller
 {
     private AbstractDatabase $db;
 
     function __construct(){
-        $this->db = Dependency("Db");
+        $this->db = dependency("Db");
     }
     
     function login()
@@ -102,15 +101,15 @@ class HomeController extends Controller
             $this->db->save($info);
             $this->db->commit();
 
-            Session("type", "success");
-            Session("message", "Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales.");
+            session("type", "success");
+            session("error", "Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales.");
 
             return $this->view("login");
 
         } else {
 
-            Session("type", "danger");
-            Session("message", "No se puede registrar el usuario ingresado.");
+            session("type", "danger");
+            session("error", "No se puede registrar el usuario ingresado.");
 
             return $this->view("submit");
         }

@@ -2,8 +2,7 @@
 
 namespace Pipeline\HTTP;
 
-use Exception;
-use Pipeline\HTTP\Exceptions\InvalidBodyException;
+use Pipeline\Exceptions\InvalidBodyException;
 
 abstract class Message
 {
@@ -55,7 +54,7 @@ abstract class Message
         if (!is_string($body)) {
             try {
                 $this->body = $body->toString();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new InvalidBodyException("Body is not a string and cannot be casted to one. ($e)");
             }
         } else {

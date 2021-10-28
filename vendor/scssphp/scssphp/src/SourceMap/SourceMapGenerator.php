@@ -35,7 +35,7 @@ class SourceMapGenerator
      * Array of default options
      *
      * @var array
-     * @phpstan-var array{sourceRoot: string, sourceMapFilename: string|null, sourceMapURL: string|null, sourceMapWriteTo: string|null, outputSourceFiles: bool, sourceMapRootpath: string, sourceMapSystemPath: string}
+     * @phpstan-var array{sourceRoot: string, sourceMapFilename: string|null, sourceMapURL: string|null, sourceMapWriteTo: string|null, outputSourceFiles: bool, sourceMapRootpath: string, sourceMapBasepath: string}
      */
     protected $defaultOptions = [
         // an optional source root, useful for relocating source files
@@ -59,7 +59,7 @@ class SourceMapGenerator
         'sourceMapRootpath' => '',
 
         // base path for filename normalization
-        'sourceMapSystemPath' => ''
+        'sourceMapBasepath' => ''
     ];
 
     /**
@@ -98,12 +98,12 @@ class SourceMapGenerator
 
     /**
      * @var array
-     * @phpstan-var array{sourceRoot: string, sourceMapFilename: string|null, sourceMapURL: string|null, sourceMapWriteTo: string|null, outputSourceFiles: bool, sourceMapRootpath: string, sourceMapSystemPath: string}
+     * @phpstan-var array{sourceRoot: string, sourceMapFilename: string|null, sourceMapURL: string|null, sourceMapWriteTo: string|null, outputSourceFiles: bool, sourceMapRootpath: string, sourceMapBasepath: string}
      */
     private $options;
 
     /**
-     * @phpstan-param array{sourceRoot?: string, sourceMapFilename?: string|null, sourceMapURL?: string|null, sourceMapWriteTo?: string|null, outputSourceFiles?: bool, sourceMapRootpath?: string, sourceMapSystemPath?: string} $options
+     * @phpstan-param array{sourceRoot?: string, sourceMapFilename?: string|null, sourceMapURL?: string|null, sourceMapWriteTo?: string|null, outputSourceFiles?: bool, sourceMapRootpath?: string, sourceMapBasepath?: string} $options
      */
     public function __construct(array $options = [])
     {
@@ -344,11 +344,11 @@ class SourceMapGenerator
     {
         $filename = $this->fixWindowsPath($filename);
         $rootpath = $this->options['sourceMapRootpath'];
-        $SystemPath = $this->options['sourceMapSystemPath'];
+        $basePath = $this->options['sourceMapBasepath'];
 
-        // "Trim" the 'sourceMapSystemPath' from the output filename.
-        if (\strlen($SystemPath) && strpos($filename, $SystemPath) === 0) {
-            $filename = substr($filename, \strlen($SystemPath));
+        // "Trim" the 'sourceMapBasepath' from the output filename.
+        if (\strlen($basePath) && strpos($filename, $basePath) === 0) {
+            $filename = substr($filename, \strlen($basePath));
         }
 
         // Remove extra leading path separators.

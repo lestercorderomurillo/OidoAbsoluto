@@ -2,9 +2,10 @@
 
 namespace Pipeline\FileSystem\Path;
 
-use Pipeline\Logger\Logger;
+use Pipeline\Trace\Logger;
 use Pipeline\Traits\StringableTrait;
-use function Pipeline\Accessors\Dependency;
+
+use function Pipeline\Navigate\dependency;
 
 abstract class AbstractPath
 {
@@ -15,7 +16,7 @@ abstract class AbstractPath
 
     public function __construct(string $base)
     {
-        $this->logger = Dependency(Logger::class);
+        $this->logger = dependency(Logger::class);
         $this->base = $base;
     }
 

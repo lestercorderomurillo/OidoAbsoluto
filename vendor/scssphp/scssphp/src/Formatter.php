@@ -157,20 +157,20 @@ abstract class Formatter
     }
 
     /**
-     * Output block Selections
+     * Output block selectors
      *
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
      *
      * @return void
      */
-    protected function blockSelections(OutputBlock $block)
+    protected function blockSelectors(OutputBlock $block)
     {
-        assert(! empty($block->Selections));
+        assert(! empty($block->selectors));
 
         $inner = $this->indentStr();
 
         $this->write($inner
-            . implode($this->tagSeparator, $block->Selections)
+            . implode($this->tagSeparator, $block->selectors)
             . $this->open . $this->break);
     }
 
@@ -205,8 +205,8 @@ abstract class Formatter
 
         $pre = $this->indentStr();
 
-        if (! empty($block->Selections)) {
-            $this->blockSelections($block);
+        if (! empty($block->selectors)) {
+            $this->blockSelectors($block);
 
             $this->indentLevel++;
         }
@@ -219,7 +219,7 @@ abstract class Formatter
             $this->blockChildren($block);
         }
 
-        if (! empty($block->Selections)) {
+        if (! empty($block->selectors)) {
             $this->indentLevel--;
 
             if (! $this->keepSemicolons) {
@@ -254,7 +254,7 @@ abstract class Formatter
 
                 if ($child->type === Type::T_MEDIA || $child->type === Type::T_DIRECTIVE) {
                     $child->children = [];
-                    $child->Selections = null;
+                    $child->selectors = null;
                 }
             }
         }

@@ -2,8 +2,8 @@
 
 namespace Pipeline\Database\SQL;
 
+use Pipeline\Core\Facade\ContainerInterface;
 use Pipeline\Traits\DefaultAccessorTrait;
-use Pipeline\Core\Container\ContainerInterface;
 use Pipeline\Exceptions\ReadOnlyException;
 
 class QueryResult implements ContainerInterface

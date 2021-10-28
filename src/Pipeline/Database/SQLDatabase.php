@@ -2,9 +2,9 @@
 
 namespace Pipeline\Database;
 
+use Pipeline\Core\Model;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\ConnectionString;
-use Pipeline\Model\Model;
 use Pipeline\Utilities\ArrayHelper;
 
 class SQLDatabase extends AbstractDatabase

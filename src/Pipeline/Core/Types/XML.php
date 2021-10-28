@@ -4,7 +4,7 @@ namespace Pipeline\Core\Types;
 
 use Pipeline\Traits\StringableTrait;
 
-class JSON 
+class XML 
 {
     use StringableTrait;
     
@@ -12,7 +12,7 @@ class JSON
     private $value;
 
     public static function create($value, int $hints = 0){
-        $instance = new JSON($value, $hints);
+        $instance = new XML($value, $hints);
         return $instance;
     }
 
@@ -22,7 +22,7 @@ class JSON
         $this->hints = $hints;
     }
 
-    public function addHint(int $hint): JSON
+    public function addHint(int $hint): XML
     {
         $this->hints += $hint;
         return $this;
@@ -30,11 +30,11 @@ class JSON
 
     public function toJavascriptString(): string
     {
-        return addslashes(json_encode($this->value, $this->hints));
+        return "Unimplemented";
     }
 
     public function toString(): string
     {
-        return json_encode($this->value, $this->hints);
+        return "Unimplemented";
     }
 }

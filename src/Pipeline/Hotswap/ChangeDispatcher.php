@@ -2,12 +2,12 @@
 
 namespace Pipeline\Hotswap;
 
-use Pipeline\Core\ResultInterface;
+use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Hotswap\ChangeDetector;
 use Pipeline\Result\JSONResult;
 
-use function Pipeline\Accessors\App;
+use function Pipeline\Navigate\App;
 
 class ChangeDispatcher
 {
@@ -18,7 +18,7 @@ class ChangeDispatcher
         $json = new JSON(
             [
                 "needUpdate" => ChangeDetector::compareTimestamps($page, $timestamp),
-                "isEnabled" => App()->getRuntimeEnvironment()->hasHotswapEnabled()
+                "isEnabled" => app()->getRuntimeEnvironment()->hasHotswapEnabled()
             ]
         );
 

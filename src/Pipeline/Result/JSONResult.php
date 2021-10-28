@@ -3,7 +3,7 @@
 namespace Pipeline\Result;
 
 use Pipeline\Core\Types\JSON;
-use Pipeline\Core\ResultInterface;
+use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
 
 class JSONResult implements ResultInterface

@@ -12,4 +12,4 @@ RewriteRule .* - [L]
 RewriteCond %{REQUEST_URI}  /src/Pipeline/Packages/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
-RewriteRule .* app/Startup.php [L]
+RewriteRule .* app/WebApp.php [L]

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Pipeline\Model\Model;
+use Pipeline\Core\Model;
 
 class Note extends Model
 {

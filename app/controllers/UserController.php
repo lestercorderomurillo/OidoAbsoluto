@@ -6,13 +6,13 @@ use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\AbstractDatabase;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\Utilities\ArrayHelper;
 
-use function Pipeline\Accessors\Dependency;
-use function Pipeline\Accessors\Session;
+use function Pipeline\Navigate\dependency;
+use function Pipeline\Navigate\session;
 
 class UserController extends Controller
 {
@@ -20,15 +20,15 @@ class UserController extends Controller
 
     function __construct()
     {
-        $this->db = Dependency("Db");
+        $this->db = dependency("Db");
     }
 
     function hearingTest(string $mode)
     {
         if ($mode != "simple" && $mode != "full") {
 
-            Session("message-type", "warning");
-            Session("message", "No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
+            session("error-type", "warning");
+            session("error", "No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
 
             return $this->redirect("login");
         }

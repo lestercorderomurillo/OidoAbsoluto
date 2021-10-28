@@ -2,7 +2,7 @@
 
 namespace Pipeline\Traits;
 
-use Pipeline\Core\Container\ContainerInterface;
+use Pipeline\Core\Facade\ContainerInterface;
 
 trait ValuesSetterTrait
 {

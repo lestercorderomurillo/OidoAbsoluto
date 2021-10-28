@@ -2,7 +2,6 @@
 
 namespace Pipeline\Core;
 
-use ErrorException;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\FilePath;
 use Pipeline\Traits\DefaultAccessorTrait;
@@ -37,7 +36,7 @@ class Environment
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             if (StringHelper::startsWith($errstr, "Undefined index")) {
-                throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+                throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
             }
         });
     }

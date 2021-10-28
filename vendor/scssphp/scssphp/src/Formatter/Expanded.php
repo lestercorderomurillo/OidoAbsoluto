@@ -63,7 +63,7 @@ class Expanded extends Formatter
 
         $this->write($inner . implode($glue, $block->lines));
 
-        if (empty($block->Selections) || ! empty($block->children)) {
+        if (empty($block->selectors) || ! empty($block->children)) {
             $this->write($this->break);
         }
     }

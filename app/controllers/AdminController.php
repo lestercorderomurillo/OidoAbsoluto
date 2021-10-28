@@ -5,7 +5,8 @@ namespace App\Controllers;
 use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\AbstractDatabase;
-use function Pipeline\Accessors\Dependency;
+
+use function Pipeline\Navigate\dependency;
 
 class AdminController extends Controller
 {
@@ -13,7 +14,7 @@ class AdminController extends Controller
 
     function __construct()
     {
-        $this->db = Dependency("Db");
+        $this->db = dependency("Db");
     }
 
     function overview()

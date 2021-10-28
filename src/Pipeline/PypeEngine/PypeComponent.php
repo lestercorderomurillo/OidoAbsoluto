@@ -4,8 +4,9 @@ namespace Pipeline\PypeEngine;
 
 use Pipeline\Utilities\ArrayHelper;
 use Pipeline\Traits\StringableTrait;
-use Pipeline\PypeEngine\Exceptions\CompileException;
-use function Pipeline\Accessors\Dependency;
+use Pipeline\Exceptions\CompileException;
+
+use function Pipeline\Navigate\dependency;
 
 class PypeComponent
 {
@@ -26,7 +27,7 @@ class PypeComponent
 
     public function __construct(PypeTemplate $template, array $attributes = [], array $external_context = [])
     {
-        $this->compiler = Dependency(PypeCompiler::class);
+        $this->compiler = dependency(PypeCompiler::class);
         
         $this->body = "";
         $this->template = $template;

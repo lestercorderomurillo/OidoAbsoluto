@@ -326,7 +326,7 @@ class Parser
     }
 
     /**
-     * Parse a Selection or Selection list
+     * Parse a selector or selector list
      *
      * @api
      *
@@ -336,7 +336,7 @@ class Parser
      *
      * @return boolean
      */
-    public function parseSelection($buffer, &$out, $shouldValidate = true)
+    public function parseSelector($buffer, &$out, $shouldValidate = true)
     {
         $this->count           = 0;
         $this->env             = null;
@@ -352,15 +352,15 @@ class Parser
         $this->whitespace();
         $this->discardComments = false;
 
-        $Selection = $this->Selections($out);
+        $selector = $this->selectors($out);
 
         $this->restoreEncoding();
 
         if ($shouldValidate && $this->count !== strlen($buffer)) {
-            throw $this->parseError("`" . substr($buffer, $this->count) . "` is not a valid Selection in `$buffer`");
+            throw $this->parseError("`" . substr($buffer, $this->count) . "` is not a valid Selector in `$buffer`");
         }
 
-        return $Selection;
+        return $selector;
     }
 
     /**
@@ -438,7 +438,7 @@ class Parser
         if (isset($this->buffer[$this->count]) && $this->buffer[$this->count] === '@') {
             if (
                 $this->literal('@at-root', 8) &&
-                ($this->Selections($Selection) || true) &&
+                ($this->selectors($selector) || true) &&
                 ($this->map($with) || true) &&
                 (($this->matchChar('(') &&
                     $this->interpolation($with) &&
@@ -448,7 +448,7 @@ class Parser
                 ! $this->cssOnly || $this->assertPlainCssValid(false, $s);
 
                 $atRoot = $this->pushSpecialBlock(Type::T_AT_ROOT, $s);
-                $atRoot->Selection = $Selection;
+                $atRoot->selector = $selector;
                 $atRoot->with     = $with;
 
                 return true;
@@ -577,14 +577,14 @@ class Parser
 
             if (
                 $this->literal('@extend', 7) &&
-                $this->Selections($Selections) &&
+                $this->selectors($selectors) &&
                 $this->end()
             ) {
                 ! $this->cssOnly || $this->assertPlainCssValid(false, $s);
 
                 // check for '!flag'
-                $optional = $this->stripOptionalFlag($Selections);
-                $this->append([Type::T_EXTEND, $Selections, $optional], $s);
+                $optional = $this->stripOptionalFlag($selectors);
+                $this->append([Type::T_EXTEND, $selectors, $optional], $s);
 
                 return true;
             }
@@ -906,9 +906,9 @@ class Parser
             return false;
         }
 
-        $inCssSelection = null;
+        $inCssSelector = null;
         if ($this->cssOnly) {
-            $inCssSelection = (! empty($this->env->parent) &&
+            $inCssSelector = (! empty($this->env->parent) &&
                 ! in_array($this->env->type, [Type::T_DIRECTIVE, Type::T_MEDIA]));
         }
         // custom properties : right part is static
@@ -957,7 +957,7 @@ class Parser
         $this->seek($s);
 
         // property shortcut
-        // captures most properties before having to parse a Selection
+        // captures most properties before having to parse a selector
         if (
             $this->keyword($name, false) &&
             $this->literal(': ', 2) &&
@@ -992,12 +992,12 @@ class Parser
 
         // opening css block
         if (
-            $this->Selections($Selections) &&
+            $this->selectors($selectors) &&
             $this->matchChar('{', false)
         ) {
-            ! $this->cssOnly || ! $inCssSelection || $this->assertPlainCssValid(false);
+            ! $this->cssOnly || ! $inCssSelector || $this->assertPlainCssValid(false);
 
-            $this->pushBlock($Selections, $s);
+            $this->pushBlock($selectors, $s);
 
             if ($this->eatWhiteDefault) {
                 $this->whitespace();
@@ -1087,12 +1087,12 @@ class Parser
     /**
      * Push block onto parse tree
      *
-     * @param array|null $Selections
+     * @param array|null $selectors
      * @param integer $pos
      *
      * @return Block
      */
-    protected function pushBlock($Selections, $pos = 0)
+    protected function pushBlock($selectors, $pos = 0)
     {
         list($line, $column) = $this->getSourcePosition($pos);
 
@@ -1101,7 +1101,7 @@ class Parser
         $b->sourceLine   = $line;
         $b->sourceColumn = $column;
         $b->sourceIndex  = $this->sourceIndex;
-        $b->Selections    = $Selections;
+        $b->selectors    = $selectors;
         $b->comments     = [];
         $b->parent       = $this->env;
 
@@ -1169,7 +1169,7 @@ class Parser
         }
 
         if ($block->type == Type::T_AT_ROOT) {
-            // keeps the parent in case of self Selection &
+            // keeps the parent in case of self selector &
             $block->selfParent = $block->parent;
         }
 
@@ -1580,7 +1580,9 @@ class Parser
                     } else {
                         list($line, $column) = $this->getSourcePosition($this->count);
                         $file = $this->sourceName;
-                        $this->logger->warn("Unterminated interpolations in multiline comments are deprecated and will be removed in ScssPhp 2.0, in \"$file\", line $line, column $column.", true);
+                        if (!$this->discardComments) {
+                            $this->logger->warn("Unterminated interpolations in multiline comments are deprecated and will be removed in ScssPhp 2.0, in \"$file\", line $line, column $column.", true);
+                        }
                         $comment[] = substr($this->buffer, $this->count, 2);
 
                         $this->count += 2;
@@ -1805,15 +1807,15 @@ class Parser
         }
 
         if (
-            $this->literal('Selection(', 9) &&
-            $this->Selection($Selection) &&
+            $this->literal('selector(', 9) &&
+            $this->selector($selector) &&
             $this->matchChar(')')
         ) {
-            $support = [Type::T_STRING, '', [[Type::T_KEYWORD, 'Selection(']]];
+            $support = [Type::T_STRING, '', [[Type::T_KEYWORD, 'selector(']]];
 
-            $SelectionList = [Type::T_LIST, '', []];
+            $selectorList = [Type::T_LIST, '', []];
 
-            foreach ($Selection as $sc) {
+            foreach ($selector as $sc) {
                 $compound = [Type::T_STRING, '', []];
 
                 foreach ($sc as $scp) {
@@ -1824,10 +1826,10 @@ class Parser
                     }
                 }
 
-                $SelectionList[2][] = $compound;
+                $selectorList[2][] = $compound;
             }
 
-            $support[2][] = $SelectionList;
+            $support[2][] = $selectorList;
             $support[2][] = [Type::T_KEYWORD, ')'];
             $parts[] = $support;
             $s = $this->count;
@@ -3395,20 +3397,20 @@ class Parser
     }
 
     /**
-     * Parse comma separated Selection list
+     * Parse comma separated selector list
      *
      * @param array $out
-     * @param string|boolean $subSelection
+     * @param string|boolean $subSelector
      *
      * @return boolean
      */
-    protected function Selections(&$out, $subSelection = false)
+    protected function selectors(&$out, $subSelector = false)
     {
         $s = $this->count;
-        $Selections = [];
+        $selectors = [];
 
-        while ($this->Selection($sel, $subSelection)) {
-            $Selections[] = $sel;
+        while ($this->selector($sel, $subSelector)) {
+            $selectors[] = $sel;
 
             if (! $this->matchChar(',', true)) {
                 break;
@@ -3419,28 +3421,28 @@ class Parser
             }
         }
 
-        if (! $Selections) {
+        if (! $selectors) {
             $this->seek($s);
 
             return false;
         }
 
-        $out = $Selections;
+        $out = $selectors;
 
         return true;
     }
 
     /**
-     * Parse whitespace separated Selection list
+     * Parse whitespace separated selector list
      *
      * @param array          $out
-     * @param string|boolean $subSelection
+     * @param string|boolean $subSelector
      *
      * @return boolean
      */
-    protected function Selection(&$out, $subSelection = false)
+    protected function selector(&$out, $subSelector = false)
     {
-        $Selection = [];
+        $selector = [];
 
         $discardComments = $this->discardComments;
         $this->discardComments = true;
@@ -3450,18 +3452,18 @@ class Parser
 
             if ($this->match('[>+~]+', $m, true)) {
                 if (
-                    $subSelection && \is_string($subSelection) && strpos($subSelection, 'nth-') === 0 &&
+                    $subSelector && \is_string($subSelector) && strpos($subSelector, 'nth-') === 0 &&
                     $m[0] === '+' && $this->match("(\d+|n\b)", $counter)
                 ) {
                     $this->seek($s);
                 } else {
-                    $Selection[] = [$m[0]];
+                    $selector[] = [$m[0]];
                     continue;
                 }
             }
 
-            if ($this->SelectionSingle($part, $subSelection)) {
-                $Selection[] = $part;
+            if ($this->selectorSingle($part, $subSelector)) {
+                $selector[] = $part;
                 $this->whitespace();
                 continue;
             }
@@ -3471,31 +3473,31 @@ class Parser
 
         $this->discardComments = $discardComments;
 
-        if (! $Selection) {
+        if (! $selector) {
             return false;
         }
 
-        $out = $Selection;
+        $out = $selector;
 
         return true;
     }
 
     /**
-     * parsing escaped chars in Selections:
-     * - escaped single chars are kept escaped in the Selection but in a normalized form
+     * parsing escaped chars in selectors:
+     * - escaped single chars are kept escaped in the selector but in a normalized form
      *   (if not in 0-9a-f range as this would be ambigous)
      * - other escaped sequences (multibyte chars or 0-9a-f) are kept in their initial escaped form,
      *   normalized to lowercase
      *
-     * TODO: this is a fallback solution. Ideally escaped chars in Selections should be encoded as the genuine chars,
+     * TODO: this is a fallback solution. Ideally escaped chars in selectors should be encoded as the genuine chars,
      * and escaping added when printing in the Compiler, where/if it's mandatory
-     * - but this require a better formal Selection representation instead of the array we have now
+     * - but this require a better formal selector representation instead of the array we have now
      *
      * @param string $out
      * @param bool $keepEscapedNumber
      * @return bool
      */
-    protected function matchEscapeCharacterInSelection(&$out, $keepEscapedNumber = false)
+    protected function matchEscapeCharacterInSelector(&$out, $keepEscapedNumber = false)
     {
         $s_escape = $this->count;
         if ($this->match('\\\\', $m)) {
@@ -3530,18 +3532,18 @@ class Parser
     }
 
     /**
-     * Parse the parts that make up a Selection
+     * Parse the parts that make up a selector
      *
      * {@internal
      *     div[yes=no]#something.hello.world:nth-child(-2n+1)%placeholder
      * }}
      *
      * @param array          $out
-     * @param string|boolean $subSelection
+     * @param string|boolean $subSelector
      *
      * @return boolean
      */
-    protected function SelectionSingle(&$out, $subSelection = false)
+    protected function selectorSingle(&$out, $subSelector = false)
     {
         $oldWhite = $this->eatWhiteDefault;
         $this->eatWhiteDefault = false;
@@ -3565,15 +3567,15 @@ class Parser
                 break;
             }
 
-            // parsing a sub Selection in () stop with the closing )
-            if ($subSelection && $char === ')') {
+            // parsing a sub selector in () stop with the closing )
+            if ($subSelector && $char === ')') {
                 break;
             }
 
             //self
             switch ($char) {
                 case '&':
-                    $parts[] = Compiler::$selfSelection;
+                    $parts[] = Compiler::$selfSelector;
                     $this->count++;
                     ! $this->cssOnly || $this->assertPlainCssValid(false, $s);
                     continue 2;
@@ -3589,10 +3591,10 @@ class Parser
                     continue 2;
             }
 
-            // handling of escaping in Selections : get the escaped char
+            // handling of escaping in selectors : get the escaped char
             if ($char === '\\') {
                 $this->count++;
-                if ($this->matchEscapeCharacterInSelection($escaped, true)) {
+                if ($this->matchEscapeCharacterInSelector($escaped, true)) {
                     $parts[] = $escaped;
                     continue;
                 }
@@ -3624,7 +3626,7 @@ class Parser
                 continue;
             }
 
-            // a pseudo Selection
+            // a pseudo selector
             if ($char === ':') {
                 if ($this->buffer[$this->count + 1] === ':') {
                     $this->count += 2;
@@ -3656,7 +3658,7 @@ class Parser
                     ) {
                         if (
                             $this->matchChar('(', true) &&
-                            ($this->Selections($subs, reset($nameParts)) || true) &&
+                            ($this->selectors($subs, reset($nameParts)) || true) &&
                             $this->matchChar(')')
                         ) {
                             $parts[] = '(';
@@ -3704,7 +3706,7 @@ class Parser
             $this->seek($s);
 
             // 2n+1
-            if ($subSelection && \is_string($subSelection) && strpos($subSelection, 'nth-') === 0) {
+            if ($subSelector && \is_string($subSelector) && strpos($subSelector, 'nth-') === 0) {
                 if ($this->match("(\s*(\+\s*|\-\s*)?(\d+|n|\d+n))+", $counter)) {
                     $parts[] = $counter[0];
                     //$parts[] = str_replace(' ', '', $counter[0]);
@@ -3714,7 +3716,7 @@ class Parser
 
             $this->seek($s);
 
-            // attribute Selection
+            // attribute selector
             if (
                 $char === '[' &&
                 $this->matchChar('[') &&
@@ -3792,11 +3794,11 @@ class Parser
      *
      * @param string  $word
      * @param boolean $eatWhitespace
-     * @param boolean $inSelection
+     * @param boolean $inSelector
      *
      * @return boolean
      */
-    protected function keyword(&$word, $eatWhitespace = null, $inSelection = false)
+    protected function keyword(&$word, $eatWhitespace = null, $inSelector = false)
     {
         $s = $this->count;
         $match = $this->match(
@@ -3824,8 +3826,8 @@ class Parser
                         && $char === '\\'
                         && !$previousEscape
                         && (
-                            $inSelection ?
-                                $this->matchEscapeCharacterInSelection($out)
+                            $inSelector ?
+                                $this->matchEscapeCharacterInSelector($out)
                                 :
                                 $this->matchEscapeCharacter($out, true)
                         )
@@ -3859,15 +3861,15 @@ class Parser
      *
      * @param string  $word
      * @param boolean $eatWhitespace
-     * @param boolean $inSelection
+     * @param boolean $inSelector
      *
      * @return boolean
      */
-    protected function restrictedKeyword(&$word, $eatWhitespace = null, $inSelection = false)
+    protected function restrictedKeyword(&$word, $eatWhitespace = null, $inSelector = false)
     {
         $s = $this->count;
 
-        if ($this->keyword($word, $eatWhitespace, $inSelection) && (\ord($word[0]) > 57 || \ord($word[0]) < 48)) {
+        if ($this->keyword($word, $eatWhitespace, $inSelector) && (\ord($word[0]) > 57 || \ord($word[0]) < 48)) {
             return true;
         }
 
@@ -3989,20 +3991,20 @@ class Parser
     }
 
     /**
-     * Strip optional flag from Selection list
+     * Strip optional flag from selector list
      *
-     * @param array $Selections
+     * @param array $selectors
      *
      * @return string
      */
-    protected function stripOptionalFlag(&$Selections)
+    protected function stripOptionalFlag(&$selectors)
     {
         $optional = false;
-        $Selection = end($Selections);
-        $part     = end($Selection);
+        $selector = end($selectors);
+        $part     = end($selector);
 
         if ($part === ['!optional']) {
-            array_pop($Selections[\count($Selections) - 1]);
+            array_pop($selectors[\count($selectors) - 1]);
 
             $optional = true;
         }

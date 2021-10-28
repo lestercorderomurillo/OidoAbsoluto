@@ -131,7 +131,7 @@ class Compiler
     public static $null         = [Type::T_NULL];
     public static $nullString   = [Type::T_STRING, '', []];
     public static $defaultValue = [Type::T_KEYWORD, ''];
-    public static $selfSelection = [Type::T_SELF];
+    public static $selfSelector = [Type::T_SELF];
     public static $emptyList    = [Type::T_LIST, '', []];
     public static $emptyMap     = [Type::T_MAP, [], []];
     public static $emptyString  = [Type::T_STRING, '"', []];
@@ -165,7 +165,7 @@ class Compiler
      * @var array<string, bool>
      */
     protected $registeredFeatures = [
-        'extend-Selection-pseudoclass' => false,
+        'extend-selector-pseudoclass' => false,
         'at-error'                    => true,
         'units-level-3'               => true,
         'global-variable-shadowing'   => false,
@@ -189,9 +189,14 @@ class Compiler
 
     /**
      * @var array
-     * @phpstan-var array{sourceRoot?: string, sourceMapFilename?: string|null, sourceMapURL?: string|null, sourceMapWriteTo?: string|null, outputSourceFiles?: bool, sourceMapRootpath?: string, sourceMapSystemPath?: string}
+     * @phpstan-var array{sourceRoot?: string, sourceMapFilename?: string|null, sourceMapURL?: string|null, sourceMapWriteTo?: string|null, outputSourceFiles?: bool, sourceMapRootpath?: string, sourceMapBasepath?: string}
      */
     protected $sourceMapOptions = [];
+
+    /**
+     * @var bool
+     */
+    private $charset = true;
 
     /**
      * @var string|\ScssPhp\ScssPhp\Formatter
@@ -221,6 +226,8 @@ class Compiler
     protected $storeEnv;
     /**
      * @var bool|null
+     *
+     * @deprecated
      */
     protected $charsetSeen;
     /**
@@ -410,6 +417,7 @@ class Compiler
      *
      * @throws SassException when the source fails to compile
      *
+     * @deprecated Use {@see compileString} instead.
      */
     public function compile($code, $path = null)
     {
@@ -462,7 +470,6 @@ class Compiler
         $this->env            = null;
         $this->scope          = null;
         $this->storeEnv       = null;
-        $this->charsetSeen    = null;
         $this->shouldEvaluate = null;
         $this->ignoreCallStackMessage = false;
         $this->parsedFiles = [];
@@ -515,11 +522,9 @@ class Compiler
 
             $prefix = '';
 
-            if (!$this->charsetSeen) {
-                if (strlen($out) !== Util::mbStrlen($out)) {
-                    $prefix = '@charset "UTF-8";' . "\n";
-                    $out = $prefix . $out;
-                }
+            if ($this->charset && strlen($out) !== Util::mbStrlen($out)) {
+                $prefix = '@charset "UTF-8";' . "\n";
+                $out = $prefix . $out;
             }
 
             $sourceMap = null;
@@ -678,18 +683,18 @@ class Compiler
      * Make output block
      *
      * @param string|null   $type
-     * @param string[]|null $Selections
+     * @param string[]|null $selectors
      *
      * @return \ScssPhp\ScssPhp\Formatter\OutputBlock
      */
-    protected function makeOutputBlock($type, $Selections = null)
+    protected function makeOutputBlock($type, $selectors = null)
     {
         $out = new OutputBlock();
         $out->type      = $type;
         $out->lines     = [];
         $out->children  = [];
         $out->parent    = $this->scope;
-        $out->Selections = $Selections;
+        $out->selectors = $selectors;
         $out->depth     = $this->env->depth;
 
         if ($this->env->block instanceof Block) {
@@ -717,16 +722,16 @@ class Compiler
         $this->rootBlock = $this->scope = $this->makeOutputBlock(Type::T_ROOT);
 
         $this->compileChildrenNoReturn($rootBlock->children, $this->scope);
-        $this->flattenSelections($this->scope);
-        $this->missingSelections();
+        $this->flattenSelectors($this->scope);
+        $this->missingSelectors();
     }
 
     /**
-     * Report missing Selections
+     * Report missing selectors
      *
      * @return void
      */
-    protected function missingSelections()
+    protected function missingSelectors()
     {
         foreach ($this->extends as $extend) {
             if (isset($extend[3])) {
@@ -741,28 +746,28 @@ class Compiler
             }
 
             $target = implode(' ', $target);
-            $origin = $this->collapseSelections($origin);
+            $origin = $this->collapseSelectors($origin);
 
             $this->sourceLine = $block[Parser::SOURCE_LINE];
-            throw $this->error("\"$origin\" failed to @extend \"$target\". The Selection \"$target\" was not found.");
+            throw $this->error("\"$origin\" failed to @extend \"$target\". The selector \"$target\" was not found.");
         }
     }
 
     /**
-     * Flatten Selections
+     * Flatten selectors
      *
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
      * @param string                                 $parentKey
      *
      * @return void
      */
-    protected function flattenSelections(OutputBlock $block, $parentKey = null)
+    protected function flattenSelectors(OutputBlock $block, $parentKey = null)
     {
-        if ($block->Selections) {
-            $Selections = [];
+        if ($block->selectors) {
+            $selectors = [];
 
-            foreach ($block->Selections as $s) {
-                $Selections[] = $s;
+            foreach ($block->selectors as $s) {
+                $selectors[] = $s;
 
                 if (! \is_array($s)) {
                     continue;
@@ -770,34 +775,34 @@ class Compiler
 
                 // check extends
                 if (! empty($this->extendsMap)) {
-                    $this->matchExtends($s, $Selections);
+                    $this->matchExtends($s, $selectors);
 
                     // remove duplicates
-                    array_walk($Selections, function (&$value) {
+                    array_walk($selectors, function (&$value) {
                         $value = serialize($value);
                     });
 
-                    $Selections = array_unique($Selections);
+                    $selectors = array_unique($selectors);
 
-                    array_walk($Selections, function (&$value) {
+                    array_walk($selectors, function (&$value) {
                         $value = unserialize($value);
                     });
                 }
             }
 
-            $block->Selections = [];
-            $placeholderSelection = false;
+            $block->selectors = [];
+            $placeholderSelector = false;
 
-            foreach ($Selections as $Selection) {
-                if ($this->hasSelectionPlaceholder($Selection)) {
-                    $placeholderSelection = true;
+            foreach ($selectors as $selector) {
+                if ($this->hasSelectorPlaceholder($selector)) {
+                    $placeholderSelector = true;
                     continue;
                 }
 
-                $block->Selections[] = $this->compileSelection($Selection);
+                $block->selectors[] = $this->compileSelector($selector);
             }
 
-            if ($placeholderSelection && 0 === \count($block->Selections) && null !== $parentKey) {
+            if ($placeholderSelector && 0 === \count($block->selectors) && null !== $parentKey) {
                 unset($block->parent->children[$parentKey]);
 
                 return;
@@ -805,27 +810,27 @@ class Compiler
         }
 
         foreach ($block->children as $key => $child) {
-            $this->flattenSelections($child, $key);
+            $this->flattenSelectors($child, $key);
         }
     }
 
     /**
-     * Glue parts of :not( or :nth-child( ... that are in general split in Selections parts
+     * Glue parts of :not( or :nth-child( ... that are in general split in selectors parts
      *
      * @param array $parts
      *
      * @return array
      */
-    protected function glueFunctionSelections($parts)
+    protected function glueFunctionSelectors($parts)
     {
         $new = [];
 
         foreach ($parts as $part) {
             if (\is_array($part)) {
-                $part = $this->glueFunctionSelections($part);
+                $part = $this->glueFunctionSelectors($part);
                 $new[] = $part;
             } else {
-                // a Selection part finishing with a ) is the last part of a :not( or :nth-child(
+                // a selector part finishing with a ) is the last part of a :not( or :nth-child(
                 // and need to be joined to this
                 if (
                     \count($new) && \is_string($new[\count($new) - 1]) &&
@@ -847,25 +852,25 @@ class Compiler
     /**
      * Match extends
      *
-     * @param array   $Selection
+     * @param array   $selector
      * @param array   $out
      * @param integer $from
      * @param boolean $initial
      *
      * @return void
      */
-    protected function matchExtends($Selection, &$out, $from = 0, $initial = true)
+    protected function matchExtends($selector, &$out, $from = 0, $initial = true)
     {
         static $partsPile = [];
-        $Selection = $this->glueFunctionSelections($Selection);
+        $selector = $this->glueFunctionSelectors($selector);
 
-        if (\count($Selection) == 1 && \in_array(reset($Selection), $partsPile)) {
+        if (\count($selector) == 1 && \in_array(reset($selector), $partsPile)) {
             return;
         }
 
         $outRecurs = [];
 
-        foreach ($Selection as $i => $part) {
+        foreach ($selector as $i => $part) {
             if ($i < $from) {
                 continue;
             }
@@ -883,8 +888,8 @@ class Compiler
             $partsPile[] = $part;
 
             if ($this->matchExtendsSingle($part, $origin, $initial)) {
-                $after       = \array_slice($Selection, $i + 1);
-                $before      = \array_slice($Selection, 0, $i);
+                $after       = \array_slice($selector, $i + 1);
+                $before      = \array_slice($selector, 0, $i);
                 list($before, $nonBreakableBefore) = $this->extractRelationshipFromFragment($before);
 
                 foreach ($origin as $new) {
@@ -892,7 +897,7 @@ class Compiler
 
                     // remove shared parts
                     if (\count($new) > 1) {
-                        while ($k < $i && isset($new[$k]) && $Selection[$k] === $new[$k]) {
+                        while ($k < $i && isset($new[$k]) && $selector[$k] === $new[$k]) {
                             $k++;
                         }
                     }
@@ -932,11 +937,11 @@ class Compiler
                         $after
                     );
 
-                    if ($result === $Selection) {
+                    if ($result === $selector) {
                         continue;
                     }
 
-                    $this->pushOrMergeExtentedSelection($out, $result);
+                    $this->pushOrMergeExtentedSelector($out, $result);
 
                     // recursively check for more matches
                     $startRecurseFrom = \count($before) + min(\count($nonBreakableBefore), \count($mergedBefore));
@@ -947,7 +952,7 @@ class Compiler
                         $this->matchExtends($result, $outRecurs, $startRecurseFrom, false);
                     }
 
-                    // Selection sequence merging
+                    // selector sequence merging
                     if (! empty($before) && \count($new) > 1) {
                         $preSharedParts = $k > 0 ? \array_slice($before, 0, $k) : [];
                         $postSharedParts = $k > 0 ? \array_slice($before, $k) : $before;
@@ -964,7 +969,7 @@ class Compiler
                             $after
                         );
 
-                        $this->pushOrMergeExtentedSelection($out, $result2);
+                        $this->pushOrMergeExtentedSelector($out, $result2);
                     }
                 }
             }
@@ -973,19 +978,19 @@ class Compiler
 
         while (\count($outRecurs)) {
             $result = array_shift($outRecurs);
-            $this->pushOrMergeExtentedSelection($out, $result);
+            $this->pushOrMergeExtentedSelector($out, $result);
         }
     }
 
     /**
-     * Test a part for being a pseudo Selection
+     * Test a part for being a pseudo selector
      *
      * @param string $part
      * @param array  $matches
      *
      * @return boolean
      */
-    protected function isPseudoSelection($part, &$matches)
+    protected function isPseudoSelector($part, &$matches)
     {
         if (
             strpos($part, ':') === 0 &&
@@ -998,36 +1003,36 @@ class Compiler
     }
 
     /**
-     * Push extended Selection except if
-     *  - this is a pseudo Selection
+     * Push extended selector except if
+     *  - this is a pseudo selector
      *  - same as previous
      *  - in a white list
-     * in this case we merge the pseudo Selection content
+     * in this case we merge the pseudo selector content
      *
      * @param array $out
      * @param array $extended
      *
      * @return void
      */
-    protected function pushOrMergeExtentedSelection(&$out, $extended)
+    protected function pushOrMergeExtentedSelector(&$out, $extended)
     {
         if (\count($out) && \count($extended) === 1 && \count(reset($extended)) === 1) {
             $single = reset($extended);
             $part = reset($single);
 
             if (
-                $this->isPseudoSelection($part, $matchesExtended) &&
+                $this->isPseudoSelector($part, $matchesExtended) &&
                 \in_array($matchesExtended[1], [ 'slotted' ])
             ) {
                 $prev = end($out);
-                $prev = $this->glueFunctionSelections($prev);
+                $prev = $this->glueFunctionSelectors($prev);
 
                 if (\count($prev) === 1 && \count(reset($prev)) === 1) {
                     $single = reset($prev);
                     $part = reset($single);
 
                     if (
-                        $this->isPseudoSelection($part, $matchesPrev) &&
+                        $this->isPseudoSelector($part, $matchesPrev) &&
                         $matchesPrev[1] === $matchesExtended[1]
                     ) {
                         $extended = explode($matchesExtended[1] . '(', $matchesExtended[0], 2);
@@ -1093,28 +1098,28 @@ class Compiler
 
             if (
                 $initial &&
-                $this->isPseudoSelection($part, $matches) &&
+                $this->isPseudoSelector($part, $matches) &&
                 ! \in_array($matches[1], [ 'not' ])
             ) {
                 $buffer    = $matches[2];
                 $parser    = $this->parserFactory(__METHOD__);
 
-                if ($parser->parseSelection($buffer, $subSelections, false)) {
-                    foreach ($subSelections as $ksub => $subSelection) {
+                if ($parser->parseSelector($buffer, $subSelectors, false)) {
+                    foreach ($subSelectors as $ksub => $subSelector) {
                         $subExtended = [];
-                        $this->matchExtends($subSelection, $subExtended, 0, false);
+                        $this->matchExtends($subSelector, $subExtended, 0, false);
 
                         if ($subExtended) {
-                            $subSelectionsExtended = $subSelections;
-                            $subSelectionsExtended[$ksub] = $subExtended;
+                            $subSelectorsExtended = $subSelectors;
+                            $subSelectorsExtended[$ksub] = $subExtended;
 
-                            foreach ($subSelectionsExtended as $ksse => $sse) {
-                                $subSelectionsExtended[$ksse] = $this->collapseSelections($sse);
+                            foreach ($subSelectorsExtended as $ksse => $sse) {
+                                $subSelectorsExtended[$ksse] = $this->collapseSelectors($sse);
                             }
 
-                            $subSelectionsExtended = implode(', ', $subSelectionsExtended);
+                            $subSelectorsExtended = implode(', ', $subSelectorsExtended);
                             $singleExtended = $single;
-                            $singleExtended[$k] = str_replace('(' . $buffer . ')', "($subSelectionsExtended)", $part);
+                            $singleExtended[$k] = str_replace('(' . $buffer . ')', "($subSelectorsExtended)", $part);
                             $outOrigin[] = [ $singleExtended ];
                             $found = true;
                         }
@@ -1126,7 +1131,7 @@ class Compiler
         foreach ($counts as $idx => $count) {
             list($target, $origin, /* $block */) = $this->extends[$idx];
 
-            $origin = $this->glueFunctionSelections($origin);
+            $origin = $this->glueFunctionSelectors($origin);
 
             // check count
             if ($count !== \count($target)) {
@@ -1154,7 +1159,7 @@ class Compiler
                     continue;
                 }
 
-                $combined = $this->combineSelectionSingle($replacement, $rem);
+                $combined = $this->combineSelectorSingle($replacement, $rem);
 
                 if (\count(array_diff($combined, $origin[$j][\count($origin[$j]) - 1]))) {
                     $origin[$j][\count($origin[$j]) - 1] = $combined;
@@ -1172,14 +1177,14 @@ class Compiler
     /**
      * Extract a relationship from the fragment.
      *
-     * When extracting the last portion of a Selection we will be left with a
+     * When extracting the last portion of a selector we will be left with a
      * fragment which may end with a direction relationship combinator. This
      * method will extract the relationship fragment and return it along side
      * the rest.
      *
-     * @param array $fragment The Selection fragment maybe ending with a direction relationship combinator.
+     * @param array $fragment The selector fragment maybe ending with a direction relationship combinator.
      *
-     * @return array The Selection without the relationship fragment if any, the relationship fragment.
+     * @return array The selector without the relationship fragment if any, the relationship fragment.
      */
     protected function extractRelationshipFromFragment(array $fragment)
     {
@@ -1204,14 +1209,14 @@ class Compiler
     }
 
     /**
-     * Combine Selection single
+     * Combine selector single
      *
      * @param array $base
      * @param array $other
      *
      * @return array
      */
-    protected function combineSelectionSingle($base, $other)
+    protected function combineSelectorSingle($base, $other)
     {
         $tag    = [];
         $out    = [];
@@ -1302,7 +1307,7 @@ class Compiler
                 $wrapped->sourceIndex  = $media->sourceIndex;
                 $wrapped->sourceLine   = $media->sourceLine;
                 $wrapped->sourceColumn = $media->sourceColumn;
-                $wrapped->Selections    = [];
+                $wrapped->selectors    = [];
                 $wrapped->comments     = [];
                 $wrapped->parent       = $media;
                 $wrapped->children     = $media->children;
@@ -1411,30 +1416,30 @@ class Compiler
         $envs    = $this->compactEnv($env);
         list($with, $without) = $this->compileWith(isset($block->with) ? $block->with : null);
 
-        // wrap inline Selection
-        if ($block->Selection) {
+        // wrap inline selector
+        if ($block->selector) {
             $wrapped = new Block();
             $wrapped->sourceName   = $block->sourceName;
             $wrapped->sourceIndex  = $block->sourceIndex;
             $wrapped->sourceLine   = $block->sourceLine;
             $wrapped->sourceColumn = $block->sourceColumn;
-            $wrapped->Selections    = $block->Selection;
+            $wrapped->selectors    = $block->selector;
             $wrapped->comments     = [];
             $wrapped->parent       = $block;
             $wrapped->children     = $block->children;
             $wrapped->selfParent   = $block->selfParent;
 
             $block->children = [[Type::T_BLOCK, $wrapped]];
-            $block->Selection = null;
+            $block->selector = null;
         }
 
         $selfParent = $block->selfParent;
         assert($selfParent !== null, 'at-root blocks must have a selfParent set.');
 
         if (
-            ! $selfParent->Selections &&
+            ! $selfParent->selectors &&
             isset($block->parent) && $block->parent &&
-            isset($block->parent->Selections) && $block->parent->Selections
+            isset($block->parent->selectors) && $block->parent->selectors
         ) {
             $selfParent = $block->parent;
         }
@@ -1490,7 +1495,7 @@ class Compiler
                 $s->parent   = null;
 
                 if ($s->type !== Type::T_MEDIA && $s->type !== Type::T_DIRECTIVE) {
-                    $s->Selections = [];
+                    $s->selectors = [];
                 }
 
                 $filteredScopes[] = $s;
@@ -1528,8 +1533,8 @@ class Compiler
     }
 
     /**
-     * found missing Selection from a at-root compilation in the previous scope
-     * (if at-root is just enclosing a property, the Selection is in the parent tree)
+     * found missing selector from a at-root compilation in the previous scope
+     * (if at-root is just enclosing a property, the selector is in the parent tree)
      *
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $scope
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $previousScope
@@ -1538,8 +1543,8 @@ class Compiler
      */
     protected function completeScope($scope, $previousScope)
     {
-        if (! $scope->type && (! $scope->Selections || ! \count($scope->Selections)) && \count($scope->lines)) {
-            $scope->Selections = $this->findScopeSelections($previousScope, $scope->depth);
+        if (! $scope->type && (! $scope->selectors || ! \count($scope->selectors)) && \count($scope->lines)) {
+            $scope->selectors = $this->findScopeSelectors($previousScope, $scope->depth);
         }
 
         if ($scope->children) {
@@ -1552,22 +1557,22 @@ class Compiler
     }
 
     /**
-     * Find a Selection by the depth node in the scope
+     * Find a selector by the depth node in the scope
      *
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $scope
      * @param integer                                $depth
      *
      * @return array
      */
-    protected function findScopeSelections($scope, $depth)
+    protected function findScopeSelectors($scope, $depth)
     {
-        if ($scope->depth === $depth && $scope->Selections) {
-            return $scope->Selections;
+        if ($scope->depth === $depth && $scope->selectors) {
+            return $scope->selectors;
         }
 
         if ($scope->children) {
             foreach (array_reverse($scope->children) as $c) {
-                if ($s = $this->findScopeSelections($c, $depth)) {
+                if ($s = $this->findScopeSelectors($c, $depth)) {
                     return $s;
                 }
             }
@@ -1646,7 +1651,7 @@ class Compiler
             if ($e->block && ! $this->isWith($e->block, $with, $without)) {
                 $ec = clone $e;
                 $ec->block     = null;
-                $ec->Selections = [];
+                $ec->selectors = [];
 
                 $filtered[] = $ec;
             } else {
@@ -1676,16 +1681,16 @@ class Compiler
             if ($block->type === Type::T_DIRECTIVE) {
                 if (isset($block->name)) {
                     return $this->testWithWithout($this->compileDirectiveName($block->name), $with, $without);
-                } elseif (isset($block->Selections) && preg_match(',@(\w+),ims', json_encode($block->Selections), $m)) {
+                } elseif (isset($block->selectors) && preg_match(',@(\w+),ims', json_encode($block->selectors), $m)) {
                     return $this->testWithWithout($m[1], $with, $without);
                 } else {
                     return $this->testWithWithout('???', $with, $without);
                 }
             }
-        } elseif (isset($block->Selections)) {
-            // a Selection starting with number is a keyframe rule
-            if (\count($block->Selections)) {
-                $s = reset($block->Selections);
+        } elseif (isset($block->selectors)) {
+            // a selector starting with number is a keyframe rule
+            if (\count($block->selectors)) {
+                $s = reset($block->selectors);
 
                 while (\is_array($s)) {
                     $s = reset($s);
@@ -1728,21 +1733,21 @@ class Compiler
      * Compile keyframe block
      *
      * @param \ScssPhp\ScssPhp\Block $block
-     * @param string[]               $Selections
+     * @param string[]               $selectors
      *
      * @return void
      */
-    protected function compileKeyframeBlock(Block $block, $Selections)
+    protected function compileKeyframeBlock(Block $block, $selectors)
     {
         $env = $this->pushEnv($block);
 
         $envs = $this->compactEnv($env);
 
         $this->env = $this->extractEnv(array_filter($envs, function (Environment $e) {
-            return ! isset($e->block->Selections);
+            return ! isset($e->block->selectors);
         }));
 
-        $this->scope = $this->makeOutputBlock($block->type, $Selections);
+        $this->scope = $this->makeOutputBlock($block->type, $selectors);
         $this->scope->depth = 1;
         $this->scope->parent->children[] = $this->scope;
 
@@ -1794,15 +1799,15 @@ class Compiler
      * Compile nested block
      *
      * @param \ScssPhp\ScssPhp\Block $block
-     * @param string[]               $Selections
+     * @param string[]               $selectors
      *
      * @return void
      */
-    protected function compileNestedBlock(Block $block, $Selections)
+    protected function compileNestedBlock(Block $block, $selectors)
     {
         $this->pushEnv($block);
 
-        $this->scope = $this->makeOutputBlock($block->type, $Selections);
+        $this->scope = $this->makeOutputBlock($block->type, $selectors);
         $this->scope->parent->children[] = $this->scope;
 
         // wrap assign children in a block
@@ -1824,7 +1829,7 @@ class Compiler
                 $wrapped->sourceIndex  = $block->sourceIndex;
                 $wrapped->sourceLine   = $block->sourceLine;
                 $wrapped->sourceColumn = $block->sourceColumn;
-                $wrapped->Selections    = [];
+                $wrapped->selectors    = [];
                 $wrapped->comments     = [];
                 $wrapped->parent       = $block;
                 $wrapped->children     = $block->children;
@@ -1848,7 +1853,7 @@ class Compiler
      * is encapsulated in a block when parsed, but it does not have parent tags
      * so all of its children appear on the root level when compiled.
      *
-     * Blocks are made up of Selections and children.
+     * Blocks are made up of selectors and children.
      *
      * The children of a block are just all the blocks that are defined within.
      *
@@ -1864,28 +1869,28 @@ class Compiler
     protected function compileBlock(Block $block)
     {
         $env = $this->pushEnv($block);
-        $env->Selections = $this->evalSelections($block->Selections);
+        $env->selectors = $this->evalSelectors($block->selectors);
 
         $out = $this->makeOutputBlock(null);
 
         $this->scope->children[] = $out;
 
         if (\count($block->children)) {
-            $out->Selections = $this->multiplySelections($env, $block->selfParent);
+            $out->selectors = $this->multiplySelectors($env, $block->selfParent);
 
             // propagate selfParent to the children where they still can be useful
-            $selfParentSelections = null;
+            $selfParentSelectors = null;
 
-            if (isset($block->selfParent->Selections)) {
-                $selfParentSelections = $block->selfParent->Selections;
-                $block->selfParent->Selections = $out->Selections;
+            if (isset($block->selfParent->selectors)) {
+                $selfParentSelectors = $block->selfParent->selectors;
+                $block->selfParent->selectors = $out->selectors;
             }
 
             $this->compileChildrenNoReturn($block->children, $out, $block->selfParent);
 
             // and revert for the following children of the same block
-            if ($selfParentSelections) {
-                $block->selfParent->Selections = $selfParentSelections;
+            if ($selfParentSelectors) {
+                $block->selfParent->selectors = $selfParentSelectors;
             }
         }
 
@@ -1944,58 +1949,58 @@ class Compiler
     }
 
     /**
-     * Evaluate Selections
+     * Evaluate selectors
      *
-     * @param array $Selections
+     * @param array $selectors
      *
      * @return array
      */
-    protected function evalSelections($Selections)
+    protected function evalSelectors($selectors)
     {
         $this->shouldEvaluate = false;
 
-        $Selections = array_map([$this, 'evalSelection'], $Selections);
+        $selectors = array_map([$this, 'evalSelector'], $selectors);
 
         // after evaluating interpolates, we might need a second pass
         if ($this->shouldEvaluate) {
-            $Selections = $this->replaceSelfSelection($Selections, '&');
-            $buffer    = $this->collapseSelections($Selections);
+            $selectors = $this->replaceSelfSelector($selectors, '&');
+            $buffer    = $this->collapseSelectors($selectors);
             $parser    = $this->parserFactory(__METHOD__);
 
             try {
-                $isValid = $parser->parseSelection($buffer, $newSelections, true);
+                $isValid = $parser->parseSelector($buffer, $newSelectors, true);
             } catch (ParserException $e) {
                 throw $this->error($e->getMessage());
             }
 
             if ($isValid) {
-                $Selections = array_map([$this, 'evalSelection'], $newSelections);
+                $selectors = array_map([$this, 'evalSelector'], $newSelectors);
             }
         }
 
-        return $Selections;
+        return $selectors;
     }
 
     /**
-     * Evaluate Selection
+     * Evaluate selector
      *
-     * @param array $Selection
+     * @param array $selector
      *
      * @return array
      */
-    protected function evalSelection($Selection)
+    protected function evalSelector($selector)
     {
-        return array_map([$this, 'evalSelectionPart'], $Selection);
+        return array_map([$this, 'evalSelectorPart'], $selector);
     }
 
     /**
-     * Evaluate Selection part; replaces all the interpolates, stripping quotes
+     * Evaluate selector part; replaces all the interpolates, stripping quotes
      *
      * @param array $part
      *
      * @return array
      */
-    protected function evalSelectionPart($part)
+    protected function evalSelectorPart($part)
     {
         foreach ($part as &$p) {
             if (\is_array($p) && ($p[0] === Type::T_INTERPOLATE || $p[0] === Type::T_STRING)) {
@@ -2014,24 +2019,24 @@ class Compiler
             }
         }
 
-        return $this->flattenSelectionSingle($part);
+        return $this->flattenSelectorSingle($part);
     }
 
     /**
-     * Collapse Selections
+     * Collapse selectors
      *
-     * @param array $Selections
+     * @param array $selectors
      *
      * @return string
      */
-    protected function collapseSelections($Selections)
+    protected function collapseSelectors($selectors)
     {
         $parts = [];
 
-        foreach ($Selections as $Selection) {
+        foreach ($selectors as $selector) {
             $output = [];
 
-            foreach ($Selection as $node) {
+            foreach ($selector as $node) {
                 $compound = '';
 
                 array_walk_recursive(
@@ -2051,21 +2056,21 @@ class Compiler
     }
 
     /**
-     * Collapse Selections
+     * Collapse selectors
      *
-     * @param array $Selections
+     * @param array $selectors
      *
      * @return array
      */
-    private function collapseSelectionsAsList($Selections)
+    private function collapseSelectorsAsList($selectors)
     {
         $parts = [];
 
-        foreach ($Selections as $Selection) {
+        foreach ($selectors as $selector) {
             $output = [];
             $glueNext = false;
 
-            foreach ($Selection as $node) {
+            foreach ($selector as $node) {
                 $compound = '';
 
                 array_walk_recursive(
@@ -2102,16 +2107,16 @@ class Compiler
     }
 
     /**
-     * Parse down the Selection and revert [self] to "&" before a reparsing
+     * Parse down the selector and revert [self] to "&" before a reparsing
      *
-     * @param array       $Selections
+     * @param array       $selectors
      * @param string|null $replace
      *
      * @return array
      */
-    protected function replaceSelfSelection($Selections, $replace = null)
+    protected function replaceSelfSelector($selectors, $replace = null)
     {
-        foreach ($Selections as &$part) {
+        foreach ($selectors as &$part) {
             if (\is_array($part)) {
                 if ($part === [Type::T_SELF]) {
                     if (\is_null($replace)) {
@@ -2120,22 +2125,22 @@ class Compiler
                     }
                     $part = $replace;
                 } else {
-                    $part = $this->replaceSelfSelection($part, $replace);
+                    $part = $this->replaceSelfSelector($part, $replace);
                 }
             }
         }
 
-        return $Selections;
+        return $selectors;
     }
 
     /**
-     * Flatten Selection single; joins together .classes and #ids
+     * Flatten selector single; joins together .classes and #ids
      *
      * @param array $single
      *
      * @return array
      */
-    protected function flattenSelectionSingle($single)
+    protected function flattenSelectorSingle($single)
     {
         $joined = [];
 
@@ -2160,35 +2165,35 @@ class Compiler
     }
 
     /**
-     * Compile Selection to string; self(&) should have been replaced by now
+     * Compile selector to string; self(&) should have been replaced by now
      *
-     * @param string|array $Selection
+     * @param string|array $selector
      *
      * @return string
      */
-    protected function compileSelection($Selection)
+    protected function compileSelector($selector)
     {
-        if (! \is_array($Selection)) {
-            return $Selection; // media and the like
+        if (! \is_array($selector)) {
+            return $selector; // media and the like
         }
 
         return implode(
             ' ',
             array_map(
-                [$this, 'compileSelectionPart'],
-                $Selection
+                [$this, 'compileSelectorPart'],
+                $selector
             )
         );
     }
 
     /**
-     * Compile Selection part
+     * Compile selector part
      *
      * @param array $piece
      *
      * @return string
      */
-    protected function compileSelectionPart($piece)
+    protected function compileSelectorPart($piece)
     {
         foreach ($piece as &$p) {
             if (! \is_array($p)) {
@@ -2210,19 +2215,19 @@ class Compiler
     }
 
     /**
-     * Has Selection placeholder?
+     * Has selector placeholder?
      *
-     * @param array $Selection
+     * @param array $selector
      *
      * @return boolean
      */
-    protected function hasSelectionPlaceholder($Selection)
+    protected function hasSelectorPlaceholder($selector)
     {
-        if (! \is_array($Selection)) {
+        if (! \is_array($selector)) {
             return false;
         }
 
-        foreach ($Selection as $parts) {
+        foreach ($selector as $parts) {
             foreach ($parts as $part) {
                 if (\strlen($part) && '%' === $part[0]) {
                     return true;
@@ -2521,45 +2526,45 @@ class Compiler
     }
 
     /**
-     * Merge direct relationships between Selections
+     * Merge direct relationships between selectors
      *
-     * @param array $Selections1
-     * @param array $Selections2
+     * @param array $selectors1
+     * @param array $selectors2
      *
      * @return array
      */
-    protected function mergeDirectRelationships($Selections1, $Selections2)
+    protected function mergeDirectRelationships($selectors1, $selectors2)
     {
-        if (empty($Selections1) || empty($Selections2)) {
-            return array_merge($Selections1, $Selections2);
+        if (empty($selectors1) || empty($selectors2)) {
+            return array_merge($selectors1, $selectors2);
         }
 
-        $part1 = end($Selections1);
-        $part2 = end($Selections2);
+        $part1 = end($selectors1);
+        $part2 = end($selectors2);
 
         if (! $this->isImmediateRelationshipCombinator($part1[0]) && $part1 !== $part2) {
-            return array_merge($Selections1, $Selections2);
+            return array_merge($selectors1, $selectors2);
         }
 
         $merged = [];
 
         do {
-            $part1 = array_pop($Selections1);
-            $part2 = array_pop($Selections2);
+            $part1 = array_pop($selectors1);
+            $part2 = array_pop($selectors2);
 
             if (! $this->isImmediateRelationshipCombinator($part1[0]) && $part1 !== $part2) {
                 if ($this->isImmediateRelationshipCombinator(reset($merged)[0])) {
                     array_unshift($merged, [$part1[0] . $part2[0]]);
-                    $merged = array_merge($Selections1, $Selections2, $merged);
+                    $merged = array_merge($selectors1, $selectors2, $merged);
                 } else {
-                    $merged = array_merge($Selections1, [$part1], $Selections2, [$part2], $merged);
+                    $merged = array_merge($selectors1, [$part1], $selectors2, [$part2], $merged);
                 }
 
                 break;
             }
 
             array_unshift($merged, $part1);
-        } while (! empty($Selections1) && ! empty($Selections2));
+        } while (! empty($selectors1) && ! empty($selectors2));
 
         return $merged;
     }
@@ -2800,7 +2805,7 @@ class Compiler
 
             if (
                 $lastChild->depth === $out->depth &&
-                \is_null($lastChild->Selections) &&
+                \is_null($lastChild->selectors) &&
                 ! \count($lastChild->children)
             ) {
                 $outWrite = $lastChild;
@@ -2876,10 +2881,6 @@ class Compiler
                 break;
 
             case Type::T_CHARSET:
-                if (! $this->charsetSeen) {
-                    $this->charsetSeen = true;
-                    $this->appendRootDirective('@charset ' . $this->compileValue($child[1]) . ';', $out);
-                }
                 break;
 
             case Type::T_CUSTOM_PROPERTY:
@@ -3050,25 +3051,25 @@ class Compiler
 
             case Type::T_EXTEND:
                 foreach ($child[1] as $sel) {
-                    $replacedSel = $this->replaceSelfSelection($sel);
+                    $replacedSel = $this->replaceSelfSelector($sel);
 
                     if ($replacedSel !== $sel) {
-                        throw $this->error('Parent Selections aren\'t allowed here.');
+                        throw $this->error('Parent selectors aren\'t allowed here.');
                     }
 
-                    $results = $this->evalSelections([$sel]);
+                    $results = $this->evalSelectors([$sel]);
 
                     foreach ($results as $result) {
                         if (\count($result) !== 1) {
-                            throw $this->error('complex Selections may not be extended.');
+                            throw $this->error('complex selectors may not be extended.');
                         }
 
                         // only use the first one
                         $result = $result[0];
-                        $Selections = $out->Selections;
+                        $selectors = $out->selectors;
 
-                        if (! $Selections && isset($child['selfParent'])) {
-                            $Selections = $this->multiplySelections($this->env, $child['selfParent']);
+                        if (! $selectors && isset($child['selfParent'])) {
+                            $selectors = $this->multiplySelectors($this->env, $child['selfParent']);
                         }
 
                         if (\count($result) > 1) {
@@ -3078,7 +3079,7 @@ class Compiler
 
                             $message = <<<EOL
 on line $line of $fname:
-Compound Selections may no longer be extended.
+Compound selectors may no longer be extended.
 Consider `@extend $replacement` instead.
 See http://bit.ly/ExtendCompound for details.
 EOL;
@@ -3086,7 +3087,7 @@ EOL;
                             $this->logger->warn($message);
                         }
 
-                        $this->pushExtends($result, $Selections, $child);
+                        $this->pushExtends($result, $selectors, $child);
                     }
                 }
                 break;
@@ -3222,18 +3223,18 @@ EOL;
                 $this->pushEnv();
                 $this->env->depth--;
 
-                // Find the parent Selections in the env to be able to know what '&' refers to in the mixin
+                // Find the parent selectors in the env to be able to know what '&' refers to in the mixin
                 // and assign this fake parent to childs
                 $selfParent = null;
 
-                if (isset($child['selfParent']) && isset($child['selfParent']->Selections)) {
+                if (isset($child['selfParent']) && isset($child['selfParent']->selectors)) {
                     $selfParent = $child['selfParent'];
                 } else {
-                    $parentSelections = $this->multiplySelections($this->env);
+                    $parentSelectors = $this->multiplySelectors($this->env);
 
-                    if ($parentSelections) {
+                    if ($parentSelectors) {
                         $parent = new Block();
-                        $parent->Selections = $parentSelections;
+                        $parent->selectors = $parentSelectors;
 
                         foreach ($mixin->children as $k => $child) {
                             if (isset($child[1]) && \is_object($child[1]) && $child[1] instanceof Block) {
@@ -3588,10 +3589,10 @@ EOL;
 
             case Type::T_SELF:
                 $selfParent = ! empty($this->env->block->selfParent) ? $this->env->block->selfParent : null;
-                $selfSelection = $this->multiplySelections($this->env, $selfParent);
-                $selfSelection = $this->collapseSelectionsAsList($selfSelection);
+                $selfSelector = $this->multiplySelectors($this->env, $selfParent);
+                $selfSelector = $this->collapseSelectorsAsList($selfSelector);
 
-                return $selfSelection;
+                return $selfSelector;
 
             default:
                 return $value;
@@ -3826,7 +3827,6 @@ EOL;
 
         // try to find a native lib function
         $normalizedName = $this->normalizeName($name);
-        $libName = null;
 
         if (isset($this->userFunctions[$normalizedName])) {
             // see if we can find a user function
@@ -3835,9 +3835,44 @@ EOL;
             return [Type::T_FUNCTION_REFERENCE, 'user', $name, $f, $prototype];
         }
 
+        $lowercasedName = strtolower($normalizedName);
+
+        // Special functions overriding a CSS function are case-insensitive. We normalize them as lowercase
+        // to avoid the deprecation warning about the wrong case being used.
+        if ($lowercasedName === 'min' || $lowercasedName === 'max') {
+            $normalizedName = $lowercasedName;
+        }
+
         if (($f = $this->getBuiltinFunction($normalizedName)) && \is_callable($f)) {
             $libName   = $f[1];
             $prototype = isset(static::$$libName) ? static::$$libName : null;
+
+            // All core functions have a prototype defined. Not finding the
+            // prototype can mean 2 things:
+            // - the function comes from a child class (deprecated just after)
+            // - the function was found with a different case, which relates to calling the
+            //   wrong Sass function due to our camelCase usage (`fade-in()` vs `fadein()`),
+            //   because PHP method names are case-insensitive while property names are
+            //   case-sensitive.
+            if ($prototype === null || strtolower($normalizedName) !== $normalizedName) {
+                $r = new \ReflectionMethod($this, $libName);
+                $actualLibName = $r->name;
+
+                if ($actualLibName !== $libName || strtolower($normalizedName) !== $normalizedName) {
+                    $kebabCaseName = preg_replace('~(?<=\\w)([A-Z])~', '-$1', substr($actualLibName, 3));
+                    assert($kebabCaseName !== null);
+                    $originalName = strtolower($kebabCaseName);
+                    $warning = "Calling built-in functions with a non-standard name is deprecated since Scssphp 1.8.0 and will not work anymore in 2.0 (they will be treated as CSS function calls instead).\nUse \"$originalName\" instead of \"$name\".";
+                    @trigger_error($warning, E_USER_DEPRECATED);
+                    $fname = $this->getPrettyPath($this->sourceNames[$this->sourceIndex]);
+                    $line  = $this->sourceLine;
+                    Warn::deprecation("$warning\n         on line $line of $fname");
+
+                    // Use the actual function definition
+                    $prototype = isset(static::$$actualLibName) ? static::$$actualLibName : null;
+                    $f[1] = $libName = $actualLibName;
+                }
+            }
 
             if (\get_class($this) !== __CLASS__ && !isset($this->warnedChildFunctions[$libName])) {
                 $r = new \ReflectionMethod($this, $libName);
@@ -4777,77 +4812,77 @@ EOL;
     }
 
     /**
-     * Find the final set of Selections
+     * Find the final set of selectors
      *
      * @param \ScssPhp\ScssPhp\Compiler\Environment $env
      * @param \ScssPhp\ScssPhp\Block                $selfParent
      *
      * @return array
      */
-    protected function multiplySelections(Environment $env, $selfParent = null)
+    protected function multiplySelectors(Environment $env, $selfParent = null)
     {
         $envs            = $this->compactEnv($env);
-        $Selections       = [];
-        $parentSelections = [[]];
+        $selectors       = [];
+        $parentSelectors = [[]];
 
-        $selfParentSelections = null;
+        $selfParentSelectors = null;
 
-        if (! \is_null($selfParent) && $selfParent->Selections) {
-            $selfParentSelections = $this->evalSelections($selfParent->Selections);
+        if (! \is_null($selfParent) && $selfParent->selectors) {
+            $selfParentSelectors = $this->evalSelectors($selfParent->selectors);
         }
 
         while ($env = array_pop($envs)) {
-            if (empty($env->Selections)) {
+            if (empty($env->selectors)) {
                 continue;
             }
 
-            $Selections = $env->Selections;
+            $selectors = $env->selectors;
 
             do {
                 $stillHasSelf  = false;
-                $prevSelections = $Selections;
-                $Selections     = [];
+                $prevSelectors = $selectors;
+                $selectors     = [];
 
-                foreach ($parentSelections as $parent) {
-                    foreach ($prevSelections as $Selection) {
-                        if ($selfParentSelections) {
-                            foreach ($selfParentSelections as $selfParent) {
-                                // if no '&' in the Selection, each call will give same result, only add once
-                                $s = $this->joinSelections($parent, $Selection, $stillHasSelf, $selfParent);
-                                $Selections[serialize($s)] = $s;
+                foreach ($parentSelectors as $parent) {
+                    foreach ($prevSelectors as $selector) {
+                        if ($selfParentSelectors) {
+                            foreach ($selfParentSelectors as $selfParent) {
+                                // if no '&' in the selector, each call will give same result, only add once
+                                $s = $this->joinSelectors($parent, $selector, $stillHasSelf, $selfParent);
+                                $selectors[serialize($s)] = $s;
                             }
                         } else {
-                            $s = $this->joinSelections($parent, $Selection, $stillHasSelf);
-                            $Selections[serialize($s)] = $s;
+                            $s = $this->joinSelectors($parent, $selector, $stillHasSelf);
+                            $selectors[serialize($s)] = $s;
                         }
                     }
                 }
             } while ($stillHasSelf);
 
-            $parentSelections = $Selections;
+            $parentSelectors = $selectors;
         }
 
-        $Selections = array_values($Selections);
+        $selectors = array_values($selectors);
 
-        // case we are just starting a at-root : nothing to multiply but parentSelections
-        if (! $Selections && $selfParentSelections) {
-            $Selections = $selfParentSelections;
+        // case we are just starting a at-root : nothing to multiply but parentSelectors
+        if (! $selectors && $selfParentSelectors) {
+            $selectors = $selfParentSelectors;
         }
 
-        return $Selections;
+        return $selectors;
     }
 
     /**
-     * Join Selections; looks for & to replace, or append parent before child
+     * Join selectors; looks for & to replace, or append parent before child
      *
      * @param array   $parent
      * @param array   $child
      * @param boolean $stillHasSelf
-     * @param array   $selfParentSelections
+     * @param array   $selfParentSelectors
 
      * @return array
      */
-    protected function joinSelections($parent, $child, &$stillHasSelf, $selfParentSelections = null)
+    protected function joinSelectors($parent, $child, &$stillHasSelf, $selfParentSelectors = null)
     {
         $setSelf = false;
         $out = [];
@@ -4857,18 +4892,18 @@ EOL;
 
             foreach ($part as $p) {
                 // only replace & once and should be recalled to be able to make combinations
-                if ($p === static::$selfSelection && $setSelf) {
+                if ($p === static::$selfSelector && $setSelf) {
                     $stillHasSelf = true;
                 }
 
-                if ($p === static::$selfSelection && ! $setSelf) {
+                if ($p === static::$selfSelector && ! $setSelf) {
                     $setSelf = true;
 
-                    if (\is_null($selfParentSelections)) {
-                        $selfParentSelections = $parent;
+                    if (\is_null($selfParentSelectors)) {
+                        $selfParentSelectors = $parent;
                     }
 
-                    foreach ($selfParentSelections as $i => $parentPart) {
+                    foreach ($selfParentSelectors as $i => $parentPart) {
                         if ($i > 0) {
                             $out[] = $newPart;
                             $newPart = [];
@@ -5498,6 +5533,25 @@ EOL;
     }
 
     /**
+     * Configures the handling of non-ASCII outputs.
+     *
+     * If $charset is `true`, this will include a `@charset` declaration or a
+     * UTF-8 [byte-order mark][] if the stylesheet contains any non-ASCII
+     * characters. Otherwise, it will never include a `@charset` declaration or a
+     * byte-order mark.
+     *
+     * [byte-order mark]: https://en.wikipedia.org/wiki/Byte_order_mark#UTF-8
+     *
+     * @param bool $charset
+     *
+     * @return void
+     */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
+    }
+
+    /**
      * Enable/disable source maps
      *
      * @api
@@ -5520,7 +5574,7 @@ EOL;
      *
      * @param array $sourceMapOptions
      *
-     * @phpstan-param  array{sourceRoot?: string, sourceMapFilename?: string|null, sourceMapURL?: string|null, sourceMapWriteTo?: string|null, outputSourceFiles?: bool, sourceMapRootpath?: string, sourceMapSystemPath?: string} $sourceMapOptions
+     * @phpstan-param  array{sourceRoot?: string, sourceMapFilename?: string|null, sourceMapURL?: string|null, sourceMapWriteTo?: string|null, outputSourceFiles?: bool, sourceMapRootpath?: string, sourceMapBasepath?: string} $sourceMapOptions
      *
      * @return void
      */
@@ -5871,7 +5925,7 @@ EOL;
         }
 
         if (0 === strpos($normalizedPath, $normalizedRootDirectory)) {
-            return substr($normalizedPath, \strlen($normalizedRootDirectory));
+            return substr($path, \strlen($normalizedRootDirectory));
         }
 
         return $path;
@@ -7208,9 +7262,13 @@ EOL;
      * @param array|Number $value
      *
      * @return integer|float
+     *
+     * @deprecated
      */
     protected function coercePercent($value)
     {
+        @trigger_error(sprintf('"%s" is deprecated since 1.7.0.', __METHOD__), E_USER_DEPRECATED);
+
         if ($value instanceof Number) {
             if ($value->hasUnit('%')) {
                 return $value->getDimension() / 100;
@@ -7437,7 +7495,7 @@ EOL;
             }
         }
 
-        return [Type::T_HSL, fmod($h, 360), $s * 100, $l / 5.1];
+        return [Type::T_HSL, fmod($h + 360, 360), $s * 100, $l / 5.1];
     }
 
     /**
@@ -7718,7 +7776,7 @@ EOL;
                             [$funcName . '(', $color[1], ', ', $color[2], ', ', $color[3], ', ', $alpha, ')']];
                     }
                 } else {
-                    $color = [Type::T_STRING, '', [$funcName . '(', $args[0], ')']];
+                    $color = [Type::T_STRING, '', [$funcName . '(', $args[0], ', ', $args[1], ')']];
                 }
                 break;
 
@@ -8019,8 +8077,8 @@ EOL;
 
     // mix two colors
     protected static $libMix = [
-        ['color1', 'color2', 'weight:0.5'],
-        ['color-1', 'color-2', 'weight:0.5']
+        ['color1', 'color2', 'weight:50%'],
+        ['color-1', 'color-2', 'weight:50%']
         ];
     protected function libMix($args)
     {
@@ -8028,25 +8086,26 @@ EOL;
 
         $first = $this->assertColor($first, 'color1');
         $second = $this->assertColor($second, 'color2');
-        $weight = $this->coercePercent($this->assertNumber($weight, 'weight'));
+        $weightScale = $this->assertNumber($weight, 'weight')->valueInRange(0, 100, 'weight') / 100;
 
         $firstAlpha = isset($first[4]) ? $first[4] : 1;
         $secondAlpha = isset($second[4]) ? $second[4] : 1;
 
-        $w = $weight * 2 - 1;
-        $a = $firstAlpha - $secondAlpha;
+        $normalizedWeight = $weightScale * 2 - 1;
+        $alphaDistance = $firstAlpha - $secondAlpha;
 
-        $w1 = (($w * $a === -1 ? $w : ($w + $a) / (1 + $w * $a)) + 1) / 2.0;
-        $w2 = 1.0 - $w1;
+        $combinedWeight = $normalizedWeight * $alphaDistance == -1 ? $normalizedWeight : ($normalizedWeight + $alphaDistance) / (1 + $normalizedWeight * $alphaDistance);
+        $weight1 = ($combinedWeight + 1) / 2.0;
+        $weight2 = 1.0 - $weight1;
 
         $new = [Type::T_COLOR,
-            $w1 * $first[1] + $w2 * $second[1],
-            $w1 * $first[2] + $w2 * $second[2],
-            $w1 * $first[3] + $w2 * $second[3],
+            $weight1 * $first[1] + $weight2 * $second[1],
+            $weight1 * $first[2] + $weight2 * $second[2],
+            $weight1 * $first[3] + $weight2 * $second[3],
         ];
 
         if ($firstAlpha != 1.0 || $secondAlpha != 1.0) {
-            $new[] = $firstAlpha * $weight + $secondAlpha * (1 - $weight);
+            $new[] = $firstAlpha * $weightScale + $secondAlpha * (1 - $weightScale);
         }
 
         return $this->fixColor($new);
@@ -8123,7 +8182,7 @@ EOL;
             }
         }
 
-        $hueValue = $hue->getDimension() % 360;
+        $hueValue = fmod($hue->getDimension(), 360);
 
         while ($hueValue < 0) {
             $hueValue += 360;
@@ -8305,6 +8364,12 @@ EOL;
     {
         $hsl = $this->toHSL($color[1], $color[2], $color[3]);
         $hsl[$idx] += $amount;
+
+        if ($idx !== 1) {
+            // Clamp the saturation and lightness
+            $hsl[$idx] = min(max(0, $hsl[$idx]), 100);
+        }
+
         $out = $this->toRGB($hsl[1], $hsl[2], $hsl[3]);
 
         if (isset($color[4])) {
@@ -8352,19 +8417,19 @@ EOL;
             return null;
         }
 
-        $color = $this->assertColor($value, 'color');
-        $amount = 100 * $this->coercePercent($this->assertNumber($args[1], 'amount'));
+        $color = $this->assertColor($args[0], 'color');
+        $amount = $this->assertNumber($args[1], 'amount');
 
-        return $this->adjustHsl($color, 2, $amount);
+        return $this->adjustHsl($color, 2, $amount->valueInRange(0, 100, 'amount'));
     }
 
     protected static $libDesaturate = ['color', 'amount'];
     protected function libDesaturate($args)
     {
         $color = $this->assertColor($args[0], 'color');
-        $amount = 100 * $this->coercePercent($this->assertNumber($args[1], 'amount'));
+        $amount = $this->assertNumber($args[1], 'amount');
 
-        return $this->adjustHsl($color, 2, -$amount);
+        return $this->adjustHsl($color, 2, -$amount->valueInRange(0, 100, 'amount'));
     }
 
     protected static $libGrayscale = ['color'];
@@ -8385,16 +8450,20 @@ EOL;
         return $this->adjustHsl($this->assertColor($args[0], 'color'), 1, 180);
     }
 
-    protected static $libInvert = ['color', 'weight:1'];
+    protected static $libInvert = ['color', 'weight:100%'];
     protected function libInvert($args)
     {
         $value = $args[0];
 
+        $weight = $this->assertNumber($args[1], 'weight');
+
         if ($value instanceof Number) {
+            if ($weight->getDimension() != 100 || !$weight->hasUnit('%')) {
+                throw new SassScriptException('Only one argument may be passed to the plain-CSS invert() function.');
+            }
+
             return null;
         }
-
-        $weight = $this->coercePercent($this->assertNumber($args[1], 'weight'));
 
         $color = $this->assertColor($value, 'color');
         $inverted = $color;
@@ -8402,11 +8471,7 @@ EOL;
         $inverted[2] = 255 - $inverted[2];
         $inverted[3] = 255 - $inverted[3];
 
-        if ($weight < 1) {
-            return $this->libMix([$inverted, $color, new Number($weight, '')]);
-        }
-
-        return $inverted;
+        return $this->libMix([$inverted, $color, $weight]);
     }
 
     // increases opacity by amount
@@ -8414,9 +8479,9 @@ EOL;
     protected function libOpacify($args)
     {
         $color = $this->assertColor($args[0], 'color');
-        $amount = $this->coercePercent($this->assertNumber($args[1], 'amount'));
+        $amount = $this->assertNumber($args[1], 'amount');
 
-        $color[4] = (isset($color[4]) ? $color[4] : 1) + $amount;
+        $color[4] = (isset($color[4]) ? $color[4] : 1) + $amount->valueInRange(0, 1, 'amount');
         $color[4] = min(1, max(0, $color[4]));
 
         return $color;
@@ -8433,9 +8498,9 @@ EOL;
     protected function libTransparentize($args)
     {
         $color = $this->assertColor($args[0], 'color');
-        $amount = $this->coercePercent($this->assertNumber($args[1], 'amount'));
+        $amount = $this->assertNumber($args[1], 'amount');
 
-        $color[4] = (isset($color[4]) ? $color[4] : 1) - $amount;
+        $color[4] = (isset($color[4]) ? $color[4] : 1) - $amount->valueInRange(0, 1, 'amount');
         $color[4] = min(1, max(0, $color[4]));
 
         return $color;
@@ -9287,7 +9352,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     }
 
     /**
-     * Preprocess Selection args
+     * Preprocess selector args
      *
      * @param array       $arg
      * @param string|null $varname
@@ -9295,7 +9360,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
      *
      * @return array
      */
-    protected function getSelectionArg($arg, $varname = null, $allowParent = false)
+    protected function getSelectorArg($arg, $varname = null, $allowParent = false)
     {
         static $parser = null;
 
@@ -9303,9 +9368,9 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
             $parser = $this->parserFactory(__METHOD__);
         }
 
-        if (! $this->checkSelectionArgType($arg)) {
+        if (! $this->checkSelectorArgType($arg)) {
             $var_value = $this->compileValue($arg);
-            throw SassScriptException::forArgument("$var_value is not a valid Selection: it must be a string, a list of strings, or a list of lists of strings", $varname);
+            throw SassScriptException::forArgument("$var_value is not a valid selector: it must be a string, a list of strings, or a list of lists of strings", $varname);
         }
 
 
@@ -9314,39 +9379,39 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
         }
         $arg = $this->compileValue($arg);
 
-        $parsedSelection = [];
+        $parsedSelector = [];
 
-        if ($parser->parseSelection($arg, $parsedSelection, true)) {
-            $Selection = $this->evalSelections($parsedSelection);
-            $gluedSelection = $this->glueFunctionSelections($Selection);
+        if ($parser->parseSelector($arg, $parsedSelector, true)) {
+            $selector = $this->evalSelectors($parsedSelector);
+            $gluedSelector = $this->glueFunctionSelectors($selector);
 
             if (! $allowParent) {
-                foreach ($gluedSelection as $Selection) {
-                    foreach ($Selection as $s) {
-                        if (in_array(static::$selfSelection, $s)) {
-                            throw SassScriptException::forArgument("Parent Selections aren't allowed here.", $varname);
+                foreach ($gluedSelector as $selector) {
+                    foreach ($selector as $s) {
+                        if (in_array(static::$selfSelector, $s)) {
+                            throw SassScriptException::forArgument("Parent selectors aren't allowed here.", $varname);
                         }
                     }
                 }
             }
 
-            return $gluedSelection;
+            return $gluedSelector;
         }
 
-        throw SassScriptException::forArgument("expected more input, invalid Selection.", $varname);
+        throw SassScriptException::forArgument("expected more input, invalid selector.", $varname);
     }
 
     /**
-     * Check variable type for getSelectionArg() function
+     * Check variable type for getSelectorArg() function
      * @param array $arg
      * @param int $maxDepth
      * @return bool
      */
-    protected function checkSelectionArgType($arg, $maxDepth = 2)
+    protected function checkSelectorArgType($arg, $maxDepth = 2)
     {
         if ($arg[0] === Type::T_LIST && $maxDepth > 0) {
             foreach ($arg[2] as $elt) {
-                if (! $this->checkSelectionArgType($elt, $maxDepth - 1)) {
+                if (! $this->checkSelectorArgType($elt, $maxDepth - 1)) {
                     return false;
                 }
             }
@@ -9359,52 +9424,52 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     }
 
     /**
-     * Postprocess Selection to output in right format
+     * Postprocess selector to output in right format
      *
-     * @param array $Selections
+     * @param array $selectors
      *
      * @return array
      */
-    protected function formatOutputSelection($Selections)
+    protected function formatOutputSelector($selectors)
     {
-        $Selections = $this->collapseSelectionsAsList($Selections);
+        $selectors = $this->collapseSelectorsAsList($selectors);
 
-        return $Selections;
+        return $selectors;
     }
 
-    protected static $libIsSuperSelection = ['super', 'sub'];
-    protected function libIsSuperSelection($args)
+    protected static $libIsSuperselector = ['super', 'sub'];
+    protected function libIsSuperselector($args)
     {
         list($super, $sub) = $args;
 
-        $super = $this->getSelectionArg($super, 'super');
-        $sub = $this->getSelectionArg($sub, 'sub');
+        $super = $this->getSelectorArg($super, 'super');
+        $sub = $this->getSelectorArg($sub, 'sub');
 
-        return $this->toBool($this->isSuperSelection($super, $sub));
+        return $this->toBool($this->isSuperSelector($super, $sub));
     }
 
     /**
-     * Test a $super Selection again $sub
+     * Test a $super selector again $sub
      *
      * @param array $super
      * @param array $sub
      *
      * @return boolean
      */
-    protected function isSuperSelection($super, $sub)
+    protected function isSuperSelector($super, $sub)
     {
-        // one and only one Selection for each arg
+        // one and only one selector for each arg
         if (! $super) {
-            throw $this->error('Invalid super Selection for isSuperSelection()');
+            throw $this->error('Invalid super selector for isSuperSelector()');
         }
 
         if (! $sub) {
-            throw $this->error('Invalid sub Selection for isSuperSelection()');
+            throw $this->error('Invalid sub selector for isSuperSelector()');
         }
 
         if (count($sub) > 1) {
             foreach ($sub as $s) {
-                if (! $this->isSuperSelection($super, [$s])) {
+                if (! $this->isSuperSelector($super, [$s])) {
                     return false;
                 }
             }
@@ -9413,7 +9478,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
 
         if (count($super) > 1) {
             foreach ($super as $s) {
-                if ($this->isSuperSelection([$s], $sub)) {
+                if ($this->isSuperSelector([$s], $sub)) {
                     return true;
                 }
             }
@@ -9465,7 +9530,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     }
 
     /**
-     * Test a part of super Selection again a part of sub Selection
+     * Test a part of super selector again a part of sub selector
      *
      * @param array $superParts
      * @param array $subParts
@@ -9491,60 +9556,60 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
         return true;
     }
 
-    protected static $libSelectionAppend = ['Selection...'];
-    protected function libSelectionAppend($args)
+    protected static $libSelectorAppend = ['selector...'];
+    protected function libSelectorAppend($args)
     {
-        // get the Selection... list
+        // get the selector... list
         $args = reset($args);
         $args = $args[2];
 
         if (\count($args) < 1) {
-            throw $this->error('Selection-append() needs at least 1 argument');
+            throw $this->error('selector-append() needs at least 1 argument');
         }
 
-        $Selections = [];
+        $selectors = [];
         foreach ($args as $arg) {
-            $Selections[] = $this->getSelectionArg($arg, 'Selection');
+            $selectors[] = $this->getSelectorArg($arg, 'selector');
         }
 
-        return $this->formatOutputSelection($this->SelectionAppend($Selections));
+        return $this->formatOutputSelector($this->selectorAppend($selectors));
     }
 
     /**
-     * Append parts of the last Selection in the list to the previous, recursively
+     * Append parts of the last selector in the list to the previous, recursively
      *
-     * @param array $Selections
+     * @param array $selectors
      *
      * @return array
      *
      * @throws \ScssPhp\ScssPhp\Exception\CompilerException
      */
-    protected function SelectionAppend($Selections)
+    protected function selectorAppend($selectors)
     {
-        $lastSelections = array_pop($Selections);
+        $lastSelectors = array_pop($selectors);
 
-        if (! $lastSelections) {
-            throw $this->error('Invalid Selection list in Selection-append()');
+        if (! $lastSelectors) {
+            throw $this->error('Invalid selector list in selector-append()');
         }
 
-        while (\count($Selections)) {
-            $previousSelections = array_pop($Selections);
+        while (\count($selectors)) {
+            $previousSelectors = array_pop($selectors);
 
-            if (! $previousSelections) {
-                throw $this->error('Invalid Selection list in Selection-append()');
+            if (! $previousSelectors) {
+                throw $this->error('Invalid selector list in selector-append()');
             }
 
-            // do the trick, happening $lastSelection to $previousSelection
+            // do the trick, happening $lastSelector to $previousSelector
             $appended = [];
 
-            foreach ($lastSelections as $lastSelection) {
-                $previous = $previousSelections;
+            foreach ($lastSelectors as $lastSelector) {
+                $previous = $previousSelectors;
 
-                foreach ($lastSelection as $lastSelectionParts) {
-                    foreach ($lastSelectionParts as $lastSelectionPart) {
-                        foreach ($previous as $i => $previousSelection) {
-                            foreach ($previousSelection as $j => $previousSelectionParts) {
-                                $previous[$i][$j][] = $lastSelectionPart;
+                foreach ($lastSelector as $lastSelectorParts) {
+                    foreach ($lastSelectorParts as $lastSelectorPart) {
+                        foreach ($previous as $i => $previousSelector) {
+                            foreach ($previousSelector as $j => $previousSelectorParts) {
+                                $previous[$i][$j][] = $lastSelectorPart;
                             }
                         }
                     }
@@ -9555,66 +9620,66 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
                 }
             }
 
-            $lastSelections = $appended;
+            $lastSelectors = $appended;
         }
 
-        return $lastSelections;
+        return $lastSelectors;
     }
 
-    protected static $libSelectionExtend = [
-        ['Selection', 'extendee', 'extender'],
-        ['Selections', 'extendee', 'extender']
+    protected static $libSelectorExtend = [
+        ['selector', 'extendee', 'extender'],
+        ['selectors', 'extendee', 'extender']
     ];
-    protected function libSelectionExtend($args)
+    protected function libSelectorExtend($args)
     {
-        list($Selections, $extendee, $extender) = $args;
+        list($selectors, $extendee, $extender) = $args;
 
-        $Selections = $this->getSelectionArg($Selections, 'Selection');
-        $extendee  = $this->getSelectionArg($extendee, 'extendee');
-        $extender  = $this->getSelectionArg($extender, 'extender');
+        $selectors = $this->getSelectorArg($selectors, 'selector');
+        $extendee  = $this->getSelectorArg($extendee, 'extendee');
+        $extender  = $this->getSelectorArg($extender, 'extender');
 
-        if (! $Selections || ! $extendee || ! $extender) {
-            throw $this->error('Selection-extend() invalid arguments');
+        if (! $selectors || ! $extendee || ! $extender) {
+            throw $this->error('selector-extend() invalid arguments');
         }
 
-        $extended = $this->extendOrReplaceSelections($Selections, $extendee, $extender);
+        $extended = $this->extendOrReplaceSelectors($selectors, $extendee, $extender);
 
-        return $this->formatOutputSelection($extended);
+        return $this->formatOutputSelector($extended);
     }
 
-    protected static $libSelectionReplace = [
-        ['Selection', 'original', 'replacement'],
-        ['Selections', 'original', 'replacement']
+    protected static $libSelectorReplace = [
+        ['selector', 'original', 'replacement'],
+        ['selectors', 'original', 'replacement']
     ];
-    protected function libSelectionReplace($args)
+    protected function libSelectorReplace($args)
     {
-        list($Selections, $original, $replacement) = $args;
+        list($selectors, $original, $replacement) = $args;
 
-        $Selections   = $this->getSelectionArg($Selections, 'Selection');
-        $original    = $this->getSelectionArg($original, 'original');
-        $replacement = $this->getSelectionArg($replacement, 'replacement');
+        $selectors   = $this->getSelectorArg($selectors, 'selector');
+        $original    = $this->getSelectorArg($original, 'original');
+        $replacement = $this->getSelectorArg($replacement, 'replacement');
 
-        if (! $Selections || ! $original || ! $replacement) {
-            throw $this->error('Selection-replace() invalid arguments');
+        if (! $selectors || ! $original || ! $replacement) {
+            throw $this->error('selector-replace() invalid arguments');
         }
 
-        $replaced = $this->extendOrReplaceSelections($Selections, $original, $replacement, true);
+        $replaced = $this->extendOrReplaceSelectors($selectors, $original, $replacement, true);
 
-        return $this->formatOutputSelection($replaced);
+        return $this->formatOutputSelector($replaced);
     }
 
     /**
-     * Extend/replace in Selections
-     * used by Selection-extend and Selection-replace that use the same logic
+     * Extend/replace in selectors
+     * used by selector-extend and selector-replace that use the same logic
      *
-     * @param array   $Selections
+     * @param array   $selectors
      * @param array   $extendee
      * @param array   $extender
      * @param boolean $replace
      *
      * @return array
      */
-    protected function extendOrReplaceSelections($Selections, $extendee, $extender, $replace = false)
+    protected function extendOrReplaceSelectors($selectors, $extendee, $extender, $replace = false)
     {
         $saveExtends = $this->extends;
         $saveExtendsMap = $this->extendsMap;
@@ -9624,7 +9689,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
 
         foreach ($extendee as $es) {
             if (\count($es) !== 1) {
-                throw $this->error('Can\'t extend complex Selection.');
+                throw $this->error('Can\'t extend complex selector.');
             }
 
             // only use the first one
@@ -9633,18 +9698,18 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
 
         $extended = [];
 
-        foreach ($Selections as $Selection) {
+        foreach ($selectors as $selector) {
             if (! $replace) {
-                $extended[] = $Selection;
+                $extended[] = $selector;
             }
 
             $n = \count($extended);
 
-            $this->matchExtends($Selection, $extended);
+            $this->matchExtends($selector, $extended);
 
-            // if didnt match, keep the original Selection if we are in a replace operation
+            // if didnt match, keep the original selector if we are in a replace operation
             if ($replace && \count($extended) === $n) {
-                $extended[] = $Selection;
+                $extended[] = $selector;
             }
         }
 
@@ -9654,74 +9719,74 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
         return $extended;
     }
 
-    protected static $libSelectionNest = ['Selection...'];
-    protected function libSelectionNest($args)
+    protected static $libSelectorNest = ['selector...'];
+    protected function libSelectorNest($args)
     {
-        // get the Selection... list
+        // get the selector... list
         $args = reset($args);
         $args = $args[2];
 
         if (\count($args) < 1) {
-            throw $this->error('Selection-nest() needs at least 1 argument');
+            throw $this->error('selector-nest() needs at least 1 argument');
         }
 
-        $SelectionsMap = [];
+        $selectorsMap = [];
         foreach ($args as $arg) {
-            $SelectionsMap[] = $this->getSelectionArg($arg, 'Selection', true);
+            $selectorsMap[] = $this->getSelectorArg($arg, 'selector', true);
         }
 
         $envs = [];
 
-        foreach ($SelectionsMap as $Selections) {
+        foreach ($selectorsMap as $selectors) {
             $env = new Environment();
-            $env->Selections = $Selections;
+            $env->selectors = $selectors;
 
             $envs[] = $env;
         }
 
         $envs            = array_reverse($envs);
         $env             = $this->extractEnv($envs);
-        $outputSelections = $this->multiplySelections($env);
+        $outputSelectors = $this->multiplySelectors($env);
 
-        return $this->formatOutputSelection($outputSelections);
+        return $this->formatOutputSelector($outputSelectors);
     }
 
-    protected static $libSelectionParse = [
-        ['Selection'],
-        ['Selections']
+    protected static $libSelectorParse = [
+        ['selector'],
+        ['selectors']
     ];
-    protected function libSelectionParse($args)
+    protected function libSelectorParse($args)
     {
-        $Selections = reset($args);
-        $Selections = $this->getSelectionArg($Selections, 'Selection');
+        $selectors = reset($args);
+        $selectors = $this->getSelectorArg($selectors, 'selector');
 
-        return $this->formatOutputSelection($Selections);
+        return $this->formatOutputSelector($selectors);
     }
 
-    protected static $libSelectionUnify = ['Selections1', 'Selections2'];
-    protected function libSelectionUnify($args)
+    protected static $libSelectorUnify = ['selectors1', 'selectors2'];
+    protected function libSelectorUnify($args)
     {
-        list($Selections1, $Selections2) = $args;
+        list($selectors1, $selectors2) = $args;
 
-        $Selections1 = $this->getSelectionArg($Selections1, 'Selections1');
-        $Selections2 = $this->getSelectionArg($Selections2, 'Selections2');
+        $selectors1 = $this->getSelectorArg($selectors1, 'selectors1');
+        $selectors2 = $this->getSelectorArg($selectors2, 'selectors2');
 
-        if (! $Selections1 || ! $Selections2) {
-            throw $this->error('Selection-unify() invalid arguments');
+        if (! $selectors1 || ! $selectors2) {
+            throw $this->error('selector-unify() invalid arguments');
         }
 
         // only consider the first compound of each
-        $compound1 = reset($Selections1);
-        $compound2 = reset($Selections2);
+        $compound1 = reset($selectors1);
+        $compound2 = reset($selectors2);
 
         // unify them and that's it
-        $unified = $this->unifyCompoundSelections($compound1, $compound2);
+        $unified = $this->unifyCompoundSelectors($compound1, $compound2);
 
-        return $this->formatOutputSelection($unified);
+        return $this->formatOutputSelector($unified);
     }
 
     /**
-     * The Selection-unify magic as its best
+     * The selector-unify magic as its best
      * (at least works as expected on test cases)
      *
      * @param array $compound1
@@ -9729,7 +9794,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
      *
      * @return array
      */
-    protected function unifyCompoundSelections($compound1, $compound2)
+    protected function unifyCompoundSelectors($compound1, $compound2)
     {
         if (! \count($compound1)) {
             return $compound2;
@@ -9749,7 +9814,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
         }
 
         $unifiedCompound = [$last];
-        $unifiedSelections = [$unifiedCompound];
+        $unifiedSelectors = [$unifiedCompound];
 
         // do the rest
         while (\count($compound1) || \count($compound2)) {
@@ -9760,11 +9825,11 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
                 list($compound2, $part2, $after2) = $match2;
 
                 if ($after2) {
-                    $unifiedSelections = $this->prependSelections($unifiedSelections, $after2);
+                    $unifiedSelectors = $this->prependSelectors($unifiedSelectors, $after2);
                 }
 
                 $c = $this->mergeParts($part1, $part2);
-                $unifiedSelections = $this->prependSelections($unifiedSelections, [$c]);
+                $unifiedSelectors = $this->prependSelectors($unifiedSelectors, [$c]);
 
                 $part1 = $part2 = null;
 
@@ -9775,11 +9840,11 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
                 list($compound1, $part1, $after1) = $match1;
 
                 if ($after1) {
-                    $unifiedSelections = $this->prependSelections($unifiedSelections, $after1);
+                    $unifiedSelectors = $this->prependSelectors($unifiedSelectors, $after1);
                 }
 
                 $c = $this->mergeParts($part2, $part1);
-                $unifiedSelections = $this->prependSelections($unifiedSelections, [$c]);
+                $unifiedSelectors = $this->prependSelectors($unifiedSelectors, [$c]);
 
                 $part1 = $part2 = null;
 
@@ -9792,44 +9857,44 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
                 array_pop($compound1);
                 array_pop($compound2);
 
-                $s   = $this->prependSelections($unifiedSelections, [$part2]);
-                $new = array_merge($new, $this->prependSelections($s, [$part1]));
-                $s   = $this->prependSelections($unifiedSelections, [$part1]);
-                $new = array_merge($new, $this->prependSelections($s, [$part2]));
+                $s   = $this->prependSelectors($unifiedSelectors, [$part2]);
+                $new = array_merge($new, $this->prependSelectors($s, [$part1]));
+                $s   = $this->prependSelectors($unifiedSelectors, [$part1]);
+                $new = array_merge($new, $this->prependSelectors($s, [$part2]));
             } elseif ($part1) {
                 array_pop($compound1);
 
-                $new = array_merge($new, $this->prependSelections($unifiedSelections, [$part1]));
+                $new = array_merge($new, $this->prependSelectors($unifiedSelectors, [$part1]));
             } elseif ($part2) {
                 array_pop($compound2);
 
-                $new = array_merge($new, $this->prependSelections($unifiedSelections, [$part2]));
+                $new = array_merge($new, $this->prependSelectors($unifiedSelectors, [$part2]));
             }
 
             if ($new) {
-                $unifiedSelections = $new;
+                $unifiedSelectors = $new;
             }
         }
 
-        return $unifiedSelections;
+        return $unifiedSelectors;
     }
 
     /**
-     * Prepend each Selection from $Selections with $parts
+     * Prepend each selector from $selectors with $parts
      *
-     * @param array $Selections
+     * @param array $selectors
      * @param array $parts
      *
      * @return array
      */
-    protected function prependSelections($Selections, $parts)
+    protected function prependSelectors($selectors, $parts)
     {
         $new = [];
 
-        foreach ($Selections as $compoundSelection) {
-            array_unshift($compoundSelection, $parts);
+        foreach ($selectors as $compoundSelector) {
+            array_unshift($compoundSelector, $parts);
 
-            $new[] = $compoundSelection;
+            $new[] = $compoundSelector;
         }
 
         return $new;
@@ -9959,7 +10024,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
     }
 
     /**
-     * Find the html tag name in a Selection parts list
+     * Find the html tag name in a selector parts list
      *
      * @param string[] $parts
      *
@@ -9976,17 +10041,17 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
         return '';
     }
 
-    protected static $libSimpleSelections = ['Selection'];
-    protected function libSimpleSelections($args)
+    protected static $libSimpleSelectors = ['selector'];
+    protected function libSimpleSelectors($args)
     {
-        $Selection = reset($args);
-        $Selection = $this->getSelectionArg($Selection, 'Selection');
+        $selector = reset($args);
+        $selector = $this->getSelectorArg($selector, 'selector');
 
-        // remove Selections list layer, keeping the first one
-        $Selection = reset($Selection);
+        // remove selectors list layer, keeping the first one
+        $selector = reset($selector);
 
         // remove parts list layer, keeping the first part
-        $part = reset($Selection);
+        $part = reset($selector);
 
         $listParts = [];
 

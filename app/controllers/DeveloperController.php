@@ -4,12 +4,9 @@ namespace App\Controllers;
 
 use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
-use Pipeline\Database\AbstractDatabase;
 use Pipeline\PypeEngine\PypeCompiler;
-use Pipeline\PypeEngine\PypeComponent;
-use Pipeline\PypeEngine\PypeTemplate;
 
-use function Pipeline\Accessors\Dependency;
+use function Pipeline\Navigate\Dependency;
 
 class DeveloperController extends Controller
 {
@@ -18,8 +15,8 @@ class DeveloperController extends Controller
 
     function __construct()
     {
-        $this->db = Dependency("Db");
-        $this->experimental = Dependency(PypeCompiler::class);
+        $this->db = dependency("Db");
+        $this->experimental = dependency(PypeCompiler::class);
     }
 
     function testMethod1()

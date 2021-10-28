@@ -2,7 +2,7 @@
 
 namespace Pipeline\Result;
 
-use Pipeline\Core\ResultInterface;
+use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
 
 class ContentResult implements ResultInterface

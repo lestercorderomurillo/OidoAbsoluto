@@ -2,11 +2,11 @@
 
 namespace Pipeline\App;
 
-use Pipeline\Logger\Logger;
+use Pipeline\Trace\Logger;
 use Pipeline\Core\Environment;
 use Pipeline\DependencyInjection\DependencyManager;
 
-require_once(dirname(__DIR__) . "/Core/Accessors.php");
+require_once(dirname(__DIR__) . "/Core/Navigate.php");
 
 abstract class App
 {

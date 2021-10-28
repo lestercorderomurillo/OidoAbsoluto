@@ -2,13 +2,12 @@
 
 namespace Pipeline\Result;
 
-use Pipeline\Core\ResultInterface;
+use Pipeline\Core\View;
+use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
-use Pipeline\PypeEngine\View;
-use Pipeline\PypeEngine\PypeTemplateBatch;
 use Pipeline\PypeEngine\PypeViewRenderer;
 
-use function Pipeline\Accessors\Dependency;
+use function Pipeline\Navigate\dependency;
 
 class ViewResult implements ResultInterface
 {
@@ -21,11 +20,9 @@ class ViewResult implements ResultInterface
 
     public function toResponse(): ServerResponse
     {
-        $renderer = Dependency(PypeViewRenderer::class);
-        $batch = Dependency(PypeTemplateBatch::class);
+        $renderer = dependency(PypeViewRenderer::class);
 
         $renderer->setView($this->view);
-        $renderer->setTemplateBatch($batch);
 
         $response = new ServerResponse();
         $response->addHeader("Content-Type", "text/html");

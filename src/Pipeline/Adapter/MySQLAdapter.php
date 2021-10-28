@@ -2,7 +2,6 @@
 
 namespace Pipeline\Adapter;
 
-use Exception;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\SQL\QueryResult;
 use Pipeline\Exceptions\SQLFailureException;
@@ -39,7 +38,7 @@ class MySQLAdapter extends Adapter
             $handler = $this->pdo->prepare($prepared_query, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
             $handler->execute($values);
             $data = $handler->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new SQLFailureException($e->getMessage());
         }
 

@@ -10,7 +10,6 @@ class WebServer
 
     public function __construct()
     {
-        //Session::preparedInitialize();
         $this->router = new Router();
         $this->session = new Session();
         $this->request = new IncomingRequest();
@@ -21,7 +20,7 @@ class WebServer
         $this->router->handle($this->request);
     }
 
-    public function getSession(): Session
+    public function getActiveSession(): Session
     {
         return $this->session;
     }

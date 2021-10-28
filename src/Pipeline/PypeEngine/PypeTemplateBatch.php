@@ -2,25 +2,19 @@
 
 namespace Pipeline\PypeEngine;
 
-use Exception;
-use Pipeline\Core\StaticObjectInitializer;
+use Pipeline\Core\Loader;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\Utilities\ArrayHelper;
 use Pipeline\Traits\DefaultAccessorTrait;
 
-class PypeTemplateBatch extends StaticObjectInitializer
+class PypeTemplateBatch extends Loader
 {
     use DefaultAccessorTrait;
     private static $templates;
 
-    public function __construct()
-    {
-        self::invokeInitialize();
-    }
-
-    protected static function __initialize(): void
+    protected static function __load(): void
     {
         $template_file_names = FileSystem::find(new DirectoryPath(SystemPath::COMPONENTS));
         $user_template_file_names = FileSystem::find(new DirectoryPath(SystemPath::USERCOMPONENTS));
@@ -43,19 +37,19 @@ class PypeTemplateBatch extends StaticObjectInitializer
 
     public static function getTemplate(string $component_name): PypeTemplate
     {
-        self::invokeInitialize();
+        self::load();
         return (self::$templates[$component_name]);
     }
 
     public static function getTemplates(): array
     {
-        self::invokeInitialize();
+        self::load();
         return self::$templates;
     }
 
     public static function isRegistered(string $component_name): bool
     {
-        self::invokeInitialize();
+        self::load();
         return (isset(self::$templates[$component_name]));
     }
 
