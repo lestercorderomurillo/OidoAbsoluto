@@ -1,22 +1,22 @@
 <?php
 
-namespace Pipeline\Core;
+namespace Pipeline\Core\Types;
 
 use Pipeline\Hotswap\ChangeDetector;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
 
 class View
 {
     private string $view_name;
+    private array $view_data;
+
     private string $controller_name;
 
     private string $html;
     private string $timestamp;
-
-    private array $view_data;
 
     public function __construct(string $controller_name, string $view_name, array $view_data)
     {
@@ -29,13 +29,13 @@ class View
 
         $this->view_data = $view_data;
 
-        $this->html = FileSystem::includeAsString(new Path(SystemPath::VIEWS, $this->controller_name . "/" . $view_name, "phtml"));
+        $this->html = FileSystem::includeAsString(new Path(ServerPath::VIEWS, $this->controller_name . "/" . $view_name, "phtml"));
         $this->timestamp = ChangeDetector::generateTimestampForView($this->getControllerName(), $this->getViewName());
     }
 
     public function getDirectory(): DirectoryPath
     {
-        return new DirectoryPath(SystemPath::VIEWS, "$this->controller_name/");
+        return new DirectoryPath(ServerPath::VIEWS, "$this->controller_name/");
     }
 
     public function getTimestamp(): string
@@ -56,14 +56,14 @@ class View
     public function getViewGUID(): string
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        $compiled_path = new Path(SystemPath::VIEWS, $path, "phtml");
+        $compiled_path = new Path(ServerPath::VIEWS, $path, "phtml");
         return md5($compiled_path->toString());
     }
 
     public function getViewPath(): Path
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        return (new Path(SystemPath::VIEWS, $path, "phtml"));
+        return (new Path(ServerPath::VIEWS, $path, "phtml"));
     }
 
     public function getControllerName(): string

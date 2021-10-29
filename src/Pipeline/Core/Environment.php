@@ -2,7 +2,7 @@
 
 namespace Pipeline\Core;
 
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Utilities\Text;
@@ -20,7 +20,7 @@ class Environment
     {
         $this->failure_count = 0;
 
-        $config_path = (new Path(SystemPath::APP, "configuration", "php"))->toString();
+        $config_path = (new Path(ServerPath::APP, "configuration", "php"))->toString();
         $this->configuration = require_once($config_path);
 
         $url_scheme = "http";

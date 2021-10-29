@@ -1,14 +1,12 @@
 <?php
 
-namespace Pipeline\Core;
+namespace Pipeline\Core\Boot;
 
 use Pipeline\Core\Types\XML;
 use Pipeline\Core\Facade\RequestHandlerInterface;
 use Pipeline\HTTP\Message;
 use Pipeline\Result\ContentResult;
 use Pipeline\Result\XMLResult;
-
-use function Pipeline\Kernel\session;
 
 abstract class ControllerBase extends ActionsBase implements RequestHandlerInterface
 {

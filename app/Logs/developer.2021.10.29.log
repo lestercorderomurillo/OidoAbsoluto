@@ -106,3 +106,8 @@
 11:14:18 >> App\Controllers\DeveloperController has been requested a response from 'testMethod2' action
 11:14:26 >> App\Controllers\DeveloperController has been requested a response from 'testMethod2' action
 11:17:05 >> App\Controllers\HomeController has been requested a response from 'login' action
+11:17:59 >> App\Controllers\HomeController has been requested a response from 'login' action
+11:20:26 >> App\Controllers\HomeController has been requested a response from 'login' action
+12:27:54 >> App\Controllers\HomeController has been requested a response from 'login' action
+12:27:57 >> App\Controllers\HomeController has been requested a response from 'signup' action
+12:27:59 >> App\Controllers\HomeController has been requested a response from 'login' action

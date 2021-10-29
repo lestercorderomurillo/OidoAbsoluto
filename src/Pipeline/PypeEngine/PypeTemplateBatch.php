@@ -2,22 +2,22 @@
 
 namespace Pipeline\PypeEngine;
 
-use Pipeline\Core\Loader;
+use Pipeline\Core\Boot\LoaderBase;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\Utilities\Vector;
 use Pipeline\Traits\DefaultAccessorTrait;
 
-class PypeTemplateBatch extends Loader
+class PypeTemplateBatch extends LoaderBase
 {
     use DefaultAccessorTrait;
     private static $templates;
 
     protected static function __load(): void
     {
-        $template_file_names = FileSystem::find(new DirectoryPath(SystemPath::COMPONENTS));
-        $user_template_file_names = FileSystem::find(new DirectoryPath(SystemPath::USERCOMPONENTS));
+        $template_file_names = FileSystem::find(new DirectoryPath(ServerPath::COMPONENTS));
+        $user_template_file_names = FileSystem::find(new DirectoryPath(ServerPath::USERCOMPONENTS));
 
         $templates_to_include = Vector::stackLines($template_file_names, $user_template_file_names);
 

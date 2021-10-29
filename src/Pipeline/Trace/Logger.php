@@ -5,7 +5,7 @@ namespace Pipeline\Trace;
 use Psr\Log\LogLevel;
 use Psr\Log\AbstractLogger;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\Utilities\Vector;
 
@@ -19,7 +19,7 @@ class Logger extends AbstractLogger
         $time = date("H:i:s");
 
         $string = Vector::parameterReplace($message, $context, "{", "}");
-        $path = new Path(SystemPath::LOGS, "$level.$date", "log");
+        $path = new Path(ServerPath::LOGS, "$level.$date", "log");
 
         if ($level == LogLevel::ERROR || $level == LogLevel::EMERGENCY || $level == LogLevel::CRITICAL) {
             if (app()->getRuntimeEnvironment()->hasErrorLoggingEnabled()) {

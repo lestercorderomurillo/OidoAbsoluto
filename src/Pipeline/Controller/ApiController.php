@@ -2,11 +2,11 @@
 
 namespace Pipeline\Controller;
 
-use Pipeline\Core\ControllerBase;
+use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\HTTP\Message;
 use Pipeline\HTTP\InvalidMessage;
-use Pipeline\HTTP\NullMessage;
+use Pipeline\HTTP\EmptyMessage;
 use Pipeline\HTTP\Server\ServerResponse;
 
 abstract class ApiController extends ControllerBase
@@ -23,7 +23,7 @@ abstract class ApiController extends ControllerBase
 
         } else if (!isset($input)) {
 
-            return new NullMessage();
+            return new EmptyMessage();
             
         }
 

@@ -2,10 +2,10 @@
 
 namespace Pipeline\Prefabs\Middleware;
 
-use Pipeline\Core\Middleware;
+use Pipeline\Core\Boot\MiddlewareBase;
 use Pipeline\HTTP\Message;
 
-class ForceSSL extends Middleware
+class ForceSSL extends MiddlewareBase
 {
     public function handle($request): Message
     {

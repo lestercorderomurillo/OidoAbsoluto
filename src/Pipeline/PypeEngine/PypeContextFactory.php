@@ -2,11 +2,11 @@
 
 namespace Pipeline\PypeEngine;
 
-use Pipeline\Core\View;
+use Pipeline\Core\Types\View;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\Vector;
 
@@ -151,26 +151,26 @@ class PypeContextFactory
 
     private function buildPackagesContext(): void
     {
-        $this->packages[] = new Path(SystemPath::PACKAGES, "jquery-3.6.0/jquery", "min.js");
-        $this->packages[] = new Path(SystemPath::PACKAGES, "popper-1.16.1/popper", "min.js");
-        $this->packages[] = new Path(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "min.js");
-        $this->packages[] = new Path(SystemPath::PACKAGES, "observable-slim-0.1.5/observable-slim", "min.js");
-        $this->packages[] = new Path(SystemPath::PACKAGES, "jquery-validate-1.11.1/jquery.validate", "min.js");
-        $this->packages[] = new Path(SystemPath::PACKAGES, "canvas-js/canvasjs", "min.js");
+        $this->packages[] = new Path(ServerPath::PACKAGES, "jquery-3.6.0/jquery", "min.js");
+        $this->packages[] = new Path(ServerPath::PACKAGES, "popper-1.16.1/popper", "min.js");
+        $this->packages[] = new Path(ServerPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "min.js");
+        $this->packages[] = new Path(ServerPath::PACKAGES, "observable-slim-0.1.5/observable-slim", "min.js");
+        $this->packages[] = new Path(ServerPath::PACKAGES, "jquery-validate-1.11.1/jquery.validate", "min.js");
+        $this->packages[] = new Path(ServerPath::PACKAGES, "canvas-js/canvasjs", "min.js");
     }
 
     private function buildStyleContext(): void
     {
         $this->styles[] = "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap";
-        $this->styles[] = new Path(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "css");
-        $this->styles[] = new Path(SystemPath::PACKAGES, "font-awesome-4.7.0/font-awesome", "css");
-        $this->styles[] = new Path(SystemPath::WEB, "build", "css");
+        $this->styles[] = new Path(ServerPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "css");
+        $this->styles[] = new Path(ServerPath::PACKAGES, "font-awesome-4.7.0/font-awesome", "css");
+        $this->styles[] = new Path(ServerPath::WEB, "build", "css");
         $this->styles = FileSystem::toWebPaths($this->styles);
     }
 
     private function buildScriptContext(): void
     {
-        $paths = FileSystem::findWebPaths(new DirectoryPath(SystemPath::SRC, "PypeEngine/Boot/Scripts/"), "js");
+        $paths = FileSystem::findWebPaths(new DirectoryPath(ServerPath::SRC, "PypeEngine/Boot/Scripts/"), "js");
         $this->scripts = FileSystem::toWebPaths(Vector::stackLines($this->packages, $paths));
     }
 
@@ -179,7 +179,7 @@ class PypeContextFactory
         $path = $view->getControllerName() . "/" . $view->getViewName();
         $this->view_identifier = $view->getViewGUID();
         $this->view_timestamp = $view->getTimestamp();
-        $this->view_script = (new Path(SystemPath::VIEWS, $path, "js"))->toWebPath()->toString();
+        $this->view_script = (new Path(ServerPath::VIEWS, $path, "js"))->toWebPath()->toString();
         $this->view_context = $view->getViewData();
     }
 

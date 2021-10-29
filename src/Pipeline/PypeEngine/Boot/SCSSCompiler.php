@@ -5,7 +5,7 @@ namespace Pipeline\PypeEngine\Boot;
 use ScssPhp\ScssPhp\Compiler;
 use Pipeline\Utilities\Vector;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
 
@@ -18,19 +18,19 @@ class SCSSCompiler
         if (configuration("development.compileSCSS")) {
 
             // Find all bootstrap, font-awesome, etc style files
-            $packages_files = FileSystem::find(new DirectoryPath(SystemPath::PACKAGES), "css");
+            $packages_files = FileSystem::find(new DirectoryPath(ServerPath::PACKAGES), "css");
 
             // Get build components style files
-            $prefabs_components_folder = (new DirectoryPath(SystemPath::PREFABS, "Components/"))->toString();
+            $prefabs_components_folder = (new DirectoryPath(ServerPath::PREFABS, "Components/"))->toString();
 
             // Get build style files
-            $prefabs_scss_folder = (new DirectoryPath(SystemPath::SRC, "PypeEngine/Boot/Stylesheet/"))->toString();
+            $prefabs_scss_folder = (new DirectoryPath(ServerPath::SRC, "PypeEngine/Boot/Stylesheet/"))->toString();
 
             // Get page style files
-            $page_folder = (new DirectoryPath(SystemPath::WEB))->toString();
+            $page_folder = (new DirectoryPath(ServerPath::WEB))->toString();
 
             // Get user components style files
-            $user_folder = new DirectoryPath(SystemPath::USERCOMPONENTS);
+            $user_folder = new DirectoryPath(ServerPath::USERCOMPONENTS);
 
             $scss_folders = Vector::stackLines(
                 $packages_files,
@@ -45,8 +45,8 @@ class SCSSCompiler
             $scss_compiler = new Compiler();
             $scss_compiler->setImportPaths($scss_folders);
 
-            $entry_scss = (new Path(SystemPath::SRC, "PypeEngine/Boot/Stylesheet/compiled", "scss"))->toString();
-            $output_scss = (new Path(SystemPath::WEB, "build", "css"))->toString();
+            $entry_scss = (new Path(ServerPath::SRC, "PypeEngine/Boot/Stylesheet/compiled", "scss"))->toString();
+            $output_scss = (new Path(ServerPath::WEB, "build", "css"))->toString();
 
             $string_scss = file_get_contents($entry_scss);
 

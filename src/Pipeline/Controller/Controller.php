@@ -2,12 +2,12 @@
 
 namespace Pipeline\Controller;
 
-use Pipeline\Core\View;
-use Pipeline\Core\ControllerBase;
+use Pipeline\Core\Types\View;
+use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\Message;
-use Pipeline\HTTP\NullMessage;
+use Pipeline\HTTP\EmptyMessage;
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\Result\ViewResult;
 
@@ -52,7 +52,7 @@ abstract class Controller extends ControllerBase
 
         } else if (!isset($input)) {
 
-            return new NullMessage();
+            return new EmptyMessage();
             
         }
 

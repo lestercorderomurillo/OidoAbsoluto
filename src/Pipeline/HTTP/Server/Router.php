@@ -4,11 +4,11 @@ namespace Pipeline\HTTP\Server;
 
 use Pipeline\Trace\Logger;
 use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\Hotswap\ChangeDispatcher;
 use Pipeline\HTTP\InvalidMessage;
-use Pipeline\HTTP\NullMessage;
+use Pipeline\HTTP\EmptyMessage;
 use Pipeline\HTTP\Common\Request;
 use Pipeline\HTTP\Common\Route;
 use Pipeline\Prefabs\Middleware\ForceSSL;
@@ -23,7 +23,7 @@ class Router
 
     public function __construct()
     {
-        FileSystem::requireFromFile(new Path(SystemPath::APP, "routes", "php"));
+        FileSystem::requireFromFile(new Path(ServerPath::APP, "routes", "php"));
     }
 
     public static function setMiddlewares($array_or_one): void
@@ -74,7 +74,7 @@ class Router
                 $controller_class_name = $route->getControllerName();
                 $controller_name = $route->getControllerName();
 
-                $controller_path = Path::create(SystemPath::CONTROLLERS, $controller_class_name, "php")->toString();
+                $controller_path = Path::create(ServerPath::CONTROLLERS, $controller_class_name, "php")->toString();
 
                 if (file_exists($controller_path)) {
 
@@ -119,7 +119,7 @@ class Router
                             if ($response instanceof InvalidMessage) {
                                 ServerResponse::create(500, "At " . $controller_name . "Controller: 
                                 the function \"$action_name()\" must return a valid ResultInterface instance.")->sendAndExit();
-                            } else if ($response instanceof NullMessage) {
+                            } else if ($response instanceof EmptyMessage) {
                                 ServerResponse::create(500, "At " . $controller_name . "Controller: 
                                 the function \"$action_name()\" must return a value.")->sendAndExit();
                             }

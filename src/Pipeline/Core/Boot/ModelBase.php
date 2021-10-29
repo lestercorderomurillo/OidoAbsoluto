@@ -1,13 +1,13 @@
 <?php
 
-namespace Pipeline\Core;
+namespace Pipeline\Core\Boot;
 
-use Pipeline\Core\Node;
+use Pipeline\Core\Boot\NodeBase;
+use Pipeline\Core\Exceptions\InvalidModelException;
 use Pipeline\Traits\ClassAwareTrait;
 use Pipeline\Traits\ValuesSetterTrait;
-use Pipeline\Core\Exceptions\InvalidModelException;
 
-abstract class Model extends Node
+abstract class ModelBase extends NodeBase
 {
     use ClassAwareTrait;
     use ValuesSetterTrait;

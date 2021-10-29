@@ -4,7 +4,7 @@ namespace Pipeline\App;
 
 use Pipeline\Trace\Logger;
 use Pipeline\Core\Environment;
-use Pipeline\DependencyInjection\DependencyManager;
+use Pipeline\Injection\DependencyManager;
 
 require_once(dirname(__DIR__) . "/Core/Kernel.php");
 

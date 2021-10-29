@@ -4,14 +4,15 @@ namespace Pipeline\Core\Types;
 
 use Pipeline\Traits\StringableTrait;
 
-class JSON 
+class JSON
 {
     use StringableTrait;
-    
+
     private int $hints;
     private $value;
 
-    public static function create($value, int $hints = 0){
+    public static function create($value, int $hints = 0): JSON
+    {
         $instance = new JSON($value, $hints);
         return $instance;
     }

@@ -1,16 +1,16 @@
 <?php
 
-namespace Pipeline\Core;
+namespace Pipeline\Core\Boot;
 
-abstract class Loader
+abstract class LoaderBase
 {
     private static array $initialized = [];
     protected abstract static function __load(): void;
 
     public static function load(): void
     {
-        if (!isset(Loader::$initialized[static::class])) {
-            Loader::$initialized[static::class] = true;
+        if (!isset(LoaderBase::$initialized[static::class])) {
+            LoaderBase::$initialized[static::class] = true;
             static::__load();
         }
     }

@@ -1,13 +1,12 @@
 <?php
 
-namespace Pipeline\Core;
+namespace Pipeline\Core\Boot;
 
 use Pipeline\Core\Types\JSON;
 use Pipeline\HTTP\Message;
 use Pipeline\Result\JSONResult;
 use Pipeline\Result\RedirectResult;
 use Pipeline\Utilities\Text;
-
 use function Pipeline\Kernel\session;
 
 abstract class ActionsBase

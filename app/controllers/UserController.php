@@ -8,7 +8,7 @@ use Pipeline\Database\DatabaseBase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\Utilities\Vector;
 use function Pipeline\Kernel\dependency;
 use function Pipeline\Kernel\session;
@@ -32,7 +32,7 @@ class UserController extends Controller
             return $this->redirect("login");
         }
 
-        $audios_sources = FileSystem::findWebPaths(new DirectoryPath(SystemPath::WEB, "audio/"), "mp3");
+        $audios_sources = FileSystem::findWebPaths(new DirectoryPath(ServerPath::WEB, "audio/"), "mp3");
         $audios_sources_json = JSON::create($audios_sources)->toString();
 
         $output = ["mode" => $mode, "audios_sources" => $audios_sources_json];
@@ -60,7 +60,7 @@ class UserController extends Controller
 
     function questionsTest()
     {
-        $json = json_decode(FileSystem::includeAsString(new Path(SystemPath::VIEWS, "User/questions", "json")), true);
+        $json = json_decode(FileSystem::includeAsString(new Path(ServerPath::VIEWS, "User/questions", "json")), true);
 
         return $this->view("questions", ["questions" => $json]);
     }

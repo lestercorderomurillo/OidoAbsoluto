@@ -7,7 +7,6 @@ use function Pipeline\Kernel\safeGet;
 
 class Container implements ContainerInterface
 {
-
     private array $data;
 
     public function __construct(array $anything_array = null)

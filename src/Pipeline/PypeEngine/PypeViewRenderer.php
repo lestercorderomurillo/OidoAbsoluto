@@ -2,7 +2,7 @@
 
 namespace Pipeline\PypeEngine;
 
-use Pipeline\Core\View;
+use Pipeline\Core\Types\View;
 use Pipeline\PypeEngine\HTML\BodyBeautifier;
 use Pipeline\Traits\DefaultAccessorTrait;
 

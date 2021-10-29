@@ -2,7 +2,7 @@
 
 namespace Pipeline\Result;
 
-use Pipeline\Core\View;
+use Pipeline\Core\Types\View;
 use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\PypeViewRenderer;

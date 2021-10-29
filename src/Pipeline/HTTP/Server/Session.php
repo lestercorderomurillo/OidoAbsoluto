@@ -2,10 +2,10 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Core\Loader;
+use Pipeline\Core\Boot\LoaderBase;
 use function Pipeline\Kernel\safeGet;
 
-class Session extends Loader
+class Session extends LoaderBase
 {
     protected static function __load(): void
     {

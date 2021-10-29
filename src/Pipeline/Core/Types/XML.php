@@ -4,14 +4,15 @@ namespace Pipeline\Core\Types;
 
 use Pipeline\Traits\StringableTrait;
 
-class XML 
+class XML
 {
     use StringableTrait;
-    
+
     private int $hints;
     private $value;
 
-    public static function create($value, int $hints = 0){
+    public static function create($value, int $hints = 0): XML
+    {
         $instance = new XML($value, $hints);
         return $instance;
     }

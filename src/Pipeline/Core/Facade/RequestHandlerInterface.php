@@ -6,5 +6,5 @@ use Pipeline\HTTP\Message;
 
 interface RequestHandlerInterface
 {
-    public function handle($mixed): Message;
+    public function handle($message): Message;
 }

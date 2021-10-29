@@ -2,7 +2,7 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Core\View;
+use Pipeline\Core\Types\View;
 use Pipeline\HTTP\Message;
 use Pipeline\Trace\Logger;
 use Pipeline\PypeEngine\PypeViewRenderer;

@@ -2,7 +2,7 @@
 
 namespace Pipeline\Core\Container;
 
-use Pipeline\Core\Node;
+use Pipeline\Core\Boot\NodeBase;
 use function Pipeline\Kernel\safeGet;
 
 class NodeContainer
@@ -43,7 +43,7 @@ class NodeContainer
     public function add($object, ?string $custom_id = null): void
     {
         if ($custom_id == null) {
-            if ($object instanceof Node) {
+            if ($object instanceof NodeBase) {
                 $this->set($object->getId(), $object);
             } else {
                 $this->set(get_class($object), $object);

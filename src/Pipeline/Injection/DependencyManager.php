@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline\DependencyInjection;
+namespace Pipeline\Injection;
 
 use Pipeline\Core\Container\Container;
 use Pipeline\Core\Container\NodeContainer;
