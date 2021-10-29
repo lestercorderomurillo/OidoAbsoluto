@@ -7,10 +7,10 @@ use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\Query;
 use Pipeline\Database\Common\ConnectionString;
 use Pipeline\Database\SQL\QueryResult;
-use Pipeline\Exceptions\SQLFailureException;
+use Pipeline\Core\Exceptions\SQLFailureException;
 use Pipeline\HTTP\Server\ServerResponse;
 
-abstract class AbstractDatabase
+abstract class DatabaseBase
 {
     private array $queries;
     protected Adapter $adapter;

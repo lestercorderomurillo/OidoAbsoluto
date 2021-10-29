@@ -3,12 +3,10 @@
 namespace Pipeline\HTTP\Server;
 
 use Pipeline\Core\Loader;
-use Pipeline\Traits\DefaultAccessorTrait;
+use function Pipeline\Kernel\safeGet;
 
 class Session extends Loader
 {
-    use DefaultAccessorTrait;
-
     protected static function __load(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -21,33 +19,42 @@ class Session extends Loader
         Session::load();
     }
 
-    public function expose(): array
+    public function exposeArray(): array
     {
         return $_SESSION;
     }
 
     public function get(string $key)
     {
-        return $this->tryGet($_SESSION[$key], "");
+        return safeGet($_SESSION[$key], "");
     }
 
-    public function store(string $key, string $value)
+    public function store(string $key, string $value): void
     {
         $_SESSION[$key] = $value;
     }
 
-    public function remove(string $key)
+    public function remove(string $key): void
     {
         unset($_SESSION[$key]);
     }
 
-    public function has(string $key)
+    public function has(string $key): bool
     {
         return isset($_SESSION[$key]);
     }
 
-    public function clear()
+    public function clear(): void
     {
         session_destroy();
+    }
+
+    public function discard(array $keys): void
+    {
+        foreach ($this->exposeArray() as $key => $value) {
+            if (array_key_exists($key, $keys) || $this->has($key)) {
+                $this->remove($key);
+            }
+        }
     }
 }

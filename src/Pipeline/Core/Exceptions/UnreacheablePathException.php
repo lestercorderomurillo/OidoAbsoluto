@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline\Exceptions;
+namespace Pipeline\Core\Exceptions;
 
 use Exception;
 

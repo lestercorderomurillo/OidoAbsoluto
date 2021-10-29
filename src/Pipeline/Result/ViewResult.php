@@ -7,7 +7,7 @@ use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\PypeViewRenderer;
 
-use function Pipeline\Navigate\dependency;
+use function Pipeline\Kernel\dependency;
 
 class ViewResult implements ResultInterface
 {

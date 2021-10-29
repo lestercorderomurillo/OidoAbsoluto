@@ -128,7 +128,7 @@ class Compiler
     public static $NaN          = [Type::T_KEYWORD, 'NaN'];
     /** @deprecated */
     public static $Infinity     = [Type::T_KEYWORD, 'Infinity'];
-    public static $null         = [Type::T_NULL];
+    public static $null         = [Type::T_null];
     public static $nullString   = [Type::T_STRING, '', []];
     public static $defaultValue = [Type::T_KEYWORD, ''];
     public static $selfSelector = [Type::T_SELF];
@@ -875,7 +875,7 @@ class Compiler
                 continue;
             }
 
-            // check that we are not building an infinite loop of extensions
+            // check that we are not PREFABSg an infinite loop of extensions
             // if the new part is just including a previous part don't try to extend anymore
             if (\count($part) > 1) {
                 foreach ($partsPile as $previousPart) {
@@ -2889,10 +2889,10 @@ class Compiler
 
                 // if the value reduces to null from something else then
                 // the property should be discarded
-                if ($value[0] !== Type::T_NULL) {
+                if ($value[0] !== Type::T_null) {
                     $value = $this->reduce($value);
 
-                    if ($value[0] === Type::T_NULL || $value === static::$nullString) {
+                    if ($value[0] === Type::T_null || $value === static::$nullString) {
                         break;
                     }
                 }
@@ -3011,10 +3011,10 @@ class Compiler
 
                 // if the value reduces to null from something else then
                 // the property should be discarded
-                if ($value[0] !== Type::T_NULL) {
+                if ($value[0] !== Type::T_null) {
                     $value = $this->reduce($value);
 
-                    if ($value[0] === Type::T_NULL || $value === static::$nullString) {
+                    if ($value[0] === Type::T_null || $value === static::$nullString) {
                         break;
                     }
                 }
@@ -4587,7 +4587,7 @@ EOL;
                             }
                         }
                     }
-                    if ($item[0] === Type::T_NULL) {
+                    if ($item[0] === Type::T_null) {
                         continue;
                     }
                     if ($same_string_quote === '"' && $item[0] === Type::T_STRING && $item[1]) {
@@ -4671,7 +4671,7 @@ EOL;
                         $filtered = [];
 
                         foreach ($items as $item) {
-                            if ($item[0] === Type::T_NULL) {
+                            if ($item[0] === Type::T_null) {
                                 continue;
                             }
 
@@ -4691,13 +4691,13 @@ EOL;
                         $reduced = [Type::T_STRING, '', [$this->compileStringContent($reduced)]];
                         break;
 
-                    case Type::T_NULL:
+                    case Type::T_null:
                         $reduced = [Type::T_KEYWORD, ''];
                 }
 
                 return $this->compileValue($reduced, $quote);
 
-            case Type::T_NULL:
+            case Type::T_null:
                 return 'null';
 
             case Type::T_COMMENT:
@@ -6490,7 +6490,7 @@ EOL;
      * Checks whether the argument invocation matches the callable prototype.
      *
      * The rules are similar to {@see verifyPrototype}. The boolean return value
-     * avoids the overhead of building and catching exceptions when the reason of
+     * avoids the overhead of PREFABSg and catching exceptions when the reason of
      * not matching the prototype does not need to be known.
      *
      * @param array                 $prototype
@@ -6699,7 +6699,7 @@ EOL;
                             $positionalArgs[] = $this->maybeReduce($reduce, $item);
                         }
                     }
-                } elseif ($val[0] !== Type::T_NULL) { // values other than null are treated a single-element lists, while null is the empty list
+                } elseif ($val[0] !== Type::T_null) { // values other than null are treated a single-element lists, while null is the empty list
                     $positionalArgs[] = $this->maybeReduce($reduce, $val);
                 }
             } elseif ($hasKeywordArgument) {
@@ -6988,7 +6988,7 @@ EOL;
                     case Type::T_LIST:
                     case Type::T_MAP:
                     case Type::T_STRING:
-                    case Type::T_NULL:
+                    case Type::T_null:
                         break;
 
                     default:

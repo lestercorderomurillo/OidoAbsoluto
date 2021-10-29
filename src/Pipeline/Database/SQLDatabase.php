@@ -5,9 +5,9 @@ namespace Pipeline\Database;
 use Pipeline\Core\Model;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\ConnectionString;
-use Pipeline\Utilities\ArrayHelper;
+use Pipeline\Utilities\Vector;
 
-class SQLDatabase extends AbstractDatabase
+class SQLDatabase extends DatabaseBase
 {
     public function __construct(Adapter $adapter, ConnectionString $connection_string, string $service_id = "SQLDatabase")
     {
@@ -23,7 +23,7 @@ class SQLDatabase extends AbstractDatabase
         return $models[0];
     }
 
-    public function findAll(string $model_class_name, array $where = [], string $append = "")
+    public function findAll(string $model_class_name, array $where = [], string $append = ""): array
     {
         $models = [];
         $table_name = (new $model_class_name())->getTableName();
@@ -31,14 +31,14 @@ class SQLDatabase extends AbstractDatabase
         if ($where == []) {
             $this->addQuery("SELECT * FROM `$table_name` $append");
         } else {
-            $array = ArrayHelper::placeholderCreateArray($where);
+            $array = Vector::placeholderCreateArray($where);
             $where = implode(" AND ", $array[0]);
             $this->addQuery("SELECT * FROM `$table_name` WHERE $where $append", $array[1]);
         }
 
         $internal_result = $this->execute();
 
-        foreach ($internal_result->expose() as $row) {
+        foreach ($internal_result->exposeArray() as $row) {
             $model = new $model_class_name();
             $model->setValues($row);
             $model->setId($row["id"]);

@@ -6,7 +6,7 @@ use Pipeline\Core\Loader;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\Utilities\ArrayHelper;
+use Pipeline\Utilities\Vector;
 use Pipeline\Traits\DefaultAccessorTrait;
 
 class PypeTemplateBatch extends Loader
@@ -19,7 +19,7 @@ class PypeTemplateBatch extends Loader
         $template_file_names = FileSystem::find(new DirectoryPath(SystemPath::COMPONENTS));
         $user_template_file_names = FileSystem::find(new DirectoryPath(SystemPath::USERCOMPONENTS));
 
-        $templates_to_include = ArrayHelper::stackLines($template_file_names, $user_template_file_names);
+        $templates_to_include = Vector::stackLines($template_file_names, $user_template_file_names);
 
         $templates_imported = [];
         foreach ($templates_to_include as $file) {

@@ -8,7 +8,7 @@ use Pipeline\PypeEngine\PypeCompiler;
 use Pipeline\PypeEngine\PypeViewRenderer;
 use Pipeline\PypeEngine\Boot\SCSSCompiler;
 
-use function Pipeline\Navigate\Dependency;
+use function Pipeline\Kernel\Dependency;
 
 abstract class MVCApp extends App
 {

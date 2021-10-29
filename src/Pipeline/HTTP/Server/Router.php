@@ -5,17 +5,17 @@ namespace Pipeline\HTTP\Server;
 use Pipeline\Trace\Logger;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
-use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\Hotswap\ChangeDispatcher;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\NullMessage;
 use Pipeline\HTTP\Common\Request;
 use Pipeline\HTTP\Common\Route;
-use Pipeline\Buildin\Middleware\ForceSSL;
-
-use function Pipeline\Navigate\app;
-use function Pipeline\Navigate\configuration;
-use function Pipeline\Navigate\dependency;
+use Pipeline\Prefabs\Middleware\ForceSSL;
+use function Pipeline\Kernel\app;
+use function Pipeline\Kernel\configuration;
+use function Pipeline\Kernel\dependency;
+use function Pipeline\Kernel\session;
 
 class Router
 {
@@ -23,7 +23,7 @@ class Router
 
     public function __construct()
     {
-        FileSystem::requireFromFile(new FilePath(SystemPath::APP, "routes", "php"));
+        FileSystem::requireFromFile(new Path(SystemPath::APP, "routes", "php"));
     }
 
     public static function setMiddlewares($array_or_one): void
@@ -74,7 +74,7 @@ class Router
                 $controller_class_name = $route->getControllerName();
                 $controller_name = $route->getControllerName();
 
-                $controller_path = FilePath::create(SystemPath::CONTROLLERS, $controller_class_name, "php")->toString();
+                $controller_path = Path::create(SystemPath::CONTROLLERS, $controller_class_name, "php")->toString();
 
                 if (file_exists($controller_path)) {
 
@@ -126,7 +126,8 @@ class Router
 
                             $response_sent = true;
                             $response->send();
-                            $controller->discardSessionErrors();
+
+                            session()->discard(["alert-text", "alert-type"]);
 
                         } else {
                             ServerResponse::create(500, "Parameter number mismatch (in Routes)")->sendAndExit();

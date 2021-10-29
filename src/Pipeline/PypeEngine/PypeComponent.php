@@ -2,11 +2,11 @@
 
 namespace Pipeline\PypeEngine;
 
-use Pipeline\Utilities\ArrayHelper;
+use Pipeline\Utilities\Vector;
 use Pipeline\Traits\StringableTrait;
-use Pipeline\Exceptions\CompileException;
+use Pipeline\Core\Exceptions\CompileException;
 
-use function Pipeline\Navigate\dependency;
+use function Pipeline\Kernel\dependency;
 
 class PypeComponent
 {
@@ -21,7 +21,7 @@ class PypeComponent
     
     public static function create(string $input_string, array $external_context = []): PypeComponent
     {
-        $object = PypeCompiler::componentToObject($input_string);
+        $object = PypeCompiler::componentStringToArray($input_string);
         return new PypeComponent(PypeTemplateBatch::getTemplate($object[0]), $object[1], $external_context);
     }
 
@@ -33,9 +33,10 @@ class PypeComponent
         $this->template = $template;
         $this->attributes = $attributes;
         $this->external_context = $external_context;
+        $this->validateComponent();
     }
 
-    private function buildComponent(): void
+    private function validateComponent(): void
     {
         foreach ($this->attributes as $attribute => $value) {
             if (is_int($attribute) && is_null($value)) {
@@ -61,7 +62,7 @@ class PypeComponent
     {
         $template_defaults = $this->template->getDefaultAttributes();
 
-        $this_context = ArrayHelper::mergeNamedValues($this->external_context, $template_defaults, 
+        $this_context = Vector::mergeNamedValues($this->external_context, $template_defaults, 
         [
             "this" => $this->template->getComponentName(),
             "this:body" => $this->body,
@@ -73,7 +74,7 @@ class PypeComponent
 
         ksort($this_context);
 
-        $stacked = ArrayHelper::parameterReplace($this->template->getAwakeScript(), $this_context); 
+        $stacked = Vector::parameterReplace($this->template->getAwakeScript(), $this_context); 
         if($stacked != "" && $stacked != " "){
             PypeCompiler::$context_factory->addAwakeScripts($stacked);
         }

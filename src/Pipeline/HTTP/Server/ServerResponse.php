@@ -7,8 +7,8 @@ use Pipeline\HTTP\Message;
 use Pipeline\Trace\Logger;
 use Pipeline\PypeEngine\PypeViewRenderer;
 
-use function Pipeline\Navigate\app;
-use function Pipeline\Navigate\dependency;
+use function Pipeline\Kernel\app;
+use function Pipeline\Kernel\dependency;
 
 class ServerResponse extends Message
 {

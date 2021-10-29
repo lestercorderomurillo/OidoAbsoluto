@@ -2,7 +2,7 @@
 
 namespace Pipeline\Utilities;
 
-class StringHelper
+class Text
 {
     public static function sanitizeString(string $string): string
     {

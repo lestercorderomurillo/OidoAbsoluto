@@ -6,7 +6,7 @@ use Pipeline\Core\Types\JSON;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\Traits\DefaultAccessorTrait;
 
 class ChangeDetector
@@ -15,7 +15,7 @@ class ChangeDetector
 
     public static function compareTimestamps(string $page, string $user_timestamp): bool
     {
-        $timestamp_path = new FilePath(SystemPath::SRC, "Hotswap/timestamp", "json");
+        $timestamp_path = new Path(SystemPath::SRC, "Hotswap/timestamp", "json");
         if (!FileSystem::exists($timestamp_path)) {
             self::saveTimestamps();
         }
@@ -30,7 +30,7 @@ class ChangeDetector
 
     public static function saveTimestamps()
     {
-        FileSystem::writeToDisk(new FilePath(SystemPath::SRC, "Hotswap/timestamp", "json"), self::generateTimestamps(), 0);
+        FileSystem::writeToDisk(new Path(SystemPath::SRC, "Hotswap/timestamp", "json"), self::generateTimestamps(), 0);
     }
 
     public static function generateTimestamps(): string
@@ -45,7 +45,7 @@ class ChangeDetector
 
     public static function generateTimestampForView(string $controller_name, string $view_name): string
     {
-        $path = (new FilePath(SystemPath::VIEWS, "$controller_name/$view_name", "phtml"))->toString();
+        $path = (new Path(SystemPath::VIEWS, "$controller_name/$view_name", "phtml"))->toString();
         return filemtime($path);
     }
 }

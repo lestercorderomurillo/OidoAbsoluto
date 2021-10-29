@@ -9,14 +9,20 @@ return
         "scripts" =>
         <<<JS
         function requireForm(id, value, bind, container){
-            $(id).change(function(){
-                if($(id).val() == value){
-                    $(bind).prop("disabled", false);
-                    $(container).show();
-                } 
-                else {
-                    $(bind).prop("disabled", true);
-                    $(container).hide();
+            $("#" + id).change(function(){
+                var currentValue = "none";
+                var type = $("#" + id).prop("tagName");
+                if (type == "DIV"){
+                    currentValue = $('[name="' + id + '"]:checked').val();
+                }else{
+                    currentValue = $("#" + id).val();
+                }
+                if(currentValue == value){
+                    $("#" + bind).prop("disabled", false);
+                    $("#" + container).show();
+                }else {
+                    $("#" + bind).prop("disabled", true);
+                    $("#" + container).hide();
                 };
             }).change(); 
         }
@@ -56,7 +62,7 @@ return
         <br>
         <if value="{this:requiredId}" startsWith="{this:requiredPattern}">
             <script type="text/javascript">
-                $(function() { shared_requireForm("#{this:requiredId}", "{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
+                $(function() { shared_requireForm("{this:requiredId}", "{this:requiredValue}", "{this:bind}", "{this:container}"); });
             </script>
         </if>
         HTML
@@ -93,7 +99,7 @@ return
         <br>
         <if value="{this:requiredId}" startsWith="{this:requiredPattern}">
             <script type="text/javascript">
-                $(function() { shared_requireForm("#{this:requiredId}", "{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
+                $(function() { shared_requireForm("{this:requiredId}", "{this:requiredValue}", "{this:bind}", "{this:container}"); });
             </script>
         </if>
         HTML,
@@ -115,7 +121,7 @@ return
         <br><br>
         <if value="{this:requiredId}" startsWith="{this:requiredPattern}">
             <script type="text/javascript">
-                $(function() { shared_requireForm("#{this:requiredId}", "{this:requiredValue}", "#{this:bind}", "#{this:container}"); });
+                $(function() { shared_requireForm("{this:requiredId}", "{this:requiredValue}", "{this:bind}", "{this:container}"); });
             </script>
         </if>
         HTML,
@@ -150,13 +156,13 @@ return
         <br>
         HTML,  
     ],
-    "persistent-error" =>[
+    "persistent-alert" =>[
         "inline",
         "render" =>
         <<<HTML
-        <if value="{session:error}">
-            <app:alert type="{session:error-type}">
-                {session:error}
+        <if value="{session:alert-text}">
+            <app:alert type="{session:alert-type}">
+                {session:alert-text}
             </app:alert>
         </if>
         <br>

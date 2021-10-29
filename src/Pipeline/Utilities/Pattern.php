@@ -4,7 +4,7 @@ namespace Pipeline\Utilities;
 
 use Pipeline\PypeEngine\HTML\BodySelection;
 
-class PatternHelper
+class Pattern
 {
     public static function findByText(string &$source, string $findme, int $position = 0)
     {

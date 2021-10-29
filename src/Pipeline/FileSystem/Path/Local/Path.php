@@ -4,13 +4,15 @@ namespace Pipeline\FileSystem\Path\Local;
 
 use Pipeline\FileSystem\Path\Web\WebPath;
 
-class FilePath extends AbstractLocalPath
+use function Pipeline\Kernel\fatal;
+
+class Path extends LocalPathBase
 {
     private string $extension;
 
     public static function create(string $base, string $path, string $extension)
     {
-        $instance = new FilePath($base, $path, $extension);
+        $instance = new Path($base, $path, $extension);
         return $instance;
     }
 
@@ -21,7 +23,7 @@ class FilePath extends AbstractLocalPath
         $this->extension = $extension;
 
         if ($path[0] == "/" || substr($path, -1) == "/") {
-            $this->logger->error("File paths CANNOT start or end with / on $base : $path");
+            fatal("File pathString cannot start or end with '/' character.");
         }
     }
 

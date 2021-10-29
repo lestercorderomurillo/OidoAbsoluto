@@ -3,18 +3,17 @@
 namespace Pipeline\Core\Container;
 
 use Pipeline\Core\Facade\ContainerInterface;
-use Pipeline\Traits\DefaultAccessorTrait;
+use function Pipeline\Kernel\safeGet;
 
 class Container implements ContainerInterface
 {
-    use DefaultAccessorTrait;
 
     private array $data;
 
-    public function __construct(array $anything_array = NULL)
+    public function __construct(array $anything_array = null)
     {
         $this->data = [];
-        if ($anything_array != NULL) {
+        if ($anything_array != null) {
             foreach ($anything_array as $key => $value) {
                 $this->set($key, $value);
             }
@@ -23,7 +22,7 @@ class Container implements ContainerInterface
 
     public function get(string $id)
     {
-        return $this->tryGet($this->data[$id]);
+        return safeGet($this->data[$id]);
     }
 
     public function &set(string $id, $anything): Container
@@ -42,58 +41,8 @@ class Container implements ContainerInterface
         unset($this->data[$id]);
     }
 
-    public function &expose(): array
+    public function &exposeArray(): array
     {
         return $this->data;
     }
 }
-
-/*
-namespace Pipeline\Core\Container;
-
-use Pipeline\Core\Interface\ContainerInterface;
-use Pipeline\Traits\DefaultAccessorTrait;
-
-class Container implements ContainerInterface
-{
-    use DefaultAccessorTrait;
-    
-    private array $data;
-
-    public function __construct(array $anything_array = NULL)
-    {
-        $this->data = [];
-        if ($anything_array != NULL) {
-            foreach ($anything_array as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
-    }
-
-    public function get(string $id)
-    {
-        return $this->tryGet($this->data[$id]);
-    }
-
-    public function &set(string $id, $anything): Container
-    {
-        $this->data["$id"] = $anything;
-        return $this;
-    }
-
-    public function has(string $id): bool
-    {
-        return (isset($this->data[$id]));
-    }
-
-    public function remove(string $id): void
-    {
-        unset($this->data[$id]);
-    }
-
-    public function &expose(): array
-    {
-        return $this->data;
-    }
-}
-*/

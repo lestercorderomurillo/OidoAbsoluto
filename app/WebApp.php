@@ -7,7 +7,8 @@ use Pipeline\App\MVCApp;
 use Pipeline\Adapter\MySQLAdapter;
 use Pipeline\Database\SQLDatabase;
 use Pipeline\Database\Common\ConnectionString;
-use function Pipeline\Navigate\configuration;
+
+use function Pipeline\Kernel\configuration;
 
 class WebApp extends MVCApp
 {

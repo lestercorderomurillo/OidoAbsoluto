@@ -5,7 +5,7 @@ namespace Pipeline\Core;
 use Pipeline\Core\Node;
 use Pipeline\Traits\ClassAwareTrait;
 use Pipeline\Traits\ValuesSetterTrait;
-use Pipeline\Exceptions\InvalidModelException;
+use Pipeline\Core\Exceptions\InvalidModelException;
 
 abstract class Model extends Node
 {

@@ -4,13 +4,13 @@ namespace App\Controllers;
 
 use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
-use Pipeline\Database\AbstractDatabase;
+use Pipeline\Database\DatabaseBase;
 
-use function Pipeline\Navigate\dependency;
+use function Pipeline\Kernel\dependency;
 
-class AdminController extends Controller
+class AdminstratorController extends Controller
 {
-    private AbstractDatabase $db;
+    private DatabaseBase $db;
 
     function __construct()
     {

@@ -2,7 +2,7 @@
 
 namespace Pipeline\HTTP;
 
-use Pipeline\Exceptions\InvalidBodyException;
+use Pipeline\Core\Exceptions\InvalidBodyException;
 
 abstract class Message
 {

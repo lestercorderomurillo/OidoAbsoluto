@@ -2,16 +2,16 @@
 
 namespace Pipeline\PypeEngine\HTML;
 
-use Pipeline\Utilities\PatternHelper;
+use Pipeline\Utilities\Pattern;
 
 class BodyFinder
 {
-    public static function detectBody(string &$input, string $tag, int $initial_offset = 0): BodySelection
+    public static function detectBody(string &$input, string $tag, int $initial_offset = 0): ?BodySelection
     {
         $level = 0;
         $offset = $initial_offset;
 
-        while (($html_strip = PatternHelper::selectStringByQuotes($input, "<", ">", $offset, 1))->isValid()) {
+        while (($html_strip = Pattern::selectStringByQuotes($input, "<", ">", $offset, 1))->isValid()) {
 
             $closure = false;
 

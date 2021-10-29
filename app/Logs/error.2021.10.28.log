@@ -16,3 +16,9 @@
 00:06:29 >> 500 responded with 'Controller Not Found (in Routes)'
 00:06:29 >> 500 responded with 'Controller Not Found (in Routes)'
 00:06:29 >> 500 responded with 'Controller Not Found (in Routes)'
+02:32:47 >> 500 responded with 'Controller Not Found (in Routes)'
+02:32:47 >> 500 responded with 'Controller Not Found (in Routes)'
+02:34:01 >> 500 responded with 'Invalid resource name [C:/wamp64/www/oidoabsoluto/app/Views/Adminstrator/overview.phtml] to include as string. 
+                Check your API files.'
+02:34:01 >> 500 responded with 'Invalid resource name [C:/wamp64/www/oidoabsoluto/app/Views/Adminstrator/overview.phtml] to include as string. 
+                Check your API files.'

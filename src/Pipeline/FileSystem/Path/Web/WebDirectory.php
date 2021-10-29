@@ -2,9 +2,11 @@
 
 namespace Pipeline\FileSystem\Path\Web;
 
-use Pipeline\FileSystem\Path\AbstractPath;
+use Pipeline\FileSystem\Path\PathBase;
 
-class WebDirectoryPath extends AbstractPath
+use function Pipeline\Kernel\fatal;
+
+class WebDirectory extends PathBase
 {
     public function __construct(string $path = "")
     {
@@ -13,11 +15,11 @@ class WebDirectoryPath extends AbstractPath
 
         if ($path != "") {
             if ($path[0] == "/") {
-                $this->logger->error("Web folder paths CANNOT start /");
+                fatal("Web folder paths cannot start with '/' character.");
             }
 
             if (substr($path, -1) != "/") {
-                $this->logger->error("Web folder paths MUST end with /");
+                fatal("Web folder paths must end with '/' character.");
             }
         }
     }

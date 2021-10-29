@@ -6,19 +6,20 @@ use Pipeline\Core\Facade\ContainerInterface;
 
 trait ValuesSetterTrait
 {
-    public function setValues($values_or_container, $override = true)
+    public function setValuesByContainer(ContainerInterface $container, $override = true): void
     {
-        $values = $values_or_container;
-        if($values_or_container instanceof ContainerInterface){
-            $values = $values->expose();
-        }
-        foreach ($values as $key => $val) {
+        return $this->setValues($container->exposeArray(), $override);
+    }
+
+    public function setValues(array $values, $override = true): void
+    {
+        foreach ($values as $key => $value) {
             if ($override) {
                 if (property_exists(get_class($this), $key))
-                    $this->$key = $val;
+                    $this->$key = $value;
             } else {
                 if (property_exists(get_class($this), $key) && !isset($this->key))
-                    $this->$key = $val;
+                    $this->$key = $value;
             }
         }
     }

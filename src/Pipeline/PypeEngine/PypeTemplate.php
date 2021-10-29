@@ -3,7 +3,7 @@
 namespace Pipeline\PypeEngine;
 
 use Pipeline\Traits\DefaultAccessorTrait;
-use Pipeline\Utilities\ArrayHelper;
+use Pipeline\Utilities\Vector;
 
 class PypeTemplate
 {
@@ -44,7 +44,7 @@ class PypeTemplate
         $this->scripts = $this->tryGet($definition["scripts"], "");
         $this->awake = $this->tryGet($definition["awake"], "");
 
-        $this->defaults = ArrayHelper::merge2DArray(true, [
+        $this->defaults = Vector::merge2DArray(true, [
             "id" => "",
             "name" => "",
             "class" => $this->class,
@@ -52,7 +52,7 @@ class PypeTemplate
             "accent" => "secondary"
         ], $this->tryGet($definition["defaults"], []));
 
-        ArrayHelper::appendKeyPrefix("this", $this->defaults);
+        Vector::appendKeyPrefix("this", $this->defaults);
     }
 
     public function hasStatefulKey(string $attribute): bool

@@ -1,11 +1,16 @@
 <?php
 
-namespace Pipeline\Navigate;
+namespace Pipeline\Kernel;
 
 use Pipeline\App\App;
 use Pipeline\HTTP\Server\WebServer;
 use Pipeline\HTTP\Server\ServerResponse;
-use Pipeline\Exceptions\UnavailableDependencyException;
+use Pipeline\Core\Exceptions\UnavailableDependencyException;
+use Pipeline\FileSystem\FileSystem;
+use Pipeline\FileSystem\Path\Local\Path;
+use Pipeline\FileSystem\Path\SystemPath;
+use Pipeline\Utilities\Vector;
+use Psr\Log\LogLevel;
 
 function app()
 {
@@ -21,12 +26,37 @@ function dependency(string $dependency_name)
     }
 }
 
+function safeGet(&$variable, $default = null)
+{
+    return (isset($variable) ? $variable : $default);
+}
+
 function debug()
 {
 }
 
-function log()
+function fatal(string $message)
 {
+    ServerResponse::create(500, $message)->sendAndExit();
+}
+
+function log($level, $message, array $context = array())
+{
+    $date = date("Y.m.d");
+    $time = date("H:i:s");
+
+    $string = Vector::parameterReplace($message, $context, "{", "}");
+    $path = new Path(SystemPath::LOGS, "$level.$date", "log");
+
+    if ($level == LogLevel::ERROR || $level == LogLevel::EMERGENCY || $level == LogLevel::CRITICAL) {
+        if (app()->getRuntimeEnvironment()->hasErrorLoggingEnabled()) {
+            FileSystem::writeToDisk($path, "$time >> $string");
+        }
+    }
+
+    if (app()->getRuntimeEnvironment()->hasDevelopmentLoggingEnabled()) {
+        FileSystem::writeToDisk($path, "$time >> $string");
+    }
 }
 
 function tryGetDependency(string $dependency_name)

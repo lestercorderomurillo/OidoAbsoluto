@@ -245,14 +245,14 @@
     },
     {
         "id": 32,
-        "subject": "¿En qué instrumentos puede identificar las notas?",
+        "subject": "¿En qué instrumento puede identificar las notas?",
         "type": "choice-multiple",
         "choices": [
             "Piano",
             "Violín",
             "Voz",
             "Cualquier instrumento",
-            "Otros"
+            "Otros/Varios (Escriba)"
         ]
     },
     {
@@ -260,7 +260,7 @@
         "subject": "Explique/justifique el punto anterior",
         "type": "text",
         "require-id": 32,
-        "require-value": "Otros"
+        "require-value": "Otros/Varios (Escriba)"
     },
     {
         "id": 34,

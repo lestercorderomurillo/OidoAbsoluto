@@ -4,7 +4,7 @@ namespace Pipeline\Adapter;
 
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\SQL\QueryResult;
-use Pipeline\Exceptions\SQLFailureException;
+use Pipeline\Core\Exceptions\SQLFailureException;
 use Pipeline\HTTP\Server\ServerResponse;
 
 class MySQLAdapter extends Adapter
@@ -28,7 +28,7 @@ class MySQLAdapter extends Adapter
 
     public function closeConnection(): void
     {
-        $this->pdo = NULL;
+        $this->pdo = null;
     }
 
     public function executePDO(string $prepared_query, array $values): QueryResult

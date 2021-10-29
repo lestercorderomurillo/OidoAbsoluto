@@ -2,7 +2,7 @@
 
 namespace Pipeline\Utilities;
 
-class FunctionHelper
+class StagedCaller
 {
     private array $stages;
 

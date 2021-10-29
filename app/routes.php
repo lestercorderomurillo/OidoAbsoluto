@@ -1,7 +1,7 @@
 <?php
 
 use Pipeline\HTTP\Server\Router;
-use Pipeline\Buildin\Middleware\Authentication;
+use Pipeline\Prefabs\Middleware\Authentication;
 /*
 class Routes
 {

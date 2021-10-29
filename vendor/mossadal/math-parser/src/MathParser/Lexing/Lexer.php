@@ -23,7 +23,7 @@ use MathParser\Exceptions\UnknownTokenException;
 /**
  * Generic very simple lexer, capable of matching tokens defined by regular expressions.
  *
- * The Lexer works on an input string, sequentially building a list of matched
+ * The Lexer works on an input string, sequentially PREFABSg a list of matched
  * Tokens (or throwing an Exception if the input string cannot be tokenized).
  *
  * The Lexer is context independent and without lookahead, and cannot for

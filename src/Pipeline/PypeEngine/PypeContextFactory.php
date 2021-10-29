@@ -5,12 +5,12 @@ namespace Pipeline\PypeEngine;
 use Pipeline\Core\View;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\Security\Cryptography;
-use Pipeline\Utilities\ArrayHelper;
+use Pipeline\Utilities\Vector;
 
-use function Pipeline\Navigate\session;
+use function Pipeline\Kernel\session;
 
 class PypeContextFactory
 {
@@ -145,33 +145,33 @@ class PypeContextFactory
             "styles" => $this->styles
         ];
 
-        $this->view_context = ArrayHelper::merge2DArray(false, $view_context, $this->view_context);
-        ArrayHelper::appendKeyPrefix("view", $this->view_context);
+        $this->view_context = Vector::merge2DArray(false, $view_context, $this->view_context);
+        Vector::appendKeyPrefix("view", $this->view_context);
     }
 
     private function buildPackagesContext(): void
     {
-        $this->packages[] = new FilePath(SystemPath::PACKAGES, "jquery-3.6.0/jquery", "min.js");
-        $this->packages[] = new FilePath(SystemPath::PACKAGES, "popper-1.16.1/popper", "min.js");
-        $this->packages[] = new FilePath(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "min.js");
-        $this->packages[] = new FilePath(SystemPath::PACKAGES, "observable-slim-0.1.5/observable-slim", "min.js");
-        $this->packages[] = new FilePath(SystemPath::PACKAGES, "jquery-validate-1.11.1/jquery.validate", "min.js");
-        $this->packages[] = new FilePath(SystemPath::PACKAGES, "canvas-js/canvasjs", "min.js");
+        $this->packages[] = new Path(SystemPath::PACKAGES, "jquery-3.6.0/jquery", "min.js");
+        $this->packages[] = new Path(SystemPath::PACKAGES, "popper-1.16.1/popper", "min.js");
+        $this->packages[] = new Path(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "min.js");
+        $this->packages[] = new Path(SystemPath::PACKAGES, "observable-slim-0.1.5/observable-slim", "min.js");
+        $this->packages[] = new Path(SystemPath::PACKAGES, "jquery-validate-1.11.1/jquery.validate", "min.js");
+        $this->packages[] = new Path(SystemPath::PACKAGES, "canvas-js/canvasjs", "min.js");
     }
 
     private function buildStyleContext(): void
     {
         $this->styles[] = "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap";
-        $this->styles[] = new FilePath(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "css");
-        $this->styles[] = new FilePath(SystemPath::PACKAGES, "font-awesome-4.7.0/font-awesome", "css");
-        $this->styles[] = new FilePath(SystemPath::WEB, "build", "css");
+        $this->styles[] = new Path(SystemPath::PACKAGES, "bootstrap-4.6.0/bootstrap", "css");
+        $this->styles[] = new Path(SystemPath::PACKAGES, "font-awesome-4.7.0/font-awesome", "css");
+        $this->styles[] = new Path(SystemPath::WEB, "build", "css");
         $this->styles = FileSystem::toWebPaths($this->styles);
     }
 
     private function buildScriptContext(): void
     {
-        $paths = FileSystem::findWebPaths(new DirectoryPath(SystemPath::BUILDIN, "Scripts/"), "js");
-        $this->scripts = FileSystem::toWebPaths(ArrayHelper::stackLines($this->packages, $paths));
+        $paths = FileSystem::findWebPaths(new DirectoryPath(SystemPath::SRC, "PypeEngine/Boot/Scripts/"), "js");
+        $this->scripts = FileSystem::toWebPaths(Vector::stackLines($this->packages, $paths));
     }
 
     private function buildViewScriptContext(View &$view): void
@@ -179,17 +179,17 @@ class PypeContextFactory
         $path = $view->getControllerName() . "/" . $view->getViewName();
         $this->view_identifier = $view->getViewGUID();
         $this->view_timestamp = $view->getTimestamp();
-        $this->view_script = (new FilePath(SystemPath::VIEWS, $path, "js"))->toWebPath()->toString();
+        $this->view_script = (new Path(SystemPath::VIEWS, $path, "js"))->toWebPath()->toString();
         $this->view_context = $view->getViewData();
     }
 
     private function buildResultSessionContext(){
         date_default_timezone_set("America/Costa_Rica");
         $this->session_context["now"] = date("m/d/Y h:i:s a", mktime());
-        foreach (session()->expose() as $key => $value) {
+        foreach (session()->exposeArray() as $key => $value) {
             $this->session_context["$key"] = $value;
         }
-        ArrayHelper::appendKeyPrefix("session", $this->session_context);
+        Vector::appendKeyPrefix("session", $this->session_context);
     }
 
     private function buildComponentScriptContext(): void

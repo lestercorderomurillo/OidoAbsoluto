@@ -1,15 +1,13 @@
 RewriteEngine On
 
-RewriteCond %{REQUEST_URI}  /web/.+(gif|png|jpg|jpeg|mp3|js|css)$
+RewriteCond %{REQUEST_URI}  /web/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
-RewriteCond %{REQUEST_URI}  /app/Views/.+(js)$
+RewriteCond %{REQUEST_URI}  /src/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
-RewriteCond %{REQUEST_URI}  /src/Pipeline/Buildin/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
+RewriteCond %{REQUEST_URI}  /app/.+(js)$
 RewriteRule .* - [L]
 
-RewriteCond %{REQUEST_URI}  /src/Pipeline/Packages/.+(gif|png|jpg|jpeg|mp3|js|css|map)$
-RewriteRule .* - [L]
 
 RewriteRule .* app/WebApp.php [L]

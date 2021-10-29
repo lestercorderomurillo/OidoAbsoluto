@@ -1,22 +1,24 @@
 <app:view title="Recolección de información">
     <app:row>
-        <app:card columnSize="12">
+        <app:card columnSize="8">
             <app:title-icon imageSource="question.png" text="Recolección de información">
             <app:title-secondary text="Se le pedirá que conteste el siguiente formulario sinceramente:">
             <app:label>
                 Algunas preguntas dependen de la respuestas de preguntas anteriores, por lo que pueden verse ocultadas.
             </app:label>
             <app:spacing>
-            <app:paginator id="questions" numberOfPages="4" elementsPerPage="10">
-                <app:row>
-                    <app:col columnSize="6">
-                        <app:survey source="{view:questions}" skip="({this:page}*{this:elementsPerPage})" take="({this:elementsPerPage}/2)">
-                    </app:col>
-                    <app:col columnSize="6">
-                        <app:survey source="{view:questions}" skip="({this:page}*{this:elementsPerPage}+{this:elementsPerPage}/2)" take="({this:elementsPerPage}/2)">
-                    </app:col>
-                </app:row>
-            </app:paginator>
+            <app:form route="questions/submit">
+                <app:paginator id="questions" numberOfPages="5" elementsPerPage="10" lastPageAction="test()" lastPageText="Subir cuestionario">
+                    <app:row>
+                        <app:survey source="{view:questions}" skip="({this:page}*{this:elementsPerPage})" take="{this:elementsPerPage}">
+                    </app:row>
+                </app:paginator>
+            </app:form>
         </app:card>
     </app:row>
 </app:view>
+<script type="text/javascript">
+    function test() {
+        alert("Prueba de acción!");
+    }
+</script>

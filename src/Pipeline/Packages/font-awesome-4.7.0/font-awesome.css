@@ -869,7 +869,7 @@
 .fa-file-text-o:before {
   content: "\f0f6";
 }
-.fa-building-o:before {
+.fa-prefabsg-o:before {
   content: "\f0f7";
 }
 .fa-hospital-o:before {
@@ -1401,7 +1401,7 @@
 .fa-fax:before {
   content: "\f1ac";
 }
-.fa-building:before {
+.fa-prefabsg:before {
   content: "\f1ad";
 }
 .fa-child:before {

@@ -2,7 +2,7 @@
 
 namespace Pipeline\Utilities;
 
-class ArrayHelper
+class Vector
 {
     public static function isMultidimensional(array $array)
     {
@@ -32,11 +32,11 @@ class ArrayHelper
     {
         foreach ($array as $key => $value) {
             if (!$after) {
-                if(!StringHelper::startsWith($prefix, $key)) {
+                if(!Text::startsWith($prefix, $key)) {
                     $array["$prefix:" . $key] = $value;
                 }
             } else {
-                if(!StringHelper::endsWith($prefix, $key)) {
+                if(!Text::endsWith($prefix, $key)) {
                     $array[$key . ":$prefix"] = $value;
                 }
             }
@@ -124,7 +124,7 @@ class ArrayHelper
             foreach ($replaced_array as $key => $value) {
                 $acumulative_replaced_value = $value;
 
-                if(ArrayHelper::is2Dimensional($replacers)){
+                if(Vector::is2Dimensional($replacers)){
                     foreach ($replacers as $_key => $_value) {
                         foreach ($_value as $__key => $__value) {
                             if($ignore_arrays){

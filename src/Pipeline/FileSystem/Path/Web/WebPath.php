@@ -2,10 +2,11 @@
 
 namespace Pipeline\FileSystem\Path\Web;
 
-use Pipeline\FileSystem\Path\AbstractPath;
-use Pipeline\Utilities\StringHelper;
+use Pipeline\FileSystem\Path\PathBase;
+use Pipeline\Utilities\Text;
+use function Pipeline\Kernel\fatal;
 
-class WebPath extends AbstractPath
+class WebPath extends PathBase
 {
     private string $extension;
 
@@ -21,14 +22,14 @@ class WebPath extends AbstractPath
         $this->extension = $extension;
 
         if ($path[0] == "/" || substr($path, -1) == "/") {
-            $this->logger->error("Web paths CANNOT start or end with /");
+            fatal("WebPath pathString cannot start or end with '/' character.");
         }
     }
 
     public function toString(): string
     {
         $base = $this->base;
-        if(StringHelper::startsWith($this->path, "https")){
+        if (Text::startsWith($this->path, "https")) {
             $base = "";
         }
 

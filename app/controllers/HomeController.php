@@ -5,19 +5,19 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Models\UserInfo;
 use Pipeline\Controller\Controller;
-use Pipeline\Database\AbstractDatabase;
+use Pipeline\Database\DatabaseBase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\Security\Cryptography;
 use Pipeline\FileSystem\Path\SystemPath;
-use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\HTTP\Server\ServerResponse;
 
-use function Pipeline\Navigate\Dependency;
-use function Pipeline\Navigate\session;
+use function Pipeline\Kernel\Dependency;
+use function Pipeline\Kernel\session;
 
 class HomeController extends Controller
 {
-    private AbstractDatabase $db;
+    private DatabaseBase $db;
 
     function __construct(){
         $this->db = dependency("Db");
@@ -61,7 +61,7 @@ class HomeController extends Controller
 
     function signup()
     {
-        $countries = FileSystem::requireFromFile(new FilePath(SystemPath::COMMON, "countries", "php"));
+        $countries = FileSystem::requireFromFile(new Path(SystemPath::COMMON, "countries", "php"));
         return $this->view("signup", ["countries" => $countries]);
     }
 
@@ -118,7 +118,7 @@ class HomeController extends Controller
     function userExists(string $email)
     {
         $result = $this->db->find(User::class, ["email" => "$email"]);
-        $result->expose();
+        $result->exposeArray();
         return ($result != []);
     }
 }

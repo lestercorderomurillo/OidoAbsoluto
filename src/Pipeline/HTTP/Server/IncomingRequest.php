@@ -3,7 +3,7 @@
 namespace Pipeline\HTTP\Server;
 
 use Pipeline\HTTP\Common\Request;
-use Pipeline\Utilities\StringHelper;
+use Pipeline\Utilities\Text;
 
 class IncomingRequest extends Request
 {
@@ -25,11 +25,11 @@ class IncomingRequest extends Request
 
         if ($this->method == "GET") {
             foreach ($_GET as $parameter => $value) {
-                $this->parameters["$parameter"] = StringHelper::sanitizeString($value);
+                $this->parameters["$parameter"] = Text::sanitizeString($value);
             }
         } else if ($this->method == "POST") {
             foreach ($_POST as $parameter => $value) {
-                $this->parameters["$parameter"] = StringHelper::sanitizeString($value);
+                $this->parameters["$parameter"] = Text::sanitizeString($value);
             }
         }
     }

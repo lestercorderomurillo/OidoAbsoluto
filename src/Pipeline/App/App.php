@@ -6,7 +6,7 @@ use Pipeline\Trace\Logger;
 use Pipeline\Core\Environment;
 use Pipeline\DependencyInjection\DependencyManager;
 
-require_once(dirname(__DIR__) . "/Core/Navigate.php");
+require_once(dirname(__DIR__) . "/Core/Kernel.php");
 
 abstract class App
 {

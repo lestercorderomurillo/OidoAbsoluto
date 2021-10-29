@@ -2,10 +2,10 @@
 
 namespace Pipeline\FileSystem\Path\Local;
 
-use Pipeline\FileSystem\Path\AbstractPath;
-use Pipeline\FileSystem\Path\Web\WebDirectoryPath;
+use Pipeline\FileSystem\Path\PathBase;
+use Pipeline\FileSystem\Path\Web\WebDirectory;
 
-class DirectoryPath extends AbstractPath
+class DirectoryPath extends PathBase
 {
     public function __construct(string $base, string $path = "")
     {
@@ -33,9 +33,9 @@ class DirectoryPath extends AbstractPath
         return $this->base . $this->path;
     }
 
-    public function toWebDirectoryPath(): WebDirectoryPath
+    public function toWebDirectory(): WebDirectory
     {
         $reroute = str_replace(__ROOT__, "", $this->toString());
-        return new WebDirectoryPath($reroute);
+        return new WebDirectory($reroute);
     }
 }

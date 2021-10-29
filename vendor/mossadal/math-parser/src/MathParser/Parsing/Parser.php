@@ -176,7 +176,7 @@ class Parser
                 // Handle the remaining operators.
             } elseif ($node instanceof PostfixOperatorNode) {
                 $op = $this->operandStack->pop();
-                if ($op == NULL) throw new SyntaxErrorException();
+                if ($op == null) throw new SyntaxErrorException();
                 $this->operandStack->push(new FunctionNode($node->getOperator(), $op));
 
             } elseif ($node instanceof ExpressionNode) {
@@ -418,7 +418,7 @@ class Parser
         $clean = false;
 
         // Pop operators off the operatorStack until its empty, or
-        // we find an opening parenthesis, building subexpressions
+        // we find an opening parenthesis, PREFABSg subexpressions
         // on the operandStack as we go.
         while ($popped = $this->operatorStack->pop()) {
 

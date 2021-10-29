@@ -1,25 +1,21 @@
 <?php
 
-namespace Pipeline\Buildin\Middleware;
+namespace Pipeline\Prefabs\Middleware;
 
 use Pipeline\Core\Middleware;
 use Pipeline\HTTP\Message;
 
-use function Pipeline\Navigate\session;
+use function Pipeline\Kernel\session;
 
 class Authentication extends Middleware
 {
     public function handle($request): Message
     {
         if (!session()->has("logged")) {
-
-            session("error", "Acceso denegado / Access Denied");
-            session("error-type", "danger");
-            
+            $this->alert("Acceso denegado (sin autorización).", "danger");
             return $this->redirect("index");
         }
 
-        /* Forward request */
         return $request;
     }
 }

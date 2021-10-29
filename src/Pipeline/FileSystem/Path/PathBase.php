@@ -4,10 +4,9 @@ namespace Pipeline\FileSystem\Path;
 
 use Pipeline\Trace\Logger;
 use Pipeline\Traits\StringableTrait;
+use function Pipeline\Kernel\dependency;
 
-use function Pipeline\Navigate\dependency;
-
-abstract class AbstractPath
+abstract class PathBase
 {
     use StringableTrait;
     

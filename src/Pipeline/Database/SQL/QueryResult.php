@@ -4,7 +4,7 @@ namespace Pipeline\Database\SQL;
 
 use Pipeline\Core\Facade\ContainerInterface;
 use Pipeline\Traits\DefaultAccessorTrait;
-use Pipeline\Exceptions\ReadOnlyException;
+use Pipeline\Core\Exceptions\ReadOnlyException;
 
 class QueryResult implements ContainerInterface
 {
@@ -29,10 +29,10 @@ class QueryResult implements ContainerInterface
 
     public function get(string $id)
     {
-        return $this->tryGet($this->data["$id"], NULL);
+        return $this->tryGet($this->data["$id"], null);
     }
 
-    public function expose()
+    public function exposeArray()
     {
         return $this->data;
     }

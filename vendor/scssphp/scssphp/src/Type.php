@@ -62,7 +62,7 @@ class Type
     const T_MIXIN_CONTENT = 'mixin_content';
     const T_NESTED_PROPERTY = 'nestedprop';
     const T_NOT = 'not';
-    const T_NULL = 'null';
+    const T_null = 'null';
     const T_NUMBER = 'number';
     const T_RETURN = 'return';
     const T_ROOT = 'root';

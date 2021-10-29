@@ -4,19 +4,18 @@ namespace App\Controllers;
 
 use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
-use Pipeline\Database\AbstractDatabase;
+use Pipeline\Database\DatabaseBase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\FileSystem\Path\SystemPath;
-use Pipeline\Utilities\ArrayHelper;
-
-use function Pipeline\Navigate\dependency;
-use function Pipeline\Navigate\session;
+use Pipeline\Utilities\Vector;
+use function Pipeline\Kernel\dependency;
+use function Pipeline\Kernel\session;
 
 class UserController extends Controller
 {
-    private AbstractDatabase $db;
+    private DatabaseBase $db;
 
     function __construct()
     {
@@ -27,8 +26,8 @@ class UserController extends Controller
     {
         if ($mode != "simple" && $mode != "full") {
 
-            session("error-type", "warning");
-            session("error", "No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
+            session("alert-type", "warning");
+            session("alert-text", "No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
 
             return $this->redirect("login");
         }
@@ -46,7 +45,7 @@ class UserController extends Controller
             $output["showKeyBinds"] = true;
         }
 
-        $output = ArrayHelper::mergeNamedValues($output, ["title" => $test_type]);
+        $output = Vector::mergeNamedValues($output, ["title" => $test_type]);
 
         return $this->view("hearing", $output);
     }
@@ -61,7 +60,7 @@ class UserController extends Controller
 
     function questionsTest()
     {
-        $json = json_decode(FileSystem::includeAsString(new FilePath(SystemPath::VIEWS, "User/questions", "json")), true);
+        $json = json_decode(FileSystem::includeAsString(new Path(SystemPath::VIEWS, "User/questions", "json")), true);
 
         return $this->view("questions", ["questions" => $json]);
     }

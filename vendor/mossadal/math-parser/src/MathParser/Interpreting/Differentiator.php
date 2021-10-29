@@ -61,7 +61,7 @@ class Differentiator implements Visitor
     protected $variable;
 
     /**
-     * NodeFactory $nodeFactory used for building the resulting AST.
+     * NodeFactory $nodeFactory used for PREFABSg the resulting AST.
      */
     protected $nodeFactory;
 

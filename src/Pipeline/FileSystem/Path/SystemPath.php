@@ -14,13 +14,13 @@ class SystemPath
     const MODELS = self::APP . "Models/";
 
     const MIDDLEWARES = self::APP . "middlewares/";
-    const BUILDIN = self::SRC . "Buildin/";
+    const PREFABS = self::SRC . "Prefabs/";
 
-    const COMPONENTS = self::BUILDIN . "Components/";
+    const COMPONENTS = self::PREFABS . "Components/";
     const PACKAGES = self::SRC . "Packages/";
-    const SCRIPTS = self::BUILDIN . "Scripts/";
+    const SCRIPTS = self::PREFABS . "Scripts/";
     const USERCOMPONENTS = self::APP . "Components/";
-    const COMMON = self::BUILDIN . "Common/";
+    const COMMON = self::PREFABS . "Common/";
 
     const DIR_INCLUDE = self::SRC . "Include/";
     const DIR_PUBLIC = self::DIR_INCLUDE . "Public/";

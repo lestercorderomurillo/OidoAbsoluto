@@ -615,7 +615,7 @@ class Parser
             ) {
                 ! $this->cssOnly || $this->assertPlainCssValid(false, $s);
 
-                $this->append([Type::T_RETURN, isset($retVal) ? $retVal : [Type::T_NULL]], $s);
+                $this->append([Type::T_RETURN, isset($retVal) ? $retVal : [Type::T_null]], $s);
 
                 return true;
             }
@@ -1286,7 +1286,7 @@ class Parser
         switch ($parsed[0]) {
             case Type::T_BLOCK:
             case Type::T_KEYWORD:
-            case Type::T_NULL:
+            case Type::T_null:
             case Type::T_NUMBER:
             case Type::T_MEDIA:
                 return $parsed;
@@ -2241,7 +2241,7 @@ class Parser
         }
 
         if ($trailing_delim) {
-            $items[] = [Type::T_NULL];
+            $items[] = [Type::T_null];
         }
 
         if ($flatten && \count($items) === 1) {
@@ -2629,7 +2629,7 @@ class Parser
             $this->whitespace();
 
             if ($keyword === 'null') {
-                $out = [Type::T_NULL];
+                $out = [Type::T_null];
             } else {
                 $out = [Type::T_KEYWORD, $keyword];
             }

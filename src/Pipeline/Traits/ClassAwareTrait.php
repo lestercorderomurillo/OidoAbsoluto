@@ -2,7 +2,7 @@
 
 namespace Pipeline\Traits;
 
-use Pipeline\Utilities\StringHelper;
+use Pipeline\Utilities\Text;
 
 trait ClassAwareTrait
 {
@@ -31,7 +31,7 @@ trait ClassAwareTrait
         $reflection_class = new \ReflectionClass($class_or_object);
 
         foreach ($reflection_class->getProperties($visibility) as $property) {
-            $value = StringHelper::sanitizeString($this->{$property->getName()});
+            $value = Text::sanitizeString($this->{$property->getName()});
             $attributes[$property->getName()] = $value;
         }
         return $attributes;

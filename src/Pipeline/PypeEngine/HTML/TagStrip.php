@@ -3,7 +3,7 @@
 namespace Pipeline\PypeEngine\HTML;
 
 use Pipeline\Traits\StringableTrait;
-use Pipeline\Utilities\StringHelper;
+use Pipeline\Utilities\Text;
 
 class TagStrip
 {
@@ -22,7 +22,7 @@ class TagStrip
     {
         $attributes_string = "";
 
-        $this->attributes = StringHelper::parseMultivalueFields($this->attributes);
+        $this->attributes = Text::parseMultivalueFields($this->attributes);
 
         foreach ($this->attributes as $key => $value) {
             if (is_int($key)) {

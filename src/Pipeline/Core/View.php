@@ -6,7 +6,7 @@ use Pipeline\Hotswap\ChangeDetector;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\SystemPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\FileSystem\Path\Local\FilePath;
+use Pipeline\FileSystem\Path\Local\Path;
 
 class View
 {
@@ -29,7 +29,7 @@ class View
 
         $this->view_data = $view_data;
 
-        $this->html = FileSystem::includeAsString(new FilePath(SystemPath::VIEWS, $this->controller_name . "/" . $view_name, "phtml"));
+        $this->html = FileSystem::includeAsString(new Path(SystemPath::VIEWS, $this->controller_name . "/" . $view_name, "phtml"));
         $this->timestamp = ChangeDetector::generateTimestampForView($this->getControllerName(), $this->getViewName());
     }
 
@@ -56,14 +56,14 @@ class View
     public function getViewGUID(): string
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        $compiled_path = new FilePath(SystemPath::VIEWS, $path, "phtml");
+        $compiled_path = new Path(SystemPath::VIEWS, $path, "phtml");
         return md5($compiled_path->toString());
     }
 
-    public function getViewFilePath(): FilePath
+    public function getViewPath(): Path
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        return (new FilePath(SystemPath::VIEWS, $path, "phtml"));
+        return (new Path(SystemPath::VIEWS, $path, "phtml"));
     }
 
     public function getControllerName(): string

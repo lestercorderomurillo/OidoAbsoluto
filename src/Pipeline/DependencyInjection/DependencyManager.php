@@ -3,12 +3,12 @@
 namespace Pipeline\DependencyInjection;
 
 use Pipeline\Core\Container\Container;
-use Pipeline\Core\Container\ObjectContainer;
+use Pipeline\Core\Container\NodeContainer;
 
 class DependencyManager
 {
     private static Container $lifecycles;
-    private static ObjectContainer $dependencies;
+    private static NodeContainer $dependencies;
 
     const TYPE_TRANSIENT = 1;
     const TYPE_SCOPED    = 2;
@@ -16,7 +16,7 @@ class DependencyManager
     public function __construct()
     {
         self::$lifecycles = new Container();
-        self::$dependencies = new ObjectContainer();
+        self::$dependencies = new NodeContainer();
     }
 
     public function add(string $id, $object): void
@@ -30,7 +30,7 @@ class DependencyManager
         self::$dependencies->add($object, $id);
     }
 
-    public function getContainer(): ObjectContainer
+    public function getContainer(): NodeContainer
     {
         return self::$dependencies;
     }

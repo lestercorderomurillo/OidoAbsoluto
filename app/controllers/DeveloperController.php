@@ -4,19 +4,15 @@ namespace App\Controllers;
 
 use Pipeline\Controller\Controller;
 use Pipeline\Core\Types\JSON;
-use Pipeline\PypeEngine\PypeCompiler;
-
-use function Pipeline\Navigate\Dependency;
+use Pipeline\Database\SQLDatabase;
 
 class DeveloperController extends Controller
 {
-    //private AbstractDatabase $db;
-    //private PypeCompiler $experimental;
+    private SQLDatabase $db;
 
     function __construct()
     {
-        $this->db = dependency("Db");
-        $this->experimental = dependency(PypeCompiler::class);
+        //$this->db = $db;
     }
 
     function testMethod1()
@@ -31,12 +27,8 @@ class DeveloperController extends Controller
 
     function testMethod2()
     {
-
-        return "a";
-        /*$models = $this->db->findAll(UserInfo::class, ["gender" => "M"]);
-        $out = var_export($models, true);
-        $model = $this->db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
-        $out .= "<br>" . var_export($model, true);*/
-        /*return $out;*/
+        $models = ["1" => "2"];//$this->db->findAll(UserInfo::class, ["gender" => "M"]);
+        //$model = $this->db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
+        return $this->JSON($models);
     }
 }
