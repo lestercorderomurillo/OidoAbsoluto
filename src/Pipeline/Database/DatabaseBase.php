@@ -2,7 +2,7 @@
 
 namespace Pipeline\Database;
 
-use Pipeline\Core\Model;
+use Pipeline\Core\Boot\ModelBase;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\Query;
 use Pipeline\Database\Common\ConnectionString;
@@ -58,8 +58,8 @@ abstract class DatabaseBase
 
     public abstract function find(string $model_class_name, array $where);
     public abstract function findAll(string $model_class_name, array $where, string $append = "");
-    public abstract function save(Model $model): void;
-    public abstract function delete(Model $model): void;
+    public abstract function save(ModelBase $model): void;
+    public abstract function delete(ModelBase $model): void;
     public abstract function saveAll(array $models): void;
     public abstract function deleteAll(array $models): void;
 }

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Pipeline\Core\Model;
+use Pipeline\Core\Boot\ModelBase;
 
-class Questio extends Model
+class Questio extends ModelBase
 {
     const table = "questions";
     

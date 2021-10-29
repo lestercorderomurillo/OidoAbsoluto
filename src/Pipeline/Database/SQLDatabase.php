@@ -2,7 +2,7 @@
 
 namespace Pipeline\Database;
 
-use Pipeline\Core\Model;
+use Pipeline\Core\Boot\ModelBase;
 use Pipeline\Adapter\Adapter;
 use Pipeline\Database\Common\ConnectionString;
 use Pipeline\Utilities\Vector;
@@ -48,7 +48,7 @@ class SQLDatabase extends DatabaseBase
         return $models;
     }
 
-    public function save(Model $model): void
+    public function save(ModelBase $model): void
     {
         $table_name = $model->getTableName();
         $values = $model->getAttributesValues();
@@ -62,7 +62,7 @@ class SQLDatabase extends DatabaseBase
         }
     }
 
-    public function delete(Model $model): void
+    public function delete(ModelBase $model): void
     {
         $table_name = $model->getTableName();
         $id = $model->getId();

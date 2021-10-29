@@ -4,18 +4,17 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Models\UserInfo;
-use Pipeline\Controller\Controller;
+use Pipeline\Controller\ControllerBase;
 use Pipeline\Database\DatabaseBase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\Security\Cryptography;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\HTTP\Server\ServerResponse;
-
 use function Pipeline\Kernel\Dependency;
 use function Pipeline\Kernel\session;
 
-class HomeController extends Controller
+class HomeController extends ControllerBase
 {
     private DatabaseBase $db;
 

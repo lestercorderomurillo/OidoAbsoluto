@@ -2,14 +2,14 @@
 
 namespace Pipeline\Controller;
 
-use Pipeline\Core\Boot\ControllerBase;
+use Pipeline\Core\Boot\ActionsBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\HTTP\Message;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\EmptyMessage;
 use Pipeline\HTTP\Server\ServerResponse;
 
-abstract class ApiController extends ControllerBase
+abstract class ApiController extends ActionsBase
 {
     public function handle($input): Message
     {

@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\Controller;
+use Pipeline\Controller\ControllerBase;
 
-class AboutController extends Controller
+class AboutController extends ControllerBase
 {
     function contact()
     {

@@ -2,8 +2,8 @@
 
 namespace Pipeline\Controller;
 
+use Pipeline\Core\Boot\ActionsBase;
 use Pipeline\Core\Types\View;
-use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\HTTP\InvalidMessage;
 use Pipeline\HTTP\Message;
@@ -11,7 +11,7 @@ use Pipeline\HTTP\EmptyMessage;
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\Result\ViewResult;
 
-abstract class Controller extends ControllerBase
+abstract class ControllerBase extends ActionsBase
 {
     public function view($dynamic_value = null, $dynamic_value_secondary = null): Message
     {
@@ -35,7 +35,7 @@ abstract class Controller extends ControllerBase
             }
         }
 
-        $view = new View($this->getControllerName(), $view_name, $view_data);
+        $view = new View($this->getClassName(), $view_name, $view_data);
         $result = new ViewResult($view);
         return $result->toResponse();
     }

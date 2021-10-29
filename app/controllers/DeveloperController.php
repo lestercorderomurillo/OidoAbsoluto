@@ -2,11 +2,11 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\Controller;
+use Pipeline\Controller\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\SQLDatabase;
 
-class DeveloperController extends Controller
+class DeveloperController extends ControllerBase
 {
     private SQLDatabase $db;
 

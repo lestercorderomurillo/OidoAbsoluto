@@ -3,14 +3,22 @@
 namespace Pipeline\Core\Boot;
 
 use Pipeline\Core\Types\JSON;
+use Pipeline\Core\Types\XML;
 use Pipeline\HTTP\Message;
+use Pipeline\Result\ContentResult;
 use Pipeline\Result\JSONResult;
 use Pipeline\Result\RedirectResult;
+use Pipeline\Result\XMLResult;
 use Pipeline\Utilities\Text;
 use function Pipeline\Kernel\session;
 
 abstract class ActionsBase
 {
+    public static function getClassName(): string
+    {
+        return static::class;
+    }
+
     public function JSON($json): Message
     {
         if ($json instanceof JSON) {
@@ -19,6 +27,18 @@ abstract class ActionsBase
             $result = new JSONResult(new JSON($json), 0);
         }
 
+        return $result->toResponse();
+    }
+
+    public function XML(XML $xml): Message
+    {
+        $result = new XMLResult($xml);
+        return $result->toResponse();
+    }
+
+    public function content(string $input): Message
+    {
+        $result = new ContentResult($input);
         return $result->toResponse();
     }
 

@@ -2,13 +2,13 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\Controller;
+use Pipeline\Controller\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\DatabaseBase;
 
 use function Pipeline\Kernel\dependency;
 
-class AdminstratorController extends Controller
+class AdminstratorController extends ControllerBase
 {
     private DatabaseBase $db;
 

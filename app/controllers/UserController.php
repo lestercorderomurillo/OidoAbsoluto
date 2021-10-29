@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\Controller;
+use Pipeline\Controller\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\DatabaseBase;
 use Pipeline\FileSystem\FileSystem;
@@ -13,7 +13,7 @@ use Pipeline\Utilities\Vector;
 use function Pipeline\Kernel\dependency;
 use function Pipeline\Kernel\session;
 
-class UserController extends Controller
+class UserController extends ControllerBase
 {
     private DatabaseBase $db;
 
