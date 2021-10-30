@@ -6,14 +6,18 @@ use ScssPhp\ScssPhp\Compiler;
 use Pipeline\Utilities\Vector;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
-use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
-
+use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use function Pipeline\Kernel\configuration;
 
 class SCSSCompiler
 {
-    public function compileProjectStylesheets()
+    public function checkForMissingBuildStylesheet(): bool
+    {
+        return (FileSystem::exists(new Path(ServerPath::WEB, "build", "css")));
+    }
+
+    public function compileProjectStylesheets(): void
     {
         if (configuration("development.compileSCSS")) {
 
@@ -51,10 +55,10 @@ class SCSSCompiler
             $string_scss = file_get_contents($entry_scss);
 
             $user_files = FileSystem::find($user_folder, "scss");
-            foreach($user_files as $user_file){
-                $string_scss .= " @import \"".FileSystem::simplifyPath($user_file)."\";";
+            foreach ($user_files as $user_file) {
+                $string_scss .= " @import \"" . FileSystem::simplifyPath($user_file) . "\";";
             }
-            
+
             $string_css = $scss_compiler->compile($string_scss);
             file_put_contents($output_scss, $string_css);
         }

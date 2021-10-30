@@ -7,13 +7,13 @@ use function Pipeline\Kernel\safeGet;
 
 class NodeContainer
 {
-    private array $objects;
+    private array $nodes;
 
-    public function __construct(array $objects = null)
+    public function __construct(array $nodes = null)
     {
-        $this->objects = [];
-        if ($objects != null) {
-            foreach ($objects as $object) {
+        $this->nodes = [];
+        if ($nodes != null) {
+            foreach ($nodes as $object) {
                 $this->add($object);
             }
         }
@@ -21,23 +21,23 @@ class NodeContainer
 
     public function get(string $id)
     {
-        return safeGet($this->objects[$id]);
+        return safeGet($this->nodes[$id]);
     }
 
     public function set(string $id, $object): NodeContainer
     {
-        $this->objects[$id] = $object;
+        $this->nodes[$id] = $object;
         return $this;
     }
 
     public function has(string $id): bool
     {
-        return (isset($this->objects[$id]));
+        return (isset($this->nodes[$id]));
     }
 
     public function exposeArray(): array
     {
-        return $this->objects;
+        return $this->nodes;
     }
 
     public function add($object, ?string $custom_id = null): void

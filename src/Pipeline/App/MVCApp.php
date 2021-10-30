@@ -2,29 +2,33 @@
 
 namespace Pipeline\App;
 
-use Pipeline\App\App;
+
+use Pipeline\Core\Dependency;
+use Pipeline\Core\Boot\AppBase;
 use Pipeline\HTTP\Server\WebServer;
 use Pipeline\PypeEngine\PypeCompiler;
 use Pipeline\PypeEngine\PypeViewRenderer;
 use Pipeline\PypeEngine\Boot\SCSSCompiler;
-
 use function Pipeline\Kernel\Dependency;
 
-abstract class MVCApp extends App
+abstract class MVCApp extends AppBase
 {
     protected function internalConfigure(): void
     {
-        //$this->injectScopeddependency(ViewRenderer::class, ["a" => "b", "d" => "e"]);
-        //$this->injectTrasientdependency(ViewRenderer::class, new ViewRenderer());
+        $this->getDependencyTable()->addInjectable(Dependency::RequestScoped, WebServer::class);
+        $this->getDependencyTable()->addInjectable(Dependency::RequestScoped, PypeCompiler::class);
+        $this->getDependencyTable()->addInjectable(Dependency::RequestScoped, PypeViewRenderer::class);
 
-        $this->getDependencyManager()->add(WebServer::class, new WebServer());
-        $this->getDependencyManager()->add(PypeCompiler::class, new PypeCompiler());
-        $this->getDependencyManager()->add(PypeViewRenderer::class, new PypeViewRenderer());
+        $asset_compiler = new SCSSCompiler();
 
-        if (!$this->getRuntimeEnvironment()->inProductionMode()) {
-            $asset_compiler = new SCSSCompiler();
+        if ($this->getRuntimeEnvironment()->inProductionMode()) {
+            if($asset_compiler->checkForMissingBuildStylesheet()){
+                $asset_compiler->compileProjectStylesheets();
+            }
+        }else{
             $asset_compiler->compileProjectStylesheets();
         }
+
     }
 
     protected function initializeApplication(): void

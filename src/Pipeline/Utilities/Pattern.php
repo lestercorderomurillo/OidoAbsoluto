@@ -2,7 +2,7 @@
 
 namespace Pipeline\Utilities;
 
-use Pipeline\PypeEngine\HTML\BodySelection;
+use Pipeline\PypeEngine\HTML\Selection;
 
 class Pattern
 {
@@ -12,7 +12,7 @@ class Pattern
         return strpos($source, $findme, $position);
     }
 
-    public static function selectStringByQuotes(string $source, string $opening = "{", string $closure = "}", int $search_offset = 0, int $after_select_offset = -1): BodySelection
+    public static function selectStringByQuotes(string $source, string $opening = "{", string $closure = "}", int $search_offset = 0, int $after_select_offset = -1): Selection
     {
         $search_offset = min($search_offset, strlen($source));
 
@@ -30,7 +30,7 @@ class Pattern
             $start += $after_select_offset;
         }
 
-        return new BodySelection($start, $end, $source);
+        return new Selection($start, $end, $source);
     }
 
     public static function isNumber($val): bool

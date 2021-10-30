@@ -4,7 +4,7 @@ namespace Pipeline\PypeEngine;
 
 use Pipeline\HTTP\Server\ServerResponse;
 use Pipeline\PypeEngine\HTML\TagStrip;
-use Pipeline\PypeEngine\HTML\BodySelection;
+use Pipeline\PypeEngine\HTML\Selection;
 use Pipeline\PypeEngine\HTML\BodyFinder;
 use Pipeline\Core\Exceptions\CompileException;
 use Pipeline\Security\Cryptography;
@@ -44,7 +44,7 @@ class PypeCompiler
         }
     }
 
-    private static function compileAppTagOnOuputBuffer(string &$stream, string $tag, array $attributes, array $this_context, BodySelection &$source_selection): string
+    private static function compileAppTagOnOuputBuffer(string &$stream, string $tag, array $attributes, array $this_context, Selection &$source_selection): string
     {
         $template = PypeTemplateBatch::getTemplate($tag);
         $component = new PypeComponent($template, $attributes, $this_context);
@@ -414,7 +414,7 @@ class PypeCompiler
         return $output;
     }
 
-    public static function compileSelection(BodySelection &$selection, string &$stream, string $replace_string): string
+    public static function compileSelection(Selection &$selection, string &$stream, string $replace_string): string
     {
         $pre_selection_string = substr($stream, 0, $selection->getStartPosition());
         $post_selection_string = substr($stream, $selection->getEndPosition() + 1);

@@ -2,9 +2,9 @@
 
 namespace Pipeline\App;
 
-use Pipeline\App\App;
+use Pipeline\Core\Boot\AppBase;
 
-abstract class RESTApp extends App
+abstract class RESTApp extends AppBase
 {
     protected function initializeApplication(): void
     {

@@ -1,19 +1,20 @@
 <?php
 
-namespace Pipeline\App;
+namespace Pipeline\Core\Boot;
 
-use Pipeline\Trace\Logger;
+use Pipeline\Core\Dependency;
+use Pipeline\Core\DependencyTable;
 use Pipeline\Core\Environment;
-use Pipeline\Injection\DependencyManager;
+use Pipeline\Trace\Logger;
 
-require_once(dirname(__DIR__) . "/Core/Kernel.php");
+require_once(dirname(__DIR__, 2) . "/Core/Kernel.php");
 
-abstract class App
+abstract class AppBase
 {
     public static $app;
 
     private Environment $environment;
-    private DependencyManager $dependency_manager;
+    private DependencyTable $dependency_table;
 
     protected abstract function configure(): void;
     protected abstract function internalConfigure(): void;
@@ -21,11 +22,11 @@ abstract class App
 
     public function __construct()
     {
-        define("__ROOT__", str_replace("\\", "/", dirname(__DIR__, 3) . "\\"));
-        App::$app = $this;
+        define("__ROOT__", $this->getRootDirectory());
+        self::$app = $this;
 
-        $this->dependency_manager = new DependencyManager();
-        $this->getDependencyManager()->add(Logger::class, new Logger());
+        $this->dependency_table = new DependencyTable();
+        $this->dependency_table->addInjectable(Dependency::RequestScoped, Logger::class);
     }
 
     public function createHostEnvironment()
@@ -35,14 +36,18 @@ abstract class App
         define("__WEB_NAME__", $this->environment->getConfiguration("application.webroot"));
     }
 
-    public function getDependencyManager(): DependencyManager
+    public function getDependencyTable(): DependencyTable
     {
-        return $this->dependency_manager;
+        return $this->dependency_table;
     }
 
     public function getRuntimeEnvironment(): Environment
     {
         return $this->environment;
+    }
+
+    public function getRootDirectory(): string{
+        return str_replace("\\", "/", dirname(__DIR__, 4) . "\\");
     }
 
     public static function deploy($app): void

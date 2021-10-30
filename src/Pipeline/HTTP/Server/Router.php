@@ -2,7 +2,6 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Trace\Logger;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
@@ -14,7 +13,7 @@ use Pipeline\HTTP\Common\Route;
 use Pipeline\Prefabs\Middleware\ForceSSL;
 use function Pipeline\Kernel\app;
 use function Pipeline\Kernel\configuration;
-use function Pipeline\Kernel\dependency;
+use function Pipeline\Kernel\debug;
 use function Pipeline\Kernel\session;
 
 class Router
@@ -84,10 +83,7 @@ class Router
                     $fully_qualified_class_name = "App\\Controllers\\" . $controller_class_name;
                     $controller = new $fully_qualified_class_name($controller_name);
 
-                    dependency(Logger::class)->debug(
-                        "{0} has been requested a response from '{1}' action",
-                        [$fully_qualified_class_name, $action_name]
-                    );
+                    debug("{0} has been requested a response from '{1}' action", [$fully_qualified_class_name, $action_name]);
 
                     if (method_exists($controller, $action_name)) {
 

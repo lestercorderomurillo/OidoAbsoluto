@@ -36,7 +36,7 @@ class SQLDatabase extends DatabaseBase
             $this->addQuery("SELECT * FROM `$table_name` WHERE $where $append", $array[1]);
         }
 
-        $internal_result = $this->execute();
+        $internal_result = $this->commit();
 
         foreach ($internal_result->exposeArray() as $row) {
             $model = new $model_class_name();

@@ -4,8 +4,9 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Models\UserInfo;
-use Pipeline\Controller\ControllerBase;
+use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Database\DatabaseBase;
+use Pipeline\Database\SQLDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\Security\Cryptography;
 use Pipeline\FileSystem\Path\ServerPath;
@@ -19,7 +20,7 @@ class HomeController extends ControllerBase
     private DatabaseBase $db;
 
     function __construct(){
-        $this->db = dependency("Db");
+        $this->db = dependency(SQLDatabase::class);
     }
     
     function login()

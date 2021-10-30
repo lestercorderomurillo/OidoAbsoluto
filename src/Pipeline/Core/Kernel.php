@@ -2,27 +2,24 @@
 
 namespace Pipeline\Kernel;
 
-use Pipeline\App\App;
+use Pipeline\Core\Exceptions\UnavailableDependencyException;
+use Pipeline\Core\Boot\AppBase;
 use Pipeline\HTTP\Server\WebServer;
 use Pipeline\HTTP\Server\ServerResponse;
-use Pipeline\Core\Exceptions\UnavailableDependencyException;
-use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\FileSystem\Path\ServerPath;
-use Pipeline\Utilities\Vector;
+use Pipeline\Trace\Logger;
 use Psr\Log\LogLevel;
 
 function app()
 {
-    return App::$app;
+    return AppBase::$app;
 }
 
 function dependency(string $dependency_name)
 {
     try {
-        return tryGetDependency($dependency_name);
+        return getDependencyInstance($dependency_name);
     } catch (UnavailableDependencyException $e) {
-        ServerResponse::create(500, $e->getMessage())->sendAndExit();
+        fatal($e->getMessage());
     }
 }
 
@@ -31,8 +28,17 @@ function safeGet(&$variable, $default = null)
     return (isset($variable) ? $variable : $default);
 }
 
-function debug()
+function log($level, $message, array $context = [])
 {
+    $logger = dependency(Logger::class);
+    $logger->log($level, $message, $context);
+}
+
+function debug(string $text, array $parameters = [])
+{
+    if (!app()->getRuntimeEnvironment()->inProductionMode()) {
+        log(LogLevel::DEBUG, $text, $parameters);
+    }
 }
 
 function fatal(string $message)
@@ -40,38 +46,20 @@ function fatal(string $message)
     ServerResponse::create(500, $message)->sendAndExit();
 }
 
-function log($level, $message, array $context = array())
+function getDependencyInstance(string $id)
 {
-    $date = date("Y.m.d");
-    $time = date("H:i:s");
+    $table = app()->getDependencyTable();
+    $dependency = $table->getDependency($id);
 
-    $string = Vector::parameterReplace($message, $context, "{", "}");
-    $path = new Path(ServerPath::LOGS, "$level.$date", "log");
-
-    if ($level == LogLevel::ERROR || $level == LogLevel::EMERGENCY || $level == LogLevel::CRITICAL) {
-        if (app()->getRuntimeEnvironment()->hasErrorLoggingEnabled()) {
-            FileSystem::writeToDisk($path, "$time >> $string");
-        }
-    }
-
-    if (app()->getRuntimeEnvironment()->hasDevelopmentLoggingEnabled()) {
-        FileSystem::writeToDisk($path, "$time >> $string");
-    }
-}
-
-function tryGetDependency(string $dependency_name)
-{
-    $container = app()->getDependencyManager()->getContainer();
-
-    if ($container->has($dependency_name)) {
-        return $container->get($dependency_name);
-    } else {
+    if ($dependency == null) {
         throw new UnavailableDependencyException(
-            "Unavailable Dependency Exception [$dependency_name].
-            Check dependency name classes, uses imports and traits. 
-            Make sure the dependency has been injected before."
+            "Unavailable Dependency Exception [$id]." +
+                "<br>Check dependency name classes, uses imports and traits. " +
+                "<br>Make sure the dependency has been injected before."
         );
     }
+
+    return $dependency;
 }
 
 function session(string $key = "", string $value = "")

@@ -24,7 +24,7 @@ class DependencyManager
         self::$dependencies->add($object, $id);
     }
 
-    public function addFutureVersion(int $type, string $id, $object): void
+    public function addFutureVersion(int $type = 1, string $id, $object): void
     {
         self::$lifecycles->set($type, $id);
         self::$dependencies->add($object, $id);

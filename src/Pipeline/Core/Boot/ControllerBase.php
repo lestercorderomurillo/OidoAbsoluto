@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline\Controller;
+namespace Pipeline\Core\Boot;
 
 use Pipeline\Core\Boot\ActionsBase;
 use Pipeline\Core\Types\View;

@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\ControllerBase;
 use Pipeline\Core\Types\JSON;
+use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Database\DatabaseBase;
-
+use Pipeline\Database\SQLDatabase;
 use function Pipeline\Kernel\dependency;
 
 class AdminstratorController extends ControllerBase
@@ -14,7 +14,7 @@ class AdminstratorController extends ControllerBase
 
     function __construct()
     {
-        $this->db = dependency("Db");
+        $this->db = dependency(SQLDatabase::class);
     }
 
     function overview()

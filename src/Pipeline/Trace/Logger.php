@@ -8,12 +8,11 @@ use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\Utilities\Vector;
-
 use function Pipeline\Kernel\app;
 
 class Logger extends AbstractLogger
 {
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $date = date("Y.m.d");
         $time = date("H:i:s");

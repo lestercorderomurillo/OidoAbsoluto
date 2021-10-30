@@ -4,6 +4,7 @@ namespace Pipeline\FileSystem\Path\Local;
 
 use Pipeline\FileSystem\Path\PathBase;
 use Pipeline\FileSystem\Path\Web\WebDirectory;
+use function Pipeline\Kernel\fatal;
 
 class DirectoryPath extends PathBase
 {
@@ -14,11 +15,11 @@ class DirectoryPath extends PathBase
 
         if ($path != "") {
             if ($path[0] == "/") {
-                $this->logger->error("Folder paths CANNOT start / on $base : $path");
+                fatal("Folder paths CANNOT start / on $base : $path");
             }
 
             if (substr($path, -1) != "/") {
-                $this->logger->error("Folder paths MUST end with / on $base : $path");
+                fatal("Folder paths MUST end with / on $base : $path");
             }
         }
     }

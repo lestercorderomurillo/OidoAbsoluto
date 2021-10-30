@@ -3,13 +3,11 @@
 namespace Pipeline\Database\SQL;
 
 use Pipeline\Core\Facade\ContainerInterface;
-use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Core\Exceptions\ReadOnlyException;
+use function Pipeline\Kernel\safeGet;
 
 class QueryResult implements ContainerInterface
 {
-    use DefaultAccessorTrait;
-
     private $data;
 
     public function __construct($data)
@@ -29,7 +27,7 @@ class QueryResult implements ContainerInterface
 
     public function get(string $id)
     {
-        return $this->tryGet($this->data["$id"], null);
+        return safeGet($this->data["$id"], null);
     }
 
     public function exposeArray()

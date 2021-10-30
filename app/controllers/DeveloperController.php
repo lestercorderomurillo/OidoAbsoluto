@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\ControllerBase;
+use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\SQLDatabase;
 

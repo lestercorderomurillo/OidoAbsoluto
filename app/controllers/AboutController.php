@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\ControllerBase;
+use Pipeline\Core\Boot\ControllerBase;
 
 class AboutController extends ControllerBase
 {

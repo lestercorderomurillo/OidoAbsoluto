@@ -2,9 +2,7 @@
 
 namespace Pipeline\FileSystem\Path;
 
-use Pipeline\Trace\Logger;
 use Pipeline\Traits\StringableTrait;
-use function Pipeline\Kernel\dependency;
 
 abstract class PathBase
 {
@@ -15,7 +13,6 @@ abstract class PathBase
 
     public function __construct(string $base)
     {
-        $this->logger = dependency(Logger::class);
         $this->base = $base;
     }
 

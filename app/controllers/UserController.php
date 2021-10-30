@@ -2,9 +2,10 @@
 
 namespace App\Controllers;
 
-use Pipeline\Controller\ControllerBase;
+use Pipeline\Core\Boot\ControllerBase;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Database\DatabaseBase;
+use Pipeline\Database\SQLDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
@@ -19,7 +20,7 @@ class UserController extends ControllerBase
 
     function __construct()
     {
-        $this->db = dependency("Db");
+        $this->db = dependency(SQLDatabase::class);
     }
 
     function hearingTest(string $mode)
