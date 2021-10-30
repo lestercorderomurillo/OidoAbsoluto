@@ -3,7 +3,6 @@
 namespace Pipeline\FileSystem\Path\Web;
 
 use Pipeline\FileSystem\Path\PathBase;
-
 use function Pipeline\Kernel\fatal;
 
 class WebDirectory extends PathBase

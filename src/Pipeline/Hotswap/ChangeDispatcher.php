@@ -6,7 +6,6 @@ use Pipeline\Core\Facade\ResultInterface;
 use Pipeline\Core\Types\JSON;
 use Pipeline\Hotswap\ChangeDetector;
 use Pipeline\Result\JSONResult;
-
 use function Pipeline\Kernel\App;
 
 class ChangeDispatcher

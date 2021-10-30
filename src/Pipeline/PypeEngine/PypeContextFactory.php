@@ -9,7 +9,6 @@ use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\Vector;
-
 use function Pipeline\Kernel\session;
 
 class PypeContextFactory

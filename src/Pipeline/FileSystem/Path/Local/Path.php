@@ -3,7 +3,6 @@
 namespace Pipeline\FileSystem\Path\Local;
 
 use Pipeline\FileSystem\Path\Web\WebPath;
-
 use function Pipeline\Kernel\fatal;
 
 class Path extends LocalPathBase

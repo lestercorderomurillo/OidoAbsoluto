@@ -9,7 +9,7 @@ use Pipeline\HTTP\Server\WebServer;
 use Pipeline\PypeEngine\PypeCompiler;
 use Pipeline\PypeEngine\PypeViewRenderer;
 use Pipeline\PypeEngine\Boot\SCSSCompiler;
-use function Pipeline\Kernel\Dependency;
+use function Pipeline\Kernel\dependency;
 
 abstract class MVCApp extends AppBase
 {

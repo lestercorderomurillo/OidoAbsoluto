@@ -4,7 +4,6 @@ namespace Pipeline\Prefabs\Middleware;
 
 use Pipeline\Core\Boot\MiddlewareBase;
 use Pipeline\HTTP\Message;
-
 use function Pipeline\Kernel\session;
 
 class Authentication extends MiddlewareBase

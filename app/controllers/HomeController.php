@@ -12,7 +12,7 @@ use Pipeline\Security\Cryptography;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\HTTP\Server\ServerResponse;
-use function Pipeline\Kernel\Dependency;
+use function Pipeline\Kernel\dependency;
 use function Pipeline\Kernel\session;
 
 class HomeController extends ControllerBase

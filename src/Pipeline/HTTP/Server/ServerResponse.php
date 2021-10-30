@@ -5,7 +5,6 @@ namespace Pipeline\HTTP\Server;
 use Pipeline\Core\Types\View;
 use Pipeline\HTTP\Message;
 use Pipeline\PypeEngine\PypeViewRenderer;
-
 use function Pipeline\Kernel\app;
 use function Pipeline\Kernel\debug;
 use function Pipeline\Kernel\dependency;

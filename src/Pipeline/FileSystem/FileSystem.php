@@ -7,7 +7,6 @@ use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\FileSystem\Path\Web\WebPath;
 use Pipeline\HTTP\Server\ServerResponse;
-
 use function Pipeline\Kernel\app;
 use function Pipeline\Kernel\fatal;
 

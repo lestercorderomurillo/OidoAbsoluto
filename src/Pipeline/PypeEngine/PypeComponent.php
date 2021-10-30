@@ -5,7 +5,6 @@ namespace Pipeline\PypeEngine;
 use Pipeline\Utilities\Vector;
 use Pipeline\Traits\StringableTrait;
 use Pipeline\Core\Exceptions\CompileException;
-
 use function Pipeline\Kernel\dependency;
 
 class PypeComponent
