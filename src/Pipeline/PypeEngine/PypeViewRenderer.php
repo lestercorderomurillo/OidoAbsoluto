@@ -4,12 +4,9 @@ namespace Pipeline\PypeEngine;
 
 use Pipeline\Core\Types\View;
 use Pipeline\PypeEngine\HTML\BodyBeautifier;
-use Pipeline\Traits\DefaultAccessorTrait;
 
 class PypeViewRenderer
 {
-    use DefaultAccessorTrait;
-
     private View $view;
 
     static int $auto_id = 0;

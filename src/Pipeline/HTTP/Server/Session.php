@@ -3,7 +3,7 @@
 namespace Pipeline\HTTP\Server;
 
 use Pipeline\Core\Boot\LoaderBase;
-use function Pipeline\Kernel\safeGet;
+use function Pipeline\Kernel\safe;
 
 class Session extends LoaderBase
 {
@@ -26,7 +26,7 @@ class Session extends LoaderBase
 
     public function get(string $key)
     {
-        return safeGet($_SESSION[$key], "");
+        return safe($_SESSION[$key], "");
     }
 
     public function store(string $key, string $value): void

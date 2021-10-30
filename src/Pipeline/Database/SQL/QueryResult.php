@@ -4,7 +4,7 @@ namespace Pipeline\Database\SQL;
 
 use Pipeline\Core\Facade\ContainerInterface;
 use Pipeline\Core\Exceptions\ReadOnlyException;
-use function Pipeline\Kernel\safeGet;
+use function Pipeline\Kernel\safe;
 
 class QueryResult implements ContainerInterface
 {
@@ -27,7 +27,7 @@ class QueryResult implements ContainerInterface
 
     public function get(string $id)
     {
-        return safeGet($this->data["$id"], null);
+        return safe($this->data["$id"], null);
     }
 
     public function exposeArray()

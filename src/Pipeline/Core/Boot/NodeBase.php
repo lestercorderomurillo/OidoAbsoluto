@@ -2,7 +2,7 @@
 
 namespace Pipeline\Core\Boot;
 
-use function Pipeline\Kernel\safeGet;
+use function Pipeline\Kernel\safe;
 
 abstract class NodeBase
 {
@@ -18,7 +18,7 @@ abstract class NodeBase
     public function getChild(string $key, bool $safe = false): NodeBase
     {
         if ($safe) {
-            return safeGet($this->data[$key]);  
+            return safe($this->data[$key]);  
         }
         return $this->data[$key];
     }

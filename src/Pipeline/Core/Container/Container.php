@@ -3,7 +3,7 @@
 namespace Pipeline\Core\Container;
 
 use Pipeline\Core\Facade\ContainerInterface;
-use function Pipeline\Kernel\safeGet;
+use function Pipeline\Kernel\safe;
 
 class Container implements ContainerInterface
 {
@@ -21,7 +21,7 @@ class Container implements ContainerInterface
 
     public function get(string $id)
     {
-        return safeGet($this->data[$id]);
+        return safe($this->data[$id]);
     }
 
     public function &set(string $id, $anything): Container

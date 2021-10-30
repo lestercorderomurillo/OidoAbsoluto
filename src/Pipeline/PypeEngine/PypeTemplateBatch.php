@@ -7,11 +7,9 @@ use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\Utilities\Vector;
-use Pipeline\Traits\DefaultAccessorTrait;
 
 class PypeTemplateBatch extends LoaderBase
 {
-    use DefaultAccessorTrait;
     private static $templates;
 
     protected static function __load(): void

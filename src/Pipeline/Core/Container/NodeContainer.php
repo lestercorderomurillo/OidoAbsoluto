@@ -3,7 +3,7 @@
 namespace Pipeline\Core\Container;
 
 use Pipeline\Core\Boot\NodeBase;
-use function Pipeline\Kernel\safeGet;
+use function Pipeline\Kernel\safe;
 
 class NodeContainer
 {
@@ -21,7 +21,7 @@ class NodeContainer
 
     public function get(string $id)
     {
-        return safeGet($this->nodes[$id]);
+        return safe($this->nodes[$id]);
     }
 
     public function set(string $id, $object): NodeContainer

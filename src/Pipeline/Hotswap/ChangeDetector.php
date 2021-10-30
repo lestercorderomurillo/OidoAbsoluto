@@ -7,12 +7,10 @@ use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\Traits\DefaultAccessorTrait;
+use function Pipeline\Kernel\safe;
 
 class ChangeDetector
 {
-    use DefaultAccessorTrait;
-
     public static function compareTimestamps(string $page, string $user_timestamp): bool
     {
         $timestamp_path = new Path(ServerPath::SRC, "Hotswap/timestamp", "json");
@@ -23,7 +21,7 @@ class ChangeDetector
         $hotswap_json = FileSystem::includeAsString($timestamp_path);
         $hotswap_values = json_decode($hotswap_json, true);
 
-        $hotswap_timestamp = self::staticTryGet($hotswap_values[$page], "");
+        $hotswap_timestamp = safe($hotswap_values[$page], "");
 
         return ($hotswap_timestamp != $user_timestamp);
     }

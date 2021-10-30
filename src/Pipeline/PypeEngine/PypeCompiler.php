@@ -11,13 +11,10 @@ use Pipeline\Security\Cryptography;
 use Pipeline\Utilities\Vector;
 use Pipeline\Utilities\Pattern;
 use Pipeline\Utilities\Text;
-use Pipeline\Traits\DefaultAccessorTrait;
-
-use function Pipeline\Kernel\safeGet;
+use function Pipeline\Kernel\safe;
 
 class PypeCompiler
 {
-    use DefaultAccessorTrait;
     const HTML_KEYWORDS = ["if", "app:", "foreach", "for", "this"];
 
     public static PypeContextFactory $context_factory;
@@ -99,13 +96,13 @@ class PypeCompiler
                 if ($keyword != null) {
                     $component_object = self::componentStringToArray($definition_selection->getString());
                     $domtag = substr($component_object[0], strlen($keyword) + $closure);
-                    $attributes = self::staticTryGet($component_object[1], []);
+                    $attributes = safe($component_object[1], []);
 
 
 /*
                     $component_object = PypeCompiler::componentStringToArray($definition_selection->getString());
                     $domtag = PypeCompiler::removeKeyword($component_object[0], $keyword, $closure);
-                    $attributes = safeGet($component_object[1], []);
+                    $attributes = safe($component_object[1], []);
 */
                     switch (trim($keyword)) {
 
@@ -148,7 +145,7 @@ class PypeCompiler
                             $prototype = $template->getPrototype();
 
                             if (!$closure) {
-                                $attributes["class"] = trim($this_context["this:class"] . " " . self::staticTryGet($attributes["class"], ""));
+                                $attributes["class"] = trim($this_context["this:class"] . " " . safe($attributes["class"], ""));
                             } else {
                                 $prototype = "/" . $prototype;
                             }
@@ -157,7 +154,7 @@ class PypeCompiler
                             $output = self::compileSelection($definition_selection, $output, new TagStrip($prototype, $attributes));
 
                             if (!$closure) {
-                                $id = self::staticTryGet($attributes["id"], "");
+                                $id = safe($attributes["id"], "");
                                 if (strlen($id) > 0) {
                                     foreach ($this_context as $key => $value) {
                                         if (is_string($value)) {
@@ -177,11 +174,11 @@ class PypeCompiler
 
                             if (!$closure) {
 
-                                $value = self::staticTryGet($attributes["value"], "");
-                                $equal = self::staticTryGet($attributes["equals"], "");
-                                $notEqual = self::staticTryGet($attributes["notEquals"], "");
-                                $startsWith = self::staticTryGet($attributes["startsWith"], "");
-                                $endsWith = self::staticTryGet($attributes["endsWith"], "");
+                                $value = safe($attributes["value"], "");
+                                $equal = safe($attributes["equals"], "");
+                                $notEqual = safe($attributes["notEquals"], "");
+                                $startsWith = safe($attributes["startsWith"], "");
+                                $endsWith = safe($attributes["endsWith"], "");
 
                                 PypeCompiler::compileMathEvaluation($equal);
                                 PypeCompiler::compileMathEvaluation($notEqual);
@@ -204,7 +201,7 @@ class PypeCompiler
                                     );
 
                                     if (Text::startsWith($value, "{") && Text::endsWith($value, "}")) {
-                                        $compare = self::staticTryGet($mixed_context[substr($value, 1, -1)], "");
+                                        $compare = safe($mixed_context[substr($value, 1, -1)], "");
                                     } else if (Text::contains($value, "{") && Text::contains($value, "}")) {
                                         $applicable = false;
                                     } else {
@@ -256,7 +253,7 @@ class PypeCompiler
 
                             if (!$closure) {
 
-                                $item_name = self::staticTryGet($attributes["name"], "i");
+                                $item_name = safe($attributes["name"], "i");
 
                                 PypeCompiler::compileMathEvaluation($item_name);
                                 PypeCompiler::compileMathEvaluation($attributes["start"]);
@@ -307,11 +304,11 @@ class PypeCompiler
 
                             if (!$closure) {
 
-                                $item_name = self::staticTryGet($attributes["name"], "");
-                                $from_name = self::staticTryGet($attributes["from"], "");
+                                $item_name = safe($attributes["name"], "");
+                                $from_name = safe($attributes["from"], "");
 
-                                $skip = self::staticTryGet($attributes["skip"], 0);
-                                $take = self::staticTryGet($attributes["take"], 10000);
+                                $skip = safe($attributes["skip"], 0);
+                                $take = safe($attributes["take"], 10000);
 
                                 PypeCompiler::compileMathEvaluation($skip);
                                 PypeCompiler::compileMathEvaluation($take);
@@ -404,7 +401,7 @@ class PypeCompiler
             while (($definition_selection = Pattern::selectStringByQuotes($output, "{?", "}", $offset, 0))->isValid()) {
                 $id = substr($definition_selection->getString(), 2);
                 if ($id != null && strlen($id) > 0) {
-                    $initial = self::staticTryGet($this_context["$id"], "");
+                    $initial = safe($this_context["$id"], "");
                     $output = self::compileSelection($definition_selection, $output, "<div class=\"app-sync-$id d-inline pr-1\">$initial</div>");
                 }
                 $offset = $definition_selection->getEndPosition() + 1;

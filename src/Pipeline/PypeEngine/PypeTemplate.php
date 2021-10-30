@@ -2,13 +2,11 @@
 
 namespace Pipeline\PypeEngine;
 
-use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Utilities\Vector;
+use function Pipeline\Kernel\safe;
 
 class PypeTemplate
 {
-    use DefaultAccessorTrait;
-
     private array $required;
     private array $defaults;
     private array $stateful;
@@ -33,16 +31,16 @@ class PypeTemplate
     {
         $this->name = $name;
 
-        $this->required = $this->tryGet($definition["required"], []);
-        $this->stateful = $this->tryGet($definition["stateful"], []);
+        $this->required = safe($definition["required"], []);
+        $this->stateful = safe($definition["stateful"], []);
 
-        $this->prototype = $this->tryGet($definition["prototype"], "div");
+        $this->prototype = safe($definition["prototype"], "div");
         $this->template = trim($definition["render"]);
         
-        $this->class = trim($this->tryGet($definition["class"], $this->name));
+        $this->class = trim(safe($definition["class"], $this->name));
         $this->inline = $this->hasKey($definition, "inline");
-        $this->scripts = $this->tryGet($definition["scripts"], "");
-        $this->awake = $this->tryGet($definition["awake"], "");
+        $this->scripts = safe($definition["scripts"], "");
+        $this->awake = safe($definition["awake"], "");
 
         $this->defaults = Vector::merge2DArray(true, [
             "id" => "",
@@ -50,7 +48,7 @@ class PypeTemplate
             "class" => $this->class,
             "classes" => "",
             "accent" => "secondary"
-        ], $this->tryGet($definition["defaults"], []));
+        ], safe($definition["defaults"], []));
 
         Vector::appendKeyPrefix("this", $this->defaults);
     }

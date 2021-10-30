@@ -4,13 +4,10 @@ namespace Pipeline\Core;
 
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\Traits\DefaultAccessorTrait;
 use Pipeline\Utilities\Text;
 
 class Environment
 {
-    use DefaultAccessorTrait;
-
     private $configuration;
 
     private int $failure_count;
@@ -28,6 +25,7 @@ class Environment
             $url_scheme = "https";
         }
 
+        $this->$url_scheme = $url_scheme;
         $this->configuration["application.url"] = "$url_scheme://" . $this->configuration["application.url"];
 
         if (!Text::endsWith($this->configuration["application.url"], "/")) {
@@ -47,6 +45,11 @@ class Environment
             throw new \InvalidArgumentException("Unavailable configuration key [$key]. Check your configuration file.");
         }
         return $this->configuration[$key];
+    }
+
+    public function getURLScheme(): string
+    {
+        return $this->url_scheme;
     }
 
     public function inProductionMode(): bool

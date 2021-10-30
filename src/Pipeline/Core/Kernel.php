@@ -23,7 +23,7 @@ function dependency(string $dependency_name)
     }
 }
 
-function safeGet(&$variable, $default = null)
+function safe(&$variable, $default = null)
 {
     return (isset($variable) ? $variable : $default);
 }
