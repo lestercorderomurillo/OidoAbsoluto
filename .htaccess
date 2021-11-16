@@ -9,5 +9,4 @@ RewriteRule .* - [L]
 RewriteCond %{REQUEST_URI}  /app/.+(js)$
 RewriteRule .* - [L]
 
-
-RewriteRule .* app/WebApp.php [L]
+RewriteRule .* app/Startup.php [L]

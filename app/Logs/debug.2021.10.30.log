@@ -1,8 +1,0 @@
-01:19:37 >> App\Controllers\HomeController has been requested a response from 'login' action
-01:20:46 >> App\Controllers\HomeController has been requested a response from 'login' action
-01:28:00 >> App\Controllers\HomeController has been requested a response from 'login' action
-01:28:02 >> App\Controllers\HomeController has been requested a response from 'signup' action
-01:30:44 >> App\Controllers\HomeController has been requested a response from 'signup' action
-01:35:46 >> App\Controllers\HomeController has been requested a response from 'login' action
-01:35:48 >> App\Controllers\HomeController has been requested a response from 'signup' action
-01:35:59 >> App\Controllers\HomeController has been requested a response from 'signup' action

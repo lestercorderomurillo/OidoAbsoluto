@@ -33,9 +33,11 @@ class Environment
         }
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+
             if (Text::startsWith($errstr, "Undefined index")) {
                 throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
             }
+
         });
     }
 
@@ -57,9 +59,9 @@ class Environment
         return $this->getConfiguration("application.production");
     }
 
-    public function hasHotswapEnabled(): bool
+    public function hasReloadEnabled(): bool
     {
-        return ($this->getConfiguration("development.hotswap") && !$this->inProductionMode());
+        return ($this->getConfiguration("development.Reload") && !$this->inProductionMode());
     }
 
     public function hasDevelopmentLoggingEnabled(): bool

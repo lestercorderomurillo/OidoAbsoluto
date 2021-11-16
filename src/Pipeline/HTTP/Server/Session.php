@@ -2,21 +2,15 @@
 
 namespace Pipeline\HTTP\Server;
 
-use Pipeline\Core\Boot\LoaderBase;
 use function Pipeline\Kernel\safe;
 
-class Session extends LoaderBase
+class Session
 {
-    protected static function __load(): void
+    public function __construct()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-    }
-
-    public function __construct()
-    {
-        Session::load();
     }
 
     public function exposeArray(): array

@@ -2,7 +2,7 @@
 
 namespace Pipeline\Core\Types;
 
-use Pipeline\Hotswap\ChangeDetector;
+use Pipeline\Reload\ChangeDetector;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;

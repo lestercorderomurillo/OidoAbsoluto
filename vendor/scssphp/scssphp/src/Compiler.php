@@ -416,8 +416,6 @@ class Compiler
      * @return string
      *
      * @throws SassException when the source fails to compile
-     *
-     * @deprecated Use {@see compileString} instead.
      */
     public function compile($code, $path = null)
     {

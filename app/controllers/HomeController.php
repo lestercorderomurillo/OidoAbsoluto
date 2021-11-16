@@ -4,23 +4,23 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Models\UserInfo;
-use Pipeline\Core\Boot\ControllerBase;
-use Pipeline\Database\DatabaseBase;
+use Pipeline\Core\Boot\Controllers\Controller;
+use Pipeline\Core\DI;
+use Pipeline\Database\Boot\Database;
 use Pipeline\Database\SQLDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\Security\Cryptography;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\HTTP\Server\ServerResponse;
-use function Pipeline\Kernel\dependency;
 use function Pipeline\Kernel\session;
 
-class HomeController extends ControllerBase
+class HomeController extends Controller
 {
-    private DatabaseBase $db;
+    private Database $db;
 
     function __construct(){
-        $this->db = dependency(SQLDatabase::class);
+        $this->db = DI::getDependency(SQLDatabase::class);
     }
     
     function login()

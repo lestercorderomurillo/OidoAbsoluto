@@ -2,15 +2,8 @@
 
 namespace Pipeline\Traits;
 
-use Pipeline\Core\Facade\ContainerInterface;
-
 trait ValuesSetterTrait
 {
-    public function setValuesByContainer(ContainerInterface $container, $override = true): void
-    {
-        return $this->setValues($container->exposeArray(), $override);
-    }
-
     public function setValues(array $values, $override = true): void
     {
         foreach ($values as $key => $value) {

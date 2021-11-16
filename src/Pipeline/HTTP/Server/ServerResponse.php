@@ -2,9 +2,10 @@
 
 namespace Pipeline\HTTP\Server;
 
+use Pipeline\Core\DI;
 use Pipeline\Core\Types\View;
+use Pipeline\DOM\ViewRenderer;
 use Pipeline\HTTP\Message;
-use Pipeline\PypeEngine\PypeViewRenderer;
 use function Pipeline\Kernel\app;
 use function Pipeline\Kernel\debug;
 use function Pipeline\Kernel\dependency;
@@ -26,7 +27,7 @@ class ServerResponse extends Message
         $response->addHeader("Content-Type", "text/html");
         $response_view = new View("System", "response", ["code" => "$code", "message" => "$message"]);
 
-        $view_renderer = dependency(PypeViewRenderer::class);
+        $view_renderer = DI::getDependency(ViewRenderer::class);
         $view_renderer->setView($response_view);
 
         /*$old_view = $view_renderer->getContextlessView();

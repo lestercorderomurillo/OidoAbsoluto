@@ -2,25 +2,25 @@
 
 namespace App\Controllers;
 
-use Pipeline\Core\Boot\ControllerBase;
+use Pipeline\Core\Boot\Controllers\Controller;
+use Pipeline\Core\DI;
 use Pipeline\Core\Types\JSON;
-use Pipeline\Database\DatabaseBase;
+use Pipeline\Database\Boot\Database;
 use Pipeline\Database\SQLDatabase;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\Local\DirectoryPath;
 use Pipeline\FileSystem\Path\Local\Path;
 use Pipeline\FileSystem\Path\ServerPath;
-use Pipeline\Utilities\Vector;
-use function Pipeline\Kernel\dependency;
+use Pipeline\Utilities\Collection;
 use function Pipeline\Kernel\session;
 
-class UserController extends ControllerBase
+class UserController extends Controller
 {
-    private DatabaseBase $db;
+    private Database $db;
 
     function __construct()
     {
-        $this->db = dependency(SQLDatabase::class);
+        $this->db = DI::getDependency(SQLDatabase::class);
     }
 
     function hearingTest(string $mode)
@@ -46,7 +46,7 @@ class UserController extends ControllerBase
             $output["showKeyBinds"] = true;
         }
 
-        $output = Vector::mergeNamedValues($output, ["title" => $test_type]);
+        $output = Collection::mergeDictionary(true, $output, ["title" => $test_type]);
 
         return $this->view("hearing", $output);
     }

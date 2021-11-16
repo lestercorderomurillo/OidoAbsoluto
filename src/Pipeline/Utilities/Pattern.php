@@ -2,7 +2,7 @@
 
 namespace Pipeline\Utilities;
 
-use Pipeline\PypeEngine\HTML\Selection;
+use Pipeline\DOM\HTML\Selection;
 
 class Pattern
 {
@@ -41,5 +41,52 @@ class Pattern
             throw new \Exception("Integer parse error at: " . debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'] . " function call");
         }
         return true;
+    }
+
+    public static function substituteTokens($array_or_string, array $replacers, string $match_start = "{", string $match_end = "}", bool $ignore_arrays = false)
+    {
+        if (is_array($array_or_string)) {
+            $replaced_array = $array_or_string;
+        } else if (is_string($array_or_string)) {
+            $replaced_array = [$array_or_string];
+        }
+        if (isset($replacers)) {
+            foreach ($replaced_array as $key => $value) {
+                $acumulative_replaced_value = $value;
+
+                if (Collection::is2Dimensional($replacers)) {
+                    foreach ($replacers as $_key => $_value) {
+                        foreach ($_value as $__key => $__value) {
+                            if ($ignore_arrays) {
+                                if (!is_array($__value)) {
+                                    $acumulative_replaced_value = str_replace($match_start . $__key . $match_end, $__value, "$acumulative_replaced_value");
+                                }
+                            } else {
+                                $acumulative_replaced_value = str_replace($match_start . $__key . $match_end, $__value, "$acumulative_replaced_value");
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($replacers as $_key => $_value) {
+                        if ($ignore_arrays) {
+                            if (!is_array($_value)) {
+                                $acumulative_replaced_value = str_replace($match_start . $_key . $match_end, $_value, "$acumulative_replaced_value");
+                            }
+                        } else {
+                            $acumulative_replaced_value = str_replace($match_start . $_key . $match_end, $_value, "$acumulative_replaced_value");
+                        }
+                    }
+                }
+
+
+                $replaced_array["$key"] = $acumulative_replaced_value;
+            }
+        }
+
+        if (is_array($array_or_string)) {
+            return $replaced_array;
+        } else if (is_string($array_or_string)) {
+            return $replaced_array[0];
+        }
     }
 }

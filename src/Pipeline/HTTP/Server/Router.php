@@ -5,8 +5,8 @@ namespace Pipeline\HTTP\Server;
 use Pipeline\FileSystem\FileSystem;
 use Pipeline\FileSystem\Path\ServerPath;
 use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\Hotswap\ChangeDispatcher;
-use Pipeline\HTTP\InvalidMessage;
+use Pipeline\Reload\ChangeDispatcher;
+use Pipeline\HTTP\ErrorMessage;
 use Pipeline\HTTP\EmptyMessage;
 use Pipeline\HTTP\Common\Request;
 use Pipeline\HTTP\Common\Route;
@@ -22,7 +22,7 @@ class Router
 
     public function __construct()
     {
-        FileSystem::requireFromFile(new Path(ServerPath::APP, "routes", "php"));
+        FileSystem::requireFromFile(new Path(ServerPath::APP, "Routes", "php"));
     }
 
     public static function setMiddlewares($array_or_one): void
@@ -44,8 +44,8 @@ class Router
     {
         $response_sent = false;
 
-        if (app()->getRuntimeEnvironment()->hasHotswapEnabled()) {
-            if ($request->getPath() == "/__HOTSWAP" && strtolower($request->getMethod()) == "get") {
+        if (app()->getRuntimeEnvironment()->hasReloadEnabled()) {
+            if ($request->getPath() == "/__Reload" && strtolower($request->getMethod()) == "get") {
                 if (isset($request->getParameters()["page"]) && isset($request->getParameters()["timestamp"])) {
                     $result = ChangeDispatcher::requested($request->getParameters()["page"], $request->getParameters()["timestamp"]);
                     $result->toResponse()->sendAndExit();
@@ -112,19 +112,16 @@ class Router
                             $anything_from_controller = call_user_func_array([$controller, $action_name], $union);
                             $response = $controller->handle($anything_from_controller);
 
-                            if ($response instanceof InvalidMessage) {
+                            if ($response instanceof ErrorMessage) {
                                 ServerResponse::create(500, "At " . $controller_name . "Controller: 
                                 the function \"$action_name()\" must return a valid ResultInterface instance.")->sendAndExit();
-                            } else if ($response instanceof EmptyMessage) {
-                                ServerResponse::create(500, "At " . $controller_name . "Controller: 
-                                the function \"$action_name()\" must return a value.")->sendAndExit();
                             }
 
                             $response_sent = true;
                             $response->send();
 
                             session()->discard(["alert-text", "alert-type"]);
-
+                            
                         } else {
                             ServerResponse::create(500, "Parameter number mismatch (in Routes)")->sendAndExit();
                         }

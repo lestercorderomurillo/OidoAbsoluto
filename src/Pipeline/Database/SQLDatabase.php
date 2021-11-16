@@ -2,16 +2,27 @@
 
 namespace Pipeline\Database;
 
-use Pipeline\Core\Boot\ModelBase;
-use Pipeline\Adapter\Adapter;
+use Pipeline\Core\Boot\Model;
+use Pipeline\Database\Boot\Database;
+use Pipeline\Database\Driver\Driver;
 use Pipeline\Database\Common\ConnectionString;
-use Pipeline\Utilities\Vector;
 
-class SQLDatabase extends DatabaseBase
+class SQLDatabase extends Database
 {
-    public function __construct(Adapter $adapter, ConnectionString $connection_string, string $service_id = "SQLDatabase")
+    public function __construct(Driver $Driver, ConnectionString $connection_string, string $service_id = "SQLDatabase")
     {
-        parent::__construct($adapter, $connection_string, $service_id);
+        parent::__construct($Driver, $connection_string, $service_id);
+    }
+
+    private function createParametersBinds(array $array): array
+    {
+        $prepare = [];
+        $values = [];
+        foreach ($array as $key => $value) {
+            $prepare[$key] = "`$key` = :$key";
+            $values[":$key"] = $value;
+        }
+        return [$prepare, $values];
     }
 
     public function find(string $model_class_name, array $where = [])
@@ -31,7 +42,7 @@ class SQLDatabase extends DatabaseBase
         if ($where == []) {
             $this->addQuery("SELECT * FROM `$table_name` $append");
         } else {
-            $array = Vector::placeholderCreateArray($where);
+            $array = $this->createParametersBinds($where);
             $where = implode(" AND ", $array[0]);
             $this->addQuery("SELECT * FROM `$table_name` WHERE $where $append", $array[1]);
         }
@@ -48,7 +59,7 @@ class SQLDatabase extends DatabaseBase
         return $models;
     }
 
-    public function save(ModelBase $model): void
+    public function save(Model $model): void
     {
         $table_name = $model->getTableName();
         $values = $model->getAttributesValues();
@@ -62,7 +73,7 @@ class SQLDatabase extends DatabaseBase
         }
     }
 
-    public function delete(ModelBase $model): void
+    public function delete(Model $model): void
     {
         $table_name = $model->getTableName();
         $id = $model->getId();

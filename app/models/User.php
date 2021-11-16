@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Pipeline\Core\Boot\ModelBase;
+use Pipeline\Core\Boot\Model;
 
-class User extends ModelBase
+class User extends Model
 {
     const table = "users";
     

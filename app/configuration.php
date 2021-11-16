@@ -12,5 +12,5 @@
     "development.logging" => true,
     "development.errorLogging" => true,
     "development.compileSCSS" => true,
-    "development.hotswap" => false,
+    "development.Reload" => false,
 ];

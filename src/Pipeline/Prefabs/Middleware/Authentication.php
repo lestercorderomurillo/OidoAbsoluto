@@ -2,11 +2,11 @@
 
 namespace Pipeline\Prefabs\Middleware;
 
-use Pipeline\Core\Boot\MiddlewareBase;
+use Pipeline\Core\Boot\Middleware;
 use Pipeline\HTTP\Message;
 use function Pipeline\Kernel\session;
 
-class Authentication extends MiddlewareBase
+class Authentication extends Middleware
 {
     public function handle($request): Message
     {
