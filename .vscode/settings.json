@@ -1,14 +1,133 @@
 {
     "files.autoSave": "afterDelay",
-    "php.validate.enable" : true,
-    "php.executablePath": "C:\\wamp64\\bin\\php\\php7.4.9\\php.exe",
-    "php.validate.executablePath": "C:\\wamp64\\bin\\php\\php7.4.9\\php.exe",
     "files.associations": {
-        "*.pexec": "php"
+        "*.pexec": "php",
+        "*.phar": "php"
     },
     "intelephense.files.associations": [
         "*.php",
         "*.phtml"
     ],
-    "debug.allowBreakpointsEverywhere": true
+    "debug.allowBreakpointsEverywhere": true,
+    "editor.tokenColorCustomizations": {
+        "[Default Dark+]": {
+            "textMateRules": [
+                {
+                    "scope": [
+                        "expression.property",
+                    ],
+                    "settings": {
+                        "foreground": "#d6c6f6"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.property.keyword",
+                    ],
+                    "settings": {
+                        "foreground": "#9b78c8"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.math",
+                    ],
+                    "settings": {
+                        "foreground": "#ffffff"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.parenthesis",
+                        "expression.math.keyword"
+                    ],
+                    "settings": {
+                        "foreground": "#48c9c9"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.bracket",
+                        "language.separator.entity",
+                        "language.separator.context",
+                    ],
+                    "settings": {
+                        "foreground": "#aaaaaa"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.heredoc",
+                    ],
+                    "settings": {
+                        "foreground": "#e7b479"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.quote",
+                    ],
+                    "settings": {
+                        "foreground": "#d16c9b"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.component",
+                    ],
+                    "settings": {
+                        "foreground": "#69bcf3"
+                    }
+                },
+                {
+                    "scope": [
+                        "component",
+                    ],
+                    "settings": {
+                        "foreground": "#63e2ad"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.name",
+                    ],
+                    "settings": {
+                        "foreground": "#eb5e5e"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.string",
+                    ],
+                    "settings": {
+                        "foreground": "#f0a294"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.string.action",
+                    ],
+                    "settings": {
+                        "foreground": "#ebe298"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.separator.equals",
+                    ],
+                    "settings": {
+                        "foreground": "#999999"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.context",
+                    ],
+                    "settings": {
+                        "foreground": "#b82b2b"
+                    }
+                }
+            ]
+        }
+    }
 }
