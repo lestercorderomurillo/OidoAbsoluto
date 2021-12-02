@@ -1,8 +1,8 @@
 <?php
 
-namespace Pipeline\HTTP\Server;
+namespace Cosmic\HTTP\Server;
 
-use function Pipeline\Kernel\safe;
+use function Cosmic\Kernel\safe;
 
 class Session
 {

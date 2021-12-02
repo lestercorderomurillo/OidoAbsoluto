@@ -1,0 +1,13 @@
+00:28:33 >> App\Controllers\HomeController has been requested a response from 'login' action
+00:28:36 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:28:44 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:29:04 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:29:06 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:29:07 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:29:08 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:31:28 >> App\Controllers\HomeController has been requested a response from 'signup' action
+00:41:25 >> App\Controllers\HomeController has been requested a response from 'login' action
+00:41:26 >> App\Controllers\HomeController has been requested a response from 'login' action
+00:42:02 >> App\Controllers\AdminstratorController has been requested a response from 'overview' action
+00:47:19 >> App\Controllers\UserController has been requested a response from 'hearingTest' action
+03:37:10 >> App\Controllers\AdminstratorController has been requested a response from 'overview' action

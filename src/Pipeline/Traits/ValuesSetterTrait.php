@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline\Traits;
+namespace Cosmic\Traits;
 
 trait ValuesSetterTrait
 {

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Pipeline\Core\Boot\Model;
+use Cosmic\Core\Boot\Model;
 
 class Questio extends Model
 {

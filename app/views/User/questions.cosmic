@@ -12,22 +12,16 @@
                 id="questions" 
                 numberOfPages="5" 
                 elementsPerPage="10" 
-                lastPageAction[local, server]="callThisFunction(); componentCall();" 
+                lastPageAction="{{ this->callThisFunction(); }}" 
                 lastPageText="Subir cuestionario">
                     <Row>
                         <Survey 
                         source="{{ view->questions }}"
-                        skip="[[ {{ this->page }} * {{ this->elementsPerPage }} ]]" 
-                        take="{{ this->elementsPerPage }}">
+                        skip="[[ {{ parent->page }} * {{ parent->elementsPerPage }} ]]" 
+                        take="{{ parent->elementsPerPage }}">
                     </Row>
                 </Paginator>
             </Form>
         </Card>
     </Row>
 </View>
-<script>
-    var a = 1;
-    function a(){
-
-    }
-</script>

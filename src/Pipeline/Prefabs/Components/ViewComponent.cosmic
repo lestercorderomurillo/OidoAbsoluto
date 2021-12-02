@@ -1,0 +1,82 @@
+<div>{{ this->a }}</div>
+
+<?php
+
+namespace Cosmic\Prefabs\Components;
+
+use Cosmic\DOM\Component;
+
+class MinimalComponent extends Component
+{
+    const Prototype = "Minimal";
+
+    public function render(): string
+    {
+        return <<<Component
+            <div>
+            </div>
+        Component;
+    }
+}
+
+class ViewComponent extends Component
+{
+    const Prototype = "View";
+
+    const Styles = [
+        "forms.scss"
+    ];
+
+    const Imports = [
+        ViewComponent::class
+    ];
+
+    public int $counter = 0;
+
+    public function actions(): string
+    {
+        return <<<JS
+            function incrementCount(state, params)
+            {
+                console.log(state); /* state = [counter = 0] */
+                console.log(params); /* params = [1] */
+                state->counter += params[0];
+                return state;
+            }
+        JS;
+    }
+
+    public function render(): string
+    {
+        return <<<Component
+            <!DOCTYPE html>
+            <html lang="es">
+                <head>
+                    <title>{{ this->title }}</title>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <Foreach using="iterator" from="{{ view->headers }}">
+                        <meta name="{{ parent->iterator->name }}" content="{{ parent->iterator->content }}">
+                    </Foreach>
+                    <Foreach using="iterator" from="{{ view->scripts-bundles }}">
+                        <script src="{{ parent->iterator }}"></script>
+                    </Foreach>
+                    <link rel="preconnect" href="https://fonts.gstatic.com">
+                    <Foreach using="iterator" from="{{ view->styles }}">
+                        <link rel="stylesheet" href="{{ parent->iterator }}">
+                    </Foreach>
+                </head>
+                <div class="container">
+                    <br>
+                    {{ this->body }}
+
+                    [[ 2 + 3 - (2 / {{ this->parameter1 }}) ]]
+                    <Button onClick="{{ this->incrementCount(1) }}"></Button>
+                </div>
+                {{ view->components }}
+                {{ view->stateful }}
+                {{ view->awake }}
+            </html>
+        Component;
+    }
+}

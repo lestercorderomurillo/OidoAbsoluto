@@ -1,7 +1,7 @@
 <?php
 
-use Pipeline\HTTP\Server\Router;
-use Pipeline\Prefabs\Middleware\Authentication;
+use Cosmic\HTTP\Server\Router;
+use Cosmic\Prefabs\Middleware\Authentication;
 /*
 class Routes
 {

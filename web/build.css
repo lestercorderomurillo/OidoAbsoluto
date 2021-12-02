@@ -150,23 +150,23 @@ button.accent-info:hover {
 .app-textfield:focus, .app-passfield:focus, .app-field:focus {
   border-bottom: 3px solid #2b2839 !important;
 }
-.app-radio, .app-radio:after, input[type='radio']:checked:after {
+.app-radio, .app-radio:after, input[type="radio"]:checked:after {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   border-radius: 15px;
   position: relative;
-  content: '';
+  content: "";
   display: inline-block;
   visibility: visible;
 }
-.app-radio:after, input[type='radio']:checked:after {
+.app-radio:after, input[type="radio"]:checked:after {
   width: 15px;
   height: 15px;
   top: 0px;
   left: -1px;
   background-color: #585275;
 }
-input[type='radio']:checked:after {
+input[type="radio"]:checked:after {
   width: 21px !important;
   height: 21px !important;
   top: -3px !important;

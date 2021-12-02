@@ -6,7 +6,7 @@
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'reference' => '74f811599e4e458e0f1151f8c30b34d0fce2e658',
-        'name' => 'pipeline/framework',
+        'name' => 'cosmic/framework',
         'dev' => true,
     ),
     'versions' => array(
@@ -37,7 +37,7 @@
             'reference' => '981b03ca603fd281049e092d75245ac029e13dec',
             'dev_requirement' => false,
         ),
-        'pipeline/framework' => array(
+        'cosmic/framework' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
             'type' => 'library',

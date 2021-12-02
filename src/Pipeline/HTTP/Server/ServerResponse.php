@@ -1,14 +1,14 @@
 <?php
 
-namespace Pipeline\HTTP\Server;
+namespace Cosmic\HTTP\Server;
 
-use Pipeline\Core\DI;
-use Pipeline\Core\Types\View;
-use Pipeline\DOM\ViewRenderer;
-use Pipeline\HTTP\Message;
-use function Pipeline\Kernel\app;
-use function Pipeline\Kernel\debug;
-use function Pipeline\Kernel\dependency;
+use Cosmic\Core\DI;
+use Cosmic\Core\Types\View;
+use Cosmic\DOM\ViewRenderer;
+use Cosmic\HTTP\Message;
+use function Cosmic\Kernel\app;
+use function Cosmic\Kernel\debug;
+use function Cosmic\Kernel\dependency;
 
 class ServerResponse extends Message
 {

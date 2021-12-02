@@ -8,11 +8,11 @@ class AboutController extends Controller
 {
     function contact()
     {
-        return $this->view("contact");
+        return $this->view();
     }
 
     function policy()
     {
-        return $this->view("policy");
+        return $this->view();
     }
 }

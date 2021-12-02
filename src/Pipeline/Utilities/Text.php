@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline\Utilities;
+namespace Cosmic\Utilities;
 
 class Text
 {

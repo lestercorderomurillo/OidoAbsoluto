@@ -1,27 +1,31 @@
-@mixin field{
+@mixin field {
     background: transparent !important;
     border: none;
     border-bottom: 1px solid $bg-secondary;
     border-radius: 0 !important;
     color: $text-primary !important;
-    outline:none;
+    outline: none;
     outline-color: transparent;
     outline-style: none;
 }
 
-.app-textfield, .app-passfield, .app-field{
-   @include component;
-   @include field;
+.app-textfield,
+.app-passfield,
+.app-field {
+    @include component;
+    @include field;
 }
 
-.app-textfield:focus, .app-passfield:focus, .app-field:focus{
+.app-textfield:focus,
+.app-passfield:focus,
+.app-field:focus {
     border-bottom: 3px solid darken($bg-secondary, 20) !important;
 }
-.app-radio{
+.app-radio {
     @include component;
     border-radius: 15px;
     position: relative;
-    content: '';
+    content: "";
     display: inline-block;
     visibility: visible;
 }
@@ -35,7 +39,7 @@
     background-color: $bg-secondary;
 }
 
-input[type='radio']:checked:after {
+input[type="radio"]:checked:after {
     @extend .app-radio;
     width: 21px !important;
     height: 21px !important;

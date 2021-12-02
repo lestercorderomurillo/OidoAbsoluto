@@ -22,7 +22,7 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
-            'Pipeline\\' => 9,
+            'Cosmic\\' => 9,
         ),
         'M' => 
         array (
@@ -71,9 +71,9 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Pipeline\\' => 
+        'Cosmic\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/Pipeline',
+            0 => __DIR__ . '/../..' . '/src/Cosmic',
         ),
         'Mimey\\' => 
         array (

@@ -1,12 +1,12 @@
 <?php
 
-namespace Pipeline\Reload;
+namespace Cosmic\Reload;
 
-use Pipeline\Core\Interfaces\ResultInterface;
-use Pipeline\Core\Types\JSON;
-use Pipeline\Reload\ChangeDetector;
-use Pipeline\Core\Result\JSONResult;
-use function Pipeline\Kernel\App;
+use Cosmic\Core\Interfaces\ResultInterface;
+use Cosmic\Core\Types\JSON;
+use Cosmic\Reload\ChangeDetector;
+use Cosmic\Core\Result\JSONResult;
+use function Cosmic\Kernel\App;
 
 class ChangeDispatcher
 {

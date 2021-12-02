@@ -1,10 +1,10 @@
 {
-    "name": "pipeline/framework",
+    "name": "cosmic/framework",
     "description": "Composed-based framework. Includes complex view templating, classic routing and common day utilities, using a MVC pattern.",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Pipeline\\": "src/Pipeline/",
+            "Cosmic\\": "src/Cosmic/",
             "App\\Controllers\\": "app/controllers/",
             "App\\Models\\": "app/models/",
             "App\\Middlewares\\": "app/middlewares/"

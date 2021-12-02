@@ -1,9 +1,9 @@
 <?php
 
-namespace Pipeline\Prefabs\Middleware;
+namespace Cosmic\Prefabs\Middleware;
 
-use Pipeline\Core\Boot\Middleware;
-use Pipeline\HTTP\Message;
+use Cosmic\Core\Boot\Middleware;
+use Cosmic\HTTP\Message;
 
 class ForceSSL extends Middleware
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Pipeline\Traits;
+namespace Cosmic\Traits;
 
-use Pipeline\Utilities\Text;
+use Cosmic\Utilities\Text;
 
 trait ClassAwareTrait
 {

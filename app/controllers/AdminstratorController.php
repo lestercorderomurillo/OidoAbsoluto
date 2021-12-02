@@ -12,9 +12,9 @@ class AdminstratorController extends Controller
 {
     private Database $db;
 
-    function __construct()
+    function __construct(SQLDatabase $db)
     {
-        $this->db = DI::getDependency(SQLDatabase::class);
+        $this->db = $db;
     }
 
     function overview()
@@ -58,6 +58,7 @@ class AdminstratorController extends Controller
             $view_data["subTitle:$i"] = $charts["setup"][$i]["subTitle"];
             $view_data["data:$i"] = new JSON($charts["data"][$i]);
         }
+
         return $this->view("overview", $view_data);
     }
 }

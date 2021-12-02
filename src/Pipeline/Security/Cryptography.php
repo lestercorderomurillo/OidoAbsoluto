@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline\Security;
+namespace Cosmic\Security;
 
 class Cryptography
 {

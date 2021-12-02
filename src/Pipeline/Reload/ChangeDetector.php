@@ -1,13 +1,13 @@
 <?php
 
-namespace Pipeline\Reload;
+namespace Cosmic\Reload;
 
-use Pipeline\Core\Types\JSON;
-use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\ServerPath;
-use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\FileSystem\Path\Local\Path;
-use function Pipeline\Kernel\safe;
+use Cosmic\Core\Types\JSON;
+use Cosmic\FileSystem\FileSystem;
+use Cosmic\FileSystem\Path\ServerPath;
+use Cosmic\FileSystem\Path\Local\DirectoryPath;
+use Cosmic\FileSystem\Path\Local\Path;
+use function Cosmic\Kernel\safe;
 
 class ChangeDetector
 {

@@ -4,7 +4,7 @@ new CLI($argc, $argv);
 
 class CLI
 {
-    const FRAMEWORK = "Pipeline";
+    const FRAMEWORK = "Cosmic";
 
     public function __construct(int $argc, array $argv)
     {

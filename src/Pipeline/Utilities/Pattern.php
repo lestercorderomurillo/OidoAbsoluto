@@ -1,8 +1,8 @@
 <?php
 
-namespace Pipeline\Utilities;
+namespace Cosmic\Utilities;
 
-use Pipeline\DOM\HTML\Selection;
+use Cosmic\DOM\HTML\Selection;
 
 class Pattern
 {
