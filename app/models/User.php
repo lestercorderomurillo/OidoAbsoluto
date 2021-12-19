@@ -6,7 +6,7 @@ use Cosmic\Core\Boot\Model;
 
 class User extends Model
 {
-    const table = "users";
+    //const table = "users";
     
     public string $email;
     public string $salt;

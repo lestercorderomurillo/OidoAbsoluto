@@ -4,25 +4,22 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Models\UserInfo;
-use Pipeline\Core\Boot\Controllers\Controller;
-use Pipeline\Core\DI;
-use Pipeline\Database\Boot\Database;
-use Pipeline\Database\SQLDatabase;
-use Pipeline\FileSystem\FileSystem;
-use Pipeline\Security\Cryptography;
-use Pipeline\FileSystem\Path\ServerPath;
-use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\HTTP\Server\ServerResponse;
-use function Pipeline\Kernel\session;
+use Cosmic\FileSystem\Paths\File;
+use Cosmic\Core\Controllers\Controller;
+use Cosmic\Database\Boot\Database;
+use Cosmic\Database\SQLDatabase;
+use Cosmic\Security\Cryptography;
+use Cosmic\Utilities\Collection;
 
 class HomeController extends Controller
 {
     private Database $db;
 
-    function __construct(){
-        $this->db = DI::getDependency(SQLDatabase::class);
+    function __construct(SQLDatabase $db)
+    {
+        $this->db = $db;
     }
-    
+
     function login()
     {
         return $this->view("login");
@@ -36,16 +33,18 @@ class HomeController extends Controller
     function resetPassword(string $token)
     {
         if ($token == "") {
-            return ServerResponse::create(500, "Invalid password reset token.");
+            return $this->response(500, "Invalid password reset token.");
         }
+
         return $this->view("reset-password");
     }
 
     function resetPasswordSubmit(string $token)
     {
         if ($token == "") {
-            return ServerResponse::create(500, "Invalid password reset token.");
+            return $this->response(500, "Invalid password reset token.");
         }
+
         return $this->view("reset-password");
     }
 
@@ -61,23 +60,24 @@ class HomeController extends Controller
 
     function signup()
     {
-        $countries = FileSystem::requireFromFile(new Path(ServerPath::COMMON, "countries", "php"));
+        $countries = Collection::from(new File("Common/countries.json"));
+
         return $this->view("signup", ["countries" => $countries]);
     }
 
     function signupSubmit(
-        string $first_name,
-        string $last_name,
+        string $firstName,
+        string $lastName,
         string $email,
         string $password,
-        string $confirm_password,
+        string $confirmPassword,
         string $country,
-        string $birth_day,
+        string $birthDay,
         string $phone,
         string $gender
     ) {
 
-        if (!$this->userExists($email) && $password == $confirm_password) {
+        if (!$this->userExists($email) && $password == $confirmPassword) {
 
             $user = new User();
 
@@ -91,26 +91,22 @@ class HomeController extends Controller
 
             $info = new UserInfo();
 
-            $info->first_name = $first_name;
-            $info->last_name = $last_name;
+            $info->firstName = $firstName;
+            $info->lastName = $lastName;
             $info->country = $country;
-            $info->birth_day = $birth_day;
+            $info->birthDay = $birthDay;
             $info->phone = $phone;
             $info->gender = $gender;
 
             $this->db->save($info);
             $this->db->commit();
 
-            session("type", "success");
-            session("error", "Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales.");
-
+            $this->success("Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales.");
             return $this->view("login");
-
+            
         } else {
 
-            session("type", "danger");
-            session("error", "No se puede registrar el usuario ingresado.");
-
+            $this->danger("No se puede registrar el usuario ingresado.", "danger");
             return $this->view("submit");
         }
     }
@@ -118,7 +114,7 @@ class HomeController extends Controller
     function userExists(string $email)
     {
         $result = $this->db->find(User::class, ["email" => "$email"]);
-        $result->exposeArray();
-        return ($result != []);
+
+        return ($result != null);
     }
 }

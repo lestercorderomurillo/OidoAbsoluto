@@ -2,43 +2,33 @@
 
 namespace App\Controllers;
 
-use Pipeline\Core\Boot\Controllers\Controller;
-use Pipeline\Core\DI;
-use Pipeline\Core\Types\JSON;
-use Pipeline\Database\Boot\Database;
-use Pipeline\Database\SQLDatabase;
-use Pipeline\FileSystem\FileSystem;
-use Pipeline\FileSystem\Path\Local\DirectoryPath;
-use Pipeline\FileSystem\Path\Local\Path;
-use Pipeline\FileSystem\Path\ServerPath;
-use Pipeline\Utilities\Collection;
-use function Pipeline\Kernel\session;
+use Cosmic\Core\Controllers\Controller;
+use Cosmic\Core\Types\JSON;
+use Cosmic\Database\Boot\Database;
+use Cosmic\Database\SQLDatabase;
+use Cosmic\FileSystem\FileSystem;
+use Cosmic\FileSystem\Paths\Directory;
+use Cosmic\FileSystem\Paths\File;
+use Cosmic\Utilities\Collection;
 
 class UserController extends Controller
 {
-    private Database $db;
-
-    function __construct()
-    {
-        $this->db = DI::getDependency(SQLDatabase::class);
-    }
-
     function hearingTest(string $mode)
     {
         if ($mode != "simple" && $mode != "full") {
 
-            session("alert-type", "warning");
-            session("alert-text", "No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
+            $this->warning("No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
 
             return $this->redirect("login");
         }
 
-        $audios_sources = FileSystem::findWebPaths(new DirectoryPath(ServerPath::WEB, "audio/"), "mp3");
-        $audios_sources_json = JSON::create($audios_sources)->toString();
+        $audiosSources = FileSystem::URLFind(new Directory("App/Content/audio/"), "mp3");
+        $audiosSourcesJSON = JSON::create($audiosSources);
 
-        $output = ["mode" => $mode, "audios_sources" => $audios_sources_json];
+        $output = ["mode" => $mode, "audiosSources" => $audiosSourcesJSON];
 
         $test_type = "Piano Interactivo";
+        
         if ($mode == "simple") {
             $test_type = "Teclado Interactivo";
             $output["showKeyText"] = true;
@@ -51,18 +41,17 @@ class UserController extends Controller
         return $this->view("hearing", $output);
     }
 
-    function submitHearingTest(string $mode, string $expected_notes,  string $selected_notes)
+    function submitHearingTest(string $mode, string $expectedNotes,  string $selectedNotes)
     {
-        $debug1 = var_export($expected_notes, true);
-        $debug2 = var_export($selected_notes, true);
+        $debug1 = var_export($expectedNotes, true);
+        $debug2 = var_export($selectedNotes, true);
 
         return "Not Implemented $mode $debug1 $debug2";
     }
 
     function questionsTest()
     {
-        $json = json_decode(FileSystem::includeAsString(new Path(ServerPath::VIEWS, "User/questions", "json")), true);
-
+        $json = Collection::from(new File("app/Views/User/questions.json"));
         return $this->view("questions", ["questions" => $json]);
     }
 

@@ -22,7 +22,6 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
-            'Cosmic\\' => 9,
         ),
         'M' => 
         array (
@@ -36,6 +35,10 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'G' => 
         array (
             'Gajus\\Dindent\\' => 14,
+        ),
+        'C' => 
+        array (
+            'Cosmic\\' => 7,
         ),
         'A' => 
         array (
@@ -71,10 +74,6 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Cosmic\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/Cosmic',
-        ),
         'Mimey\\' => 
         array (
             0 => __DIR__ . '/..' . '/ralouphie/mimey/src',
@@ -90,6 +89,10 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'Gajus\\Dindent\\' => 
         array (
             0 => __DIR__ . '/..' . '/gajus/dindent/src',
+        ),
+        'Cosmic\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Cosmic',
         ),
         'App\\Models\\' => 
         array (

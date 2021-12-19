@@ -2,21 +2,11 @@
 
 namespace App\Controllers;
 
-use Pipeline\Core\Types\JSON;
-use Pipeline\Core\Boot\Controllers\Controller;
-use Pipeline\Core\DI;
-use Pipeline\Database\Boot\Database;
-use Pipeline\Database\SQLDatabase;
+use Cosmic\Core\Types\JSON;
+use Cosmic\Core\Controllers\Controller;
 
 class AdminstratorController extends Controller
 {
-    private Database $db;
-
-    function __construct(SQLDatabase $db)
-    {
-        $this->db = $db;
-    }
-
     function overview()
     {
         $charts = [

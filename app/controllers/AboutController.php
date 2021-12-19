@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Pipeline\Core\Boot\Controllers\Controller;
+use Cosmic\Core\Controllers\Controller;
 
 class AboutController extends Controller
 {

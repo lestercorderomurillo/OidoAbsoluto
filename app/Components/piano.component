@@ -1,6 +1,0 @@
-<For from="{{ view.assignTest }}" to="2" using="myIterator">
-    <InlineComponentTest attribute1="{{ parent.myIterator }}">
-    <ComponentTest attribute1="{{ parent.myIterator }}">
-        [[ 2 + {{ view.sumTest }} ]]
-    <ComponentTest/>
-</For>

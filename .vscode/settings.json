@@ -2,11 +2,11 @@
     "files.autoSave": "afterDelay",
     "files.associations": {
         "*.pexec": "php",
-        "*.phar": "php"
+        "*.phar": "php",
     },
     "intelephense.files.associations": [
         "*.php",
-        "*.phtml"
+        "*.cosmic"
     ],
     "debug.allowBreakpointsEverywhere": true,
     "editor.tokenColorCustomizations": {
@@ -14,85 +14,18 @@
             "textMateRules": [
                 {
                     "scope": [
-                        "expression.property",
-                    ],
-                    "settings": {
-                        "foreground": "#d6c6f6"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.property.keyword",
-                    ],
-                    "settings": {
-                        "foreground": "#9b78c8"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.math",
-                    ],
-                    "settings": {
-                        "foreground": "#ffffff"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.parenthesis",
-                        "expression.math.keyword"
-                    ],
-                    "settings": {
-                        "foreground": "#48c9c9"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.bracket",
-                        "language.separator.entity",
-                        "language.separator.context",
-                    ],
-                    "settings": {
-                        "foreground": "#aaaaaa"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.heredoc",
-                    ],
-                    "settings": {
-                        "foreground": "#e7b479"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.quote",
-                    ],
-                    "settings": {
-                        "foreground": "#d16c9b"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.component",
-                    ],
-                    "settings": {
-                        "foreground": "#69bcf3"
-                    }
-                },
-                {
-                    "scope": [
-                        "component",
-                    ],
-                    "settings": {
-                        "foreground": "#63e2ad"
-                    }
-                },
-                {
-                    "scope": [
                         "component.name",
                     ],
                     "settings": {
-                        "foreground": "#eb5e5e"
+                        "foreground": "#ff5959"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.attributes",
+                    ],
+                    "settings": {
+                        "foreground": "#b995e7"
                     }
                 },
                 {
@@ -100,33 +33,92 @@
                         "component.string",
                     ],
                     "settings": {
-                        "foreground": "#f0a294"
+                        "foreground": "#adc097"
                     }
                 },
                 {
                     "scope": [
-                        "component.string.action",
+                        "language.separator.entity"
                     ],
                     "settings": {
-                        "foreground": "#ebe298"
+                        "foreground": "#b92323"
                     }
                 },
                 {
                     "scope": [
-                        "component.separator.equals",
+                        "language.separator.bracket",
+                        "language.separator.parenthesis",
+                        "expression.callback.separator"
                     ],
                     "settings": {
-                        "foreground": "#999999"
+                        "foreground": "#747474"
                     }
                 },
                 {
                     "scope": [
-                        "component.context",
+                        "language.separator.quote"
                     ],
                     "settings": {
-                        "foreground": "#b82b2b"
+                        "foreground": "#cccccc"
                     }
-                }
+                },
+                {
+                    "scope": [
+                        "expression.property"
+                    ],
+                    "settings": {
+                        "foreground": "#d6c5c5"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.property.keyword",
+                        "component.attributes.context"
+                    ],
+                    "settings": {
+                        "foreground": "#6f71f1"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.callback.action"
+                    ],
+                    "settings": {
+                        "foreground": "#fadd9e"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.callback.parameters"
+                    ],
+                    "settings": {
+                        "foreground": "#cacaca"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.math"
+                    ],
+                    "settings": {
+                        "foreground": "#2daeeb"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.math.keyword"
+                    ],
+                    "settings": {
+                        "foreground": "#c7ac54"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.parenthesis.callback"
+                    ],
+                    "settings": {
+                        "foreground": "#c5c5c5"
+                    }
+                },
             ]
         }
     }

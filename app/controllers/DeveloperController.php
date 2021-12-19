@@ -2,17 +2,22 @@
 
 namespace App\Controllers;
 
-use Pipeline\Core\Boot\Controllers\Controller;
-use Pipeline\Core\Types\JSON;
-use Pipeline\Database\SQLDatabase;
+use Cosmic\Core\Controllers\Controller;
+use Cosmic\Core\Types\JSON;
+use Cosmic\Database\SQLDatabase;
 
 class DeveloperController extends Controller
 {
     private SQLDatabase $db;
 
-    function __construct()
+    function __construct(SQLDatabase $db)
     {
-        //$this->db = $db;
+        $this->db = $db;
+    }
+
+    function index()
+    {
+        return ["test" => "good"];
     }
 
     function testMethod1()
@@ -27,8 +32,21 @@ class DeveloperController extends Controller
 
     function testMethod2()
     {
-        $models = ["1" => "2"];//$this->db->findAll(UserInfo::class, ["gender" => "M"]);
-        //$model = $this->db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
-        return $this->JSON($models);
+        $model = $this->db->find(UserInfo::class, ["id" => "1", "gender" => "M"]);
+
+        return $this->JSON($model);
     }
+
+    /*
+    function requestMatched(Request $request){
+
+    }
+
+    function modelMatched(Model $model){
+
+    }
+
+    function valueMatched(string $a, string $b){
+
+    }*/
 }

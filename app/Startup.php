@@ -2,28 +2,32 @@
 
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use Pipeline\Core\Boot\App;
-use Pipeline\Core\Boot\App\MVCApp;
-use Pipeline\Core\DI;
-use Pipeline\Core\Lifetime;
-use Pipeline\Database\SQLDatabase;
-use Pipeline\Database\Driver\MySQLDriver;
-use Pipeline\Database\Common\ConnectionString;
-use function Pipeline\Kernel\configuration;
+use Cosmic\Core\Boot\Lifetime;
+use Cosmic\Core\Applications\MVCApplication;
+use Cosmic\Database\SQLDatabase;
+use Cosmic\Database\Driver\MySQLDriver;
+use Cosmic\Database\Common\ConnectionString;
+use Cosmic\Database\Common\MySQLConnectionString;
+use function Cosmic\Core\Boot\deploy;
 
-class PypelineApplication extends MVCApp
+class WebApplication extends MVCApplication
 {
-    protected function configure(): void
-    {
-        $connection_string = new ConnectionString(
-            configuration("database.mysql.server"),
-            configuration("database.mysql.db"),
-            configuration("database.mysql.user"),
-            configuration("database.mysql.pass")
-        );
+    private ConnectionString $connectionString;
 
-        DI::inject(Lifetime::ContextScoped, SQLDatabase::class, [new MySQLDriver(), $connection_string]);
+    protected function onConfiguration(): void
+    {
+        parent::onConfiguration();
+
+        $this->connectionString = new MySQLConnectionString();
+    }
+
+    protected function onServicesInjection(): void
+    {
+        parent::onServicesInjection();
+
+        $this->inject(Lifetime::ContextLifetime, SQLDatabase::class, [new MySQLDriver(), $this->connectionString]);
     }
 }
 
-App::deploy(new PypelineApplication());
+/** Starts the application **/
+deploy(new WebApplication());

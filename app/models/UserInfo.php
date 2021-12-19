@@ -6,12 +6,12 @@ use Cosmic\Core\Boot\Model;
 
 class UserInfo extends Model
 {
-    const table = "users_info";
+    //const table = "users_info";
 
-    public string $first_name;
-    public string $last_name;
+    public string $firstName;
+    public string $lastName;
     public string $country;
-    public string $birth_day;
+    public string $birthDay;
     public string $phone;
     public string $gender;
 }
