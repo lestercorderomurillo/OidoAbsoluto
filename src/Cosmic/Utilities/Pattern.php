@@ -2,8 +2,6 @@
 
 namespace Cosmic\Utilities;
 
-use Cosmic\DOM\HTML\Selection;
-
 /**
  * This helper class is used to provide methods to search and manipulate string patterns.
  */
@@ -16,12 +14,11 @@ class Pattern
      * @param string $openingDelimiter The opening delimiter.
      * @param string $closureDelimiter The closure delimiter.
      * @param int $offset The starting position to start the searching.
-     * @param bool $selectDelimiters If true, selection will not select the delimiters.
      * 
-     * @return Selection The selection.
+     * @return Selection
      * 
      */
-    public static function select(string $input, string $openingDelimiter = "{", string $closureDelimiter = "}", int $offset = 0, bool $selectDelimiters = false): Selection
+    public static function select(string $input, string $openingDelimiter = "{", string $closureDelimiter = "}", int $offset = 0): Selection
     {
         $offset = min($offset, strlen($input));
 
@@ -29,15 +26,10 @@ class Pattern
         $end = false;
 
         if ($start !== false) {
-            $end = strpos($input, $closureDelimiter, $start);
-        }
-        
-        if (!$selectDelimiters) {
-            $start += strlen($openingDelimiter);
-            $end -= strlen($closureDelimiter);
+            $end = strpos($input, $closureDelimiter, $start) + 1;
         }
 
-        return new Selection($start, $end, $input);
+        return new Selection($input, $start, $end);
     }
 
     /**
@@ -73,6 +65,29 @@ class Pattern
         }
         return true;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * @deprecated

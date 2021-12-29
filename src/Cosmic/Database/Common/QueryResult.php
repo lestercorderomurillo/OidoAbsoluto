@@ -2,7 +2,7 @@
 
 namespace Cosmic\Database\Common;
 
-use function Cosmic\Core\Boot\safe;
+use function Cosmic\Core\Bootstrap\safe;
 
 /**
  * This class represents a simple database result data-set retrieved after performing a query.

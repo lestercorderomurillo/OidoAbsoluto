@@ -2,7 +2,7 @@
 
 namespace Cosmic\Core\Applications;
 
-use Cosmic\Core\Boot\Application;
+use Cosmic\Core\Bootstrap\Application;
 
 /**
  * This class represents a restful application.

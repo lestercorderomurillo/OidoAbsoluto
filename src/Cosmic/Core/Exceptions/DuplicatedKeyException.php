@@ -2,4 +2,4 @@
 
 namespace Cosmic\Core\Exceptions;
 
-class DuplicatedKeyException extends \LogicException { }
+class DuplicatedKeyException extends \Exception { }

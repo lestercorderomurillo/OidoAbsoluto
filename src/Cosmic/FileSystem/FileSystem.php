@@ -2,11 +2,13 @@
 
 namespace Cosmic\FileSystem;
 
+use Cosmic\Binder\Compiler;
 use Cosmic\Utilities\Collection;
-use Cosmic\FileSystem\Boot\BasePath;
+use Cosmic\FileSystem\Bootstrap\BasePath;
 use Cosmic\FileSystem\Exceptions\IOException;
-use Cosmic\FileSystem\Paths\Directory;
+use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\FileSystem\Paths\File;
+use function Cosmic\Core\Bootstrap\app;
 
 /**
  * This class represents an abstraction for the filesystem of your OS. Developers can
@@ -14,56 +16,48 @@ use Cosmic\FileSystem\Paths\File;
  */
 class FileSystem
 {
-    /**
-     * Returns the name of a resource given a namespace or a path.
-     * Ex: Collection/Lib/Object returns Object. Allows both kinds of slashes as delimiter.
-     * 
-     * @param string $resource The full name of a resource.
-     * 
-     * @return string The resource name.
-     */
-    public static function getResourceName(string $resource): string
-    {
-        $last_index = strripos($resource, "/");
-        $last_index_alter = strripos($resource, "\\");
-        return substr($resource, max($last_index, $last_index_alter) + 1);
-    }
 
     /**
      * Search all files within a directory. Can be used with an specific extension.
      * The search will convert all paths to their public web variant.
      * If the extension is php, this will throw an exception.
      * 
-     * @param Directory $directory The directory path to search.
+     * @param Folder $folder The directory path to search.
      * @param string $extension Can be used as filters. By default all extensions. (*)
      * 
      * @return string[] A collection of paths.
      * @throws IOException When trying to use a php file extension.
      */
-    public static function URLFind(Directory $directory, string $extension = "*"): array
+    public static function URLFind(Folder $folder, string $extension = "*"): array
     {
         if (($extension = strtolower($extension)) == "php") {
-            throw new IOException("URL find cannot be used with PHP extension for security reasons.");
+            throw new IOException("URL find cannot be used with PHP extension for security reasons");
         }
 
-        return FileSystem::toWebPaths(FileSystem::find($directory, $extension));
+        return FileSystem::toWebPaths(FileSystem::find($folder, $extension));
     }
 
     /**
      * Search all files within a directory. Can be used with an specific extension.
      * 
-     * @param Directory $directory The directory path to search.
-     * @param string $extension Can be used as filters. By default all extensions. (*)
+     * @param Folder $folder The directory path to search.
+     * @param string[]|string $extensions Can be used as filters. By default all extensions. (*)
+     * When passed an array, it can search multiple extensions.
      * 
-     * @return array A collection of paths.
+     * @return File[] A collection of files path.
      */
-    public static function find(Directory $directory, string $extension = "*"): array
+    public static function find(Folder $folder, $extensions = "*"): array
     {
-        $paths = [];
-        $search_path = $directory . "*.$extension";
+        $extensions = Collection::normalize($extensions);
 
-        foreach (FileSystem::recursiveGlob($search_path) as $file) {
-            $paths[] = $file;
+        $paths = [];
+
+        foreach ($extensions as $extension) {
+            $searchPath = $folder . "*.$extension";
+
+            foreach (FileSystem::recursiveGlob($searchPath) as $file) {
+                $paths[] = new File($file);
+            }
         }
 
         return $paths;
@@ -86,6 +80,12 @@ class FileSystem
             throw new IOException("Failed to import the requested file: $file");
         }
 
+        if(in_array($file->getExtension(), ['phps', 'phpx'])) {
+            $precompiled = app()->get(Compiler::class)->precompileFile($file);
+            //die($precompiled);
+            return eval($precompiled);
+        }
+
         if ($required) {
             if ($once) {
                 return require_once($file);
@@ -102,7 +102,7 @@ class FileSystem
     /**
      * Check if a file exists.
      * 
-     * @param File|Directory $path The file or directory to check.
+     * @param File|Folder $path The file or directory to check.
      * 
      * @return bool True if the file exists, false otherwise.
      */
@@ -156,7 +156,7 @@ class FileSystem
      * 
      * @param mixed|array $paths A collection of paths to convert.
      * 
-     * @return array A collection of paths.
+     * @return string[] A collection of compiled paths.
      */
     public static function toLocalPaths($paths): array
     {
@@ -180,7 +180,7 @@ class FileSystem
      * 
      * @param mixed|array $paths A collection of paths to convert.
      * 
-     * @return array A collection of paths.
+     * @return string[] A collection of compiled paths.
      */
     public static function toWebPaths($paths): array
     {
@@ -190,6 +190,10 @@ class FileSystem
 
         foreach ($paths as $path) {
             if ($path instanceof BasePath) {
+                $path->toWebPath();
+                $output[] = $path->toString();
+            }else if(is_string($path)) {
+                $path = new File($path);
                 $path->toWebPath();
                 $output[] = $path->toString();
             }
@@ -213,7 +217,7 @@ class FileSystem
      * GLOB_ONLYDIR - Return only directory entries which match the pattern 
      * GLOB_ERR - Stop on read errors (like unreadable directories), by default errors are ignored.
      * 
-     * @return array|false A collection of paths.
+     * @return string[]|false A collection of compiled paths. Returns false on failure.
      */
     private static function recursiveGlob(string $pattern, int $flags = 0): array
     {

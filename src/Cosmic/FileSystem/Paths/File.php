@@ -2,7 +2,7 @@
 
 namespace Cosmic\FileSystem\Paths;
 
-use Cosmic\FileSystem\Boot\BasePath;
+use Cosmic\FileSystem\Bootstrap\BasePath;
 use Cosmic\FileSystem\Exceptions\IOException;
 
 /**
@@ -31,7 +31,7 @@ class File extends BasePath
         if (isset($matches[0]) && strlen($matches[0]) > 0) {
             $this->extension = $matches[0];
         } else {
-            throw new IOException("The provided path is invalid.");
+            throw new IOException("The provided path is invalid");
         }
 
         $this->setPath($path);

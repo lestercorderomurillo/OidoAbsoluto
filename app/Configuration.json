@@ -10,7 +10,7 @@
     "database.mysql.pass": "localhost",
     "database.mysql.db": "oidoabsoluto",
     "framework.errorLogging": true,
-    "framework.styleCompile": true,
+    "framework.compileStylesheet": true,
     "framework.logging": true,
     "framework.reload": false
 }

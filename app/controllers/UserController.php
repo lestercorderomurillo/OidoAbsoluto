@@ -4,10 +4,10 @@ namespace App\Controllers;
 
 use Cosmic\Core\Controllers\Controller;
 use Cosmic\Core\Types\JSON;
-use Cosmic\Database\Boot\Database;
+use Cosmic\Database\Bootstrap\Database;
 use Cosmic\Database\SQLDatabase;
 use Cosmic\FileSystem\FileSystem;
-use Cosmic\FileSystem\Paths\Directory;
+use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\Utilities\Collection;
 
@@ -22,7 +22,7 @@ class UserController extends Controller
             return $this->redirect("login");
         }
 
-        $audiosSources = FileSystem::URLFind(new Directory("App/Content/audio/"), "mp3");
+        $audiosSources = FileSystem::URLFind(new Folder("App/Content/audio/"), "mp3");
         $audiosSourcesJSON = JSON::create($audiosSources);
 
         $output = ["mode" => $mode, "audiosSources" => $audiosSourcesJSON];

@@ -3,7 +3,7 @@
 namespace Cosmic\HTTP\Server;
 
 use Cosmic\Core\Interfaces\ContainerInterface;
-use function Cosmic\Core\Boot\safe;
+use function Cosmic\Core\Bootstrap\safe;
 
 /**
  * This class represents a session. For the time being, this class uses the PHP standard session storage mechanism.

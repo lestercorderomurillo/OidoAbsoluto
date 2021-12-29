@@ -16,7 +16,26 @@ class Text
      */
     public static function sanitizeString(string $string): string
     {
-        return preg_replace('[A-Za-z0-9@.\/\-#]', '', trim($string));
+        //return $string;
+        return htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
+     * Returns the name of a resource given a namespace.
+     * Ex: Collection/Lib/Object returns Object. Allows both kinds of slashes as delimiter.
+     * 
+     * @param string $resource The full name of a resource.
+     * 
+     * @return string The resource name.
+     */
+    public static function getNamespaceBaseName(string $resource): string
+    {
+        $resource = str_replace("\\", "/", $resource);
+        $lastIndex = strripos($resource, "/");
+
+        if ($lastIndex == false) return $resource;
+
+        return substr($resource, $lastIndex + 1);
     }
 
     /**
@@ -41,13 +60,11 @@ class Text
      * 
      * @return array Collection of values already splitted.
      */
-    public static function quotedExplode(string $text, array $delimiters = [" "], array $quotes = ["\"'"]): array
+    public static function quotedExplode(string $text, array $delimiters = [" "], array $quotes = ["\"", "'"]): array
     {
-        $delimiters = implode('', $delimiters);
-        $clauses[] = '[^' . $delimiters . $quotes . ']';
+        $clauses[] = '[^' . implode("", $delimiters) . implode($quotes) . ']';
 
         foreach ($quotes as $quote) {
-            $quote = self::sanitizeString($quote);
             $clauses[] = "[$quote][^$quote]*[$quote]";
         }
 

@@ -2,16 +2,20 @@
 
 namespace Cosmic\Utilities;
 
+use Cosmic\Traits\StringableTrait;
+
 /**
  * This helper class is used to select substrings inside strings. 
- * Extremelly useful when doing string replacements and DOM manipulation on the server side.
+ * Extremelly useful when doing string replacements and Binder manipulation on the server side.
  */
 class Selection
 {
+    use StringableTrait;
+
     /**
-     * @var string $value The original value without selection.
+     * @var string $input The original input without selection.
      */
-    private string $value;
+    private string $input;
 
     /**
      * @var int $startPosition The start position of the selection.
@@ -24,19 +28,33 @@ class Selection
     private int $endPosition;
 
     /**
+     * @var string $startDelimiter The delimiter used to start the selection.
+     */
+    private string $startDelimiter;
+
+    /**
+     * @var string $endDelimiter The delimiter used to end the selection.
+     */
+    private string $endDelimiter;
+
+    /**
      * Selects the given string, starting at the given position and ending at the other position.
      * 
-     * @param int $startPosition The initial position of the selection.
-     * @param int $endPosition The final position of the selection.
-     * @param string $value The string to select.
+     * @param string $input The string to select.
+     * @param int|null $startPosition The initial position of the selection.
+     * @param int|null $endPosition The final position of the selection.
+     * @param string $startDelimiter The initial delimiter used to select this string. Can be left blank
+     * @param string $endDelimiter The final delimiter used to select this string. Can be left blank
      * 
      * @return void
      */
-    public function __construct(int $startPosition, int $endPosition, string $value)
+    public function __construct(string $input, $startPosition, $endPosition, string $startDelimiter = "{", string $endDelimiter = "}")
     {
-        $this->value = $value;
+        $this->input = $input;
         $this->startPosition = max($startPosition, 0);
-        $this->endPosition = min($endPosition, strlen($value));
+        $this->endPosition = min($endPosition, strlen($input));
+        $this->startDelimiter = $startDelimiter;
+        $this->endDelimiter = $endDelimiter;
     }
 
     /**
@@ -54,9 +72,15 @@ class Selection
      * 
      * @return string The "cutted" string. 
      */
-    public function getString(): string
+    public function getString(bool $excludeDelimiters = true): string
     {
-        return trim(substr($this->value, $this->startPosition, $this->endPosition - $this->startPosition));
+        if($excludeDelimiters){
+            $startPosition = $this->startPosition + strlen($this->startDelimiter);
+            $endPosition = $this->endPosition - strlen($this->endDelimiter);
+
+            return trim(substr($this->input, $startPosition, $endPosition - $startPosition));
+        }
+        return trim(substr($this->input, $this->startPosition, $this->endPosition - $this->startPosition));
     }
 
     /**
@@ -66,7 +90,15 @@ class Selection
      */
     public function getSourceString(): string
     {
-        return $this->value;
+        return $this->input;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(): string
+    {
+        return $this->getString();
     }
 
     /**
@@ -76,7 +108,7 @@ class Selection
      */
     public function getStartPosition(): int
     {
-        return $this->start;
+        return $this->startPosition;
     }
 
     /**
@@ -86,7 +118,7 @@ class Selection
      */
     public function getEndPosition(): int
     {
-        return $this->end;
+        return $this->endPosition;
     }
 
     /**
@@ -98,7 +130,7 @@ class Selection
      */
     public function setStartPosition(int $position): Selection
     {
-        $this->start = max($position, 0);
+        $this->startPosition = max($position, 0);
         return $this;
     }
 
@@ -111,12 +143,12 @@ class Selection
      */
     public function setEndPosition(int $position): Selection
     {
-        $this->end = $position;
+        $this->endPosition = $position;
         return $this;
     }
 
     /**
-     * Move the start position for this selection. 
+     * Move the start position for this selection. Moves +1 by default.
      * 
      * @param int $offset The relative position offset to apply.
      * 
@@ -124,8 +156,8 @@ class Selection
      */
     public function moveStartPosition(int $offset = 1): Selection
     {
-        $this->start += $offset;
-        $this->start = max($this->start, 0);
+        $this->startPosition += $offset;
+        $this->startPosition = max($this->startPosition, 0);
         return $this;
     }
 
@@ -138,7 +170,7 @@ class Selection
      */
     public function moveEndPosition(int $offset = 1): Selection
     {
-        $this->end += $offset;
+        $this->endPosition += $offset;
         return $this;
     }
 }

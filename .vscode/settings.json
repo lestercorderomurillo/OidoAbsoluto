@@ -6,7 +6,7 @@
     },
     "intelephense.files.associations": [
         "*.php",
-        "*.cosmic"
+        "*.phps"
     ],
     "debug.allowBreakpointsEverywhere": true,
     "editor.tokenColorCustomizations": {
@@ -15,6 +15,15 @@
                 {
                     "scope": [
                         "component.name",
+                    ],
+                    "settings": {
+                        "foreground": "#ffb759"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.default",
+                        "component.name.keyword"
                     ],
                     "settings": {
                         "foreground": "#ff5959"
@@ -41,13 +50,14 @@
                         "language.separator.entity"
                     ],
                     "settings": {
-                        "foreground": "#b92323"
+                        "foreground": "#817f7f"
                     }
                 },
                 {
                     "scope": [
                         "language.separator.bracket",
                         "language.separator.parenthesis",
+                        "component.separator.equals",
                         "expression.callback.separator"
                     ],
                     "settings": {

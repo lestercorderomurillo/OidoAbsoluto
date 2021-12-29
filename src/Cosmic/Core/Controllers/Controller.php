@@ -2,7 +2,7 @@
 
 namespace Cosmic\Core\Controllers;
 
-use Cosmic\Core\Boot\Actions;
+use Cosmic\Core\Bootstrap\Actions;
 use Cosmic\Core\Types\View;
 use Cosmic\Core\Types\JSON;
 use Cosmic\HTTP\Server\Response;
@@ -14,7 +14,7 @@ use Cosmic\Core\Result\ViewResult;
 abstract class Controller extends Actions
 {
     /**
-     * Returns a compiled view result. Internally will use Cosmic DOM to render this view.
+     * Returns a compiled view result. Internally will use Cosmic Binder to render this view.
      * If both parameters are left empty, the controller will assume the view is called the same as the function name.
      * 
      * @param string|array $dynamicValue If it's a string, it will be considered as the view name. If it's an array, 
@@ -26,22 +26,22 @@ abstract class Controller extends Actions
      */
     public function view($dynamicValue = null, $dynamicValueSecondary = null): Response
     {
-        if(is_string($dynamicValue)){
+        if (is_string($dynamicValue)) {
             $viewName = $dynamicValue;
-        }else{
+        } else {
             $viewName = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
         }
 
-        if(is_array($dynamicValue)){
+        if (is_array($dynamicValue)) {
             $viewData = $dynamicValue;
-        }else if(is_array($dynamicValueSecondary)) {
+        } else if (is_array($dynamicValueSecondary)) {
             $viewData = $dynamicValueSecondary;
-        }else{
+        } else {
             $viewData = [];
         }
 
-        foreach($viewData as $key => $value){
-            if($value instanceof JSON){
+        foreach ($viewData as $key => $value) {
+            if ($value instanceof JSON) {
                 $viewData[$key] = $value->toString();
             }
         }

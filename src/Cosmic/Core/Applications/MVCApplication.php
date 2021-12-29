@@ -2,9 +2,14 @@
 
 namespace Cosmic\Core\Applications;
 
-use Cosmic\Core\Boot\Application;
-use Cosmic\Core\Boot\Lifetime;
+use Cosmic\Core\Bootstrap\Application;
+use Cosmic\Binder\DOM;
+use Cosmic\Binder\Compiler;
+use Cosmic\FileSystem\FileSystem;
+use Cosmic\FileSystem\Paths\File;
+use Cosmic\HTTP\Request;
 use Cosmic\HTTP\Server\WebServer;
+use Cosmic\HTTP\Server\ComponentServer;
 use Cosmic\HTTP\Server\Router;
 use Cosmic\HTTP\Server\Session;
 
@@ -13,11 +18,20 @@ use Cosmic\HTTP\Server\Session;
  */
 abstract class MVCApplication extends Application
 {
+
+    /**
+     * @var bool $compileStylesheet On true, the server will compile the stylesheets on the onInitialization() method.
+     */
+    private bool $compileStylesheet = false;
+
     /**
      * @inheritdoc
      */
     protected function onConfiguration(): void
     {
+        if(FileSystem::exists(new File(__CONTENT__ . "output/build.css"))){
+            $this->compileStylesheet = true;
+        }
     }
 
     /**
@@ -25,20 +39,13 @@ abstract class MVCApplication extends Application
      */
     protected function onServicesInjection(): void
     {
-        $this->inject(Lifetime::RequestLifetime, Session::class);
-        $this->inject(Lifetime::RequestLifetime, Router::class);
-        //$this->inject(Lifetime::RequestLifetime, CosmicDOM::class);
-        $this->inject(Lifetime::RequestLifetime, WebServer::class);
-
-        /*$asset_compiler = new SCSSCompiler();
-
-        if ($this->getRuntimeEnvironment()->inProductionMode()) {
-            if($asset_compiler->checkForMissingBuildStylesheet()){
-                $asset_compiler->compileProjectStylesheets();
-            }
-        }else{
-            $asset_compiler->compileProjectStylesheets();
-        }*/
+        $this->injectPrimitive(Request::class, Request::intercept());
+        $this->injectSingleton(Session::class);
+        $this->injectSingleton(Router::class);
+        $this->injectSingleton(Compiler::class);
+        $this->injectSingleton(DOM::class);
+        $this->injectSingleton(ComponentServer::class);
+        $this->injectSingleton(WebServer::class);
     }
 
     /**
@@ -46,6 +53,12 @@ abstract class MVCApplication extends Application
      */
     protected function onInitialization(): void
     {
+        $this->get(ComponentServer::class)->run();
+
+        if($this->compileStylesheet){
+            $this->get(Compiler::class)->compileStylesheet();
+        }
+
         $this->get(WebServer::class)->run();
     }
 }

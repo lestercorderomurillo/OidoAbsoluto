@@ -2,16 +2,18 @@
 
 namespace Cosmic\HTTP\Server;
 
+use Cosmic\Core\Bootstrap\Actions;
 use Cosmic\Core\Exceptions\ControllerException;
 use Cosmic\HTTP\Request;
 use Cosmic\FileSystem\Exceptions\IOException;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\Prefabs\Middleware\ForceSSL;
+use Cosmic\Bundle\Middleware\ForceSSL;
 use Cosmic\Utilities\Collection;
-use function Cosmic\Core\Boot\app;
-use function Cosmic\Core\Boot\configuration;
-use function Cosmic\Core\Boot\safe;
+use Cosmic\Utilities\Text;
+use function Cosmic\Core\Bootstrap\app;
+use function Cosmic\Core\Bootstrap\configuration;
+use function Cosmic\Core\Bootstrap\safe;
 
 /**
  * A router class that manages the entry points for this application. 
@@ -20,7 +22,7 @@ use function Cosmic\Core\Boot\safe;
  * On match, the router will execute the entry point closure and finalize the application after. All middlewares and late-middlewares will be executed.
  * When the closure for the entry point is called, the application will not exit that specific scope until the application has been terminated.
  */
-class Router
+class Router extends Actions
 {
     /**
      * @var EntryPoint[] $entryPoints A collection of entry points for this application.
@@ -155,7 +157,7 @@ class Router
 
             } else {
 
-                throw new \InvalidArgumentException("A entry point or a group doesn't have a controller binded.");
+                throw new \InvalidArgumentException("A entry point or a group doesn't have a controller binded");
             }
         } else if (is_array($mixed) || is_string($mixed)) {
 
@@ -181,12 +183,12 @@ class Router
                 }
             }
 
-            $controllerName = FileSystem::getResourceName($controllerClassName);
+            $controllerName = Text::getNamespaceBaseName($controllerClassName);
             $controllerPath = new File("app/Controllers/$controllerName.php");
 
             if (!FileSystem::exists($controllerPath)) {
 
-                throw new IOException("Controller file does not exist in app/Controllers/ folder.");
+                throw new IOException("Controller file does not exist in app/Controllers/ folder");
             }
 
             FileSystem::import($controllerPath, true, true);
@@ -210,7 +212,7 @@ class Router
             $entryPoint = new EntryPoint($pathRegex, $method, $mixed);
         } else {
 
-            throw new \InvalidArgumentException("Must be either a closure or an array with the class and the action method. ");
+            throw new \InvalidArgumentException("Must be either a closure or an array with the class and the action method ");
         }
 
         if ($this->middlewares !== null) {

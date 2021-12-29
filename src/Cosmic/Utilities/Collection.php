@@ -144,7 +144,7 @@ class Collection
      * 
      * @param array[] $arrays A list of lists to merge.
      * 
-     * @return array[] The resulting list from the merge. (1D array with values)
+     * @return array The resulting list from the merge. (1D array with values)
      */
     public static function mergeList(...$arrays): array
     {
@@ -174,7 +174,7 @@ class Collection
      * 
      * @param array[] $arrays A list of dictionaries to merge.
      * 
-     * @return array[] The resulting dictionary from the merge. (2D array with keys and values)
+     * @return array The resulting dictionary from the merge. (2D array with keys and values)
      */
     public static function mergeDictionary(...$arrays): array
     {
@@ -243,5 +243,31 @@ class Collection
     public static function from(File $file): array
     {
         return JSON::from($file)->toArray();
+    }
+
+    /**
+     * Return the first element stored in the collection.
+     * 
+     * @param array $data The collection.
+     * 
+     * @return mixed The entry at the last position in the array.
+     */
+    public static function getFirstElement(array $data)
+    {
+        return $data[0];
+    }
+
+    /**
+     * Return the last element stored in the collection.
+     * 
+     * @param array $data The collection.
+     * 
+     * @return mixed The entry at the last position in the array.
+     */
+    public static function getLastElement(array $data)
+    {
+        $lastElement = end($data);
+        reset($data);
+        return $lastElement;
     }
 }

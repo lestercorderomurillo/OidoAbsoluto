@@ -46,7 +46,7 @@ class Math {
      */
 	public static function logGamma($a) {
 		if($a < 0)
-			throw new \InvalidArgumentException("Log gamma calls should be >0.");
+			throw new \InvalidArgumentException("Log gamma calls should be >0");
 
 		if ($a >= 171)	// Lanczos approximation w/ the given coefficients is accurate to 15 digits for 0 <= real(z) <= 171
 			return self::logStirlingApproximation($a);

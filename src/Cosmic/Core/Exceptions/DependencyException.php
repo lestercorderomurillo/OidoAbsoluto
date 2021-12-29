@@ -2,4 +2,4 @@
 
 namespace Cosmic\Core\Exceptions;
 
-class DependecyException extends \Exception { }
+class DependencyException extends \Exception { }

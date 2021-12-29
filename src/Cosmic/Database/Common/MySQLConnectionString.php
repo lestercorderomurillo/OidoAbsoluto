@@ -2,7 +2,7 @@
 
 namespace Cosmic\Database\Common;
 
-use function Cosmic\Core\Boot\configuration;
+use function Cosmic\Core\Bootstrap\configuration;
 
 /**
  * This call will automatically fill the connection string using default keys.

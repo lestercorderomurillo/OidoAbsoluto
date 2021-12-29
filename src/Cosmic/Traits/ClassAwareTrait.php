@@ -11,6 +11,31 @@ use Cosmic\Utilities\Text;
 trait ClassAwareTrait
 {
     /**
+     * Get the reflection method for this constructor.
+     * 
+     * @return \ReflectionMethod The constructor method.
+     */
+    public function getConstructor()
+    {
+        $reflectionClass = new \ReflectionClass($this);
+        return $reflectionClass->getConstructor();
+    }
+
+    /**
+     * Get the value of a constant for this class (extern form).
+     * 
+     * @param string $constant The constant to check for.
+     * @param string $className If not null, this class  will be used in the reflection call.
+     * 
+     * @return mixed|false The constant value, or false if the constant is not found.
+     */
+    public static function getClassConstant(string $constant, $className)
+    {
+        $reflectionClass = new \ReflectionClass($className);
+        return $reflectionClass->getConstant($constant);
+    }
+
+    /**
      * Get the value of a constant for this class.
      * 
      * @param string $constant The constant to check for.
@@ -21,6 +46,17 @@ trait ClassAwareTrait
     {
         $reflectionClass = new \ReflectionClass($this);
         return $reflectionClass->getConstant($constant);
+    }
+
+    /**
+     * Get a collection of methods for this class.
+     * 
+     * @return \ReflectionMethod[] The collection of all methods.
+     */
+    public function getMethods()
+    {
+        $reflectionClass = new \ReflectionClass($this);
+        return $reflectionClass->getMethods();
     }
 
     /**

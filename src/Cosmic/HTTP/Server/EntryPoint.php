@@ -2,14 +2,16 @@
 
 namespace Cosmic\HTTP\Server;
 
-use Cosmic\Core\Boot\Actions;
-use Cosmic\Core\Boot\Middleware;
+use Cosmic\Core\Bootstrap\Actions;
+use Cosmic\Core\Bootstrap\Middleware;
 use Cosmic\Core\Interfaces\ResultGeneratorInterface;
 use Cosmic\Core\Types\JSON;
 use Cosmic\HTTP\Request;
 use Cosmic\HTTP\Exceptions\EntryPointException;
 use Cosmic\HTTP\Exceptions\InvalidParameterBinding;
 use Cosmic\Utilities\Collection;
+
+use function Cosmic\Core\Bootstrap\app;
 
 /**
  * This class represents a entry point. 
@@ -159,21 +161,7 @@ class EntryPoint extends Actions
     }
 
     /**
-     * Execute this entry point using the request object as the unique parameter for the closure.
-     * Return the data from the function unaltered. Later on will be parsed to a valid HTTP response.
-     * 
-     * @param Request $request The request to execute.
-     * 
-     * @return mixed
-     */
-    private function executeUsingRequestBinding(Request $request)
-    {
-        $entryPoint = $this->closure;
-        return $entryPoint($request);
-    }
-
-    /**
-     * Execute this entry point using reflection to try to match all the formData into the closure arguments.
+     * Execute this entry point using reflection to try to match all the formData and dependencies into the closure arguments.
      * Return the data from the function unaltered. Later on will be parsed to a valid HTTP response.
      * 
      * @param Request $request The request to execute.
@@ -181,7 +169,7 @@ class EntryPoint extends Actions
      * @return mixed
      * @throws InvalidParameterBinding
      */
-    private function executeUsingParameterBinding(Request $request)
+    private function executeUsingAutowire(Request $request)
     {
         $formData = $request->getFormData();
         $outputParameters = [];
@@ -189,16 +177,24 @@ class EntryPoint extends Actions
         $reflectionFunction = new \ReflectionFunction($this->closure);
         $parameters = $reflectionFunction->getParameters();
 
-        var_dump($parameters);
-        die();
-
         foreach ($parameters as $parameter) {
 
-            if (isset($formData[$parameter->getName()])) {
-                $outputParameters[] = $formData[$parameter->getName()];
-            } else {
-                throw new InvalidParameterBinding();
+            $type = $parameter->getType();
+
+            if($type instanceof \ReflectionNamedType && app()->has($type->getName())){
+
+                $outputParameters[] = app()->get($type->getName());
+
+            }else{
+
+                if (isset($formData[$parameter->getName()])) {
+                    $outputParameters[] = $formData[$parameter->getName()];
+                } else {
+                    throw new InvalidParameterBinding("Unmatched parameter '$parameter' from the route.");
+                }
+
             }
+
         }
 
         $entryPoint = $this->closure;
@@ -221,25 +217,11 @@ class EntryPoint extends Actions
         if ($reflectionFunction->getNumberOfParameters() == 0) {
 
             return $this->executeUsingNoBinding();
-        } else if ($reflectionFunction->getNumberOfParameters() == 1) {
 
-            $firstParameter = $reflectionFunction->getParameters()[0];
-
-            if ($firstParameter->hasType()) {
-
-                $type = $firstParameter->getType();
-
-                if ($type instanceof \ReflectionNamedType && $type->getName() == Request::class) {
-
-                    return $this->executeUsingRequestBinding($request);
-                }
-            } else if ($firstParameter->getName() == "request") {
-
-                return $this->executeUsingRequestBinding($request);
-            }
         }
+        
+        return $this->executeUsingAutowire($request);
 
-        return $this->executeUsingParameterBinding($request);
     }
 
     /**
@@ -265,11 +247,12 @@ class EntryPoint extends Actions
 
             if (!$request instanceof Response) {
 
+                $response = null;
                 $request = $this->delegate($request);
 
-                if (!isset($request)) {
+                if (!isset($request) && ob_get_contents() == false) {
 
-                    $response = $this->content("HTTP 200 OK");
+                    $response = $this->content("Timestamp:" . time());
 
                 } else if ($request instanceof Response) {
 

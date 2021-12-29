@@ -4,7 +4,7 @@ namespace Cosmic\Core\Types;
 
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\FileSystem\Paths\Directory;
+use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\Reload\ChangeDetector;
 
 /**
@@ -57,18 +57,20 @@ class View
         $this->controllerName = $controllerName;
         $this->viewData = $viewData;
 
-        $this->html = FileSystem::read(new File("App/Views/$this->controllerName/$this->viewName.cosmic"));
-        $this->timestamp = ChangeDetector::generateTimestampForView($this->getControllerName(), $this->getViewName());
+        $file = new File("App/Views/$this->controllerName/$this->viewName.phtml");
+
+        $this->html = FileSystem::read($file);
+        $this->timestamp = filemtime($file);
     }
 
     /**
      * Returns the directory that holds the view in the file system.
      * 
-     * @return Directory The directory.
+     * @return Folder The directory.
      */
-    public function getDirectory(): Directory
+    public function getFolder(): Folder
     {
-        return new Directory("App/Views/$this->controllerName/");
+        return new Folder("App/Views/$this->controllerName/");
     }
 
     /**
@@ -108,7 +110,7 @@ class View
      */
     public function getViewGUID(): string
     {
-        return md5(new File("App/Views/$this->controllerName/$this->viewName.cosmic"));
+        return md5(new File("App/Views/$this->controllerName/$this->viewName.phtml"));
     }
 
     /**
@@ -119,7 +121,7 @@ class View
     public function getViewPath(): File
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        return new File("App/Views/$path.cosmic");
+        return new File("App/Views/$path.phtml");
     }
 
     /**

@@ -1,0 +1,171 @@
+// Replace Bootstrap base styles
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+.Error, .Cerror{
+    font-size: 11px !important;
+    font-weight: bold;
+    background-color: $bg-danger;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 4px;
+    padding-top: 2px;
+    margin-top: 3px;
+}
+
+.Container{
+    padding: 0 !important;
+}
+
+@mixin Unselectable{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+*{
+    transition: ease all 0.33s;
+}
+
+.NoTransition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+.Close {
+    padding-top: .865rem !important;
+}
+
+// Alerts Core
+.AlertInfo{
+    color: $text-info;
+    background-color: $bg-info;
+}
+
+.AlertDanger{
+    color: $text-danger;
+    background-color: $bg-danger;
+}
+
+.AlertWarning{
+    color: $text-warning;
+    background-color: $bg-warning;
+}
+
+.AlertSuccess{
+    color: $text-success;
+    background-color: $bg-success;
+}
+
+// Body Core 
+Body{
+    @include Unselectable;
+    min-width: $page-min-width;
+    background-color: $page-background !important;
+    font-size: $font-size;
+    font-family: $font-family;
+    opacity: 0%;
+    transition: ease all 0.75s;
+}
+
+.BodyLoaded{
+    opacity: 100% !important;
+}
+
+// Global link
+a{
+    color: $bg-secondary;
+    font-weight: bold;
+    text-decoration: none !important;
+    font-size: $font-size;
+}
+
+a:hover{
+    color: darken($bg-secondary, 35%);
+    text-decoration: underline !important;
+}
+
+// Primary Accent Color
+.AccentPrimary{
+    background-color: $bg-primary !important;
+    color: $text-primary !important;
+}
+
+.AccentSecondary{
+    background-color: $bg-secondary !important;
+    color: $text-secondary !important;
+}
+
+.AccentSuccess{
+    background-color: $bg-success !important;
+    color: $text-success !important;
+}
+
+.AccentWarning{
+    background-color: $bg-warning !important;
+    color: $text-warning !important;
+}
+
+.AccentDanger{
+    background-color: $bg-danger !important;
+    color: $text-danger !important;
+}
+
+.AccentInfo{
+    background-color: $bg-info !important;
+    color: $text-info !important;
+}
+
+Button.AccentPrimary:hover{
+    background-color: $text-primary !important;
+    color: $bg-primary !important;
+}
+
+Button.AccentSecondary:hover{
+    background-color: $text-secondary !important;
+    color: $bg-secondary !important;
+}
+
+Button.AccentSuccess:hover{
+    background-color: $text-success !important;
+    color: $bg-success !important;
+}
+
+Button.AccentWarning:hover{
+    background-color: $text-warning !important;
+    color: $bg-warning !important;
+}
+
+Button.AccentDanger:hover{
+    background-color: $text-danger !important;
+    color: $bg-danger !important;
+}
+
+Button.AccentInfo:hover{
+    background-color: $text-info !important;
+    color: $bg-info !important;
+}
+
+// Base Component
+@mixin Component{
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+// Visibility
+.Hide{
+    display: none;
+}

@@ -24,4 +24,5 @@ class Cryptography
         }
         return implode('', $pieces);
     }
+    
 }

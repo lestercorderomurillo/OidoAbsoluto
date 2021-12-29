@@ -5,19 +5,17 @@ namespace Cosmic\HTTP\Server;
 use Cosmic\HTTP\Request;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
-use function Cosmic\Core\Boot\app;
-use function Cosmic\Core\Boot\configuration;
+use Cosmic\HTTP\Interfaces\ServerInterface;
+use function Cosmic\Core\Bootstrap\app;
+use function Cosmic\Core\Bootstrap\configuration;
 
 /**
  * This class represents a HTTP server. It's a controller around the router and the process of loading the routes.
- * @deprecated Will be removed in a future release to mix with the environment class.
  */
-class WebServer
+class WebServer implements ServerInterface
 {
     /**
-     * Run the current WebServer. They require a router dependency to be already injected.
-     * 
-     * @return void
+     * @inheritdoc
      */
     public function run(): void
     {

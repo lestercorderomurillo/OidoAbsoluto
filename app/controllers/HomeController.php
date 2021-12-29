@@ -6,10 +6,10 @@ use App\Models\User;
 use App\Models\UserInfo;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\Core\Controllers\Controller;
-use Cosmic\Database\Boot\Database;
+use Cosmic\Database\Bootstrap\Database;
 use Cosmic\Database\SQLDatabase;
-use Cosmic\Security\Cryptography;
 use Cosmic\Utilities\Collection;
+use Cosmic\Utilities\Cryptography;
 
 class HomeController extends Controller
 {

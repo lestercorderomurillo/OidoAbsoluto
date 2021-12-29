@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Cosmic\Core\Boot\Model;
+use Cosmic\Core\Bootstrap\Model;
 
 class User extends Model
 {

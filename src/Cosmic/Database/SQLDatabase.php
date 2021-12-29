@@ -2,8 +2,8 @@
 
 namespace Cosmic\Database;
 
-use Cosmic\Core\Boot\Model;
-use Cosmic\Database\Boot\Database;
+use Cosmic\Core\Bootstrap\Model;
+use Cosmic\Database\Bootstrap\Database;
 use Cosmic\Database\Driver\Driver;
 use Cosmic\Database\Common\ConnectionString;
 

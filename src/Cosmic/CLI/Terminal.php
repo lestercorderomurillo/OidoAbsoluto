@@ -86,7 +86,7 @@ class Terminal
             $controller_name,
             "index",
             "return \$this->view();",
-            ["Core\Boot\Controller"],
+            ["Core\Bootstrap\Controller"],
             "extends Controller"
         );
     }
