@@ -9,8 +9,6 @@
     outline-style: none;
 }
 
-.Textfield,
-.Passfield,
 .Field {
     @include Component;
     @include Field;

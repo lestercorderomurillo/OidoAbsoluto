@@ -10,6 +10,7 @@ use Cosmic\FileSystem\Paths\File;
 use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\HTTP\Server\Response;
 use Cosmic\Utilities\Collection;
+use Cosmic\Utilities\HTML;
 
 use function Cosmic\Core\Bootstrap\app;
 
@@ -80,6 +81,12 @@ class ViewResult implements ResultGeneratorInterface
 
         $compiler = app()->get(Compiler::class);
         $html = $compiler->compileString($this->view->getSourceHTML(), $this->view->getViewData());
+
+        $jsFile = new File($this->view->getFolder() . $this->view->getViewName() . ".js");
+
+        if (FileSystem::exists($jsFile)){
+            $html .= "\n" . HTML::encodeInJScript(FileSystem::read($jsFile));
+        }
 
         $response = new Response();
         $response->addHeader("Content-Type", "text/html");

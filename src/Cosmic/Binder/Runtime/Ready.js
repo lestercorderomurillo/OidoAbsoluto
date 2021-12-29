@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".Error").hide();
+    $(".error").hide();
     $(".Focuseable").keyup(function () {
         if (this.value.length == this.maxLength) {
             $(this).next('.Focuseable').focus();

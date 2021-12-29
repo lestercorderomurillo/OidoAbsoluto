@@ -9,7 +9,7 @@ input[type='number'] {
     -moz-appearance:textfield;
 }
 
-.Error, .Cerror{
+.error, .cerror{
     font-size: 11px !important;
     font-weight: bold;
     background-color: $bg-danger;
@@ -79,6 +79,7 @@ Body{
     font-family: $font-family;
     opacity: 0%;
     transition: ease all 0.75s;
+    overflow-x: hidden;
 }
 
 .BodyLoaded{

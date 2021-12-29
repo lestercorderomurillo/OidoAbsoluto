@@ -1,0 +1,49 @@
+<View title="Registro de usuario en el proyecto">
+    <Row>
+        <Card size="8" maxWidth="600px">
+            <Form route="signup/submit">
+                <IconifiedTitle source="signup.png">Registro de usuario</IconifiedTitle>
+                <Spacing>
+                <Row>
+                    <Column size="6">
+                        <Label for="firstName">Nombre</Label>
+                        <Textfield bind="firstName">
+                    </Column>
+                    <Column size="6">
+                        <Label for="lastName">Apellidos</Label>
+                        <Textfield bind="lastName">
+                    </Column>
+                </Row>
+                <Label for="email">Correo Electrónico</Label>
+                <Textfield bind="email">
+                <Label for="password">Contraseña</Label>
+                <Passfield>
+                <Hint>La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -</Hint>
+                <Spacing>
+                <Label for="confirmPassword">Confirmar contraseña</Label>
+                <Passfield bind="confirmPassword">
+                <Label for="country">País de nacimiento</Label> 
+                <Select bind="country" from="{countries}">
+                <Row>
+                    <Column size="6">
+                        <Label for="birthDay">Fecha de nacimiento</Label>
+                        <Date bind="birthDay">
+                        <ErrorContainer bind="birthDay">
+                    </Column>
+                    <Column size="6">
+                        <Label for="phone">Teléfono</Label>
+                        <Textfield bind="phone">
+                    </Column>
+                </Row>
+                <Label for="gender">Seleccione su Género</Label>
+                <Spacing>
+                <Radio id="0" bind="gender" text="Masculino" value="M">
+                <Radio id="1" bind="gender" text="Femenino" value="F">
+                <Radio id="2" bind="gender" text="Otro" value="O">
+                <Radio id="3" bind="gender" text="No responder" value="-">
+                <ErrorContainer bind="gender">
+                <SubmitButton>Registrarse</SubmitButton>
+            </Form>
+        </Card>
+    </Row>
+</View>

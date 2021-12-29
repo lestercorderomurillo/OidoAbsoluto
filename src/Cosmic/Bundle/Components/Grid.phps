@@ -11,7 +11,26 @@ class Row extends Component
     public function render(): string
     {
         return {{
-            <div class="Row">
+            <div class="row">
+                {body}
+            </div>
+        }};
+    }
+}
+
+class Column extends Component
+{
+    public function __construct(int $size = 12, string $textPosition = "left", string $classes = "")
+    {
+        $this->size = $size;
+        $this->textPosition = $textPosition;
+        $this->classes = $classes;
+    }
+
+    public function render(): string
+    {
+        return {{
+            <div class="pb-2 col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-{size} mx-auto text-{textPosition} {classes}">
                 {body}
             </div>
         }};
@@ -45,7 +64,7 @@ class Card extends Component
         string $maxWidth = "1400px",
         string $minHeight = "10px",
         string $maxHeight = "5000px",
-        string $columnSize = "12",
+        string $size = "12",
         string $padding = "5",
         string $fontSize = "1em",
         string $accent = "Primary",
@@ -57,7 +76,7 @@ class Card extends Component
         $this->maxWidth = $maxWidth;
         $this->minHeight = $minHeight;
         $this->maxHeight = $maxHeight;
-        $this->columnSize = $columnSize;
+        $this->size = $size;
         $this->padding = $padding;
         $this->fontSize = $fontSize;
         $this->accent = $accent;
@@ -69,7 +88,7 @@ class Card extends Component
     public function render(): string
     {
         return {{
-            <div id&name="{id}" class="{_template} col-lg-{columnSize} col-xl-{columnSize} mx-auto text-center" style="min-width: {minWidth}; max-width: {maxWidth}; min-height: {minHeight}; max-height: {maxHeight};">
+            <div id&name="{id}" class="{_template} col-lg-{size} col-xl-{size} mx-auto text-center" style="min-width: {minWidth}; max-width: {maxWidth}; min-height: {minHeight}; max-height: {maxHeight};">
                 <div class="shadow shadow-lg text-left Accent{accent} p-{padding} rounded" style="font-size: {fontSize}; min-height: {minHeight};">
                     {body}
                 </div>
@@ -78,4 +97,9 @@ class Card extends Component
     }
 }
 
-publish([Row::class, Spacing::class, Card::class]);
+publish([
+    Row::class, 
+    Column::class, 
+    Spacing::class, 
+    Card::class
+]);

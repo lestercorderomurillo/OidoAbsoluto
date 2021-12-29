@@ -13,8 +13,16 @@ use function Cosmic\Core\Bootstrap\app;
  * ----------------------------------------------------------------------------------------
  */
 
-
 $router = app()->get(Router::class);
 
-$router->get('/login', [HomeController::class, "login"]);
-$router->any(function () {  return "404"; });
+$router->groupController(HomeController::class, function ($router) {
+
+    $router->get('/', ["login"]);
+    $router->get('/login', ["login"]);
+    $router->get('/signup', ["signup"]);
+
+});
+
+$router->any(function () {
+    return "404";
+});

@@ -60,8 +60,7 @@ class HomeController extends Controller
 
     function signup()
     {
-        $countries = Collection::from(new File("Common/countries.json"));
-
+        $countries = Collection::from(new File("src/Cosmic/Bundle/Common/countries.json"));
         return $this->view("signup", ["countries" => $countries]);
     }
 

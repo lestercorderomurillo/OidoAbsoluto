@@ -21,16 +21,16 @@ class HTML
 
             if($addBodyReady){
                 $value = <<<JS
-                    $(function() {
-                    $value
-                    });
+                $(function() {
+                $value
+                });
                 JS;
             }
 
             $value = <<<HTML
-                <script type="text/javascript">
-                $value
-                </script>
+            <script type="text/javascript">
+            $value
+            </script>
             HTML;
 
         }

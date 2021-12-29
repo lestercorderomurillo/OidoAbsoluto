@@ -45,19 +45,118 @@ class Span extends Component
     }
 }
 
-class Label extends Component
+class Select extends Component
 {
-    public function __construct(string $textPosition = "left", string $fontSize = "1em", string $for = "")
+    const Inline = true;
+
+    public function __construct(array $from, string $bind)
     {
-        $this->textPosition = $textPosition;
-        $this->fontSize = $fontSize;
-        $this->for = $for;
+        $this->from = $from;
+        $this->bind = $bind;
     }
 
     public function render(): string
     {
         return {{
-            <label for="{for}" class="w-100 text-color text-{textPosition}" style="font-size: {fontSize};">
+            <select id&name="{bind}" class="form-control Field">
+                <option value="">Seleccione una opción...</option>
+                <Foreach using="item" from="{from}">
+                    <option value="{parent.item}">{parent.item}</option>
+                </Foreach>
+            </select>
+            <Spacing>
+        }};
+    }
+}
+
+class Date extends Component
+{
+    const Inline = true;
+
+    public function __construct(string $bind)
+    {
+        $this->bind = $bind;
+        $this->_template = "form-control d-inline Field Focuseable text-small";
+    }
+
+    public function render(): string
+    {
+        return {{
+            <input id&name="{bind}" type="hidden">
+            <input id&name="{bind}_dd" class="{_template}" type="text" maxlength="2" style="max-width: 50px;" placeholder="DD"> / 
+            <input id&name="{bind}_mm" class="{_template}" type="text" maxlength="2" style="max-width: 50px;" placeholder="MM"> / 
+            <input id&name="{bind}_yy" class="{_template}" type="text" maxlength="4" style="max-width: 60px;" placeholder="YYYY">
+            <Spacing>
+        }};
+    }
+}
+
+class ErrorContainer extends Component
+{
+    const Inline = true;
+
+    public function __construct(string $bind)
+    {
+        $this->bind = $bind;
+    }
+
+    public function render(): string
+    {
+        return {{
+            <label id&name="error_{bind}" for="{bind}" class="error"></label>
+            <Spacing>
+        }};
+    }
+}
+
+class Label extends Component
+{
+    public function __construct(string $textPosition = "left", string $fontSize = "1em", string $for = "", string $classes = "")
+    {
+        $this->textPosition = $textPosition;
+        $this->fontSize = $fontSize;
+        $this->for = $for;
+        $this->classes = $classes;
+    }
+
+    public function render(): string
+    {
+        return {{
+            <label for="{for}" class="w-100 text-color text-{textPosition} {classes}" style="font-size: {fontSize};">
+                {body}
+            </label>
+        }};
+    }
+}
+
+class Radio extends Component
+{
+    const Inline = true;
+
+    public function __construct(string $bind, string $value, string $text, string $id)
+    {
+        $this->id = $id;
+        $this->bind = $bind;
+        $this->value = $value;
+        $this->text = $text;
+    }
+
+    public function render(): string
+    {
+        return {{
+            <input id="{bind}_{id}" name="{bind}" class="Radio p-1 ml-1 d-inline" type="radio" value="{value}">
+            <Label for="{bind}_{id}" classes="pl-2 d-inline">{text}</Label> 
+            <Spacing>
+        }};
+    }
+}
+
+class Hint extends Component
+{
+    public function render(): string
+    {
+        return {{
+            <label class="small">
                 {body}
             </label>
         }};
@@ -186,10 +285,15 @@ publish([
     Form::class, 
     Span::class, 
     Label::class, 
+    Hint::class, 
+    Select::class,
+    Date::class,
+    Radio::class,
+    Link::class,
     Textfield::class, 
     Passfield::class, 
     SubmitButton::class, 
     RedirectButton::class, 
-    Link::class,
-    IconifiedTitle::class
+    IconifiedTitle::class,
+    ErrorContainer::class
 ]);

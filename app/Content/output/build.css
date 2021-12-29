@@ -6,7 +6,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
-.Error, .Cerror {
+.error, .cerror {
   font-size: 11px !important;
   font-weight: bold;
   background-color: #7e2020;
@@ -61,6 +61,7 @@ Body {
   font-family: 'Noto Sans JP', sans-serif;
   opacity: 0%;
   transition: ease all 0.75s;
+  overflow-x: hidden;
 }
 .BodyLoaded {
   opacity: 100% !important;
@@ -126,7 +127,7 @@ Button.AccentInfo:hover {
 .Hide {
   display: none;
 }
-.Textfield, .Passfield, .Field {
+.Field {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   background: transparent !important;
