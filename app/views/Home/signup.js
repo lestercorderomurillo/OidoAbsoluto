@@ -1,14 +1,15 @@
-$('#form').submit(function () {
-    event.preventDefault();
+$('#form').submit(function (event) {
 
-    /*if (PypeValidator.validateDate("birth_day")) {
-        if ($(this).valid()) {
-            PypeValidator.parseDateForSubmit("birth_day");
-            return true;
-        }
-    }*/
+    if (!Validator.validateDate("birthDay")) {
+        event.preventDefault();
+        return false;
+    }
 
-    return false;
+    Validator.disableDateSubComponents("birthDay");
+
+    $('#submit').prop("disabled", true);
+    $('#submit').html("Subiendo resultados...");
+    
 });
 
 $("#form").validate({

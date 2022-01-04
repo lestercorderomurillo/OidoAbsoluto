@@ -8,12 +8,9 @@ use Cosmic\HTTP\Request;
 use Cosmic\FileSystem\Exceptions\IOException;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\Bundle\Middleware\ForceSSL;
+use Cosmic\Bundle\Middlewares\ForceSSL;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
-use function Cosmic\Core\Bootstrap\app;
-use function Cosmic\Core\Bootstrap\configuration;
-use function Cosmic\Core\Bootstrap\safe;
 
 /**
  * A router class that manages the entry points for this application. 
@@ -93,7 +90,7 @@ class Router extends Actions
     {
         $middlewares = Collection::normalize($middlewares);
         $previous = $this->middlewares;
-        $this->middlewares = $middlewares;
+        $this->middlewares = Collection::mergeList($previous, $middlewares);
         $closure($this);
         $this->middlewares = $previous;
         return $this;
@@ -159,6 +156,7 @@ class Router extends Actions
 
                 throw new \InvalidArgumentException("A entry point or a group doesn't have a controller binded");
             }
+            
         } else if (is_array($mixed) || is_string($mixed)) {
 
             $mixed = Collection::normalize($mixed);
@@ -207,9 +205,11 @@ class Router extends Actions
             $closure->bindTo($controllerInstance);
 
             $entryPoint = new EntryPoint($pathRegex, $method, $closure);
+
         } else if ($mixed instanceof \Closure) {
 
             $entryPoint = new EntryPoint($pathRegex, $method, $mixed);
+            
         } else {
 
             throw new \InvalidArgumentException("Must be either a closure or an array with the class and the action method ");

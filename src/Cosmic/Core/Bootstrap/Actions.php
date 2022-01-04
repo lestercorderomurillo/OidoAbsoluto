@@ -85,8 +85,8 @@ abstract class Actions
      */
     protected function display(string $message, string $type): void
     {
-        session("alert-type", $type);
-        session("alert-text", $message);
+        session("alertType", $type);
+        session("alertText", $message);
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class Actions
      */
     protected function warning(string $message): void
     {
-        $this->display($message, "warning");
+        $this->display($message, "Warning");
     }
 
     /**
@@ -110,7 +110,7 @@ abstract class Actions
      */
     protected function success(string $message): void
     {
-        $this->display($message, "success");
+        $this->display($message, "Success");
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class Actions
      */
     protected function danger(string $message): void
     {
-        $this->display($message, "danger");
+        $this->display($message, "Danger");
     }
 
     /**
@@ -130,12 +130,8 @@ abstract class Actions
      * 
      * @return Response
      */
-    protected function redirect(string $targetURL): Response
+    protected function redirect(string $targetURL = "index"): Response
     {
-        /*if (Text::endsWith($targetURL, "/")) {
-            $targetURL = substr($targetURL, -1);
-        }*/
-
         $result = new RedirectResult($targetURL);
         return $result->toResponse();
     }

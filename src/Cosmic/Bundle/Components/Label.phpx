@@ -1,0 +1,28 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Label extends Component
+{
+    public function __construct(string $textPosition = "left", string $fontSize = "1em", string $for = "", string $classes = "")
+    {
+        $this->textPosition = $textPosition;
+        $this->fontSize = $fontSize;
+        $this->for = $for;
+        $this->classes = $classes;
+    }
+
+    public function render()
+    {
+        return {{
+            <label for="{for}" class="w-100 text-color text-{textPosition} {classes}" style="font-size: {fontSize};">
+                {body}
+            </label>
+        }};
+    }
+}
+
+
+publish(Label::class);

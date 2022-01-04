@@ -1,0 +1,26 @@
+.Radio {
+    @include Component;
+    border-radius: 15px;
+    position: relative;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+}
+
+.Radio:after {
+    @extend .Radio;
+    width: 15px;
+    height: 15px;
+    top: -0px;
+    left: -1px;
+    background-color: $bg-secondary;
+}
+
+input[type="radio"]:checked:after {
+    @extend .Radio;
+    width: 21px !important;
+    height: 21px !important;
+    top: -3px !important;
+    left: -4px !important;
+    background-color: darken($bg-secondary, 30) !important;
+}

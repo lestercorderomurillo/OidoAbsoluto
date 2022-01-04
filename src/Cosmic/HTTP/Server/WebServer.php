@@ -6,8 +6,6 @@ use Cosmic\HTTP\Request;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\HTTP\Interfaces\ServerInterface;
-use function Cosmic\Core\Bootstrap\app;
-use function Cosmic\Core\Bootstrap\configuration;
 
 /**
  * This class represents a HTTP server. It's a controller around the router and the process of loading the routes.

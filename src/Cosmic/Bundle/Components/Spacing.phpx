@@ -1,0 +1,26 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Spacing extends Component
+{
+    const Inline = true;
+
+    public function __construct(int $size = 1)
+    {
+        $this->size = $size + 1;
+    }
+
+    public function render()
+    {
+        return {{
+            <For from="0" to="{size}">
+                <br>
+            </For>
+        }};
+    }
+}
+
+publish(Spacing::class);

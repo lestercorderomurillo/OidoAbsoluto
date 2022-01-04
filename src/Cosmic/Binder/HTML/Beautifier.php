@@ -577,7 +577,7 @@ class Beautifier
                         $tag_extracted_from_last_output = null;
                         if (count($this->output)) {
                             $matches = array();
-                            preg_match('/(?:<|{{#)\s*(\w+)/', $this->output[count($this->output) - 1], $matches);
+                            preg_match('/(?:<|<<<HTML#)\s*(\w+)/', $this->output[count($this->output) - 1], $matches);
                             $tag_extracted_from_last_output = isset($matches[0]) ? $matches[0] : null;
                         }
                         if ($tag_extracted_from_last_output === null || $tag_extracted_from_last_output[1] !== $tag_name) {

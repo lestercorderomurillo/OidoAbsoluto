@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use Cosmic\Core\Bootstrap\Model;
+use Cosmic\ORM\Bootstrap\Model;
 
 class User extends Model
 {
-    //const table = "users";
-    
     public string $email;
     public string $salt;
     public string $password;
-    public string $token;
     public string $activated;
     public string $role;
+    public string $token;
 }

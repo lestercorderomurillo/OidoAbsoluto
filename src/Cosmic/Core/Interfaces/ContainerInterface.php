@@ -13,11 +13,4 @@ interface ContainerInterface extends WriteableContainerInterface
      * @return void
      */
     public function clear(): void;
-
-    /**
-     * Return all elements from the container.
-     * 
-     * @return array
-     */
-    public function all(): array;
 }

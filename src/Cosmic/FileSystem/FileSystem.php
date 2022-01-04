@@ -8,7 +8,6 @@ use Cosmic\FileSystem\Bootstrap\BasePath;
 use Cosmic\FileSystem\Exceptions\IOException;
 use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\FileSystem\Paths\File;
-use function Cosmic\Core\Bootstrap\app;
 
 /**
  * This class represents an abstraction for the filesystem of your OS. Developers can

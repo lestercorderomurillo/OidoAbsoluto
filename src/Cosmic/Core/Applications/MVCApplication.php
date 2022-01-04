@@ -9,7 +9,7 @@ use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\HTTP\Request;
 use Cosmic\HTTP\Server\WebServer;
-use Cosmic\HTTP\Server\ComponentServer;
+use Cosmic\HTTP\Server\DOMServer;
 use Cosmic\HTTP\Server\Router;
 use Cosmic\HTTP\Server\Session;
 
@@ -18,7 +18,6 @@ use Cosmic\HTTP\Server\Session;
  */
 abstract class MVCApplication extends Application
 {
-
     /**
      * @var bool $compileStylesheet On true, the server will compile the stylesheets on the onInitialization() method.
      */
@@ -44,7 +43,7 @@ abstract class MVCApplication extends Application
         $this->injectSingleton(Router::class);
         $this->injectSingleton(Compiler::class);
         $this->injectSingleton(DOM::class);
-        $this->injectSingleton(ComponentServer::class);
+        $this->injectSingleton(DOMServer::class);
         $this->injectSingleton(WebServer::class);
     }
 
@@ -53,7 +52,7 @@ abstract class MVCApplication extends Application
      */
     protected function onInitialization(): void
     {
-        $this->get(ComponentServer::class)->run();
+        $this->get(DOMServer::class)->run();
 
         if($this->compileStylesheet){
             $this->get(Compiler::class)->compileStylesheet();

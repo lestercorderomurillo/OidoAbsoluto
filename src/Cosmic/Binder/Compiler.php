@@ -17,9 +17,6 @@ use Cosmic\Utilities\Transport;
 use ScssPhp\ScssPhp\Compiler as ScssPhpCompiler;
 use ScssPhp\ScssPhp\Exception\CompilerException;
 
-use function Cosmic\Core\Bootstrap\app;
-use function Cosmic\Core\Bootstrap\configuration;
-
 class Compiler
 {
     /**
@@ -66,10 +63,10 @@ class Compiler
             $baseContent .= FileSystem::read(new File(__CONTENT__ . "page.scss")) . "\n\n";
 
             // Get prefixes files
-            $files = FileSystem::find(new Folder("src/Cosmic/Bundle/Packages/"), ["scss"]);
+            $packages = FileSystem::find(new Folder("src/Cosmic/Bundle/Packages/"), ["scss"]);
 
             // Get components files
-            $files = Collection::mergeList($files, app()->get(DOM::class)->getSCSSFiles());
+            $files = Collection::mergeList($packages, app()->get(DOM::class)->getSCSSFiles());
 
             // Read all files
             foreach ($files as $file) {
@@ -101,17 +98,18 @@ class Compiler
     /**
      * Compile a raw cosmic string to a valid compiled HTML string.
      * 
-     * @param string $input The COSMIC HTML string.
+     * @param string $html The COSMIC HTML string.
      * @param array $tokens A collection of tokens to use as replacements.
+     * @param int $depth The recursive depth level.
      * 
      * @return string The compiled HTML string.
      */
     public function compileString(string $html, array $tokens = [], int $depth = 0): string
     {
-
         $offset = 0;
 
         $html = $this->compileTokens($this->beatifier->prefixIndent($html), $tokens);
+        $html = $this->compileMathExpression($html);
 
         while (($selection = Pattern::select($html, "<", ">", $offset))->isValid()) {
 
@@ -124,56 +122,57 @@ class Compiler
                 $elementString = substr($elementString, 1);
             }
 
-            if (!$isCloseTag){
+            if (!$isCloseTag) {
 
-                if($this->isGenericElement($elementString)){
+                if ($this->isGenericElement($elementString)) {
 
                     $data = $this->extractRawData($elementString);
 
                     $strip = new TagStrip($data[0], $data[1]);
 
                     $html = $this->compileSelection($html, $selection, $strip);
-
-                }else{
+                } else {
 
                     $element = $this->createElementFromString($elementString);
-    
+
                     $component = $element->getComponentInstance();
                     $component->resetKey();
 
                     $elementComponentName = $element->getComponentName();
-                    $componentTokens = get_object_vars($component);
-    
+
                     if (!$component->isInlineComponent()) {
-    
+
                         $bodySelection = HTML::findElementBody($html, $elementComponentName, $selection->getEndPosition());
 
-                        if($bodySelection == null){
-                            throw new CompilerException("The element with the component '". $component->getClassName() . "' has no body in the template/view, or it's not marked as an inline component");
+                        if ($bodySelection == null) {
+                            throw new CompilerException("The element with the component '" . $component->getClassName() . "' has no body in the template/view, or it's not marked as an inline component");
                         }
 
                         $bodySelection->moveStartPosition(-1);
                         $bodySelection->moveEndPosition(1);
-    
-                        $downTokens = Collection::mergeDictionary($tokens, $componentTokens, ["body" => $bodySelection]);
-                        $component->body = $bodySelection;
-    
+
+                        $component->body = $bodySelection->toString();
+                        $componentTemplate = $component->getRenderTemplate();
+                        $componentTokens = get_object_vars($component);
+
+                        $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens, ["body" => $component->body]);
                         $selection->setEndPosition($bodySelection->getEndPosition() + strlen("</$elementComponentName>"));
-    
-                    }else{
-    
-                        $downTokens = Collection::mergeDictionary($tokens, $componentTokens);
+                    } else {
+
                         $component->body = "";
-    
+                        $componentTemplate = $component->getRenderTemplate();
+                        $componentTokens = get_object_vars($component);
+
+                        $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens);
                         $selection->setEndPosition($selection->getEndPosition());
-    
                     }
 
-                    $compiledComponent = $this->compileString($component->getRenderTemplate(), $downTokens, $depth + 1);
-                    $html = $this->compileSelection($html, $selection, $compiledComponent);
+                    $output = $this->compileString($componentTemplate, $passdownTokens, $depth + 1);
+                    $component->tryDispose();
+
+                    $html = $this->compileSelection($html, $selection, $output);
                 }
             }
-
         }
 
         if ($depth == 0) {
@@ -281,9 +280,29 @@ class Compiler
         return new Element($data[0], $data[1]);
     }
 
-    public function compileMathExpression(): string
+    /**
+     * Compile all math expressions inside the HTML string.
+     * 
+     * @param string $html The HTML string to compile.
+     * 
+     * @return string The HTML string compiled.
+     */
+    public function compileMathExpression(string $html): string
     {
-        return "";
+        $offset = 0;
+
+        while (($selection = Pattern::select($html, "[", "]", $offset))->isValid()) {
+
+            $expressionRaw = trim($selection->getString(true));
+
+            if (!Text::contains($expressionRaw, ["{", "}"])){
+                $html = $this->compileSelection($html, $selection, math_eval($expressionRaw));
+            }
+
+            $offset++;
+        }
+
+        return $html;
     }
 
     /**

@@ -62,7 +62,7 @@ final class ValueConverter
             return $value;
         }
 
-        if (is_array($value) && isset($value[0]) && \in_array($value[0], [Type::T_null, Type::T_COLOR, Type::T_KEYWORD, Type::T_LIST, Type::T_MAP, Type::T_STRING])) {
+        if (is_array($value) && isset($value[0]) && \in_array($value[0], [Type::T_NULL, Type::T_COLOR, Type::T_KEYWORD, Type::T_LIST, Type::T_MAP, Type::T_STRING])) {
             return $value;
         }
 

@@ -1,0 +1,12 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class InlineComponent extends Component
+{
+    const Inline = true;
+}
+
+publish(InlineComponent::class);

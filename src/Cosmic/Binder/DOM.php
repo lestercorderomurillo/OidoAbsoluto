@@ -5,12 +5,9 @@ namespace Cosmic\Binder;
 use Cosmic\HTTP\Request;
 use Cosmic\HTTP\Server\Router;
 use Cosmic\Binder\Exceptions\NotFoundComponentException;
-use Cosmic\Bundle\Components\View;
 use Cosmic\Core\Exceptions\NotFoundDependencyException;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
-
-use function Cosmic\Core\Bootstrap\app;
 
 /**
  * This class represents the cosmic Binder tree.
@@ -134,12 +131,11 @@ class DOM
 
         foreach ($all as $key => $value){
             if(Text::startsWith($key, "Component@")){
-
                 $value = $value->get();
-                $files = Collection::mergeList(Component::getStyleFilesPath($value));
+                $files = Collection::mergeList($files, Component::getStyleFilesPath($value));
             }
         }
 
-        return array_unique($files);
+        return $files;
     }
 }

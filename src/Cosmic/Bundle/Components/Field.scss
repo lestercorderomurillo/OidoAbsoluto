@@ -1,0 +1,19 @@
+@mixin Field {
+    background: transparent !important;
+    border: none;
+    border-bottom: 1px solid $bg-secondary;
+    border-radius: 0 !important;
+    color: $text-primary !important;
+    outline: none;
+    outline-color: transparent;
+    outline-style: none;
+}
+
+.Field {
+    @include Component;
+    @include Field;
+}
+
+.Field:focus {
+    border-bottom: 3px solid darken($bg-secondary, 20) !important;
+}

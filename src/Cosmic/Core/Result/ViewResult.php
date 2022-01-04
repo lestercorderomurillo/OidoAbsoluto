@@ -12,8 +12,6 @@ use Cosmic\HTTP\Server\Response;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\HTML;
 
-use function Cosmic\Core\Bootstrap\app;
-
 /**
  * A response that renders a view and generates a valid HTTP response with the result as the body.
  */
@@ -79,6 +77,9 @@ class ViewResult implements ResultGeneratorInterface
         app()->injectPrimitive("metaBundles", $headers);
         app()->injectPrimitive("styleBundles", $styles);
 
+        /**
+         * @var Compiler $compiler
+         **/
         $compiler = app()->get(Compiler::class);
         $html = $compiler->compileString($this->view->getSourceHTML(), $this->view->getViewData());
 

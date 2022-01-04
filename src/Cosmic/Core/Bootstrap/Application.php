@@ -46,6 +46,10 @@ abstract class Application extends Environment
      */
     public function buildApplication(): void
     {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
         $this->injectSingleton(Logger::class);
 
         $this->createHostEnvironment();

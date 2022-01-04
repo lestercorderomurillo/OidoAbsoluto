@@ -11,8 +11,6 @@ use Cosmic\HTTP\Exceptions\EntryPointException;
 use Cosmic\HTTP\Exceptions\InvalidParameterBinding;
 use Cosmic\Utilities\Collection;
 
-use function Cosmic\Core\Bootstrap\app;
-
 /**
  * This class represents a entry point. 
  * 
@@ -32,13 +30,13 @@ class EntryPoint extends Actions
     private string $method;
 
     /**
-     * @var Middleware[] $middlewares A collection of middlewares for this entry point.
+     * @var string[] $middlewares A collection of middlewares for this entry point.
      * Must be already the runtime objects, not the class definition.
      */
     private array $middlewares;
 
     /**
-     * @var Middleware[] $middlewares A collection of middlewares. Works the same as in $middlewares, but
+     * @var string[] $middlewares A collection of middlewares. Works the same as in $middlewares, but
      * their handle action will  be executed after the request has been already sent to the client.
      */
     private array $lateMiddlewares;
@@ -181,17 +179,38 @@ class EntryPoint extends Actions
 
             $type = $parameter->getType();
 
-            if($type instanceof \ReflectionNamedType && app()->has($type->getName())){
+            if($type instanceof \ReflectionNamedType){
 
-                $outputParameters[] = app()->get($type->getName());
+                $typeName = $type->getName();
+
+                if(app()->has($typeName)){
+
+                    $outputParameters[] = app()->get($typeName);
+    
+                }else{
+    
+                    if (isset($formData[$parameter->getName()])) {
+    
+                        $outputParameters[] = $formData[$parameter->getName()];
+    
+                    } else {
+                        
+                        switch($typeName){
+                            case 'value': $value = 0; break;
+                            case 'array': $value = []; break;
+                            case 'string': $value = ""; break;
+                            default: $value = null; break;
+                        }
+
+                        $outputParameters[] = $value;
+
+                    }
+    
+                }
 
             }else{
 
-                if (isset($formData[$parameter->getName()])) {
-                    $outputParameters[] = $formData[$parameter->getName()];
-                } else {
-                    throw new InvalidParameterBinding("Unmatched parameter '$parameter' from the route.");
-                }
+                throw new InvalidParameterBinding("The parameter '$parameter' must have a type in the method definition");
 
             }
 
@@ -238,7 +257,7 @@ class EntryPoint extends Actions
         foreach ($this->middlewares as $middleware) {
 
             if ($request != null) {
-                $middlewareInstance = new $middleware();
+                $middlewareInstance = app()->create($middleware);
                 $request = $middlewareInstance->handle($request);
             }
         }

@@ -6,8 +6,6 @@ use Cosmic\Binder\Exceptions\CompileException;
 use Cosmic\Utilities\Text;
 use Cosmic\Utilities\Transport;
 
-use function Cosmic\Core\Bootstrap\app;
-
 /**
  * This class represents a cosmic element. Similar to an HTML object but with server side rendering capability.
  */

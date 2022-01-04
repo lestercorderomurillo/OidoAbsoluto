@@ -157,6 +157,11 @@ class Injectable implements ContainerInterface
         $class = new \ReflectionClass($alias);
 
         $constructor = $class->getConstructor();
+
+        if ($constructor == null) {
+            return new $alias();
+        }
+
         $parameters = $constructor->getParameters();
 
         foreach ($parameters as $parameter) {

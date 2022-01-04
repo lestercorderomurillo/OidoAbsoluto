@@ -3,7 +3,6 @@
 namespace Cosmic\FileSystem\Bootstrap;
 
 use Cosmic\Traits\StringableTrait;
-use function Cosmic\Core\Bootstrap\app;
 
 /**
  * The base class for all kinds of paths. Can be either a directory or a file.

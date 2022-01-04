@@ -2,10 +2,6 @@
 
 namespace Cosmic\Core\Bootstrap;
 
-use Cosmic\Core\Exceptions\UnavailableDependencyException;
-use Cosmic\Core\Interfaces\ContainerInterface;
-use Cosmic\Utilities\Collection;
-
 /**
  * This class represents a dependency that can be injected into a instance.
  */

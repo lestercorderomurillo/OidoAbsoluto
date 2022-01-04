@@ -4,7 +4,6 @@ namespace Cosmic\Binder\HTML;
 
 use Cosmic\Binder\Compiler;
 use Cosmic\Traits\StringableTrait;
-use function Cosmic\Core\Bootstrap\app;
 
 /**
  * This class represents a simple HTML tag strip. Not used to manage cosmic elements but already parsed HTML ones.
@@ -69,6 +68,7 @@ class TagStrip
                 }
             }
         }
+
         return "<" . trim($this->tag . $attributesString) . ">";
     }
 }

@@ -41,14 +41,22 @@ class Text
     /**
      * Check if a string contains another string. Another way to say it's substring of...
      * 
-     * @param string $text The input string.
-     * @param string $check The string to search.
+     * @param string $text The input string. 
+     * @param string[]|string $check The string to search. Can be an array of strings.
      * 
      * @return bool Return true if the string contains the another one, false otherwise.
      */
-    public static function contains(string $text, string $check)
+    public static function contains(string $text, $check)
     {
-        return (strpos($text, $check) !== false);
+        $check = Collection::normalize($check);
+
+        foreach ($check as $singleCheck) {
+            if (strpos($text, $singleCheck) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

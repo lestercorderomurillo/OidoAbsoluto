@@ -1,0 +1,45 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Alert extends Component
+{
+    const Styles = [
+        "Alert.scss"
+    ];
+
+    public function __construct(string $type = "warning")
+    {
+        $this->type = $type;
+
+        switch(strtolower($type)){
+            case "danger": $this->strongMessage = "¡Ha ocurrido un problema!"; break;
+            case "warning": $this->strongMessage = "¡Advertencia!"; break;
+            case "info": $this->strongMessage = "¡Aviso!"; break;
+            default: $this->strongMessage = "¡Excelente!"; break;
+        }
+    }
+
+    public function render()
+    {
+        return {{
+            <div class="alert Alert{type} alert-dismissible fade show">
+                <span class="close" data-dismiss="alert" aria-label="Close">
+                    <small>
+                        &times;
+                    </small>
+                    <br>
+                </span>
+                <strong>{strongMessage}</strong>
+                <div>
+                    {body}
+                </div>
+            </div>
+        }};
+    }
+}
+
+
+publish(Alert::class);

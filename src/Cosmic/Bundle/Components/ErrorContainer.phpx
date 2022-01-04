@@ -1,0 +1,26 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class ErrorContainer extends Component
+{
+    const Inline = true;
+
+    public function __construct(string $bind)
+    {
+        $this->bind = $bind;
+    }
+
+    public function render()
+    {
+        return {{
+            <label id&name="error_{bind}" for="{bind}" class="error"></label>
+            <Spacing>
+        }};
+    }
+}
+
+
+publish(ErrorContainer::class);

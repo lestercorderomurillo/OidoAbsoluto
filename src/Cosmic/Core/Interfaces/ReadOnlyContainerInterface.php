@@ -24,4 +24,11 @@ interface ReadOnlyContainerInterface
      * @return mixed The entry value.
      */
     public function get(string $key);
+
+    /**
+     * Return all elements from the container.
+     * 
+     * @return array
+     */
+    public function all(): array;
 }

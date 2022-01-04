@@ -1,0 +1,31 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Select extends Component
+{
+    const Inline = true;
+
+    public function __construct(array $from, string $bind)
+    {
+        $this->from = $from;
+        $this->bind = $bind;
+    }
+
+    public function render()
+    {
+        return {{
+            <select id&name="{bind}" class="form-control Field">
+                <option value="">Seleccione una opción...</option>
+                <Foreach using="item" from="{from}">
+                    <option value="{parent.item}">{parent.item}</option>
+                </Foreach>
+            </select>
+            <Spacing>
+        }};
+    }
+}
+
+publish(Select::class);

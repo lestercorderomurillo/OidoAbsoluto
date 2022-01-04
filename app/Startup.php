@@ -10,14 +10,13 @@
  */
 
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "/src/Cosmic/Core/Bootstrap/Kernel.php");
 
-use Cosmic\Core\Bootstrap\Lifetime;
 use Cosmic\Core\Applications\MVCApplication;
-use Cosmic\Database\SQLDatabase;
-use Cosmic\Database\Driver\MySQLDriver;
-use Cosmic\Database\Common\ConnectionString;
-use Cosmic\Database\Common\MySQLConnectionString;
-use function Cosmic\Core\Bootstrap\deploy;
+use Cosmic\ORM\Common\ConnectionString;
+use Cosmic\ORM\Driver\MySQLDriver;
+use Cosmic\ORM\Databases\SQL\SQLDatabase;
+use Cosmic\ORM\Databases\SQL\SQLConnectionString;
 
 class WebApplication extends MVCApplication
 {
@@ -27,7 +26,7 @@ class WebApplication extends MVCApplication
     {
         parent::onConfiguration();
 
-        $this->connectionString = new MySQLConnectionString();
+        $this->connectionString = new SQLConnectionString();
     }
 
     protected function onServicesInjection(): void

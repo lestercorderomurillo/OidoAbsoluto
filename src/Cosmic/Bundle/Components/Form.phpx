@@ -1,0 +1,28 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+use Cosmic\Utilities\Cryptography;
+
+class Form extends Component
+{
+    public function __construct(string $route, string $method = "post", string $id = "form")
+    {
+        $this->id = $id;
+        $this->method = $method;
+        $this->fullRoute = __HOST__ . $route;
+        $this->random = Cryptography::computeRandomKey(8);
+    }
+
+    public function render()
+    {
+        return {{
+            <form id="{id}" action="{fullRoute}" method="{method}" autocomplete="{random}">
+                {body}
+            </form>
+        }};
+    }
+}
+
+publish(Form::class);

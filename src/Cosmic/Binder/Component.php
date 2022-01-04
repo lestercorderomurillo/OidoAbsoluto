@@ -9,9 +9,6 @@ use Cosmic\Traits\ClassAwareTrait;
 use Cosmic\Binder\Exceptions\InvalidComponentException;
 use Cosmic\FileSystem\Paths\File;
 
-use function Cosmic\Core\Bootstrap\app;
-use function Cosmic\Core\Bootstrap\guid;
-
 /**
  * This class represents a cosmic component. Should be extended to create new components.
  */
@@ -68,7 +65,8 @@ abstract class Component
 
         if ($constant !== false) {
             foreach ($constant as $line) {
-                $paths[] = new File("src/Cosmic/Bundle/Components/$line");
+                $path = new File("src/Cosmic/Bundle/Components/$line");
+                $paths[] = $path;
             }
         }
 
@@ -159,11 +157,27 @@ abstract class Component
     {
         if (method_exists($this, 'render')) {
 
-            $this->renderTemplate = call_user_func([$this, 'render']);
-            return $this->renderTemplate;
+            $renderTemplate = call_user_func([$this, 'render']);
+            if ($renderTemplate != null && strlen($renderTemplate) > 0) {
+                return $renderTemplate;
+            }
+            return __EMPTY__;
         }
 
-        throw new InvalidComponentException("This component is missing a render method");
+        throw new InvalidComponentException("This component is missing a render method in their class definition");
+    }
+
+    /**
+     * Call the dispose method of this component if available.
+     *
+     * @return void
+     */
+    public function tryDispose(): void
+    {
+        if (method_exists($this, 'dispose')) {
+
+            call_user_func([$this, 'dispose']);
+        }
     }
 
     /**

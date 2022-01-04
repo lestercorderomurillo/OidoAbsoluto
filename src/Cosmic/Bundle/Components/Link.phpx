@@ -1,0 +1,26 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Link extends Component
+{
+    public function __construct(string $route, string $accent = "Secondary", string $id = "")
+    {
+        $this->accent = $accent;
+        $this->id = $id;
+        $this->fullRoute = __HOST__ . $route;
+    }
+
+    public function render()
+    {
+        return {{
+            <a id="{id}" class="accent-{accent}" href="{fullRoute}">
+                {body}
+            </a>
+        }};
+    }
+}
+
+publish(Link::class);

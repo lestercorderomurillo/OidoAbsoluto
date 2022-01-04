@@ -1,0 +1,32 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+use Cosmic\Utilities\Cryptography;
+
+class Textfield extends Component
+{
+    const Inline = true;
+
+    const Styles = [
+        "Field.scss"
+    ];
+
+    public function __construct(string $type = "text", string $maxWidth = "1200px", string $bind)
+    {
+        $this->bind = $bind;
+        $this->type = $type;
+        $this->maxWidth = $maxWidth;
+        $this->random = Cryptography::computeRandomKey(8);
+    }
+
+    public function render()
+    {
+        return {{
+            <input id&name="{bind}" type="{type}" class="form-control Field Focuseable" style="max-width: {maxWidth};" maxlength="64" autocomplete="{random}"> <br> 
+        }};
+    }
+}
+
+publish(Textfield::class);

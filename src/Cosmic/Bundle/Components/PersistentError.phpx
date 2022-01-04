@@ -1,0 +1,33 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class PersistentError extends Component
+{
+    const Inline = true;
+
+    public function render()
+    {
+        $this->text = session("alertText");
+        $this->type = session("alertType");
+
+        if ($this->text != null) {
+
+            return {{
+                <Alert type="{type}">
+                    {text}
+                </Alert>
+            }};
+        }
+    }
+
+    public function dispose()
+    {
+        session()->delete("alertText");
+        session()->delete("alertType");
+    }
+}
+
+publish(PersistentError::class);

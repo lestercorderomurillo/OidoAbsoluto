@@ -233,6 +233,20 @@ class Collection
     }
 
     /**
+     * Normalize an array to a single element if the collection contains only one element.
+     * If not, then return the same array without modifications.
+     * 
+     * @param mixed|array|null $data The data to be single normalize.
+     * 
+     * @return mixed|array|null The array or the single element.
+     */
+    public static function singleNormalize($data)
+    {
+        if($data == null) return null;
+        return (count($data) == 1) ? $data[array_key_first($data)] : $data;
+    }
+
+    /**
      * Create a new array collection directly from a file.
      * The returned array can be a list or a dictionary.
      * 

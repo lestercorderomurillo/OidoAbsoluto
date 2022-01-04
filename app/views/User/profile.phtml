@@ -1,0 +1,166 @@
+<View title="Perfil de Usuario">
+    <Row>
+        <Card size="10">
+            <Title>Bienvenido de nuevo, {username}</Title>
+            <PersistentError>
+            <RedirectButton route="">Iniciar Prueba con Piano Interactivo</RedirectButton>
+            <RedirectButton route="">Iniciar Prueba Sencilla</RedirectButton>
+            <RedirectButton route="">Editar su perfil</RedirectButton>
+            <RedirectButton route="logout" accent="Danger">Cerrar Sesión</RedirectButton>
+            <Spacing size="3">
+            <Title>Historial de pruebas realizadas</Title>
+            <Label>
+                Esta sección muestra un resumen breve de cada una de las pruebas realizadas asociadas al usuario actual.
+            </Label>
+            <Spacing>
+            <Foreach from="{tests}" using="i">
+                <Card>
+                    <Row>
+                        <Column textPosition="left" size="4">
+                            <Subtitle><strong>Prueba #{parent.i.try} ({parent.i.date})</strong></Subtitle>
+                        </Column>
+                        <Column textPosition="right" size="8">
+                            <Link route="">Ver detalles avanzados de esta prueba &rarr;</Link>
+                        </Column>
+                    </Row>
+                    <Spacing>
+                    <Row>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>Aciertos Totales</Subtitle>
+                            <div>
+                                {parent.i.totalMatches} / {parent.i.totalNotes} 
+                                ([{parent.i.totalMatches}/{parent.i.totalNotes}*100]%)
+                            </div>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>Aciertos Piano</Subtitle>
+                            <div>
+                                {parent.i.totalPianoMatches} / {parent.i.totalPianoNotes} 
+                                ([{parent.i.totalPianoMatches}/{parent.i.totalPianoNotes}*100]%)
+                            </div>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>Aciertos Sintéticos</Subtitle>
+                            <div>
+                                {parent.i.totalSinMatches} / {parent.i.totalSinNotes} 
+                                ([{parent.i.totalSinMatches}/{parent.i.totalSinNotes}*100]%)
+                            </div>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>Aciertos Naturales</Subtitle>
+                            <div>
+                                {parent.i.totalNaturalMatches} / {parent.i.totalNaturalNotes} 
+                                ([{parent.i.totalNaturalMatches}/{parent.i.totalNaturalNotes}*100]%)
+                            </div>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>Aciertos Sostenidos</Subtitle>
+                            <div>
+                                {parent.i.total#Matches} / {parent.i.total#Notes} 
+                                ([{parent.i.total#Matches}/{parent.i.total#Notes}*100]%)
+                            </div>
+                        </Column>
+                    </Row>
+                    <hr>
+                    <Row>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>C / DO</Subtitle>
+                            <div>
+                                {parent.i.CMatches} / {parent.i.CTotal}
+                                ([{parent.i.CMatches}/{parent.i.CTotal} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>C# / DO#</Subtitle>
+                            <div>
+                                {parent.i.C#Matches} / {parent.i.C#Total}
+                                ([{parent.i.C#Matches}/{parent.i.C#Total} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>D / RE</Subtitle>
+                            <div>
+                                {parent.i.DMatches} / {parent.i.DTotal}
+                                ([{parent.i.DMatches}/{parent.i.DTotal} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>D# / RE#</Subtitle>
+                            <div>
+                                {parent.i.D#Matches} / {parent.i.D#Total}
+                                ([{parent.i.D#Matches}/{parent.i.D#Total} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>E / MI</Subtitle>
+                            <div>
+                                {parent.i.EMatches} / {parent.i.ETotal}
+                                ([{parent.i.EMatches}/{parent.i.ETotal} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>F / FA</Subtitle>
+                            <div>
+                                {parent.i.FMatches} / {parent.i.FTotal}
+                                ([{parent.i.FMatches}/{parent.i.FTotal} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>F# / FA#</Subtitle>
+                            <div>
+                                {parent.i.F#Matches} / {parent.i.F#Total}
+                                ([{parent.i.F#Matches}/{parent.i.F#Total} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>G / SOL</Subtitle>
+                            <div>
+                                {parent.i.GMatches} / {parent.i.GTotal}
+                                ([{parent.i.GMatches}/{parent.i.GTotal} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>G# / SOL#</Subtitle>
+                            <div>
+                                {parent.i.G#Matches} / {parent.i.G#Total}
+                                ([{parent.i.G#Matches}/{parent.i.G#Total} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>A / LA</Subtitle>
+                            <div>
+                                {parent.i.AMatches} / {parent.i.ATotal}
+                                ([{parent.i.AMatches}/{parent.i.ATotal} * 100]%)
+                            </div>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>A# / LA#</Subtitle>
+                            <div>
+                                {parent.i.A#Matches} / {parent.i.A#Total}
+                                ([{parent.i.A#Matches}/{parent.i.A#Total} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                        <Column textPosition="center" size="2">
+                            <Subtitle>B / SI</Subtitle>
+                            <div>
+                                {parent.i.BMatches} / {parent.i.BTotal}
+                                ([{parent.i.BMatches}/{parent.i.BTotal} * 100]%)
+                            </div>
+                            <Spacing>
+                        </Column>
+                    </Row>
+                </Card>
+            </Foreach>
+        </Card>
+    </Row>
+</View>

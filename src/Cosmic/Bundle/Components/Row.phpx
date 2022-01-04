@@ -1,0 +1,19 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Row extends Component
+{
+    public function render()
+    {
+        return {{
+            <div class="row">
+                {body}
+            </div>
+        }};
+    }
+}
+
+publish(Row::class);

@@ -3,7 +3,6 @@
 namespace Cosmic\HTTP;
 
 use Cosmic\Utilities\Text;
-use function Cosmic\Core\Bootstrap\safe;
 
 /**
  * Representation of an incoming, client-side request.

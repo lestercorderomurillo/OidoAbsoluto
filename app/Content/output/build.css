@@ -32,22 +32,6 @@ input[type='number'] {
 .Close {
   padding-top: 0.865rem !important;
 }
-.AlertInfo {
-  color: #0a3048;
-  background-color: #a4c5da;
-}
-.AlertDanger {
-  color: #ce8888;
-  background-color: #7e2020;
-}
-.AlertWarning {
-  color: #7a501a;
-  background-color: #f4e295;
-}
-.AlertSuccess {
-  color: #112d11;
-  background-color: #6fab6d;
-}
 Body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -100,6 +84,33 @@ a:hover {
   background-color: #a4c5da !important;
   color: #0a3048 !important;
 }
+.Hide {
+  display: none;
+}
+.AlertInfo {
+  color: #0a3048;
+  background-color: #a4c5da;
+}
+.AlertDanger {
+  color: #ce8888;
+  background-color: #7e2020;
+}
+.AlertWarning {
+  color: #7a501a;
+  background-color: #f4e295;
+}
+.AlertSuccess {
+  color: #112d11;
+  background-color: #6fab6d;
+}
+.Button {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  background-color: #585275;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: bolder;
+}
 Button.AccentPrimary:hover {
   background-color: #04081a !important;
   color: #e4e5ec !important;
@@ -124,9 +135,6 @@ Button.AccentInfo:hover {
   background-color: #0a3048 !important;
   color: #a4c5da !important;
 }
-.Hide {
-  display: none;
-}
 .Field {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -139,7 +147,7 @@ Button.AccentInfo:hover {
   outline-color: transparent;
   outline-style: none;
 }
-.Textfield:focus, .Passfield:focus, .Field:focus {
+.Field:focus {
   border-bottom: 3px solid #2b2839 !important;
 }
 .Radio, .Radio:after, input[type="radio"]:checked:after {
@@ -172,4 +180,75 @@ input[type="radio"]:checked:after {
   padding: 12px;
   font-size: 12px;
   font-weight: bolder;
+}
+Button.AccentPrimary:hover {
+  background-color: #04081a !important;
+  color: #e4e5ec !important;
+}
+Button.AccentSecondary:hover {
+  background-color: #a3a3b8 !important;
+  color: #585275 !important;
+}
+Button.AccentSuccess:hover {
+  background-color: #112d11 !important;
+  color: #6fab6d !important;
+}
+Button.AccentWarning:hover {
+  background-color: #7a501a !important;
+  color: #f4e295 !important;
+}
+Button.AccentDanger:hover {
+  background-color: #ce8888 !important;
+  color: #7e2020 !important;
+}
+Button.AccentInfo:hover {
+  background-color: #0a3048 !important;
+  color: #a4c5da !important;
+}
+.Button {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  background-color: #585275;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: bolder;
+}
+Button.AccentPrimary:hover {
+  background-color: #04081a !important;
+  color: #e4e5ec !important;
+}
+Button.AccentSecondary:hover {
+  background-color: #a3a3b8 !important;
+  color: #585275 !important;
+}
+Button.AccentSuccess:hover {
+  background-color: #112d11 !important;
+  color: #6fab6d !important;
+}
+Button.AccentWarning:hover {
+  background-color: #7a501a !important;
+  color: #f4e295 !important;
+}
+Button.AccentDanger:hover {
+  background-color: #ce8888 !important;
+  color: #7e2020 !important;
+}
+Button.AccentInfo:hover {
+  background-color: #0a3048 !important;
+  color: #a4c5da !important;
+}
+.Field {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: none;
+  border-bottom: 1px solid #585275;
+  border-radius: 0 !important;
+  color: #04081a !important;
+  outline: none;
+  outline-color: transparent;
+  outline-style: none;
+}
+.Field:focus {
+  border-bottom: 3px solid #2b2839 !important;
 }

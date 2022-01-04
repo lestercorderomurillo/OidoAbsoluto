@@ -4,6 +4,7 @@
             <Form route="signup/submit">
                 <IconifiedTitle source="signup.png">Registro de usuario</IconifiedTitle>
                 <Spacing>
+                <PersistentError>
                 <Row>
                     <Column size="6">
                         <Label for="firstName">Nombre</Label>
@@ -14,7 +15,7 @@
                         <Textfield bind="lastName">
                     </Column>
                 </Row>
-                <Label for="email">Correo Electrónico</Label>
+                <Label for="email">Correo Electrónico (Nombre de la cuenta)</Label>
                 <Textfield bind="email">
                 <Label for="password">Contraseña</Label>
                 <Passfield>

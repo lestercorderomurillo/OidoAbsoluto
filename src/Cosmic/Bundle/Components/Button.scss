@@ -1,0 +1,37 @@
+.Button {
+    @include Component;
+    background-color: $bg-secondary;
+    padding: 12px;
+    font-size: $font-button-size;
+    font-weight: bolder;
+}
+
+Button.AccentPrimary:hover{
+    background-color: $text-primary !important;
+    color: $bg-primary !important;
+}
+
+Button.AccentSecondary:hover{
+    background-color: $text-secondary !important;
+    color: $bg-secondary !important;
+}
+
+Button.AccentSuccess:hover{
+    background-color: $text-success !important;
+    color: $bg-success !important;
+}
+
+Button.AccentWarning:hover{
+    background-color: $text-warning !important;
+    color: $bg-warning !important;
+}
+
+Button.AccentDanger:hover{
+    background-color: $text-danger !important;
+    color: $bg-danger !important;
+}
+
+Button.AccentInfo:hover{
+    background-color: $text-info !important;
+    color: $bg-info !important;
+}

@@ -1,0 +1,34 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Radio extends Component
+{
+    const Inline = true;
+
+    const Styles = [
+        "Radio.scss"
+    ];
+
+    public function __construct(string $bind, string $value, string $text, string $id)
+    {
+        $this->id = $id;
+        $this->bind = $bind;
+        $this->value = $value;
+        $this->text = $text;
+    }
+
+    public function render()
+    {
+        return {{
+            <input id="{bind}_{id}" name="{bind}" class="Radio p-1 ml-1 d-inline" type="radio" value="{value}">
+            <Label for="{bind}_{id}" classes="pl-2 d-inline">{text}</Label> 
+            <Spacing>
+        }};
+    }
+}
+
+
+publish(Radio::class);

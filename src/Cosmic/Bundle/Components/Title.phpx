@@ -1,0 +1,24 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class Title extends Component
+{
+    public function __construct(string $id = "")
+    {
+        $this->id = $id;
+    }
+
+    public function render()
+    {
+        return {{
+            <h4 class="font-weight-bold mb-3">
+                {body}
+            </h4>
+        }};
+    }
+}
+
+publish(Title::class);

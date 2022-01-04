@@ -206,7 +206,7 @@ class LaTeXPrinter implements Visitor
             return "$p/$q";
         }
 
-        return "\\frac{{$p}}{{$q}}";
+        return "\\frac<<<HTML$p}}<<<HTML$q}}";
     }
 
     /**

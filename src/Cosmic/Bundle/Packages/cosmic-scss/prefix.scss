@@ -49,27 +49,6 @@ input[type='number'] {
     padding-top: .865rem !important;
 }
 
-// Alerts Core
-.AlertInfo{
-    color: $text-info;
-    background-color: $bg-info;
-}
-
-.AlertDanger{
-    color: $text-danger;
-    background-color: $bg-danger;
-}
-
-.AlertWarning{
-    color: $text-warning;
-    background-color: $bg-warning;
-}
-
-.AlertSuccess{
-    color: $text-success;
-    background-color: $bg-success;
-}
-
 // Body Core 
 Body{
     @include Unselectable;
@@ -128,36 +107,6 @@ a:hover{
 .AccentInfo{
     background-color: $bg-info !important;
     color: $text-info !important;
-}
-
-Button.AccentPrimary:hover{
-    background-color: $text-primary !important;
-    color: $bg-primary !important;
-}
-
-Button.AccentSecondary:hover{
-    background-color: $text-secondary !important;
-    color: $bg-secondary !important;
-}
-
-Button.AccentSuccess:hover{
-    background-color: $text-success !important;
-    color: $bg-success !important;
-}
-
-Button.AccentWarning:hover{
-    background-color: $text-warning !important;
-    color: $bg-warning !important;
-}
-
-Button.AccentDanger:hover{
-    background-color: $text-danger !important;
-    color: $bg-danger !important;
-}
-
-Button.AccentInfo:hover{
-    background-color: $text-info !important;
-    color: $bg-info !important;
 }
 
 // Base Component
