@@ -1,13 +1,3 @@
-$(document).ready(function () {
-    $(".error").hide();
-    $(".Focuseable").keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $(this).next('.Focuseable').focus();
-        }
-    });
-    $("Body").addClass('BodyLoaded');
-});
-
 /**
  * Run a function with the specified delay.
  * 
@@ -18,4 +8,18 @@ function delay(fn, time) {
     setTimeout(function () {
         fn();
     }, time);
+}
+
+/**
+ * Returns a number whose value is limited to the given range.
+ *
+ * @param {int} value The number to limit the value to.
+ * @param {int} min The lower boundary of the output range.
+ * @param {int} max The upper boundary of the output range.
+ * @returns {int} A number in the range [min, value, max].
+ */
+function clamp(value, min, max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
 }

@@ -6,10 +6,9 @@ use Cosmic\Binder\Component;
 
 class Link extends Component
 {
-    public function __construct(string $route, string $accent = "Secondary", string $id = "")
+    public function __construct(string $route, string $accent = "Secondary")
     {
         $this->accent = $accent;
-        $this->id = $id;
         $this->fullRoute = __HOST__ . $route;
     }
 

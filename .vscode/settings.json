@@ -83,7 +83,7 @@
                 {
                     "scope": [
                         "expression.property.keyword",
-                        "component.attributes.context"
+                        "component.attributes.event"
                     ],
                     "settings": {
                         "foreground": "#6f71f1"
@@ -94,7 +94,7 @@
                         "expression.callback.action"
                     ],
                     "settings": {
-                        "foreground": "#fadd9e"
+                        "foreground": "#DCDCAA"
                     }
                 },
                 {
@@ -129,6 +129,14 @@
                         "foreground": "#c5c5c5"
                     }
                 },
+                {
+                    "scope": [
+                        "expression.componentReference"
+                    ],
+                    "settings": {
+                        "foreground": "#9CDCFE"
+                    }
+                }
             ]
         }
     }

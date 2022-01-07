@@ -6,11 +6,6 @@ use Cosmic\Binder\Component;
 
 class Title extends Component
 {
-    public function __construct(string $id = "")
-    {
-        $this->id = $id;
-    }
-
     public function render()
     {
         return {{

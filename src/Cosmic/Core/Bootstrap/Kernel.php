@@ -173,15 +173,15 @@ if (!function_exists('configuration')) {
     }
 }
 
-if (!function_exists('guid')) {
+if (!function_exists('generateID')) {
     /**
-     * Get a new unique guid from php system.
+     * Get a new unique key from php system.
      * 
      * @return string
      */
-    function guid(): string
+    function generateID(): string
     {
-        return com_create_guid();
+        return md5(com_create_guid());
     }
 }
 

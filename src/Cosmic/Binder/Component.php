@@ -6,8 +6,8 @@ use Cosmic\Utilities\Text;
 use Cosmic\Utilities\Collection;
 use Cosmic\Traits\ValuesSetterTrait;
 use Cosmic\Traits\ClassAwareTrait;
-use Cosmic\Binder\Exceptions\InvalidComponentException;
 use Cosmic\FileSystem\Paths\File;
+use Cosmic\Binder\Exceptions\InvalidComponentException;
 
 /**
  * This class represents a cosmic component. Should be extended to create new components.
@@ -18,9 +18,19 @@ abstract class Component
     use ValuesSetterTrait;
 
     /**
-     * @var string $key The component key. Needed for DOM transforming.
+     * @var string $id The component ID. Needed for DOM manipulation and transforming.
      */
-    private string $key;
+    public string $id;
+
+    /**
+     * @var string $events Store this component compiled delegated events.
+     */
+    public string $events;
+
+    /**
+     * @var string $classList Store this component compiled delegated classes.
+     */
+    public string $classList;
 
     /**
      * Return the publish component name for injectable container's.
@@ -41,11 +51,11 @@ abstract class Component
     /**
      * Return the publish component name from the HTML tag name.
      *
-     * @return string $tag The HTML tag name.
+     * @param string $tag The HTML tag name.
      * 
      * @return string The component name.
      */
-    public static function getPublishNameFromTag($tag): string
+    public static function getPublishNameFromTag(string $tag): string
     {
         return "Component@" . $tag;
     }
@@ -74,13 +84,13 @@ abstract class Component
     }
 
     /**
-     * Return the global DOM tree compiler.
-     *
-     * @return Compiler The DOM tree.
+     * Return the component name simplified.
+     * 
+     * @return string The component name simplified.
      */
-    public function &getCompiler(): Compiler
+    public function getSimplifiedName(): string
     {
-        return app()->get(Compiler::class);
+        return Text::getNamespaceBaseName($this->getClassName());
     }
 
     /**
@@ -99,85 +109,10 @@ abstract class Component
                 return "parent." . $key;
             });
 
-            return $this->getCompiler()->compileString($this->body, $passthroughTokens, 1) . "\n";
-        }
-        return "";
-    }
-
-    /**
-     * Return the component class name for instantiation.
-     *
-     * @return string The class name.
-     */
-    public function getClassName(): string
-    {
-        return static::class;
-    }
-
-    /**
-     * Set the new component internal key to a new random value, to help cosmic keep track of this component when trying to perform server side rendering.
-     *
-     * @return void
-     */
-    public function resetKey(): void
-    {
-        $this->key = guid();
-    }
-
-    /**
-     * Set the current component internal key to the given value.
-     * 
-     * @param string $key The key to bind to this component.
-     *
-     * @return void
-     */
-    public function setKey(string $key): void
-    {
-        $this->key = $key;
-    }
-
-    /**
-     * Return the binded key.
-     *
-     * @return string|null
-     */
-    public function getKey()
-    {
-        return isset($this->key) ? $this->key : null;
-    }
-
-    /**
-     * Return the render renderTemplate for this component.
-     * If not present, this will throw an exception
-     *
-     * @return string A HTML Cosmic renderTemplate string.
-     * @throws InvalidComponentException
-     */
-    public function getRenderTemplate(): string
-    {
-        if (method_exists($this, 'render')) {
-
-            $renderTemplate = call_user_func([$this, 'render']);
-            if ($renderTemplate != null && strlen($renderTemplate) > 0) {
-                return $renderTemplate;
-            }
-            return __EMPTY__;
+            return app()->get(Compiler::class)->compileString($this->body, $passthroughTokens, 1) . "\n";
         }
 
-        throw new InvalidComponentException("This component is missing a render method in their class definition");
-    }
-
-    /**
-     * Call the dispose method of this component if available.
-     *
-     * @return void
-     */
-    public function tryDispose(): void
-    {
-        if (method_exists($this, 'dispose')) {
-
-            call_user_func([$this, 'dispose']);
-        }
+        return __EMPTY__;
     }
 
     /**
@@ -221,27 +156,49 @@ abstract class Component
     }
 
     /**
-     * Return a collection of callbacks for this component.
+     * Return the render renderTemplate for this component.
+     * If not present, this will throw an exception
      *
-     * @return Callback[] An list of callbacks. 
+     * @return string A HTML Cosmic renderTemplate string.
+     * @throws InvalidComponentException
      */
-    public function getCallbacks(): array
+    public function getRenderTemplate(): string
     {
-        $componentMethods = $this->getMethods();
-        $callbacks = [];
+        if (method_exists($this, 'render')) {
 
-        foreach ($componentMethods as $method) {
-            $actionName = $method->getName();
+            $renderTemplate = call_user_func([$this, 'render']);
 
-            if ($method->isPublic() && $method->class == $this->getClassName() && !in_array($actionName, ["__construct", "render"])) {
-
-                $callbacks[] = new Callback(self::getPublishName($this), $actionName, $this->getKey(), $method->getParameters());
+            if ($renderTemplate != null && strlen($renderTemplate) > 0) {
+                return $renderTemplate;
             }
+
+            return __EMPTY__;
         }
 
-        return $callbacks;
+        throw new InvalidComponentException("This component is missing a render method in their class definition");
     }
 
+    /**
+     * Return the compiled javascripts functions of this component.
+     *
+     * @return string The compiled javascript source code.
+     */
+    public function getCompiledJavascriptFunctions(): string
+    {
+        $script = __EMPTY__;
+
+        if (method_exists($this, 'scripts')) {
+            $componentName = $this->getSimplifiedName() . "_" . $this->id . "_";
+            $script = call_user_func([$this, 'scripts']);
+            $script = preg_replace("/component\.([A-z0-9_]+)(?=\()/", "$componentName$1", $script);
+            //$script = preg_replace("/component\./", "state[\"" . $this->id . "\"].", $script);
+            $script = preg_replace("/component\./", "state[\"" . $this->id . "\"].", $script);
+            $script = preg_replace("/function (?=[A-z]+)/", "function $componentName", $script);
+        }
+
+        return trim("state[\"" . $this->id . "\"] = {};\n" . $script);
+    }
+    
     /**
      * @return bool Return true if this component doesn't require a closing tag.
      */
@@ -251,5 +208,18 @@ abstract class Component
             return $this->getConstant('Inline');
         }
         return false;
+    }
+
+    /**
+     * Call the dispose method of this component if available.
+     *
+     * @return void
+     */
+    public function tryDispose(): void
+    {
+        if (method_exists($this, 'dispose')) {
+
+            call_user_func([$this, 'dispose']);
+        }
     }
 }

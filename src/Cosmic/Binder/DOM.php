@@ -2,12 +2,12 @@
 
 namespace Cosmic\Binder;
 
-use Cosmic\HTTP\Request;
 use Cosmic\HTTP\Server\Router;
-use Cosmic\Binder\Exceptions\NotFoundComponentException;
-use Cosmic\Core\Exceptions\NotFoundDependencyException;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
+use Cosmic\Core\Exceptions\NotFoundDependencyException;
+use Cosmic\Binder\Exceptions\NotFoundComponentException;
+use Cosmic\Utilities\HTML;
 
 /**
  * This class represents the cosmic Binder tree.
@@ -15,19 +15,9 @@ use Cosmic\Utilities\Text;
 class DOM
 {
     /**
-     * @var Callback[] $callbacks Holds all the callbacks as a list.
+     * @var string[] $functions Holds all the javascripts functions from all components.
      */
-    private array $callbacks;
-
-    /**
-     * @var Router $router The router that this DOM object uses to put entry points for server side rendering.
-     */
-    private Router $router;
-
-    /**
-     * @var Compiler $compiler The compiler that this DOM tree uses for rendering components.
-     */
-    private Compiler $compiler;
+    private array $functions;
 
     /**
      * Constructor. Expected be resolved using dependency injection.
@@ -37,11 +27,9 @@ class DOM
      * 
      * @return void
      */
-    public function __construct(Compiler $compiler, Router $router)
+    public function __construct()
     {
-        $this->callbacks = [];
-        $this->compiler = $compiler;
-        $this->router = $router;
+        $this->functions = [];
     }
 
     /**
@@ -56,14 +44,14 @@ class DOM
     public function getComponentClassName(string $tag): string
     {
         try {
-            return app()->get(Component::getPublishNameFromTag($tag)); 
+            return app()->get(Component::getPublishNameFromTag($tag));
         } catch (NotFoundDependencyException $exception) {
-            throw new NotFoundComponentException("Binder doesn't have the component \"$tag\" registered yet");
+            throw new NotFoundComponentException("Binder doesn't have the component \"$tag\" registered yet. \nFrom Internal: " . $exception->getMessage());
         }
     }
 
     /**
-     * Register the component class in the container. When
+     * Register the component class in the container. 
      * 
      * @param string $className The component class to inject into the container.
      * 
@@ -75,48 +63,27 @@ class DOM
     }
 
     /**
-     * Add the given callback to the router to retrieve ajax-responses from the server when doing server side rendering.
+     * Register the given script for later client side export.
      * 
-     * @param Callback $callback The callback to be added.
+     * @param string $compiledJavascript The compiled javascript code.
      * 
      * @return void
      */
-    public function registerCallback(Callback $callback): void
+    public function registerJavascriptSourceCode(string $compiledJavascript): void
     {
-        $compiler = $this->compiler;
-
-        $this->router->get($callback->getEntryPointToken(),  function (Request $request) use ($callback, $compiler) {
-
-
-            return "callback request - component: " . $callback->getComponentName() . " with action: " . $callback->getComponentAction();
-            /*$componentName = $callback->getComponentName();
-
-            $formData = $request->getFormData();
-            
-            // emm.. we need the props genius..
-            $componentInstance = new View("test", "en");
-            $componentInstance->setKey($formData['key']);
-            $componentInstance->setValues($formData['state'], true);
-
-            $element = new Element($componentInstance, )
-            $compiler->compileElement()*/
-        });
+        $this->functions[] = $compiledJavascript;
     }
 
     /**
-     * Return the resulting compiled callbacks as one single javascript string that be exported 
-     * later on in the build.js file. This method merge all callbacks from all components.
+     * Return the resulting compiled scripts as one single javascript string that be exported 
+     * later on the view. This method merge all scripts from all components.
      *
-     * @return string 
+     * @return string The output javascript source code.
      */
-    public function getClientSideCallbacks(): string
+    public function getOuputJavascript(): string
     {
-        $bundle = [];
-        foreach ($this->callbacks as $callback) {
-            $bundle[] = $callback->getJavascriptFunction();
-        }
-
-        return implode("\n", $bundle);
+        $output = trim(implode("\n", $this->functions));
+        return "\n" . HTML::encodeInJScript($output, false);
     }
 
     /**
@@ -129,8 +96,8 @@ class DOM
         $all = app()->all();
         $files = [];
 
-        foreach ($all as $key => $value){
-            if(Text::startsWith($key, "Component@")){
+        foreach ($all as $key => $value) {
+            if (Text::startsWith($key, "Component@")) {
                 $value = $value->get();
                 $files = Collection::mergeList($files, Component::getStyleFilesPath($value));
             }

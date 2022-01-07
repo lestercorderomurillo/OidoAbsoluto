@@ -2,22 +2,20 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\Binder\InlineComponent;
 
-class Select extends Component
+class Select extends InlineComponent
 {
-    const Inline = true;
-
-    public function __construct(array $from, string $bind)
+    public function __construct(array $from, string $id)
     {
+        $this->id = $id;
         $this->from = $from;
-        $this->bind = $bind;
     }
 
     public function render()
     {
         return {{
-            <select id&name="{bind}" class="form-control Field">
+            <select {events} id&name="{id}" class="form-control Field">
                 <option value="">Seleccione una opción...</option>
                 <Foreach using="item" from="{from}">
                     <option value="{parent.item}">{parent.item}</option>

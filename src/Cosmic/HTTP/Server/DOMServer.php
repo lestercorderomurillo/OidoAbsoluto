@@ -18,7 +18,16 @@ class DOMServer implements ServerInterface
      */
     public function run(): void
     {
-        $files = FileSystem::find(new Folder("src/Cosmic/Bundle/Components/"), ["php", "phps", "phpx"]);
+        $files = FileSystem::find(
+            [
+                new Folder("src/Cosmic/Bundle/Components/"),
+                new Folder("app/Components/")
+            ],
+            [
+                "php", "phps", "phpx"
+            ]
+        );
+
         foreach ($files as $file) {
             FileSystem::import(new File($file));
         }

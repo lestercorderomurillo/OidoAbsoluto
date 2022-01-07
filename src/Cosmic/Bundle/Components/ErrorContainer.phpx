@@ -2,21 +2,19 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\Binder\InlineComponent;
 
-class ErrorContainer extends Component
+class ErrorContainer extends InlineComponent
 {
-    const Inline = true;
-
-    public function __construct(string $bind)
+    public function __construct(string $id)
     {
-        $this->bind = $bind;
+        $this->id = $id;
     }
 
     public function render()
     {
         return {{
-            <label id&name="error_{bind}" for="{bind}" class="error"></label>
+            <label id&name="error_{id}" for="{id}" class="error"></label>
             <Spacing>
         }};
     }

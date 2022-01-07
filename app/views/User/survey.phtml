@@ -1,0 +1,23 @@
+<View title="Recolección de información">
+    <Row>
+        <Card size="10">
+            <IconifiedTitle source="question.png">
+                Recolección de información
+            </IconifiedTitle>
+            <Subtitle>
+                Se le pedirá que conteste el siguiente formulario sinceramente
+            </Subtitle>
+            <Label>
+                Algunas preguntas dependen de la respuestas de preguntas anteriores, por lo que pueden verse ocultadas.
+            </Label>
+            <Spacing>
+            <Form id="surveyForm" route="questions/submit">
+                <Paginator numberOfPages="5">
+                    <Row>
+                        <Survey from="{surveyQuestions}" skip="[{parent.page}*10]" take="10">
+                    </Row>
+                </Paginator>
+            </Form>
+        </Card>
+    </Row>
+</View>

@@ -17,10 +17,15 @@ class Element
     private string $componentName;
 
     /**
-     * @var array $fixedParameters The parameters that will be used to render the element. 
-     * They should be inmutable once created.
+     * @var string[] $parameters The parameters that will be used to render the element. 
+     * They should be inmutable once created to avoid conflicts later on when doing stateful rendering.
      */
-    private array $fixedParameters;
+    private array $parameters;
+
+    /**
+     * @var string[] $events The delegated events for this element.
+     */
+    private array $events;
 
     /**
      * Constructor. Creates a new element using the given component as the template.
@@ -34,7 +39,16 @@ class Element
     public function __construct(string $componentName, array $parameters)
     {
         $this->componentName = $componentName;
-        $this->fixedParameters = $parameters;
+        $this->events = [];
+        $this->parameters = [];
+
+        foreach ($parameters as $key => $value){
+            if (Text::startsWith($key, "(") && Text::endsWith($key, ")")){
+                $this->events[$key] = $value;
+            }else{
+                $this->parameters[$key] = $value;
+            }
+        }
     }
 
     /**
@@ -46,6 +60,7 @@ class Element
     {
         return $this->componentName;
     }
+
     /**
      * Return the stored properties for this element.
      * 
@@ -53,7 +68,7 @@ class Element
      */
     public function getParameters(): array
     {
-        return $this->fixedParameters;
+        return $this->parameters;
     }
 
     /**
@@ -74,9 +89,9 @@ class Element
 
             foreach ($constructor->getParameters() as $parameter) {
 
-                if (isset($this->fixedParameters[$parameter->getName()])) {
+                if (isset($this->parameters[$parameter->getName()])) {
 
-                    $parameterCompiled = $this->fixedParameters[$parameter->getName()];
+                    $parameterCompiled = $this->parameters[$parameter->getName()];
 
                     if (Text::startsWith($parameterCompiled, "@_ARRAY_")) {
                         $parameterCompiled = Transport::stringToArray($parameterCompiled);
@@ -89,9 +104,11 @@ class Element
                     }
 
                     $parameters[] = $parameterCompiled;
+                    
                 } else if ($parameter->isDefaultValueAvailable()) {
 
                     $parameters[] = $parameter->getDefaultValue();
+
                 } else {
 
                     throw new CompileException("Unable to render '" . $this->getComponentName() . "' component because $parameter is missing");
@@ -99,6 +116,27 @@ class Element
             }
         }
 
-        return new $componentClassName(...$parameters);
+        /** @var Component $component */
+        $component = new $componentClassName(...$parameters);
+
+        if(!isset($component->id)){
+            $component->id = (isset($this->parameters["id"])) ? $this->parameters["id"] : generateID();
+        }
+
+        if(!isset($component->classList)){
+            $component->classList = (isset($this->parameters["classList"])) ? $this->parameters["classList"] : __EMPTY__;
+        }
+
+        $component->events = "";
+
+        foreach ($this->events as $key => $event) {
+            $component->events .= $key . '="' . $event . '" ';
+        }
+
+        $component->events = trim($component->events);
+
+        app()->get(DOM::class)->registerJavascriptSourceCode($component->getCompiledJavascriptFunctions());
+
+        return $component;
     }
 }

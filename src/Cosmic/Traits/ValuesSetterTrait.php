@@ -22,7 +22,7 @@ trait ValuesSetterTrait
                 if (property_exists(get_class($this), $key))
                     $this->$key = $value;
             } else {
-                if (property_exists(get_class($this), $key) && !isset($this->key))
+                if (property_exists(get_class($this), $key) && !isset($this->$key))
                     $this->$key = $value;
             }
         }

@@ -1,19 +1,19 @@
-<app:view title="{view:title}">
-    <app:row>
-        <app:card columnSize="8" padding="4">
-            <app:title-primary text="{view:title}">
-            <app:span fontSize="0.9rem">
+<View title="{title}">
+    <Rrow>
+        <Card columnSize="8" padding="4">
+            <Title>{title}</Title>
+            <Span fontSize="0.9rem">
                 <strong>Instrucciones de utilización</strong>
-                <app:spacing>
+                <Spacing>
                 Una vez usted escucha una nota músical, tiene un intervalo breve de 3 segundos para
-                identificar y marcar la nota que cree que escuchó en el {view:title}.
-                <if value="{view:showKeyBinds}">
+                identificar y marcar la nota que cree que escuchó en el {title}.
+                <if value="{showKeyBinds}">
                     Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. 
-                    Para el caso de notas blancas, utilice las teclas [ZXCVBNM] y para las negras utilice [SDGHJ].
+                    Para el caso de notas blancas, utilice las teclas "ZXCVBNM" y para las negras utilice "SDGHJ".
                 </if>
                 <v-spacing size="2">
                 Cuando se reproduzcan {?note_max} notas consecutivas, se pasará automaticamente a la siguiente etapa.
-            </app:span>
+            </Span>
             
             <app:spacing>
             <app:col textPosition="center">
@@ -57,4 +57,6 @@
 <script type="application/json" id="audios_sources">
     {view:audios_sources}
 </script>
-<script type="text/javascript" src="{view:script}" data-url="{view:url}" data-mode="{view:mode}"></script>
+<JSParameter key="audios">{audios}</JSParameter>
+<JSParameter key="url">{url}</JSParameter>
+<JSParameter key="mode">{mode}</JSParameter>

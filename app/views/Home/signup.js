@@ -1,4 +1,4 @@
-$('#form').submit(function (event) {
+$('#signupForm').submit(function (event) {
 
     if (!Validator.validateDate("birthDay")) {
         event.preventDefault();
@@ -8,11 +8,11 @@ $('#form').submit(function (event) {
     Validator.disableDateSubComponents("birthDay");
 
     $('#submit').prop("disabled", true);
-    $('#submit').html("Subiendo resultados...");
+    $('#submit').html("Subiendo formulario...");
     
 });
 
-$("#form").validate({
+$("#signupForm").validate({
     rules: {
         firstName: {
             required: true,

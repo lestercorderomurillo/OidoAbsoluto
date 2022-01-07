@@ -37,25 +37,29 @@ class FileSystem
     }
 
     /**
-     * Search all files within a directory. Can be used with an specific extension.
+     * Search all files within a directory(or directories). Can be used with an specific extension.
      * 
-     * @param Folder $folder The directory path to search.
+     * @param Folder[]|Folder $folders The directory path to search. Can be an array of folders.
      * @param string[]|string $extensions Can be used as filters. By default all extensions. (*)
      * When passed an array, it can search multiple extensions.
      * 
      * @return File[] A collection of files path.
      */
-    public static function find(Folder $folder, $extensions = "*"): array
+    public static function find($folders, $extensions = "*"): array
     {
+        $folders = Collection::normalize($folders);
         $extensions = Collection::normalize($extensions);
 
         $paths = [];
 
-        foreach ($extensions as $extension) {
-            $searchPath = $folder . "*.$extension";
+        foreach ($folders as $folder) {
 
-            foreach (FileSystem::recursiveGlob($searchPath) as $file) {
-                $paths[] = new File($file);
+            foreach ($extensions as $extension) {
+                $searchPath = $folder . "*.$extension";
+
+                foreach (FileSystem::recursiveGlob($searchPath) as $file) {
+                    $paths[] = new File($file);
+                }
             }
         }
 
@@ -75,27 +79,33 @@ class FileSystem
      */
     public static function import(File $file, bool $required = true, bool $once = false)
     {
-        if (!FileSystem::exists($file)) {
-            throw new IOException("Failed to import the requested file: $file");
-        }
-
-        if(in_array($file->getExtension(), ['phps', 'phpx'])) {
-            $precompiled = app()->get(Compiler::class)->precompileFile($file);
-            //die($precompiled);
-            return eval($precompiled);
-        }
-
-        if ($required) {
-            if ($once) {
-                return require_once($file);
+        try {
+            
+            if (!FileSystem::exists($file)) {
+                throw new IOException("The request file does not exist: $file");
             }
-            return require($file);
-        }
+    
+            if (in_array($file->getExtension(), ['phps', 'phpx'])) {
+                $precompiled = app()->get(Compiler::class)->precompileFile($file);
+                return eval($precompiled);
+            }
+            
+            if ($required) {
+                if ($once) {
+                    return require_once($file);
+                }
+                return require($file);
+            }
 
-        if ($once) {
-            return include_once($file);
+            if ($once) {
+                return include_once($file);
+            }
+            return include($file);
+
+        } catch (\Throwable $th) {
+
+            throw new IOException("Failed to import the requested file: $file \n Internal Error: " . $th->getMessage());
         }
-        return include($file);
     }
 
     /**
@@ -191,7 +201,7 @@ class FileSystem
             if ($path instanceof BasePath) {
                 $path->toWebPath();
                 $output[] = $path->toString();
-            }else if(is_string($path)) {
+            } else if (is_string($path)) {
                 $path = new File($path);
                 $path->toWebPath();
                 $output[] = $path->toString();

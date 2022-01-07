@@ -38,6 +38,7 @@ class View extends Component
                     <br>
                     { body }
                 </body>
+                { bindings }
             </html>
         }};
     }

@@ -5,14 +5,15 @@ namespace Cosmic\Bundle\Components;
 use Cosmic\Binder\Component;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Cryptography;
+use Cosmic\Utilities\Transport;
 
 class ForeachComponent extends Component
 {
     const Name = "Foreach";
 
-    public function __construct(array $from, string $using = "iterator")
+    public function __construct(array $from, string $using = "iterator", int $skip = 0, int $take = 10000)
     {
-        $this->from = $from;
+        $this->from = array_slice($from, $skip, $take);
         $this->using = $using;
     }
 
@@ -30,7 +31,6 @@ class ForeachComponent extends Component
     private function createTokensRecursive(string $base, $data)
     {
         $tokens = [];
-        $tokens[$base] = "array";
 
         foreach ($data as $key => $value) {
 
@@ -48,7 +48,7 @@ class ForeachComponent extends Component
                     $recursiveTokens
                 );
 
-                $tokens[$tokenName] = "array";
+                $tokens[$tokenName] = Transport::arrayToString($value);
             }
         }
 

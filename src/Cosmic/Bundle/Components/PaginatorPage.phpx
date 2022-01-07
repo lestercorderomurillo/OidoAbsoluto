@@ -1,0 +1,27 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class PaginatorPage extends Component
+{
+    public function __construct(int $page, string $paginator)
+    {
+        $this->page = $page;
+        $this->paginator = $paginator;
+    }
+
+    public function render()
+    {
+        $this->compiledBody = $this->renderChilds(["page" => $this->page]);
+
+        return {{
+            <div paginator="{paginator}" page="{page}" class="PaginatorPage hide">
+                {compiledBody}
+            </div>
+        }};
+    }
+}
+
+publish(PaginatorPage::class);

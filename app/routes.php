@@ -42,6 +42,7 @@ $router->groupController(UserController::class, function (Router $router) {
     $router->groupMiddlewares([Authentication::class], function (Router $router) {
         
         $router->get('/profile', ["profile"]);
+        $router->get('/survey', ["survey"]);
         
     });
 

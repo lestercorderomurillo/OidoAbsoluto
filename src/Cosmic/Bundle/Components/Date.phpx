@@ -2,15 +2,13 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\Binder\InlineComponent;
 
-class Date extends Component
+class Date extends InlineComponent
 {
-    const Inline = true;
-
-    public function __construct(string $bind)
+    public function __construct(string $id)
     {
-        $this->bind = $bind;
+        $this->id = $id;
     }
 
     public function render()
@@ -18,10 +16,10 @@ class Date extends Component
         $this->_template = "form-control d-inline Field Focuseable text-small";
 
         return {{
-            <input id&name="{bind}" type="hidden">
-            <input id&name="{bind}_dd" class="{_template}" type="text" maxlength="2" style="max-width: 50px;" placeholder="DD"> / 
-            <input id&name="{bind}_mm" class="{_template}" type="text" maxlength="2" style="max-width: 50px;" placeholder="MM"> / 
-            <input id&name="{bind}_yy" class="{_template}" type="text" maxlength="4" style="max-width: 60px;" placeholder="YYYY">
+            <input id&name="{id}" type="hidden">
+            <input id&name="{id}_dd" class="{_template}" type="text" maxlength="2" style="max-width: 50px;" placeholder="DD"> / 
+            <input id&name="{id}_mm" class="{_template}" type="text" maxlength="2" style="max-width: 50px;" placeholder="MM"> / 
+            <input id&name="{id}_yy" class="{_template}" type="text" maxlength="4" style="max-width: 60px;" placeholder="YYYY">
         }};
     }
 }

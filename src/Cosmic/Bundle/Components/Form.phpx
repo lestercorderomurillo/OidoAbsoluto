@@ -7,7 +7,7 @@ use Cosmic\Utilities\Cryptography;
 
 class Form extends Component
 {
-    public function __construct(string $route, string $method = "post", string $id = "form")
+    public function __construct(string $id, string $route, string $method = "post")
     {
         $this->id = $id;
         $this->method = $method;

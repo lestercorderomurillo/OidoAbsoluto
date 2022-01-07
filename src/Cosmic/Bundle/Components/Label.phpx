@@ -6,18 +6,17 @@ use Cosmic\Binder\Component;
 
 class Label extends Component
 {
-    public function __construct(string $textPosition = "left", string $fontSize = "1em", string $for = "", string $classes = "")
+    public function __construct(string $textPosition = "left", string $fontSize = "1em", string $for = "")
     {
         $this->textPosition = $textPosition;
         $this->fontSize = $fontSize;
         $this->for = $for;
-        $this->classes = $classes;
     }
 
     public function render()
     {
         return {{
-            <label for="{for}" class="w-100 text-color text-{textPosition} {classes}" style="font-size: {fontSize};">
+            <label for="{for}" class="w-100 text-color text-{textPosition} {classList}" style="font-size: {fontSize};">
                 {body}
             </label>
         }};

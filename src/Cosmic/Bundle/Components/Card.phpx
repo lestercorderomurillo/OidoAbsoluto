@@ -15,8 +15,7 @@ class Card extends Component
         string $padding = "5",
         string $fontSize = "1em",
         string $accent = "Primary",
-        string $overflow = "100",
-        string $id = ""
+        string $overflow = "100"
     ) {
         $this->minWidth = $minWidth;
         $this->maxWidth = $maxWidth;
@@ -27,9 +26,9 @@ class Card extends Component
         $this->fontSize = $fontSize;
         $this->accent = $accent;
         $this->overflow = $overflow;
-        $this->id = $id;
         $this->_template = "p-1 col col-12 col-sm-12 col-md-12";
     }
+
 
     public function render()
     {

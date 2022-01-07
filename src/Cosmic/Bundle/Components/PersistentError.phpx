@@ -2,12 +2,10 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\Binder\InlineComponent;
 
-class PersistentError extends Component
+class PersistentError extends InlineComponent
 {
-    const Inline = true;
-
     public function render()
     {
         $this->text = session("alertText");

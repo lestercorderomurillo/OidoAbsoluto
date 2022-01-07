@@ -1,6 +1,6 @@
 <?php
 
-namespace Cosmic\Bundle\Components;
+namespace Cosmic\Binder;
 
 use Cosmic\Binder\Component;
 
@@ -8,5 +8,3 @@ class InlineComponent extends Component
 {
     const Inline = true;
 }
-
-publish(InlineComponent::class);

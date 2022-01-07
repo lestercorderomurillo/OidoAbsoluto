@@ -3,7 +3,9 @@
 namespace Cosmic\Binder\HTML;
 
 use Cosmic\Binder\Compiler;
+use Cosmic\Binder\DOM;
 use Cosmic\Traits\StringableTrait;
+use Cosmic\Utilities\Text;
 
 /**
  * This class represents a simple HTML tag strip. Not used to manage cosmic elements but already parsed HTML ones.
@@ -11,8 +13,6 @@ use Cosmic\Traits\StringableTrait;
 class TagStrip
 {
     use StringableTrait;
-
-    const cannotBeEmptyTags = ["id", "name", "for"];
 
     /**
      * @var array $attributes The HTML tag.
@@ -57,12 +57,35 @@ class TagStrip
                 
             } else {
 
-                if ($key == "html") {
-                    $attributesString .= " $key";
-                } else if (in_array($key, self::cannotBeEmptyTags)) {
+                if (Text::startsWith($key, "(") && Text::endsWith($key, ")")) {
+
+                    $event = substr($key, 1, -1);
+                    $id = safe($this->attributes["id"]);
+
+                    if($id == null){
+                        throw new \RuntimeException("Event handlers require an id attribute to identify the DOM element");
+                    }
+
+                    if($event == "load"){
+                        $id = "window";
+                    }else{
+                        $id = '"#' . $id . '"';
+                    }
+
+                    $handleCode = <<<JS
+                    $($id).on("$event", function() {
+                        $value
+                    });
+                    JS;
+
+                    app()->get(DOM::class)->registerJavascriptSourceCode($handleCode);
+
+                }else if (Text::contains($key, ["id", "name", "for", "key"])) {
+
                     if (strlen($value) > 0) {
                         $attributesString .= " $key=\"$value\"";
                     }
+
                 } else {
                     $attributesString .= " $key=\"$value\"";
                 }

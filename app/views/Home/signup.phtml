@@ -1,49 +1,73 @@
 <View title="Registro de usuario en el proyecto">
     <Row>
         <Card size="8" maxWidth="600px">
-            <Form route="signup/submit">
-                <IconifiedTitle source="signup.png">Registro de usuario</IconifiedTitle>
+            <Form id="signupForm" route="signup/submit">
+                <IconifiedTitle source="signup.png">
+                    Registro de usuario
+                </IconifiedTitle>
                 <Spacing>
                 <PersistentError>
                 <Row>
                     <Column size="6">
-                        <Label for="firstName">Nombre</Label>
-                        <Textfield bind="firstName">
+                        <Label for="firstName">
+                            Nombre
+                        </Label>
+                        <Textfield id="firstName">
                     </Column>
                     <Column size="6">
-                        <Label for="lastName">Apellidos</Label>
-                        <Textfield bind="lastName">
+                        <Label for="lastName">
+                            Apellidos
+                        </Label>
+                        <Textfield id="lastName">
                     </Column>
                 </Row>
-                <Label for="email">Correo Electrónico (Nombre de la cuenta)</Label>
-                <Textfield bind="email">
-                <Label for="password">Contraseña</Label>
-                <Passfield>
-                <Hint>La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -</Hint>
+                <Label for="email">
+                    Correo Electrónico (Nombre de la cuenta)
+                </Label>
+                <Textfield id="email">
+                <Label for="password">
+                    Contraseña
+                </Label>
+                <Passfield id="password">
+                <Hint>
+                    La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -
+                </Hint>
                 <Spacing>
-                <Label for="confirmPassword">Confirmar contraseña</Label>
-                <Passfield bind="confirmPassword">
-                <Label for="country">País de nacimiento</Label> 
-                <Select bind="country" from="{countries}">
+                <Label for="confirmPassword">
+                    Confirmar contraseña
+                </Label>
+                <Passfield id="confirmPassword">
+                <Label for="country">
+                    País de nacimiento
+                </Label> 
+                <Select id="country" from="{countries}">
                 <Row>
                     <Column size="6">
-                        <Label for="birthDay">Fecha de nacimiento</Label>
-                        <Date bind="birthDay">
-                        <ErrorContainer bind="birthDay">
+                        <Label for="birthDay">
+                            Fecha de nacimiento
+                        </Label>
+                        <Date id="birthDay">
+                        <ErrorContainer id="birthDay">
                     </Column>
                     <Column size="6">
-                        <Label for="phone">Teléfono</Label>
-                        <Textfield bind="phone">
+                        <Label for="phone">
+                            Teléfono
+                        </Label>
+                        <Textfield id="phone">
                     </Column>
                 </Row>
-                <Label for="gender">Seleccione su Género</Label>
+                <Label for="gender">
+                    Seleccione su Género
+                </Label>
                 <Spacing>
-                <Radio id="0" bind="gender" text="Masculino" value="M">
-                <Radio id="1" bind="gender" text="Femenino" value="F">
-                <Radio id="2" bind="gender" text="Otro" value="O">
-                <Radio id="3" bind="gender" text="No responder" value="-">
-                <ErrorContainer bind="gender">
-                <SubmitButton>Registrarse</SubmitButton>
+                <Radio id="gender" option="0" text="Masculino" value="M">
+                <Radio id="gender" option="1" text="Femenino" value="F">
+                <Radio id="gender" option="2" text="Otro" value="O">
+                <Radio id="gender" option="3" text="No responder" value="-">
+                <ErrorContainer id="gender">
+                <SubmitButton id="submit">
+                    Registrarse
+                </SubmitButton>
             </Form>
         </Card>
     </Row>

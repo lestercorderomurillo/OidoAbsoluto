@@ -2,20 +2,18 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\Binder\InlineComponent;
 use Cosmic\Utilities\Cryptography;
 
-class Textfield extends Component
+class Textfield extends InlineComponent
 {
-    const Inline = true;
-
     const Styles = [
         "Field.scss"
     ];
 
-    public function __construct(string $type = "text", string $maxWidth = "1200px", string $bind)
+    public function __construct(string $id, string $type = "text", string $maxWidth = "1200px")
     {
-        $this->bind = $bind;
+        $this->id = $id;
         $this->type = $type;
         $this->maxWidth = $maxWidth;
         $this->random = Cryptography::computeRandomKey(8);
@@ -24,7 +22,8 @@ class Textfield extends Component
     public function render()
     {
         return {{
-            <input id&name="{bind}" type="{type}" class="form-control Field Focuseable" style="max-width: {maxWidth};" maxlength="64" autocomplete="{random}"> <br> 
+            <input {events} id&name="{id}" type="{type}" class="form-control Field Focuseable" style="max-width: {maxWidth};" maxlength="64" autocomplete="{random}"> 
+            <br> 
         }};
     }
 }

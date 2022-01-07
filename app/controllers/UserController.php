@@ -12,6 +12,28 @@ use Cosmic\Utilities\Collection;
 
 class UserController extends Controller
 {
+    
+    function logout()
+    {
+        Authentication::logout();
+        return $this->redirect();
+    }
+
+    function survey()
+    {
+        return $this->view(["surveyQuestions" => Collection::from(new File("app/Views/User/questions.json"))]);
+    }
+
+
+
+
+
+
+
+
+
+
+    // WIP
     function profile()
     {
         $singleTest = [
@@ -80,22 +102,7 @@ class UserController extends Controller
         ]);
     }
 
-    function logout()
-    {
-        Authentication::logout();
-        return $this->redirect();
-    }
 
-
-
-
-
-
-
-
-
-
-    // WIP
     function hearingTest(string $mode)
     {
         if ($mode != "simple" && $mode != "full") {

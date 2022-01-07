@@ -60,6 +60,28 @@ class Text
     }
 
     /**
+     * Check if a string is equals to another string.
+     * 
+     * @param string $text The input string. 
+     * @param string[]|string $check The string to search. Can be an array of strings.
+     * 
+     * @return bool Return true if the string contains the another one, false otherwise.
+     */
+    public static function equals(string $text, $check)
+    {
+        $check = Collection::normalize($check);
+
+        foreach ($check as $singleCheck) {
+
+            if ($text == $singleCheck) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Explode the given input string. This method will ignore all delimiters when inside a quote when transversing the string.
      * 
      * @param string $text The input string.

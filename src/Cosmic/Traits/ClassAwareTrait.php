@@ -122,24 +122,14 @@ trait ClassAwareTrait
         return isset($traits[$trait]);
     }
 
-    /*public function getFullyQualifiedClassName($class_or_object = null): string
+    /**
+     * Return the class name for instantiation.
+     *
+     * @return string The class name.
+     */
+    public function getClassName(): string
     {
-        $class_or_object = $this->defaultIfNeeded($class_or_object);
-        return get_class($this);
+        return static::class;
     }
-
-    public function getClassName($class_or_object = null): string
-    {
-        $class_or_object = $this->defaultIfNeeded($class_or_object);
-        return ((new \ReflectionClass($class_or_object)))->getShortName();
-    }*/
-
-    /*private function defaultIfNeeded($class_or_object = null)
-    {
-        if ($class_or_object == null) {
-            $class_or_object = $this;
-        }
-        return $class_or_object;
-    }*/
 
 }

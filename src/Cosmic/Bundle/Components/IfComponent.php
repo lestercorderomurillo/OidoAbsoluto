@@ -1,0 +1,68 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+use Cosmic\Utilities\Text;
+
+class IfComponent extends Component
+{
+    const Name = "If";
+
+    public function __construct(
+        string $value,
+        string $equals = __EMPTY__,
+        string $notEquals = __EMPTY__,
+        string $startsWith = __EMPTY__,
+        string $endsWith = __EMPTY__,
+        int $minimumLength = 0
+    ) {
+
+        $this->allowed = true;
+
+        if ($equals != __EMPTY__) {
+            if ($value != $equals) {
+                $this->allowed = false;
+            }
+        }
+
+        if ($notEquals != __EMPTY__) {
+            if ($value == $notEquals) {
+                $this->allowed = false;
+            }
+        }
+
+        if ($startsWith != __EMPTY__) {
+            if (!Text::startsWith($value, $startsWith)) {
+                $this->allowed = false;
+            }
+        }
+
+        if ($endsWith != __EMPTY__) {
+            if (!Text::startsWith($value, $endsWith)) {
+                $this->allowed = false;
+            }
+        }
+
+        if ($minimumLength != __EMPTY__) {
+            if (strlen($value) < $minimumLength) {
+                $this->allowed = false;
+            }
+        }
+    }
+
+    public function render()
+    {
+        if ($this->allowed == true){
+
+            return <<<HTML
+                {body}
+            HTML;
+
+        }
+
+        return __EMPTY__;
+    }
+}
+
+publish(IfComponent::class);

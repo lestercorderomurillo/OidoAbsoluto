@@ -6,14 +6,13 @@ use Cosmic\Binder\Component;
 
 class Column extends Component
 {
-    public function __construct(int $size = 12, string $textPosition = "left", $mediumSize = 12, $smallSize = 12, int $padding = 2, string $classes = "")
+    public function __construct(int $size = 12, string $textPosition = "left", $mediumSize = 12, $smallSize = 12, int $padding = 2)
     {
         $this->mediumSize = $mediumSize;
         $this->smallSize = $smallSize;
         $this->padding = $padding;
         $this->size = $size;
         $this->textPosition = $textPosition;
-        $this->classes = $classes;
 
         if(is_int($mediumSize) && $mediumSize > $size){
             $this->mediumSize = $size;
@@ -28,14 +27,14 @@ class Column extends Component
     {
         if($this->size == "auto"){
             return {{
-                <div class="pb-{padding} col col-auto text-{textPosition} {classes}">
+                <div class="pb-{padding} col col-auto text-{textPosition} {classList}">
                     {body}
                 </div>
             }};
         }
 
         return {{
-            <div class="pb-{padding} col col-{smallSize} col-sm-{smallSize} col-md-{mediumSize} col-lg-{mediumSize} col-xl-{size} mx-auto text-{textPosition} {classes}">
+            <div class="pb-{padding} col col-{smallSize} col-sm-{smallSize} col-md-{mediumSize} col-lg-{mediumSize} col-xl-{size} mx-auto text-{textPosition} {classList}">
                 {body}
             </div>
         }};

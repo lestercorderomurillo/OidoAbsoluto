@@ -106,9 +106,9 @@ class View
     /**
      * Returns an unique identifier for this view with this controller.
      * 
-     * @return string A unique GUID.
+     * @return string A unique MD5 Identifier for this view.
      */
-    public function getViewGUID(): string
+    public function getViewIdentifier(): string
     {
         return md5(new File("App/Views/$this->controllerName/$this->viewName.phtml"));
     }

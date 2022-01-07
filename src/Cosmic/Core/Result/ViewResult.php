@@ -3,6 +3,7 @@
 namespace Cosmic\Core\Result;
 
 use Cosmic\Binder\Compiler;
+use Cosmic\Binder\DOM;
 use Cosmic\Core\Types\View;
 use Cosmic\Core\Interfaces\ResultGeneratorInterface;
 use Cosmic\FileSystem\FileSystem;
@@ -68,7 +69,7 @@ class ViewResult implements ResultGeneratorInterface
             ],
             [
                 "name" => "page",
-                "content" => $this->view->getViewGUID()
+                "content" => $this->view->getViewIdentifier()
             ]
         ];
 
@@ -81,7 +82,14 @@ class ViewResult implements ResultGeneratorInterface
          * @var Compiler $compiler
          **/
         $compiler = app()->get(Compiler::class);
+
+        /**
+         * @var DOM $dom
+         **/
+        $dom = app()->get(DOM::class);
+
         $html = $compiler->compileString($this->view->getSourceHTML(), $this->view->getViewData());
+        $html = $compiler->compileServerSideTokens($html, ["bindings" => $dom->getOuputJavascript()]);
 
         $jsFile = new File($this->view->getFolder() . $this->view->getViewName() . ".js");
 

@@ -6,16 +6,15 @@ use Cosmic\Binder\Component;
 
 class IconifiedTitle extends Component
 {
-    public function __construct(string $source, string $id = "")
+    public function __construct(string $source)
     {
-        $this->id = $id;
         $this->fullSource = __WEBCONTENT__ . "images/" . $source;
     }
 
     public function render()
     {
         return {{
-            <img id="{id}" class="d-inline" src="{fullSource}" style="width: 40px; height: auto; position: relative; margin-top: -12px;">
+            <img class="d-inline" src="{fullSource}" style="width: 40px; height: auto; position: relative; margin-top: -12px;">
             <h3 class="d-inline pl-2">
                 {body}
             </h3>
