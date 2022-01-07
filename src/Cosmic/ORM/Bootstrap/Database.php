@@ -16,7 +16,7 @@ abstract class Database
     private array $queryQueue;
 
     /**
-     * @var Driver $driver An abstract driver class used to manage the database specific abstractions.
+     * @var Driver $driver An abstract driver class used to manage the database specific abstrController.
      */
     protected Driver $driver;
 

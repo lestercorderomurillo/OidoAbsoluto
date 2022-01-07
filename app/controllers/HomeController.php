@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\UserInfo;
 use Cosmic\Bundle\Middlewares\Authentication;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\Core\Controllers\Controller;
+use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\ORM\Bootstrap\Database;
 use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;

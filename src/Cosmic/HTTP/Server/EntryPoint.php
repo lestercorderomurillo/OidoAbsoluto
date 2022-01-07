@@ -2,7 +2,7 @@
 
 namespace Cosmic\HTTP\Server;
 
-use Cosmic\Core\Bootstrap\Actions;
+use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\Core\Bootstrap\Middleware;
 use Cosmic\Core\Interfaces\ResultGeneratorInterface;
 use Cosmic\Core\Types\JSON;
@@ -17,7 +17,7 @@ use Cosmic\Utilities\Collection;
  * A entry point is just a HTTP route that can be matched against when 
  * the user writes an URL in the browser or performs a simple request.
  */
-class EntryPoint extends Actions
+class EntryPoint extends Controller
 {
     /**
      * @var string $pathRegex The regex used to match the entry point on the router.

@@ -62,7 +62,7 @@ class ComplexTest extends TestCase
         $this->assertEquals(1 / 2, $z->i());
         $this->assertEquals('2/3+1/2i', "$z");
 
-        // Real coefficients, (note that numbers that can be identified with small fractions are printed as such)
+        // Real coefficients, (note that numbers that can be identified with small frController are printed as such)
         $z = Complex::parse('0.7-0.2i');
         $this->assertEquals(0.7, $z->r());
         $this->assertEquals(-0.2, $z->i());

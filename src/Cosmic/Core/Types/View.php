@@ -6,6 +6,7 @@ use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\Reload\ChangeDetector;
+use Cosmic\Utilities\Text;
 
 /**
  * This class represents a COSMIC view.
@@ -48,13 +49,10 @@ class View
      */
     public function __construct(string $controllerName, string $viewName, array $viewData)
     {
-        $splitted = explode("\\", $controllerName);
+        $controllerName = Text::getNamespaceBaseName(str_replace("Controller", "", $controllerName));
 
-        $controllerName = $splitted[count($splitted) - 1];
-        $controllerName = str_replace("Controller", "", $controllerName);
-
-        $this->viewName = $viewName;
         $this->controllerName = $controllerName;
+        $this->viewName = $viewName;
         $this->viewData = $viewData;
 
         $file = new File("App/Views/$this->controllerName/$this->viewName.phtml");

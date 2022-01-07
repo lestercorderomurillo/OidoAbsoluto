@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use Cosmic\Core\Types\JSON;
-use Cosmic\Core\Controllers\Controller;
+use Cosmic\Core\Bootstrap\Controller;
 
 class AdminstratorController extends Controller
 {

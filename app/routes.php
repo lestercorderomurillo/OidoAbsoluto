@@ -50,6 +50,8 @@ $router->groupController(UserController::class, function (Router $router) {
 
 });
 
-$router->any(function () {
-    return "404";
+$router->any(function (Router $router) {
+    
+    return $router->view("404");
+
 });

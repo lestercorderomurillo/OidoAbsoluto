@@ -3,13 +3,13 @@
 namespace Cosmic\Core\Bootstrap;
 
 use Cosmic\HTTP\Request;
-use Cosmic\Core\Bootstrap\Actions;
+use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\Core\Interfaces\RequestHandlerInterface;
 
 /**
  * The basic abstract class for all middlewares.
  */
-abstract class Middleware extends Actions implements RequestHandlerInterface
+abstract class Middleware extends Controller implements RequestHandlerInterface
 {
     /**
      * @inheritdoc

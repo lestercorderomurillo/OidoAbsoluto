@@ -2,7 +2,7 @@
 
 namespace Cosmic\HTTP\Server;
 
-use Cosmic\Core\Bootstrap\Actions;
+use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\Core\Exceptions\ControllerException;
 use Cosmic\HTTP\Request;
 use Cosmic\FileSystem\Exceptions\IOException;
@@ -19,7 +19,7 @@ use Cosmic\Utilities\Text;
  * On match, the router will execute the entry point closure and finalize the application after. All middlewares and late-middlewares will be executed.
  * When the closure for the entry point is called, the application will not exit that specific scope until the application has been terminated.
  */
-class Router extends Actions
+class Router extends Controller
 {
     /**
      * @var EntryPoint[] $entryPoints A collection of entry points for this application.
@@ -60,7 +60,7 @@ class Router extends Actions
 
     /**
      * Apply a controller group to the given closure. All routes registed inside will have the passed controller as 
-     * their default controller, and only the actions must be passed in the array.
+     * their default controller, and only the Controller must be passed in the array.
      * 
      * @param string $controllerClassName The class used as the controller.
      * @param \Closure $closure Apply a controller to all the routes registered inside the closure.

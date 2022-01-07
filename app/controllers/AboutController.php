@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Cosmic\Core\Controllers\Controller;
+use Cosmic\Core\Bootstrap\Controller;
 
 class AboutController extends Controller
 {

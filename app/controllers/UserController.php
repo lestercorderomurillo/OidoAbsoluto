@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use Cosmic\Bundle\Middlewares\Authentication;
-use Cosmic\Core\Controllers\Controller;
+use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\Core\Types\JSON;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\Folder;
@@ -21,6 +21,9 @@ class UserController extends Controller
 
     function survey()
     {
+
+
+
         return $this->view(["surveyQuestions" => Collection::from(new File("app/Views/User/questions.json"))]);
     }
 

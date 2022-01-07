@@ -2,27 +2,32 @@
 
 namespace Cosmic\Core\Bootstrap;
 
+use Cosmic\Core\Types\View;
 use Cosmic\Core\Types\JSON;
 use Cosmic\HTTP\Server\Response;
 use Cosmic\Core\Result\ContentResult;
 use Cosmic\Core\Result\JSONResult;
 use Cosmic\Core\Result\RedirectResult;
 use Cosmic\Core\Result\ViewResult;
-use Cosmic\Core\Types\View;
+use Cosmic\Utilities\Text;
 
 /**
- * This class represents actions that can be performed.
+ * This class represents actions that can be performed by a controller.
  */
-abstract class Actions
+abstract class Controller
 {
     /**
-     * Return the current runtime class name.
+     * Return the current controller class name.
      * 
      * @return string
      */
-    protected static function getClassName(): string
+    protected static function getControllerName(): string
     {
-        return static::class;
+        $name = static::class;
+        if (Text::contains($name, ["Router"])) {
+            return "System";
+        }
+        return $name;
     }
 
     /**
@@ -40,6 +45,45 @@ abstract class Actions
         } else {
             $result = new JSONResult(new JSON($json), 0);
         }
+
+        return $result->toResponse();
+    }
+
+    /**
+     * Returns a compiled view result. Internally will use Cosmic Binder to render this view.
+     * If both parameters are left empty, the controller will assume the view is called the same as the function name.
+     * 
+     * @param string|array $dynamicValue If it's a string, it will be considered as the view name. If it's an array, 
+     * it will be considered as the view data. Then the second parameter can be left blank.
+     * 
+     * @param string|array $dynamicValueSecondary If the first parameter was the view name, this parameter can be used as view data.
+     * 
+     * @return Response A valid HTTP response object with a rendered view.
+     */
+    public function view($dynamicValue = null, $dynamicValueSecondary = null): Response
+    {
+        if (is_string($dynamicValue)) {
+            $viewName = $dynamicValue;
+        } else {
+            $viewName = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
+        }
+
+        if (is_array($dynamicValue)) {
+            $viewData = $dynamicValue;
+        } else if (is_array($dynamicValueSecondary)) {
+            $viewData = $dynamicValueSecondary;
+        } else {
+            $viewData = [];
+        }
+
+        foreach ($viewData as $key => $value) {
+            if ($value instanceof JSON) {
+                $viewData[$key] = $value->toString();
+            }
+        }
+
+        $view = new View($this->getControllerName(), $viewName, $viewData);
+        $result = new ViewResult($view);
 
         return $result->toResponse();
     }

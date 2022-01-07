@@ -10,14 +10,15 @@ class Alert extends Component
         "Alert.scss"
     ];
 
-    public function __construct(string $type = "warning")
+    public function __construct(string $type = "Warning", string $canClose = "true")
     {
-        $this->type = $type;
+        $this->type = ucfirst($type);
+        $this->canClose = $canClose;
 
-        switch(strtolower($type)){
-            case "danger": $this->strongMessage = "¡Ha ocurrido un problema!"; break;
-            case "warning": $this->strongMessage = "¡Advertencia!"; break;
-            case "info": $this->strongMessage = "¡Aviso!"; break;
+        switch($type){
+            case "Danger": $this->strongMessage = "¡Ha ocurrido un problema!"; break;
+            case "Warning": $this->strongMessage = "¡Advertencia!"; break;
+            case "Info": $this->strongMessage = "¡Aviso!"; break;
             default: $this->strongMessage = "¡Excelente!"; break;
         }
     }
@@ -26,12 +27,14 @@ class Alert extends Component
     {
         return {{
             <div class="alert Alert{type} alert-dismissible fade show">
-                <span class="close" data-dismiss="alert" aria-label="Close">
-                    <small>
-                        &times;
-                    </small>
-                    <br>
-                </span>
+                <If value="{canClose}" equals="true">
+                    <span class="close" data-dismiss="alert" aria-label="Close">
+                        <small>
+                            &times;
+                        </small>
+                        <br>
+                    </span>
+                </If>
                 <strong>{strongMessage}</strong>
                 <div>
                     {body}
