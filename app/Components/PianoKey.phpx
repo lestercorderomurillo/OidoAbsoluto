@@ -1,0 +1,28 @@
+<?php
+
+namespace app\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class PianoKey extends InlineComponent
+{
+    public function __construct(string $displayMode, string $keyColor, string $noteName)
+    {
+        $this->displayMode = $displayMode;
+        $this->noteName = $noteName;
+        $this->keyColor = $keyColor;
+    }
+
+    public function render()
+    {
+        return {{
+            <div {events} id="{noteName}" class="PianoKey{keyColor}{displayMode} text-center">
+                <If value="{displayMode}" equals="Simple">
+                    {noteName}
+                </If>
+            </div>
+        }};
+    }
+}
+
+publish(PianoKey::class);

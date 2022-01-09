@@ -2,43 +2,119 @@
 
 namespace App\Controllers;
 
-use Cosmic\Bundle\Middlewares\Authentication;
+use App\Models\Answer;
+use App\Models\UserInfo;
+use Cosmic\Binder\Authorization;
 use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\Core\Types\JSON;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\FileSystem\Paths\File;
+use Cosmic\HTTP\Request;
+use Cosmic\ORM\Bootstrap\Database;
+use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
+use Cosmic\Utilities\Text;
 
 class UserController extends Controller
 {
-    
-    function logout()
+    private Database $db;
+
+    function __construct(SQLDatabase $db)
     {
-        Authentication::logout();
-        return $this->redirect();
+        $this->db = $db;
     }
 
     function survey()
     {
+        if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+            return $this->redirect("profile");
+        }
 
+        $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
+        $questions = Collection::from(new File("app/Views/User/questions.json"));
 
+        $fixedQuestions = [];
 
-        return $this->view(["surveyQuestions" => Collection::from(new File("app/Views/User/questions.json"))]);
+        foreach ($questions as $question) {
+            if (isset($question['gender'])) {
+                if ($question['gender'] == $userInfo->gender) {
+                    $fixedQuestions[] = $question;
+                }
+            } else {
+                $fixedQuestions[] = $question;
+            }
+        }
+
+        return $this->view(["gender" => $userInfo->gender, "surveyQuestions" => $fixedQuestions]);
+    }
+
+    function surveySubmit(Request $request)
+    {
+        $formData = $request->getFormData();
+
+        if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+
+            $this->danger("El formulario solo puede ser subido al servidor una única vez por usuario.");
+            return $this->redirect("profile");
+        }
+
+        if (count($formData) > 0) {
+
+            $answers = [];
+
+            foreach ($formData as $key => $value) {
+
+                if (Text::startsWith($key, "q-")) {
+
+                    $question = (int)str_replace("q-", __EMPTY__, $key);
+                    $answer = new Answer();
+                    $answer->setId(Authorization::getCurrentId());
+                    $answer->question = $question;
+                    $answer->value = $value;
+                    $answers[] = $answer;
+                }
+            }
+
+            $this->db->save($answers);
+            $this->db->commit();
+        }
+
+        return $this->redirect("profile");
+    }
+
+    function piano(string $displayMode)
+    {
+        if (!Text::equals($displayMode, ["Simple", "Full"])) {
+            $this->warning("No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
+            return $this->redirect("login");
+        }
+
+        $audiosSources = FileSystem::URLFind(new Folder("app/Content/audio/"), "mp3");
+        $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+
+        return $this->view(["displayMode" => $displayMode, "audiosSources" => $audiosSources, "displayString" => $displayString]);
     }
 
 
+    function pianoSubmit(Request $request)
+    {
+        var_export($request);
 
+        die();
 
-
-
-
-
+        //return "Not Implemented $mode $debug1 $debug2";
+    }
 
 
     // WIP
     function profile()
     {
+
+        if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+            return $this->redirect("survey");
+        }
+
         $singleTest = [
 
             "try" => 1,
@@ -96,11 +172,14 @@ class UserController extends Controller
             "BTotal" => 4,
         ];
 
-        
+
         $tests = [$singleTest];
 
+        /** @var UserInfo $model */
+        $model = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
+
         return $this->view([
-            "username" => Authentication::getCurrentUsername(),
+            "username" => $model->firstName . " " . $model->lastName,
             "tests" => $tests
         ]);
     }
@@ -121,7 +200,7 @@ class UserController extends Controller
         $output = ["mode" => $mode, "audiosSources" => $audiosSourcesJSON];
 
         $test_type = "Piano Interactivo";
-        
+
         if ($mode == "simple") {
             $test_type = "Teclado Interactivo";
             $output["showKeyText"] = true;
@@ -132,20 +211,6 @@ class UserController extends Controller
         $output = Collection::mergeDictionary(true, $output, ["title" => $test_type]);
 
         return $this->view("hearing", $output);
-    }
-
-    function submitHearingTest(string $mode, string $expectedNotes,  string $selectedNotes)
-    {
-        $debug1 = var_export($expectedNotes, true);
-        $debug2 = var_export($selectedNotes, true);
-
-        return "Not Implemented $mode $debug1 $debug2";
-    }
-
-    function questionsTest()
-    {
-        $json = Collection::from(new File("app/Views/User/questions.json"));
-        return $this->view("questions", ["questions" => $json]);
     }
 
     function testResult(int $id)

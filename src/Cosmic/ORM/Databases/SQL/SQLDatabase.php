@@ -43,6 +43,27 @@ class SQLDatabase extends Database
     /**
      * @inheritdoc
      */
+    public function exists(string $modelClass, array $where)
+    {
+        $tableName = (new $modelClass())->getTableName();
+        $array = $this->createParametersBinds($where);
+        $where = implode(" AND ", $array[0]);
+
+        $this->addQueryToNextBatch("SELECT 1 FROM `$tableName` WHERE $where", $array[1]);
+
+        $queryResults = $this->commit();
+        $rows = $queryResults[0]->all();
+
+        if ($rows == []) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function find(string $modelClass, array $where = [])
     {
         $models = $this->findAll($modelClass, $where, "LIMIT 1");
@@ -63,7 +84,6 @@ class SQLDatabase extends Database
         if ($where == []) {
 
             $this->addQueryToNextBatch("SELECT * FROM `$tableName` $append");
-
         } else {
 
             $array = $this->createParametersBinds($where);
@@ -71,9 +91,6 @@ class SQLDatabase extends Database
             $this->addQueryToNextBatch("SELECT * FROM `$tableName` WHERE $where $append", $array[1]);
         }
 
-        /** 
-         * @var QueryResult[] $queryResults 
-         **/
         $queryResults = $this->commit();
         $rows = $queryResults[0]->all();
 
@@ -83,7 +100,6 @@ class SQLDatabase extends Database
             $model->setValues($row);
             $model->setId($row["id"]);
             $models[] = $model;
-
         }
 
         return $models;
@@ -99,16 +115,24 @@ class SQLDatabase extends Database
         foreach ($models as $model) {
 
             $tableName = $model->getTableName();
-            $values = $model->getAttributesValues();
-            $placeholders = implode(", ", $model->getAttributesPlaceholders());
             $id = $model->getId();
 
+            $shouldInsert = !($this->exists($model->getClassName(), ["id" => $id]));
+
             if ($id == 0) {
+                $values = $model->getAttributesValues(true);
+                $placeholders = $model->getAttributesPlaceholders(true);
+            } else {
+                $values = $model->getAttributesValues();
+                $placeholders = $model->getAttributesPlaceholders();
+            }
+
+            if ($shouldInsert) {
                 $this->addQueryToNextBatch("INSERT INTO `$tableName` SET $placeholders", $values);
             } else {
-                $values[":id"] = $id;
                 $this->addQueryToNextBatch("UPDATE `$tableName` SET $placeholders WHERE id = :id", $values);
             }
+
         }
     }
 

@@ -1,0 +1,545 @@
+<?php
+
+namespace app\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class Piano extends InlineComponent
+{
+    const Styles = [
+        "Piano.scss"
+    ];
+
+    public function __construct(string $displayMode, array $audiosSources, string $toggleButton, string $pianoLog, string $pianoLogTemplate)
+    {
+        $this->displayMode = $displayMode;
+        $this->audiosSources = json_encode($audiosSources, JSON_UNESCAPED_SLASHES);
+        $this->noteTypePiano = "1/2 (Piano) Tonos reales";
+        $this->noteTypeSin = "2/2 (Puros) Tonos artificiales";
+        $this->unselectedNote = "No se seleccionó ninguna nota";
+        $this->loadingNotes = "Cargando audios en memoria...";
+        $this->readyString = "Inicializar la prueba";
+        $this->inTestString = "Prueba en proceso...";
+        $this->continueString = "Continuar con la segunda parte";
+        $this->uploadingString = "Subiendo resultados...";
+        $this->url = __HOST__;
+        $this->toggleButton = $toggleButton;
+        $this->pianoLog = $pianoLog;
+        $this->pianoLogTemplate = $pianoLogTemplate;
+
+        $this->notesNames =
+        [
+            [
+                "noteName" => "C",
+                "keyColor" => "White"
+            ],
+            [
+                "noteName" => "CX",
+                "keyColor" => "Black"
+            ],
+            [
+                "noteName" => "D",
+                "keyColor" => "White"
+            ],
+            [
+                "noteName" => "DX",
+                "keyColor" => "Black"
+            ],
+            [
+                "noteName" => "E",
+                "keyColor" => "White"
+            ],
+            [
+                "noteName" => "F",
+                "keyColor" => "White"
+            ],
+            [
+                "noteName" => "FX",
+                "keyColor" => "Black"
+            ],
+            [
+                "noteName" => "G",
+                "keyColor" => "White"
+            ],
+            [
+                "noteName" => "GX",
+                "keyColor" => "Black"
+            ],
+            [
+                "noteName" => "A",
+                "keyColor" => "White"
+            ],
+            [
+                "noteName" => "AX",
+                "keyColor" => "Black"
+            ],
+            [
+                "noteName" => "B",
+                "keyColor" => "White"
+            ]
+        ];
+    }
+
+    public function scripts()
+    {
+        return <<<JS
+
+        class ExpectedNote {
+
+            constructor(audioElement) {
+                var src = audioElement.getAttribute('src');
+                var splitted = src.split("/");
+                var subdivide = splitted[splitted.length - 1].split("-");
+                this._noteName = (subdivide[subdivide.length - 1]).replace(".mp3", "").replace("X", "#");
+                this._audioElement = audioElement;
+            }
+
+            get noteName() {
+                return this._noteName;
+            }
+
+            get audioElement() {
+                return this._audioElement;
+            }
+
+        }
+
+        class SelectedNote {
+
+            constructor(noteName, reactionTime) {
+                this._noteName = noteName;
+                this._reactionTime = reactionTime;
+            }
+
+            get noteName() {
+                return this._noteName;
+            }
+
+            get reactionTime() {
+                return this._reactionTime;
+            }
+
+        }
+
+        function awake(){
+
+            // For resource management
+            component.audiosFetched = 0;
+            component.audiosInMemory = [];
+
+            // For state management
+            component.isRunning = false;
+            component.isDone = false;
+
+            // For time measurements
+            component.firstTestTime = 0;
+            component.firstTestStartTime = Date.now();
+
+            component.secondTestTime = 0;
+            component.secondTestStartTime = Date.now();
+
+            component.reactionTime = 0;
+            component.markTime = Date.now();
+
+            extern.totalTime = component.numericalToHHMMSS(Math.floor(0));
+
+            // For note management
+            extern.loggedNotes = 0;
+            extern.notesPerTest = 2;
+
+            extern.currentNoteIndex = 0;
+            extern.currentNoteType = "$this->noteTypePiano";
+            extern.currentNoteName = "$this->unselectedNote";
+            extern.buttonString = "$this->loadingNotes";
+            
+            $("#$this->toggleButton").prop("disabled", true);
+
+            // For form submission
+            extern.expectedPianoNotes = [];
+            extern.expectedSinNotes = [];
+            extern.selectedPianoNotes = [];
+            extern.selectedSinNotes = [];
+
+            // Start the engine
+            $("#$this->id-testDelay").hide();
+
+            $(document).off().on("keypress", function (event) {
+                switch (event.code) {
+                    case "KeyZ":
+                        $("#C").click();
+                        break;
+                    case "KeyS":
+                        $("#CX").click();
+                        break;
+                    case "KeyX":
+                        $("#D").click();
+                        break;
+                    case "KeyD":
+                        $("#DX").click();
+                        break;
+                    case "KeyC":
+                        $("#E").click();
+                        break;
+                    case "KeyV":
+                        $("#F").click();
+                        break;
+                    case "KeyG":
+                        $("#FX").click();
+                        break;
+                    case "KeyB":
+                        $("#G").click();
+                        break;
+                    case "KeyH":
+                        $("#GX").click();
+                        break;
+                    case "KeyN":
+                        $("#A").click();
+                        break;
+                    case "KeyJ":
+                        $("#AX").click();
+                        break;
+                    case "KeyM":
+                        $("#B").click();
+                        break;
+                }
+            });
+
+            component.fetchAllAudios();
+
+        }
+
+        function fetchAllAudios(){
+
+            var audiosSources = $this->audiosSources;
+            var audiosCount = audiosSources.length;
+
+            for (const source of audiosSources) {
+
+                var audioElement = document.createElement('audio');
+
+                audioElement.setAttribute('src', source);
+                audioElement.addEventListener('ended', fn.noteComplete, false);
+                audioElement.addEventListener('canplay', function () {
+
+                    component.audiosFetched++;
+
+                    if(component.audiosFetched == audiosCount){
+                        component.buildExpectedNotes();
+                    }
+
+                }, false);
+
+                component.audiosInMemory.push(audioElement);
+            }
+
+        }
+
+        function buildExpectedNotes(){
+
+            var expectedNotes = [];
+
+            for (const audioElement of component.audiosInMemory) {
+                expectedNotes.push(new ExpectedNote(audioElement.__getTarget));
+            }
+
+            var slicePoint = 69;
+
+            extern.expectedPianoNotes = expectedNotes.slice(0, slicePoint);
+            extern.expectedSinNotes = expectedNotes.slice(slicePoint);
+
+            extern.expectedPianoNotes = component.shuffleArray(extern.expectedPianoNotes).slice(0, extern.notesPerTest);
+            extern.expectedSinNotes = component.shuffleArray(extern.expectedSinNotes).slice(0, extern.notesPerTest);
+
+            extern.buttonString = "$this->readyString";
+
+            $("#$this->toggleButton").prop("disabled", false);
+            $("#$this->toggleButton").on("click", function() {
+                
+                if(!component.isRunning){
+                    component.prePhaseStart();  
+                }
+
+            });
+        }
+
+        function countBeforeStart(){
+
+            if(component.testDelay == 0){
+                
+                clearInterval(component.counterInterval);
+                $("#$this->id-testDelay").hide();
+                component.phaseStart();
+
+            }else{
+
+                component.testDelay--;
+            }
+        }
+
+        function prePhaseStart(){
+
+            extern.buttonString = "$this->inTestString";
+            $("#$this->toggleButton").prop("disabled", true);
+
+            extern.currentNoteIndex = 0;
+            extern.currentNoteName = "$this->unselectedNote";
+
+            $("#$this->id-testDelay").show();
+
+            component.testDelay = 3;
+            component.counterInterval = setInterval(fn.countBeforeStart, 1000);
+        }
+
+        function phaseStart(){
+
+            component.isRunning = true;
+            component.reactionTime = 0;
+
+            if(extern.currentNoteType == "$this->noteTypePiano"){
+
+                component.firstTestStartTime = Date.now();
+                 
+            }else if(extern.currentNoteType == "$this->noteTypeSin"){
+
+                component.secondTestStartTime = Date.now();
+
+            }
+
+            component.markTime = Date.now();
+            component.playNote(extern.currentNoteIndex);
+        }
+
+        function phaseComplete(){
+
+            if(extern.currentNoteType == "$this->noteTypePiano"){
+
+                extern.currentNoteIndex = 0;
+                extern.currentNoteType = "$this->noteTypeSin";
+
+                component.isRunning = false;
+                extern.buttonString = "$this->continueString";
+                $("#$this->toggleButton").prop("disabled", false);
+                
+
+            }else if(extern.currentNoteType == "$this->noteTypeSin"){
+
+                extern.currentNoteIndex = component.notesPerTest;
+                component.uploadTest();
+
+            }
+
+        }
+
+        function noteComplete(){
+
+            extern.currentNoteIndex++;
+
+            component.logNote(extern.currentNoteName, component.reactionTime);
+
+            extern.currentNoteName = "$this->unselectedNote";
+            component.reactionTime = 0;
+            component.markTime = Date.now();
+
+            if (extern.currentNoteIndex == extern.notesPerTest) {
+
+                component.phaseComplete();
+
+            } else {
+
+                component.playNote(extern.currentNoteIndex);
+            }
+
+        }
+
+        function update(){
+
+            extern.currentNoteIndexString = extern.currentNoteIndex + 1;
+
+            if(component.isRunning && !component.isDone){
+
+                var timeDelta = 0;
+
+                if(extern.currentNoteType == "$this->noteTypePiano"){
+
+                    timeDelta = Date.now() - component.firstTestStartTime;
+                    component.firstTestTime = timeDelta / 1000;
+                    
+
+                }else if(extern.currentNoteType == "$this->noteTypeSin"){
+
+                    timeDelta = Date.now() - component.secondTestStartTime;
+                    component.secondTestTime = timeDelta / 1000;
+
+                }
+
+                extern.totalTime = component.numericalToHHMMSS(Math.floor(component.firstTestTime + component.secondTestTime));
+
+            }
+
+        }
+
+        function animatePianoKey(noteName) {
+
+            var id = "#" + noteName;
+
+            $(id).toggleClass("PianoToggleable");
+
+            setTimeout(function () {
+
+                $(id).toggleClass("PianoToggleable");
+
+            }, 60, id);
+
+        }
+
+        function shuffleArray(array) {
+
+            return array.sort(() => Math.random() - 0.5);
+
+        }
+
+        function numericalToHHMMSS(value) {
+
+            var secNum = parseInt(value, 10);
+            var hours = Math.floor(secNum / 3600);
+            var minutes = Math.floor((secNum - (hours * 3600)) / 60);
+            var seconds = secNum - (hours * 3600) - (minutes * 60);
+
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+
+            return hours + ':' + minutes + ':' + seconds;
+
+        }
+
+        function selectNote(noteName){
+
+            component.animatePianoKey(noteName);
+
+            if(component.isRunning){
+
+                extern.currentNoteName = noteName;
+
+                component.reactionTime = (Date.now() - component.markTime) * 0.992;
+                component.reactionTime = parseFloat(component.reactionTime).toFixed(3);
+
+                component.markTime = Date.now();
+
+            }
+
+        }
+
+        function playNote(index) {
+
+            if (extern.currentNoteType =="$this->noteTypePiano") {
+
+                extern.expectedPianoNotes[index].audioElement.play();
+
+            } else if (extern.currentNoteType =="$this->noteTypeSin") {
+
+                extern.expectedSinNotes[index].audioElement.play();
+
+            }
+        }
+
+        function logNote(noteName, reactionTime = "0") {
+
+            if (extern.currentNoteType =="$this->noteTypePiano") {
+
+                extern.selectedPianoNotes.push(new SelectedNote(noteName, reactionTime));
+
+            } else if (extern.currentNoteType =="$this->noteTypeSin") {
+
+                extern.selectedSinNotes.push(new SelectedNote(noteName, reactionTime));
+
+            }
+
+            $("#$this->pianoLog").show();
+
+            noteName = noteName.replace("X", " #");
+
+            template = $("#$this->pianoLogTemplate").clone();
+            template.removeClass("Hide");
+            template.attr("id", "$this->pianoLog" + component.loggedNotes++);
+            templateContents = $("#$this->pianoLogTemplate > div").clone();
+            templateContents.html(noteName);
+
+            if (reactionTime > 0) {
+                templateContents.html(noteName + " con duración de " + reactionTime + " ms");
+            }
+
+            template.html(templateContents);
+
+            template.show();
+            template.appendTo("#$this->pianoLog > div");
+
+            var out = $("#$this->pianoLog")[0];
+            out.scrollTop = out.scrollHeight - out.clientHeight;
+        }
+
+        function uploadTest(){
+
+            component.isDone = true;
+
+            extern.buttonString = "$this->uploadingString";
+            $("#$this->toggleButton").prop("disabled", true);
+
+            var parsedNotes = {};
+            var expectedNotes = extern.expectedPianoNotes.concat(extern.expectedSinNotes);
+            var selectedNotes = extern.selectedPianoNotes.concat(extern.selectedSinNotes);
+
+            for (var i = 0; i < expectedNotes.length; i++){
+
+                parsedNotes[i] = {};
+
+                var expectedNote = expectedNotes[i].__getTarget;
+                var selectedNote = selectedNotes[i].__getTarget;
+
+                parsedNotes[i].expectedNote = expectedNote.noteName;
+                parsedNotes[i].selectedNote = selectedNote.noteName;
+                parsedNotes[i].reactionTime = selectedNote.reactionTime;
+            }
+
+            console.log(parsedNotes);
+
+            $.ajax({
+                type: "post",
+                url: "$this->url" + "piano/submit",
+                data: JSON.stringify({ "mode" : "$this->displayMode", "notes" : parsedNotes}),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // he expects a JSON with the response of the token id to redirect to result
+                    console.log(response);
+                },
+            });
+
+        }
+
+        JS;
+    }
+
+    public function render()
+    {
+        return {{
+            <div id="{id}" (load)="awake()" (update)="update()" class="Piano{displayMode} text-center">
+                <Foreach from="{notesNames}">
+                     <PianoKey (click)="selectNote('{parent.iterator.noteName}')" keyColor="{parent.iterator.keyColor}" noteName="{parent.iterator.noteName}" displayMode="{displayMode}">
+                </Foreach>
+            </div>
+            <div id="{id}-testDelay" class="text-center h-100 w-100 row align-items-center justify-content-center" style="top: 0; left: 0; position:fixed; z-index: 25;">
+                <div class="col" style="color: #ffff66; font-size: 30em; text-shadow: 0px 0px 7px #000000;">
+                    {?testDelay}
+                </div>
+            </div>
+        }};
+    }
+}
+
+publish(Piano::class);

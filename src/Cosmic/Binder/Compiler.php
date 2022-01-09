@@ -41,14 +41,6 @@ class Compiler
     {
         $value = FileSystem::read($phpsFile);
 
-        /*if ($phpsFile->getExtension() == 'phps') {
-            $value = preg_replace('/(?<={{)\s*.*\s*(?=}})/m', "$1\n\t\t$0\n\t\t", $value);
-            $value = str_replace('{{', "<<<'HTML'", $value);
-            $value = str_replace('}}', "HTML", $value);
-            $value = preg_replace('/^[\n\r]+/m', '$1', $value);
-            die($value);
-        }*/
-
         $value = str_replace('{{', "<<<'HTML'", $value);
         $value = str_replace('}}', "HTML", $value);
         $value = preg_replace('/^[\n\r]+/m', '$1', $value);
@@ -80,7 +72,7 @@ class Compiler
 
             // Read all files
             foreach ($files as $file) {
-                $baseContent .= FileSystem::read($file) . "\n\n";;
+                $baseContent .= FileSystem::read($file) . "\n\n";
             }
 
             $build = $scssCompiler->compileString($baseContent);
@@ -109,8 +101,8 @@ class Compiler
      * Compile a raw cosmic string to a valid compiled HTML string.
      * 
      * @param string $html The COSMIC HTML string.
-     * @param array $tokens A collection of tokens to use as replacements.
-     * @param int $depth The recursive depth level.
+     * @param array $tokens [Optional] A collection of tokens to use as replacements.
+     * @param int $depth [Optional] The recursive depth level.
      * 
      * @return string The compiled HTML string.
      */
@@ -139,19 +131,22 @@ class Compiler
                 if ($this->isGenericElement($elementString)) {
 
                     $data = $this->extractRawData($elementString);
-
                     $strip = new TagStrip($data[0], $data[1]);
-
                     $html = $this->compileSelection($html, $selection, $strip);
 
                 } else {
 
                     $element = $this->createElementFromString($elementString);
+
                     $component = $element->getComponentInstance();
-        
+
                     $elementComponentName = $element->getComponentName();
 
-                    if (!$component->isInlineComponent()) {
+                    if ($component->isInlineComponent()) {
+
+                        $component->body = "";
+
+                    } else {
 
                         $bodySelection = HTML::findElementBody($html, $elementComponentName, $selection->getEndPosition());
 
@@ -163,26 +158,27 @@ class Compiler
                         $bodySelection->moveEndPosition(1);
 
                         $component->body = $bodySelection->toString();
-                        
-                        $componentTemplate = preg_replace("/(?= *)component\.(?=[A-z0-9_]*\()/", $component->getSimplifiedName() . "_" . $component->id . "_", $component->getRenderTemplate());
-                        $componentTemplate = $this->compileClientSideTokens($componentTemplate, $component->id);
 
-                        $componentTokens = get_object_vars($component);
+                    }
+
+                    $prefix = $component->getSimplifiedName() . "_" . $component->id . "_";
+
+                    $componentTemplate = $component->getRenderTemplate();
+                    $componentTemplate = $this->compileRenderTemplateEvents($componentTemplate, $prefix);
+                    $componentTemplate = $this->compileClientSideTokens($componentTemplate, $component->id);
+
+                    $componentTokens = get_object_vars($component);
+
+                    if ($component->isInlineComponent()) {
+
+                        $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens);
+                        $selection->setEndPosition($selection->getEndPosition());
+
+                    } else {
 
                         $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens, ["body" => $component->body]);
                         $selection->setEndPosition($bodySelection->getEndPosition() + strlen("</$elementComponentName>"));
 
-                    } else {
-
-                        $component->body = "";
-
-                        $componentTemplate = preg_replace("/(?= *)component\.(?=[A-z0-9_]*\()/", $component->getSimplifiedName() . "_" . $component->id . "_", $component->getRenderTemplate());
-                        $componentTemplate = $this->compileClientSideTokens($componentTemplate, $component->id);
-                        
-                        $componentTokens = get_object_vars($component);
-
-                        $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens);
-                        $selection->setEndPosition($selection->getEndPosition());
                     }
 
                     $output = $this->compileString($componentTemplate, $passdownTokens, $depth + 1);
@@ -201,6 +197,23 @@ class Compiler
     }
 
     /**
+     * Compile all events for this render template.
+     * 
+     * @param string $html The string to be compiled.
+     * @param string $prefix The prefix for the events.
+     * 
+     * @return string The token-compiled string.
+     */
+    public function compileRenderTemplateEvents(string $html, string $prefix): string
+    {
+        $html = preg_replace("/(?= *)extern\.(?=[A-z0-9_]*\()/", "", $html);
+        $html = preg_replace("/(?= *)component\.(?=[A-z0-9_]*\()/", $prefix, $html);
+        $html =  preg_replace('/(\([a-z]+\)=")([^"]*)(?=")/', '$1' . $prefix . "$2", $html);
+
+        return $html;
+    }
+
+    /**
      * Compile all client side tokens for javascript use.
      * 
      * @param string $html The string to be compiled.
@@ -208,7 +221,7 @@ class Compiler
      * 
      * @return string The token-compiled string.
      */
-    public function compileClientSideTokens(string $html, string $componentId): string
+    public function compileClientSideTokens(string $html, string $componentId = "_globalComponent_"): string
     {
         $offset = 0;
 
@@ -298,7 +311,7 @@ class Compiler
                     if ($value[strlen($value) - 1] == "\"" || $value[strlen($value) - 1] == "'") {
                         $value = substr($value, 0, -1);
                     } else {
-                        throw new CompileException("Cannot parse key value from string object");
+                        throw new CompileException("Cannot parse key value from string object: $value");
                     }
                 }
 

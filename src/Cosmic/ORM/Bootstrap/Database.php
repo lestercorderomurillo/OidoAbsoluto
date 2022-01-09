@@ -45,6 +45,16 @@ abstract class Database
     public abstract function find(string $modelClass, array $where = []);
 
     /**
+     * Check if the given model exists in the database.
+     * 
+     * @param string $modelClass The model to look for.
+     * @param array $where Specfic "where string" for the query.
+     * 
+     * @return bool True if it exists, false otherwise.
+     */
+    public abstract function exists(string $modelClass, array $where);
+
+    /**
      * Find all the entities in the database with a particular model. 
      * 
      * @param string $modelClass The model to look for.
@@ -58,7 +68,7 @@ abstract class Database
     /**
      * Save the the given models into the database.
      * 
-     * @param Models[]|Model $models The model to store into the database.
+     * @param Models[]|Model $models The model(s) to store into the database.
      * 
      * @return void
      */
@@ -74,23 +84,10 @@ abstract class Database
     public abstract function delete($models): void;
 
     /**
-     * Append a new query to the commit queue.
-     * 
-     * @param string $query A query statement.
-     * @param array $queryData Context for this new query.
-     * 
-     * @return void
-     */
-    public function addQueryToNextBatch(string $query, array $queryData = []): void
-    {
-        $this->queryQueue[] = new PreparedQuery(trim($query), $queryData);
-    }
-
-    /**
      * Execute the stored query queue and return all results (models, single model or null).
      * Return an empty array if there are no results from this query batch.
      * 
-     * @return QueryResult[]| The result data-set from the database. Can be either models, values or array of models.
+     * @return QueryResult[] The result data-set from the database.
      * @throws QueryExecutionException If something goes wrong during execution.
      */
     public function commit()
@@ -106,5 +103,18 @@ abstract class Database
         $this->queryQueue = [];
 
         return $results;
+    }
+
+    /**
+     * Append a new query to the commit queue.
+     * 
+     * @param string $query A query statement.
+     * @param array $queryData Context for this new query.
+     * 
+     * @return void
+     */
+    protected function addQueryToNextBatch(string $query, array $queryData = []): void
+    {
+        $this->queryQueue[] = new PreparedQuery(trim($query), $queryData);
     }
 }

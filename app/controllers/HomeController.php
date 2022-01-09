@@ -2,9 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Models\Answer;
 use App\Models\User;
 use App\Models\UserInfo;
-use Cosmic\Bundle\Middlewares\Authentication;
+use Cosmic\Binder\Authorization;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\ORM\Bootstrap\Database;
@@ -23,8 +24,9 @@ class HomeController extends Controller
 
     function login()
     {
-        if (Authentication::isLogged()){
-            return $this->redirect("/profile");
+        if (Authorization::isLogged()) {
+
+            return $this->automaticSurveyProfileRedirect();
         }
 
         return $this->view();
@@ -32,12 +34,18 @@ class HomeController extends Controller
 
     function loginSubmit(string $email, string $password)
     {
-        if (Authentication::tryLogIn($email, $password)){
-            return $this->redirect("/profile");
+        if (Authorization::tryLogIn($email, $password, User::class)) {
+            return $this->redirect("profile");
         }
 
         $this->danger("El usuario o contraseña ingresada no son correctos.");
         return $this->view("login");
+    }
+
+    function logout()
+    {
+        Authorization::logout();
+        return $this->redirect();
     }
 
     function signup()
@@ -94,13 +102,11 @@ class HomeController extends Controller
 
                 $this->success("Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales a continuación.");
                 return $this->redirect("login");
-
             } else {
 
                 $this->danger("No se puede validar los datos ingresados en el servidor remoto. ");
                 return $this->redirect("signup");
             }
-
         } else {
 
             $this->danger("No se puede registrar el usuario ingresado porque el correo utilizado se encuentra asociado a otra cuenta ya existente.");
@@ -112,6 +118,15 @@ class HomeController extends Controller
     {
         $result = $this->db->find(User::class, ["email" => "$email"]);
         return ($result != null);
+    }
+
+    function automaticSurveyProfileRedirect()
+    {
+        if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+            return $this->redirect("survey");
+        }
+
+        return $this->redirect("profile");
     }
 
 

@@ -1,23 +1,26 @@
 <View title="Recolección de información">
-    <Row>
-        <Card size="10">
-            <IconifiedTitle source="question.png">
-                Recolección de información
-            </IconifiedTitle>
-            <Subtitle>
-                Se le pedirá que conteste el siguiente formulario sinceramente
-            </Subtitle>
-            <Label>
-                Algunas preguntas dependen de la respuestas de preguntas anteriores, por lo que pueden verse ocultadas.
-            </Label>
-            <Spacing>
-            <Form id="surveyForm" route="questions/submit">
-                <Paginator numberOfPages="5">
-                    <Row>
-                        <Survey from="{surveyQuestions}" skip="[{parent.page}*10]" take="10">
-                    </Row>
-                </Paginator>
-            </Form>
-        </Card>
-    </Row>
+    <Container>
+        <Row>
+            <Column size="10">
+                <Card>
+                    <IconifiedTitle source="survey.png">
+                        Recolección de información
+                    </IconifiedTitle>
+                    <Subtitle>
+                        Se le pedirá que conteste el siguiente formulario sinceramente antes de poder utilizar el resto de la aplicación.
+                    </Subtitle>
+                    <Label>
+                        Algunas preguntas dependen de la respuestas de preguntas anteriores, por lo que pueden verse ocultadas. Asi mismo,
+                        hay preguntas que varian en función del género biológico que usted seleccionó anteriormente.
+                    </Label>
+                    <Spacing>
+                    <Form id="surveyForm" route="survey/submit">
+                        <FormPaginator form="{parent.formName}" numberOfPages="5">
+                            <Survey from="{surveyQuestions}" skip="[{parent.page}*10]" take="10">
+                        </FormPaginator>
+                    </Form>
+                </Card>
+            </Column>
+        </Row>
+    </Container>
 </View>

@@ -179,15 +179,29 @@ class Request
         $request->formData = [];
         $request->method = strtolower($_SERVER['REQUEST_METHOD']);
 
-        if ($request->method == "get") {
-            foreach ($_GET as $parameter => $value) {
-                $request->formData[$parameter] = Text::sanitizeString($value);
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+
+            $input = file_get_contents('php://input');
+            
+            if($input !== false){
+                $request->formData = json_decode($input, true);
             }
-        } else if ($request->method == "post") {
-            foreach ($_POST as $parameter => $value) {
-                $request->formData[$parameter] = Text::sanitizeString($value);
+
+        }else{
+
+            if ($request->method == "get") {
+                foreach ($_GET as $parameter => $value) {
+                    $request->formData[$parameter] = Text::sanitizeString($value);
+                }
+            } else if ($request->method == "post") {
+                foreach ($_POST as $parameter => $value) {
+                    $request->formData[$parameter] = Text::sanitizeString($value);
+                }
             }
+
         }
+
+        
 
         return $request;
     }

@@ -6,7 +6,7 @@ use Cosmic\Binder\InlineComponent;
 
 class Survey extends InlineComponent
 {
-    public function __construct(array $from, int $skip, int $take, string $minWidth = "10px", string $minHeight = "125px")
+    public function __construct(array $from, int $skip, int $take, array $exclude = [], string $minWidth = "10px", string $minHeight = "125px")
     {
         $this->from = $from;
         $this->skip = $skip;
@@ -58,19 +58,19 @@ class Survey extends InlineComponent
         return {{
 
             <Foreach using="q" from="{from}" skip="{skip}" take="{take}">
-                <Card size="12" id="q-{parent.q.id}-c" padding="3" minWidth="{minWidth}" minHeight="{minHeight}">
+                <Card id="q-{parent.q.id}-c" padding="3" minWidth="{minWidth}" minHeight="{minHeight}" class="pb-4">
                     <div>{parent.q.subject}</div>
                     <If value="{parent.q.type}" equals="text">
-                       <Textfield id="q-{parent.q.id}" (load)="component.manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                       <Textfield id="q-{parent.q.id}" (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
                     </If>
                     <If value="{parent.q.type}" equals="number">
-                        <Textfield id="q-{parent.q.id}" (load)="component.manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                        <Textfield id="q-{parent.q.id}" (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
                     </If>
                     <If value="{parent.q.type}" equals="singleChoice">
                         <Select 
                         id="q-{parent.q.id}" 
                         from="{parent.q.choices}" 
-                        (load)="component.manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                        (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
                     </If>
                     <If value="{parent.q.type}" equals="multipleChoice">
                         <br>
@@ -78,7 +78,7 @@ class Survey extends InlineComponent
                             <Foreach using="c" from="{parent.q.choices}">
                                 <br>
                                 <Radio id="q-{parent.q.id}" option="{parent.c}" value="{parent.c}" 
-                                (load)="component.manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                                (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
                             </Foreach>
                         </div>
                     </If>

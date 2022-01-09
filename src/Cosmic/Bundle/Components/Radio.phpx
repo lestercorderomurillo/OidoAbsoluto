@@ -25,7 +25,7 @@ class Radio extends InlineComponent
     {
         return {{
             <input {events} id="{id}_{option}" name="{id}" class="Radio p-1 ml-1 d-inline" type="radio" value="{value}">
-            <Label for="{id}_{option}" classList="pl-2 d-inline">
+            <Label for="{id}_{option}" class="pl-2 d-inline">
                 {text}
             </Label> 
             <Spacing>

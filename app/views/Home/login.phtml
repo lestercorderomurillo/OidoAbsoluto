@@ -1,34 +1,38 @@
 <View title="Inicio de sesión">
-    <Row>
-        <Card size="8" maxWidth="600px">
-            <Form id="loginForm" route="login/submit">
-                <IconifiedTitle source="profile.png">Inicio de sesión</IconifiedTitle>
-                <Span>
-                    Sírvase de acceder al servicio para realizar o consultar su historial de pruebas
-                </Span>
-                <PersistentError>
-                <Label for="email">
-                    Correo Electrónico
-                </Label> 
-                <Textfield id="email">
-                <Label for="password">
-                    Contraseña
-                </Label>   
-                <Passfield id="password">
-                <SubmitButton>
-                    Acceder al Proyecto
-                </SubmitButton>
-                <RedirectButton route="signup">
-                    O bien, Crear cuenta
-                </RedirectButton>
-                <Spacing>
-                <Span>
-                    ¿Olvidó su contraseña o no puede acceder a su cuenta?
-                </Span>
-                <Link route="forgot">
-                    Haga click en este enlace para recuperar su contraseña
-                </Link>
-            </Form>
-        </Card>
-    </Row>
+    <Container>
+        <Row>
+            <Column>
+                <Card size="8" maxWidth="600px">
+                    <Form id="loginForm" route="login/submit">
+                        <IconifiedTitle source="profile.png">Inicio de sesión</IconifiedTitle>
+                        <Span>
+                            Sírvase de acceder al servicio para realizar o consultar su historial de pruebas
+                        </Span>
+                        <PersistentError>
+                        <Label for="email">
+                            Correo Electrónico
+                        </Label> 
+                        <Textfield id="email">
+                        <Label for="password">
+                            Contraseña
+                        </Label>   
+                        <Passfield id="password">
+                        <SubmitButton>
+                            Acceder al Proyecto
+                        </SubmitButton>
+                        <RedirectButton route="signup">
+                            O bien, Crear cuenta
+                        </RedirectButton>
+                        <Spacing>
+                        <Span>
+                            ¿Olvidó su contraseña o no puede acceder a su cuenta?
+                        </Span>
+                        <Link route="forgot">
+                            Haga click en este enlace para recuperar su contraseña
+                        </Link>
+                    </Form>
+                </Card>
+            </Column>
+        </Row>
+    </Container>
 </View>

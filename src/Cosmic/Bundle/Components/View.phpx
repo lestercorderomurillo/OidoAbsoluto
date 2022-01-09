@@ -12,6 +12,27 @@ class View extends Component
         $this->language = $language;
     }
 
+    public function scripts()
+    {
+        return <<<JS
+
+        function awake(){
+
+            $(".error").hide();
+
+            $(".Focuseable").keyup(function () {
+                if (this.value.length == this.maxLength) {
+                    $(this).next('.Focuseable').focus();
+                }
+            });
+
+            $("Body").addClass('BodyLoaded');
+
+        };
+
+        JS;
+    }
+
     public function render()
     {
         $this->scriptBundles = app()->get("scriptBundles");
@@ -34,8 +55,7 @@ class View extends Component
                         <link rel="stylesheet" href="{ parent.style }">
                     </Foreach>
                 </head>
-                <body class="Container">
-                    <br>
+                <body id="{id}" (load)="awake()">
                     { body }
                 </body>
                 { bindings }

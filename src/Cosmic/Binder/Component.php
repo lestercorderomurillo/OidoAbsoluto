@@ -8,6 +8,7 @@ use Cosmic\Traits\ValuesSetterTrait;
 use Cosmic\Traits\ClassAwareTrait;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\Binder\Exceptions\InvalidComponentException;
+use Cosmic\FileSystem\FileSystem;
 
 /**
  * This class represents a cosmic component. Should be extended to create new components.
@@ -28,9 +29,9 @@ abstract class Component
     public string $events;
 
     /**
-     * @var string $classList Store this component compiled delegated classes.
+     * @var string $class Store this component compiled delegated classes.
      */
-    public string $classList;
+    public string $class;
 
     /**
      * Return the publish component name for injectable container's.
@@ -75,8 +76,15 @@ abstract class Component
 
         if ($constant !== false) {
             foreach ($constant as $line) {
+
                 $path = new File("src/Cosmic/Bundle/Components/$line");
-                $paths[] = $path;
+                $pathInApp = new File("app/Components/$line");
+
+                if(FileSystem::exists($path)) {
+                    $paths[] = $path;
+                }else if (FileSystem::exists($pathInApp)) {
+                    $paths[] = $pathInApp;
+                }
             }
         }
 
@@ -179,6 +187,16 @@ abstract class Component
     }
 
     /**
+     * Return the compiled initial state javascripts functions of this component.
+     *
+     * @return string The compiled javascript source code.
+     */
+    public function getBaseStateJavascript(): string
+    {
+        return trim("state[\"" . $this->id . "\"] = {};\n");
+    }
+
+    /**
      * Return the compiled javascripts functions of this component.
      *
      * @return string The compiled javascript source code.
@@ -190,13 +208,14 @@ abstract class Component
         if (method_exists($this, 'scripts')) {
             $componentName = $this->getSimplifiedName() . "_" . $this->id . "_";
             $script = call_user_func([$this, 'scripts']);
+            $script = preg_replace("/fn\.([A-z0-9_]+)/", "$componentName$1", $script);
             $script = preg_replace("/component\.([A-z0-9_]+)(?=\()/", "$componentName$1", $script);
-            //$script = preg_replace("/component\./", "state[\"" . $this->id . "\"].", $script);
             $script = preg_replace("/component\./", "state[\"" . $this->id . "\"].", $script);
+            $script = preg_replace("/extern\./", "state[\"_globalComponent_\"].", $script);
             $script = preg_replace("/function (?=[A-z]+)/", "function $componentName", $script);
         }
 
-        return trim("state[\"" . $this->id . "\"] = {};\n" . $script);
+        return trim($script);
     }
     
     /**

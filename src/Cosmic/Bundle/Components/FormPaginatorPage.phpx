@@ -4,7 +4,7 @@ namespace Cosmic\Bundle\Components;
 
 use Cosmic\Binder\Component;
 
-class PaginatorPage extends Component
+class FormPaginatorPage extends Component
 {
     public function __construct(int $page, string $paginator)
     {
@@ -17,11 +17,11 @@ class PaginatorPage extends Component
         $this->compiledBody = $this->renderChilds(["page" => $this->page]);
 
         return {{
-            <div paginator="{paginator}" page="{page}" class="PaginatorPage hide">
+            <div paginator="{paginator}" page="{page}" class="FormPaginatorPage hide">
                 {compiledBody}
             </div>
         }};
     }
 }
 
-publish(PaginatorPage::class);
+publish(FormPaginatorPage::class);

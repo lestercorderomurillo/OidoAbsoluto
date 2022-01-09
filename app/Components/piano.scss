@@ -2,42 +2,38 @@
 $piano-color-bg: hsl(26, 37%, 19%);
 $piano-color-bg-simple: hsl(0, 0%, 89%);
 $piano-progress-color-bg: hsl(231, 19%, 79%);
-$piano-key-color-border: hsla(0, 10%, 62%, 0.698);
+$pianoKey-color-border: hsla(0, 10%, 62%, 0.698);
 $piano-wk-color-bg: hsl(0, 0%, 100%);
 $piano-wk-color-bg-end: hsl(0, 0%, 89%);
 $piano-bk-color-bg: hsl(0, 0%, 14%);
 $piano-bk-color-bg-end: hsl(0, 0%, 8%);
 
 $piano-scale: 1.00;
-$piano-downscale: 0.75;
+$piano-downscale: 0.72;
 
-$piano-key-width: 80px * $piano-scale;
-$piano-key-height: 240px * $piano-scale;
+$pianoKey-width: 80px * $piano-scale;
+$pianoKey-height: 240px * $piano-scale;
 
 $piano-simple-font-size: 1.75rem;
 $piano-simple-width: 140px * $piano-scale;
 $piano-simple-height: 80px * $piano-scale;
 
-$piano-breakpoint: 1200px;
+$piano-breakpoint: 1360px;
+$piano-log-height: 220px;
 
-$piano-log-height: 250px;
+/* State Loggers */
 
-#progress_log > div{
+#progressLog > div{
     background-color: $piano-progress-color-bg !important;
 }
 
-#piano_log{
+#pianoLog{
     overflow-y: scroll;
     height: $piano-log-height !important;
-    opacity: 0%;
-}
-
-#piano_log_title{
-    opacity: 0%;
 }
 
 /* Full piano */
-.app-piano-full{
+.PianoFull{
     background-color: $piano-color-bg;
     background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/187/vwood.png);
     margin: 4px;
@@ -49,7 +45,7 @@ $piano-log-height: 250px;
     box-shadow: 0px 0px 30px 11px rgba(0,0,0,0.28);
 }
 
-.app-piano-key-full{
+.PianoKeyFull{
     position: relative;
     top: 8px;
     border-width: 1px;
@@ -58,28 +54,28 @@ $piano-log-height: 250px;
     z-index: 1 !important;
 }
 
-.app-piano-key-full:first-child{
+.PianoKeyFull:first-child{
     border-top-left-radius: 6px;
 }
 
-.app-piano-key-full:last-child{
+.PianoKeyFull:last-child{
     border-top-right-radius: 6px;
 }
 
-.app-piano-key-white-full{
-    @extend .app-piano-key-full;
+.PianoKeyWhiteFull{
+    @extend .PianoKeyFull;
 
     display: inline-block;
-    border: solid $piano-key-color-border;
+    border: solid $pianoKey-color-border;
 
-    width: $piano-key-width;
-    height: $piano-key-height;
+    width: $pianoKey-width;
+    height: $pianoKey-height;
 
     margin-left: -6px;
 
     @media (max-width: $piano-breakpoint) {
-        width: $piano-key-width*$piano-downscale;
-        height: $piano-key-height*$piano-downscale;
+        width: $pianoKey-width*$piano-downscale;
+        height: $pianoKey-height*$piano-downscale;
     }
 
     background: linear-gradient($piano-wk-color-bg, $piano-wk-color-bg-end);
@@ -87,29 +83,29 @@ $piano-log-height: 250px;
     border-width: 1px;
 }
 
-.app-piano-key-black-full{
+.PianoKeyBlackFull{
     position: relative;
     z-index: 2 !important;
-    left: $piano-key-width*0.25;
-    margin-bottom: $piano-key-height*0.31;
-    margin-left: -$piano-key-width*0.5;
+    left: $pianoKey-width*0.25;
+    margin-bottom: $pianoKey-height*0.31;
+    margin-left: -$pianoKey-width*0.5;
 
     @media (max-width: $piano-breakpoint) {
-        left: $piano-key-width*$piano-downscale*0.25;
-        margin-bottom: $piano-key-height*$piano-downscale*0.30;
+        left: $pianoKey-width*$piano-downscale*0.25;
+        margin-bottom: $pianoKey-height*$piano-downscale*0.30;
     }
 
     box-shadow: inset 0.25em 0.25em 0.25em 0 rgba(255,255,255,0.15), inset -0.2em -0.2em 0.2em 0 rgba(149, 149, 149, 0.25);
     border-radius: 4px;
     display: inline-block;
-    border: solid $piano-key-color-border;
+    border: solid $pianoKey-color-border;
 
-    width: $piano-key-width*0.50 !important;
-    height: $piano-key-height*0.66 !important;
+    width: $pianoKey-width*0.50 !important;
+    height: $pianoKey-height*0.66 !important;
 
     @media (max-width: $piano-breakpoint) {
-        width: $piano-key-width*$piano-downscale*0.50 !important;
-        height: $piano-key-height*$piano-downscale*0.66 !important;
+        width: $pianoKey-width*$piano-downscale*0.50 !important;
+        height: $pianoKey-height*$piano-downscale*0.66 !important;
     }
 
     background: linear-gradient($piano-bk-color-bg, $piano-bk-color-bg-end);
@@ -118,12 +114,12 @@ $piano-log-height: 250px;
 }
 
 /* Simple piano */
-.app-piano-key-white-simple, .app-piano-key-black-simple{
+.PianoKeyWhiteSimple, .PianoKeyBlackSimple{
     margin: 4px;
     border-radius: 6px;
 
     display: inline-block;
-    border: solid $piano-key-color-border;
+    border: solid $pianoKey-color-border;
 
     font-size: $piano-simple-font-size;
     width: $piano-simple-width;
@@ -142,6 +138,6 @@ $piano-log-height: 250px;
     border-width: 1px;
 }
 
-.app-piano-toggleable{
+.PianoToggleable{
     background: linear-gradient($piano-wk-color-bg-end, gray) !important;
 }

@@ -314,7 +314,7 @@
     },
     {
         "id": 40,
-        "gender": "female",
+        "gender": "F",
         "subject": "¿Ha notado alguna alteración en su capacidad de identificar notas con las fases del ciclo menstrual?",
         "type": "singleChoice",
         "choices": [

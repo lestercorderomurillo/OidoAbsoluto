@@ -16,7 +16,7 @@ class Label extends Component
     public function render()
     {
         return {{
-            <label for="{for}" class="w-100 text-color text-{textPosition} {classList}" style="font-size: {fontSize};">
+            <label for="{for}" class="w-100 text-color text-{textPosition} {class}" style="font-size: {fontSize};">
                 {body}
             </label>
         }};

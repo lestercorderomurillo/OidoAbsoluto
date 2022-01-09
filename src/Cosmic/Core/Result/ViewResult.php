@@ -90,6 +90,7 @@ class ViewResult implements ResultGeneratorInterface
 
         $html = $compiler->compileString($this->view->getSourceHTML(), $this->view->getViewData());
         $html = $compiler->compileServerSideTokens($html, ["bindings" => $dom->getOuputJavascript()]);
+        $html = $compiler->compileClientSideTokens($html);
 
         $jsFile = new File($this->view->getFolder() . $this->view->getViewName() . ".js");
 

@@ -20,6 +20,11 @@ class DOM
     private array $functions;
 
     /**
+     * @var string[] $initialStates Holds all the initial stateful javascripts functions from all components.
+     */
+    private array $initialStates;
+
+    /**
      * Constructor. Expected be resolved using dependency injection.
      * 
      * @param Compiler $compiler The compiler instance.
@@ -30,6 +35,7 @@ class DOM
     public function __construct()
     {
         $this->functions = [];
+        $this->initialStates = [];
     }
 
     /**
@@ -71,7 +77,27 @@ class DOM
      */
     public function registerJavascriptSourceCode(string $compiledJavascript): void
     {
-        $this->functions[] = $compiledJavascript;
+        $value = trim($compiledJavascript);
+
+        if ($value != __EMPTY__) {
+            $this->functions[] = $value;
+        }
+    }
+
+    /**
+     * Register the given state script for later client side export.
+     * 
+     * @param string $compiledJavascript The compiled javascript code.
+     * 
+     * @return void
+     */
+    public function registerInitialStateSourceCode(string $compiledJavascript): void
+    {
+        $value = trim($compiledJavascript);
+
+        if ($value != __EMPTY__) {
+            $this->initialStates[] = $value;
+        }
     }
 
     /**
@@ -82,8 +108,10 @@ class DOM
      */
     public function getOuputJavascript(): string
     {
-        $output = trim(implode("\n", $this->functions));
-        return "\n" . HTML::encodeInJScript($output, false);
+        $initialOutput = HTML::encodeInJScript(trim("state[\"_globalComponent_\"] = {};\n" . implode("\n", $this->initialStates)));
+        $output = HTML::encodeInJScript(trim(implode("\n", $this->functions)), false);
+
+        return "\n" . $initialOutput . "\n" . $output;
     }
 
     /**

@@ -17,6 +17,8 @@ class Form extends Component
 
     public function render()
     {
+        $this->body = $this->renderChilds(["formName" => $this->id]);
+
         return {{
             <form id="{id}" action="{fullRoute}" method="{method}" autocomplete="{random}">
                 {body}

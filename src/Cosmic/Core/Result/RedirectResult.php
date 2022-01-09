@@ -4,6 +4,7 @@ namespace Cosmic\Core\Result;
 
 use Cosmic\Core\Interfaces\ResultGeneratorInterface;
 use Cosmic\HTTP\Server\Response;
+use Cosmic\Utilities\Text;
 
 /**
  * A response that performs a simple 301 HTTP redirection.
@@ -21,10 +22,16 @@ class RedirectResult implements ResultGeneratorInterface
      * @param string $destinationURL The destination URL to redirect.
      * 
      * @return void
+     * 
+     * @throws \InvalidArgumentException If the destination URL has a slash at the beginning.
      */
     public function __construct(string $destinationURL)
     {
-        $this->destinationURL = $destinationURL;
+        if(Text::startsWith($destinationURL, "/")){
+            throw new \InvalidArgumentException("URL must not start with a slash.");
+        }
+        
+        $this->destinationURL = __HOST__ . $destinationURL;
     }
 
     /**

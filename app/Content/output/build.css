@@ -4,22 +4,20 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
-.error, .cerror {
-  font-size: 11px !important;
-  font-weight: bold;
+label.error {
+  font-size: 0.8em;
   background-color: #7e2020;
   color: white;
   border-radius: 5px;
   padding: 5px;
-  padding-bottom: 4px;
-  padding-top: 2px;
-  margin-top: 3px;
+  margin: 3px;
+  margin-bottom: 15px;
 }
-.Container {
-  padding: 0 !important;
+input.error {
+  color: #7e2020 !important;
 }
 * {
   transition: ease all 0.33s;
@@ -33,6 +31,14 @@ input[type='number'] {
 .Close {
   padding-top: 0.865rem !important;
 }
+.row.display-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.row.display-flex > [class*="col-"] {
+  display: flex;
+  flex-direction: column;
+}
 Body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -41,12 +47,14 @@ Body {
   -ms-user-select: none;
   user-select: none;
   min-width: 600px;
+  height: 100vh;
   background-color: #585275 !important;
   font-size: 12px;
   font-family: 'Noto Sans JP', sans-serif;
   opacity: 0%;
-  transition: ease all 0.75s;
+  transition: ease all 0s;
   overflow-x: hidden;
+  padding: 0 !important;
 }
 .BodyLoaded {
   opacity: 100% !important;
@@ -143,7 +151,7 @@ Button.AccentInfo:hover {
   border: none;
   border-bottom: 1px solid #585275;
   border-radius: 0 !important;
-  color: #04081a !important;
+  color: #04081a;
   outline: none;
   outline-color: transparent;
   outline-style: none;
@@ -245,11 +253,114 @@ Button.AccentInfo:hover {
   border: none;
   border-bottom: 1px solid #585275;
   border-radius: 0 !important;
-  color: #04081a !important;
+  color: #04081a;
   outline: none;
   outline-color: transparent;
   outline-style: none;
 }
 .Field:focus {
   border-bottom: 3px solid #2b2839 !important;
+}
+/* State Loggers */
+#progressLog > div {
+  background-color: #bfc2d4 !important;
+}
+#pianoLog {
+  overflow-y: scroll;
+  height: 220px !important;
+}
+/* Full piano */
+.PianoFull {
+  background-color: #422e1f;
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/187/vwood.png);
+  margin: 4px;
+  padding: 35px;
+  padding-top: 25px;
+  padding-bottom: 0px;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0px 0px 30px 11px rgba(0, 0, 0, 0.28);
+}
+.PianoKeyFull, .PianoKeyWhiteFull {
+  position: relative;
+  top: 8px;
+  border-width: 1px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  z-index: 1 !important;
+}
+.PianoKeyFull:first-child, .PianoKeyWhiteFull:first-child {
+  border-top-left-radius: 6px;
+}
+.PianoKeyFull:last-child, .PianoKeyWhiteFull:last-child {
+  border-top-right-radius: 6px;
+}
+.PianoKeyWhiteFull {
+  display: inline-block;
+  border: solid rgba(168, 148, 148, 0.698);
+  width: 80px;
+  height: 240px;
+  margin-left: -6px;
+  background: linear-gradient(white, #e3e3e3);
+  border: solid rgba(36, 36, 36, 0.267);
+  border-width: 1px;
+}
+@media (max-width: 1360px) {
+  .PianoKeyWhiteFull {
+    width: 57.6px;
+    height: 172.8px;
+  }
+}
+.PianoKeyBlackFull {
+  position: relative;
+  z-index: 2 !important;
+  left: 20px;
+  margin-bottom: 74.4px;
+  margin-left: -40px;
+  box-shadow: inset 0.25em 0.25em 0.25em 0 rgba(255, 255, 255, 0.15), inset -0.2em -0.2em 0.2em 0 rgba(149, 149, 149, 0.25);
+  border-radius: 4px;
+  display: inline-block;
+  border: solid rgba(168, 148, 148, 0.698);
+  width: 40px !important;
+  height: 158.4px !important;
+  background: linear-gradient(#242424, #141414);
+  border: solid rgba(36, 36, 36, 0.267);
+  border-width: 1px;
+}
+@media (max-width: 1360px) {
+  .PianoKeyBlackFull {
+    left: 14.4px;
+    margin-bottom: 51.84px;
+  }
+}
+@media (max-width: 1360px) {
+  .PianoKeyBlackFull {
+    width: 28.8px !important;
+    height: 114.048px !important;
+  }
+}
+/* Simple piano */
+.PianoKeyWhiteSimple, .PianoKeyBlackSimple {
+  margin: 4px;
+  border-radius: 6px;
+  display: inline-block;
+  border: solid rgba(168, 148, 148, 0.698);
+  font-size: 1.75rem;
+  width: 140px;
+  height: 80px;
+  line-height: 80px;
+  background: linear-gradient(white, #e3e3e3);
+  border: solid rgba(36, 36, 36, 0.267);
+  border-width: 1px;
+}
+@media (max-width: 1360px) {
+  .PianoKeyWhiteSimple, .PianoKeyBlackSimple {
+    width: 100.8px;
+    height: 57.6px;
+    font-size: 1.26rem;
+    line-height: 57.6px;
+  }
+}
+.PianoToggleable {
+  background: linear-gradient(#e3e3e3, gray) !important;
 }

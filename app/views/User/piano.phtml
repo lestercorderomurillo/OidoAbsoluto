@@ -1,0 +1,55 @@
+<View title="{displayString}">
+    <Container>
+        <FluidRow padding="5">
+            <Column size="7" padding="1">
+                <Card class="h-100">
+                    <Title>{displayString}</Title>
+                    <Label>
+                        <strong>Instrucciones de utilización</strong>
+                        <Spacing>
+                        Una vez usted escucha una nota músical, tiene un intervalo breve de 3 segundos para
+                        identificar y marcar la nota que cree que escuchó en el {displayString}.
+                        <If value="{displayMode}" equals="Full">
+                            <div>
+                                Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. 
+                                Para el caso de notas blancas, utilice las teclas "ZXCVBNM" y para las negras utilice "SDGHJ".
+                            </div>
+                        </If>
+                        <br>
+                        Cuando se reproduzcan {?noteMax} notas consecutivas, se pasará automaticamente a la siguiente etapa.
+                    </Label>
+                    <Spacing>
+                    <div class="text-center">
+                        <Piano displayMode="{displayMode}" audiosSources="{audiosSources}" toggleButton="pianoToggleButton" pianoLog="pianoLog" pianoLogTemplate="pianoLogTemplate">
+                    </div>
+                </Card>
+            </Column>
+            <Column size="4" padding="1">
+                <Card padding="5" class="h-100">
+                    <Title>
+                        Prueba Auditiva
+                    </Title>
+                    <Card id="progressLog" padding="3">      
+                        Tipo de sonido: {?currentNoteType}
+                        <Spacing>
+                        Reproduciendo la nota {?currentNoteIndexString} de {?notesPerTest}
+                        <Spacing>
+                        Tiempo total transcurido: {?totalTime}
+                    </Card>
+                    <Spacing>
+                    <Button id="pianoToggleButton">
+                        {?buttonString}
+                    </Button>
+                    <Spacing>
+                    <Card id="pianoLog" padding="1" accent="Primary" class="Hide">
+                        <Subtitle id="pianoLogTitle" class="m-2">
+                            Historial de Notas
+                        </Subtitle>
+                        <Card id="pianoLogTemplate" padding="2" class="Hide m-1">
+                        </Card>
+                    </Card>
+                </Card>
+            </Column>
+        </FluidRow>
+    </Container>
+</View>

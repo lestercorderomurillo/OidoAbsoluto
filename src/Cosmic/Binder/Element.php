@@ -49,6 +49,58 @@ class Element
                 $this->parameters[$key] = $value;
             }
         }
+
+        if (!isset($this->parameters["id"])) {
+            $this->parameters["id"] = generateID();
+        }
+    }
+
+    /**
+     * Assigns the key with the given value.
+     * 
+     * @param string $key The key to use.
+     * @param string $value The value to assign.
+     */
+    public function setParameter(string $key, string $value): void
+    {
+        $this->parameters[$key] = $value;
+    }
+
+    /**
+     * Return the stored property for this element.
+     * 
+     * @param string $key The key to retrieve from.
+     * 
+     * @return array The properties array.
+     */
+    public function getParameter(string $key): string
+    {
+        return $this->parameters[$key];
+    }
+
+    /**
+     * Store an event in the given key.
+     * 
+     * @param string $key The key to store in.
+     * @param string $value The value to store.
+     * 
+     * @return void
+     */
+    public function setEvent(string $key, string $value): void
+    {
+        $this->events[$key] = $value;
+    }
+
+    /**
+     * Return the stored event for this element.
+     * 
+     * @param string $key The key to retrieve from.
+     * 
+     * @return array The properties array.
+     */
+    public function getEvent(string $key): string
+    {
+        return $this->events[$key];
     }
 
     /**
@@ -69,6 +121,16 @@ class Element
     public function getParameters(): array
     {
         return $this->parameters;
+    }
+
+    /**
+     * Return the stored events for this element.
+     * 
+     * @return array The properties array.
+     */
+    public function getEvents(): array
+    {
+        return $this->events;
     }
 
     /**
@@ -120,11 +182,11 @@ class Element
         $component = new $componentClassName(...$parameters);
 
         if(!isset($component->id)){
-            $component->id = (isset($this->parameters["id"])) ? $this->parameters["id"] : generateID();
+            $component->id = $this->parameters["id"];
         }
 
-        if(!isset($component->classList)){
-            $component->classList = (isset($this->parameters["classList"])) ? $this->parameters["classList"] : __EMPTY__;
+        if(!isset($component->class)){
+            $component->class = (isset($this->parameters["class"])) ? $this->parameters["class"] : __EMPTY__;
         }
 
         $component->events = "";
@@ -135,6 +197,7 @@ class Element
 
         $component->events = trim($component->events);
 
+        app()->get(DOM::class)->registerInitialStateSourceCode($component->getBaseStateJavascript());
         app()->get(DOM::class)->registerJavascriptSourceCode($component->getCompiledJavascriptFunctions());
 
         return $component;

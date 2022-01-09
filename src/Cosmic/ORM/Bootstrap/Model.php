@@ -17,12 +17,12 @@ abstract class Model
     /**
      * @var string $id The entity current Id key.
      */
-    private string $id;
+    public string $id;
 
     /**
      * @var array $data The underlying stored data.
      */
-    private array $data = [];
+    protected array $data = [];
 
     /**
      * Constructor. By default, sets the Id to 0.
@@ -58,30 +58,48 @@ abstract class Model
     }
 
     /**
-     * Return the query replacement placeholder array for this model.
+     * Return the query replacement placeholder array for this model compiled.
      * Uses the class attributes to resolve the placeholder array.
      * 
-     * @return array The placeholder array.
+     * @param bool $skipID If true, the placeholder will skip the id attribute.
+     * 
+     * @return string The placeholder array already compiled.
      */
-    public function getAttributesPlaceholders(): array
+    public function getAttributesPlaceholders(bool $skipID = false): string
     {
         $attributes = [];
         foreach ($this->getPublicProperties() as $property => $value) {
-            $attributes[] = '`' . $property . '` = :' . $property;
+            if ($skipID) {
+                if (strtolower($property) !== "id") {
+                    $attributes[] = '`' . $property . '` = :' . $property;
+                }
+            } else {
+                $attributes[] = '`' . $property . '` = :' . $property;
+            }
         }
-        return $attributes;
+
+        return implode(", ", $attributes);
     }
 
     /**
      * Return the bindings with their respective values for this model.
      * 
+     * @param bool $skipID If true, the placeholder will skip the id attribute.
+     * 
      * @return array The attributes array.
      */
-    public function getAttributesValues(): array
+    public function getAttributesValues(bool $skipID = false): array
     {
         $attributes = [];
         foreach ($this->getPublicProperties() as $property => $value) {
-            $attributes[":" . $property] = $value;
+
+            if ($skipID) {
+                if (strtolower($property) !== "id") {
+                    $attributes[":" . $property] = $value;
+                }
+            } else {
+                $attributes[":" . $property] = $value;
+            }
         }
         return $attributes;
     }

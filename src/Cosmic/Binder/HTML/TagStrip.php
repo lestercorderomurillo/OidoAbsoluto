@@ -54,38 +54,57 @@ class TagStrip
             if (is_int($key)) {
 
                 $attributesString .= " $value";
-                
             } else {
 
                 if (Text::startsWith($key, "(") && Text::endsWith($key, ")")) {
 
                     $event = substr($key, 1, -1);
+
                     $id = safe($this->attributes["id"]);
 
-                    if($id == null){
+                    if ($id == null) {
                         throw new \RuntimeException("Event handlers require an id attribute to identify the DOM element");
                     }
 
-                    if($event == "load"){
-                        $id = "window";
-                    }else{
-                        $id = '"#' . $id . '"';
+                    $value = trim($value);
+
+                    if ($event == "update") {
+
+                        $value = str_replace("()", "", $value);
+
+                        $handleCode = <<<JS
+                        $(window).on("load", function() {
+                            setInterval($value, 16);
+                        });
+                        JS;
+                        
+                    } else {
+
+                        if ($event == "load") {
+                            $id = "window";
+
+                        } else {
+
+                            $id = '"#' . $id . '"';
+
+                            if (!Text::endsWith($value, ";")) {
+                                $value .= ";";
+                            }
+                        }
+
+                        $handleCode = <<<JS
+                        $($id).on("$event", function() {
+                            $value
+                        });
+                        JS;
                     }
 
-                    $handleCode = <<<JS
-                    $($id).on("$event", function() {
-                        $value
-                    });
-                    JS;
-
                     app()->get(DOM::class)->registerJavascriptSourceCode($handleCode);
-
-                }else if (Text::contains($key, ["id", "name", "for", "key"])) {
+                } else if (Text::contains($key, ["id", "name", "for", "key"])) {
 
                     if (strlen($value) > 0) {
                         $attributesString .= " $key=\"$value\"";
                     }
-
                 } else {
                     $attributesString .= " $key=\"$value\"";
                 }

@@ -16,7 +16,7 @@ use Cosmic\Bundle\Middlewares\Authentication;
 
 $router = app()->get(Router::class);
 
-$router->groupController(HomeController::class, function (Router $router) {
+$router->withController(HomeController::class, function (Router $router) {
 
     $router->get('/', ["login"]);
     $router->get('/index', ["login"]);
@@ -27,8 +27,7 @@ $router->groupController(HomeController::class, function (Router $router) {
     $router->get('/signup', ["signup"]);
     $router->post('/signup/submit', ["signupSubmit"]);
 
-
-
+    $router->get('/logout', ["logout"]);
 
 
     // NOT DONE
@@ -37,16 +36,19 @@ $router->groupController(HomeController::class, function (Router $router) {
 
 });
 
-$router->groupController(UserController::class, function (Router $router) {
+$router->withController(UserController::class, function (Router $router) {
 
-    $router->groupMiddlewares([Authentication::class], function (Router $router) {
+    $router->withMiddlewares(Authentication::class, function (Router $router) {
         
         $router->get('/profile', ["profile"]);
         $router->get('/survey', ["survey"]);
+        $router->post('/survey/submit', ["surveySubmit"]);
+        $router->get('/piano', ["piano"]);
+        $router->post('/piano/submit', ["pianoSubmit"]);
         
     });
 
-    $router->get('/logout', ["logout"]);
+    
 
 });
 

@@ -4,17 +4,17 @@ namespace Cosmic\Bundle\Components;
 
 use Cosmic\Binder\Component;
 
-class Paginator extends Component
+class FormPaginator extends Component
 {
-    public function __construct(string $numberOfPages)
+    public function __construct(string $numberOfPages, string $form)
     {
         $this->numberOfPages = $numberOfPages;
         $this->prevPageText = "Página anterior";
         $this->nextPageText = "Página siguiente";
         $this->lastPageText = "Subir formulario";
-
         $this->prevButtonID = generateID();
         $this->nextButtonID = generateID();
+        $this->form = $form;
     }
 
     public function scripts()
@@ -39,11 +39,16 @@ class Paginator extends Component
         }
         
         function update(){
+
+            if(component.currentPage == $this->numberOfPages){
+                $("#$this->form").submit();
+            }
+
             component.currentPage = clamp(component.currentPage, 0, $this->numberOfPages - 1);
             component.currentPageUI = component.currentPage + 1;
 
-            $('.PaginatorPage[paginator="$this->id"]').hide();
-            $('.PaginatorPage[paginator="$this->id"][page="' + component.currentPage + '"]').show();
+            $('.FormPaginatorPage[paginator="$this->id"]').hide();
+            $('.FormPaginatorPage[paginator="$this->id"][page="' + component.currentPage + '"]').show();
 
             if(component.currentPage == 0){
                 $('#$this->prevButtonID').hide();
@@ -70,25 +75,25 @@ class Paginator extends Component
     public function render()
     {
         return {{
-            <div (load)="component.awake()" id="{id}">
+            <div (load)="awake()" id="{id}">
                 <For from="0" to="{numberOfPages}">
-                    <PaginatorPage paginator="{id}" page="{parent.iterator}">
+                    <FormPaginatorPage paginator="{id}" page="{parent.iterator}">
                         {body}
-                    </PaginatorPage>
+                    </FormPaginatorPage>
                 </For>
             </div>
             <Spacing>
-            <Button (click)="component.goBack()" id="{prevButtonID}">
+            <Button (click)="goBack()" id="{prevButtonID}">
                 {prevPageText}
             </Button>
-            <Button (click)="component.goNext()" id="{nextButtonID}">
+            <Button (click)="goNext()" id="{nextButtonID}">
                 {?nextPageText}
             </Button>
-            <Label classList="d-inline"> 
+            <Label class="d-inline"> 
                 {?currentPageUI} / {numberOfPages}
             </Label>
         }};
     }
 }
 
-publish(Paginator::class);
+publish(FormPaginator::class);

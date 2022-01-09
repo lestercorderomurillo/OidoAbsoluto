@@ -73,8 +73,13 @@ trait ClassAwareTrait
         $reflectionClass = new \ReflectionClass($this);
 
         foreach ($reflectionClass->getProperties($visibility) as $property) {
-            $value = Text::sanitizeString($this->{$property->getName()});
-            $attributes[$property->getName()] = $value;
+
+            $accessor = $this->{$property->getName()};
+
+            if(!is_array($accessor)) {
+                $value = Text::sanitizeString($accessor);
+                $attributes[$property->getName()] = $value;
+            }
         }
         return $attributes;
     }

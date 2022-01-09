@@ -67,7 +67,7 @@ class Router extends Controller
      * 
      * @return Router The router instance with a scoped controller.
      */
-    public function groupController(string $controllerClassName, \Closure $closure): Router
+    public function withController(string $controllerClassName, \Closure $closure): Router
     {
         $previous = $this->controllerClassName;
         $this->controllerClassName = $controllerClassName;
@@ -86,7 +86,7 @@ class Router extends Controller
      * 
      * @return Router The router instance using a group of middlewares.
      */
-    public function groupMiddlewares($middlewares, \Closure $closure): Router
+    public function withMiddlewares($middlewares, \Closure $closure): Router
     {
         $middlewares = Collection::normalize($middlewares);
         $previous = $this->middlewares;
@@ -232,7 +232,7 @@ class Router extends Controller
      * Add a new entry point to the routes. This entry point is registed using the GET method.
      * 
      * @param string $pathRegex The path to use to create this entry point.
-     * @param \Closure|array|null $mixed A closure to call when this entry point is called. If provided an array instead,
+     * @param \Closure|array|null $mixed A closure to execute when this entry point is called. If provided an array instead,
      * then this method will try to create the controller class, inject all dependencies and call the passed method automatically.
      * If passed null, then it will try to use the default controller class previously registered. 
      * If not provided, then it will throw an exception.
