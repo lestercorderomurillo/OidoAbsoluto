@@ -1,0 +1,30 @@
+<?php
+
+namespace app\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class OverviewColumnStat extends InlineComponent
+{
+    public function __construct(string $title, int $matches, int $total)
+    {
+        $this->title = $title;
+        $this->matches = $matches;
+        $this->total = $total;
+    }
+
+    public function render()
+    {
+        return {{
+            <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
+                <Subtitle>{title}</Subtitle>
+                <div>
+                    {matches} / {total} 
+                    ([{matches}/{total}*100]%)
+                </div>
+            </Column>
+        }};
+    }
+}
+
+publish(OverviewColumnStat::class);

@@ -1,0 +1,26 @@
+a {
+    font-weight: bold;
+    text-decoration: none !important;
+    font-size: $font-size;
+    background-color: rgba(0,0,0,0) !important;
+}
+
+a:hover {
+    text-decoration: underline !important;
+}
+
+a.LinkPrimary {
+    color: $text-primary !important;
+}
+
+a.LinkPrimary:hover{
+    color: lighten($text-primary, 30%) !important;
+}
+
+a.LinkSecondary {
+    color: $text-secondary !important;
+}
+
+a.LinkSecondary:hover{
+    color: lighten($text-secondary, 30%) !important;
+}

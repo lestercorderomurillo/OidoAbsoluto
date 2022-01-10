@@ -42,4 +42,33 @@ class Transport
         eval($code . ";");
         return self::$__temp;
     }
+
+    /**
+     * Convert the given string into a valid base64 encoded string.
+     * 
+     * @param string $input The string to convert.
+     *
+     * @return string The encoded string.
+     */
+    public static function encodeBase64SafeURL(string $input): string
+    {
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($input));
+    }
+
+    /**
+     * Convert the given string into a valid base64 encoded string.
+     * 
+     * @param string $input The string to convert.
+     *
+     * @return string The encoded string.
+     */
+    public static function decodeBase64SafeURL($input): string
+    {
+        $data = str_replace(['-', '_'], ['+', '/'], $input);
+        $mod4 = strlen($data) % 4;
+        if ($mod4) {
+            $data .= substr('====', $mod4);
+        }
+        return base64_decode($data);
+    }
 }

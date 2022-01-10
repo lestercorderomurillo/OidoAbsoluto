@@ -2,6 +2,8 @@
 
 namespace Cosmic\Traits;
 
+use Cosmic\ORM\Bootstrap\Model;
+use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
 
 /**
@@ -74,12 +76,16 @@ trait ClassAwareTrait
 
         foreach ($reflectionClass->getProperties($visibility) as $property) {
 
-            $accessor = $this->{$property->getName()};
+            $value = $this->{$property->getName()};
 
-            if(!is_array($accessor)) {
-                $value = Text::sanitizeString($accessor);
-                $attributes[$property->getName()] = $value;
+            if(!is_array($value)) {
+
+                $value = Text::sanitizeString($value);
+
             }
+
+            $attributes[$property->getName()] = $value;
+
         }
         return $attributes;
     }

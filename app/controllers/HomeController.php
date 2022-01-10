@@ -38,7 +38,7 @@ class HomeController extends Controller
             return $this->redirect("profile");
         }
 
-        $this->danger("El usuario o contraseña ingresada no son correctos.");
+        $this->error("El usuario o contraseña ingresada no son correctos.");
         return $this->view("login");
     }
 
@@ -104,12 +104,12 @@ class HomeController extends Controller
                 return $this->redirect("login");
             } else {
 
-                $this->danger("No se puede validar los datos ingresados en el servidor remoto. ");
+                $this->error("No se puede validar los datos ingresados en el servidor remoto. ");
                 return $this->redirect("signup");
             }
         } else {
 
-            $this->danger("No se puede registrar el usuario ingresado porque el correo utilizado se encuentra asociado a otra cuenta ya existente.");
+            $this->error("No se puede registrar el usuario ingresado porque el correo utilizado se encuentra asociado a otra cuenta ya existente.");
             return $this->redirect("signup");
         }
     }

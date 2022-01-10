@@ -55,19 +55,10 @@ Body {
   transition: ease all 0s;
   overflow-x: hidden;
   padding: 0 !important;
+  margin: 0;
 }
 .BodyLoaded {
   opacity: 100% !important;
-}
-a {
-  color: #585275;
-  font-weight: bold;
-  text-decoration: none !important;
-  font-size: 12px;
-}
-a:hover {
-  color: #09080c;
-  text-decoration: underline !important;
 }
 .AccentPrimary {
   background-color: #e4e5ec !important;
@@ -143,6 +134,27 @@ Button.AccentDanger:hover {
 Button.AccentInfo:hover {
   background-color: #0a3048 !important;
   color: #a4c5da !important;
+}
+a {
+  font-weight: bold;
+  text-decoration: none !important;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+a:hover {
+  text-decoration: underline !important;
+}
+a.LinkPrimary {
+  color: #04081a !important;
+}
+a.LinkPrimary:hover {
+  color: #19319f !important;
+}
+a.LinkSecondary {
+  color: #a3a3b8 !important;
+}
+a.LinkSecondary:hover {
+  color: #f9f9fb !important;
 }
 .Field {
   -webkit-box-shadow: none !important;

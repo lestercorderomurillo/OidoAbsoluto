@@ -1,0 +1,51 @@
+<?php
+
+namespace app\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class OverviewColumnNote extends InlineComponent
+{
+    public function __construct(array $notes, int $skip, int $take = 20)
+    {
+        $this->notes = $notes;
+        $this->skip = $skip;
+        $this->take = $take;
+    }
+
+    public function render()
+    {
+        return {{
+            <Column smallSize="12" mediumSize="12" size="12" xlSize="4" padding="1">
+                <Card padding="0">
+                    <table class="table">
+                        <tr>
+                            <th>#</th>
+                            <th>Real</th>
+                            <th>Usuario</th>
+                            <th>Respuesta</th>
+                        </tr>
+                        <Foreach using="i" from="{notes}" skip="{skip}" take="{take}">
+                            <tr>
+                                <td>
+                                    [{parent.i.noteIndex} + 1]
+                                </td>
+                                <td>
+                                    {parent.i.expectedNote}
+                                </td>
+                                <td>
+                                    {parent.i.selectedNote}
+                                </td>
+                                <td>
+                                    {parent.i.reactionTime}ms
+                                </td>
+                            </tr>
+                        </Foreach>
+                    </table>
+                </Card>
+            </Column>
+        }};
+    }
+}
+
+publish(OverviewColumnNote::class);

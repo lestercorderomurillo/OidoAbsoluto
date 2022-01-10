@@ -4,6 +4,7 @@ namespace Cosmic\Utilities;
 
 use Cosmic\Core\Types\JSON;
 use Cosmic\FileSystem\Paths\File;
+use Cosmic\ORM\Bootstrap\Model;
 
 /**
  * This helper class is used to provide methods for array, list and dictionary manipulation.
@@ -48,6 +49,18 @@ class Collection
         $rv = array_filter($array, 'is_array');
         if (count($rv) > 0) return true;
         return false;
+    }
+
+    /**
+     * Check it the given array is 1-dimensional.
+     * 
+     * @param array $array The collection to check.
+     * 
+     * @return bool True if it is, false otherwise.
+     */
+    public static function isList(array $array)
+    {
+        return $array === [] || (array_keys($array) === range(0, count($array) - 1));
     }
 
     /**
@@ -283,5 +296,87 @@ class Collection
         $lastElement = end($data);
         reset($data);
         return $lastElement;
+    }
+    
+    /**
+     * Explore deep down the collection, and generate all the available tokens for this array. 
+     * 
+     * @param string $base The base token for the recursive search.
+     * @param array $input The collection to tokenize.
+     * 
+     * @return mixed The tokenized collection.
+     */
+    public static function tokenize(string $base = __EMPTY__, $input = []): array
+    {
+        $tokens = [];
+
+        if(self::is2Dimensional($input)){
+
+            foreach ($input as $array) {
+                $tokens[] = self::recursiveTokenize($base, $array);
+            }
+
+        }else{
+
+            $tokens = self::recursiveTokenize($base, $input);
+            
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * [Recursive private function of createTokens]
+     * Explore deep down the collection, and generate all the available tokens for this array. 
+     * 
+     * @param string $base The base token for the recursive search.
+     * @param mixed $data The collection to tokenize.
+     * 
+     * @return mixed The tokenized collection.
+     */
+    private static function recursiveTokenize(string $base, $data): array
+    {
+        $tokens = [];
+
+        foreach ($data as $key => $value) {
+
+            $tokenName = ($base != __EMPTY__) ? "$base.$key" : "$key";
+
+            if (is_string($value) || is_int($value) || is_float($value)) {
+
+                $tokens[$tokenName] = $value;
+
+            } else if (is_array($value)) {
+
+                $recursiveTokens = self::recursiveTokenize($tokenName, $value);
+                $tokens = Collection::mergeDictionary(
+                    $tokens,
+                    $recursiveTokens
+                );
+
+                $tokens[$tokenName] = Transport::arrayToString($value);
+            }
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * Check if the given array contains only elements of the given type.
+     * 
+     * @param string $className The classname to use.
+     * @param array $array The collection to verify.
+     * 
+     * @return bool True if the given array contains only elements of the given type, false otherwise.
+     */
+    public static function typeOf(string $className, array $array): bool
+    {
+        foreach ($array as $value) {
+            if(!$value instanceof $className){
+                return false;
+            }
+        }
+
+        return true;
     }
 }

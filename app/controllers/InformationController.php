@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use Cosmic\Core\Bootstrap\Controller;
 
-class AboutController extends Controller
+class InformationController extends Controller
 {
-    function contact()
+    function about()
     {
         return $this->view();
     }

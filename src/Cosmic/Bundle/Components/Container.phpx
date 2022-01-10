@@ -9,7 +9,7 @@ class Container extends Component
     public function render()
     {
         return {{
-            <div class="container-fluid h-100 {class}">
+            <div class="container-fluid {class}">
                 {body}
             </div>
         }};

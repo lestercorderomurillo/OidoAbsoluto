@@ -11,7 +11,7 @@ trait ValuesSetterTrait
      * Sets properties of a class, using the given array.
      * 
      * @param array $values The collection of values to set to this object.
-     * @param bool $override = true When true, will override all values when posible.
+     * @param bool $override [Optional] When true, will override all values when posible.
      * 
      * @return void
      */

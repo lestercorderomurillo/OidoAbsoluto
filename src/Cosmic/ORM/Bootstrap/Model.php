@@ -22,7 +22,7 @@ abstract class Model
     /**
      * @var array $data The underlying stored data.
      */
-    protected array $data = [];
+    private array $data = [];
 
     /**
      * Constructor. By default, sets the Id to 0.
@@ -55,6 +55,16 @@ abstract class Model
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * Return the entity current stored values.
+     * 
+     * @return array The values of this model.
+     */
+    public function getValues(): array
+    {
+        return $this->getPublicProperties();
     }
 
     /**

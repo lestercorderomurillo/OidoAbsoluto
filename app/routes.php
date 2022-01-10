@@ -1,8 +1,9 @@
 <?php
 
+use Cosmic\HTTP\Server\Router;
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
-use Cosmic\HTTP\Server\Router;
+use App\Controllers\InformationController;
 use Cosmic\Bundle\Middlewares\Authentication;
 
 /** 
@@ -45,10 +46,16 @@ $router->withController(UserController::class, function (Router $router) {
         $router->post('/survey/submit', ["surveySubmit"]);
         $router->get('/piano', ["piano"]);
         $router->post('/piano/submit', ["pianoSubmit"]);
+        $router->get('/overview', ["overview"]);
         
     });
 
-    
+});
+
+$router->withController(InformationController::class, function (Router $router) {
+        
+    $router->get('/about', ["about"]);
+    $router->get('/policy', ["policy"]);
 
 });
 

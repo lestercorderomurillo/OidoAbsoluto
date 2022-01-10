@@ -61,7 +61,7 @@ abstract class Database
      * @param array $where Specfic "where string" for the query.
      * @param string $append Can be any string.
      * 
-     * @return Model[]|null A collection of models.
+     * @return Model[] A collection of models.
      */
     public abstract function findAll(string $modelClass, array $where = [], string $append = "");
 

@@ -112,19 +112,10 @@ class Authorization
     /**
      * Logout the current active session.
      * 
-     * @return bool True if successfully logged out, false otherwise.
+     * @return void
      */
-    public static function logOut(): bool
+    public static function logOut(): void
     {
-        if (session()->has("isLogged")) {
-
-            session()->delete("isLogged");
-            session()->delete("loggedId");
-            session()->delete("loggedRole");
-
-            return true;
-        }
-
-        return false;
+        session()->clear();
     }
 }

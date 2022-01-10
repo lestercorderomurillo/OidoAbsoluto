@@ -6,7 +6,11 @@ use Cosmic\Binder\Component;
 
 class Link extends Component
 {
-    public function __construct(string $route, string $accent = "Secondary")
+    const Styles = [
+        "Link.scss"
+    ];
+
+    public function __construct(string $route, string $accent = "Primary")
     {
         $this->accent = $accent;
         $this->fullRoute = __HOST__ . $route;
@@ -15,7 +19,7 @@ class Link extends Component
     public function render()
     {
         return {{
-            <a id="{id}" class="accent-{accent}" href="{fullRoute}">
+            <a id="{id}" class="Link{accent} {class}" href="{fullRoute}">
                 {body}
             </a>
         }};

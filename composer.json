@@ -5,9 +5,10 @@
     "autoload": {
         "psr-4": {
             "Cosmic\\": "src/Cosmic/",
-            "App\\Controllers\\": "app/controllers/",
-            "App\\Models\\": "app/models/",
-            "App\\Middlewares\\": "app/middlewares/"
+            "App\\Controllers\\": "app/Controllers/",
+            "App\\Models\\": "app/Models/",
+            "App\\ViewModels\\": "app/ViewModels/",
+            "App\\Middlewares\\": "app/Middlewares/"
         }
     },
     "authors": [

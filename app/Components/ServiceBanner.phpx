@@ -1,0 +1,27 @@
+<?php
+
+namespace app\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class ServiceBanner extends InlineComponent
+{
+    public function render()
+    {
+        return {{
+            <div class="p-2 m-0 bg-dark text-white" style="font-size: 1.25em;">
+                <Link route="index" accent="Secondary" class="p-2">
+                    Acceder
+                </Link>
+                <Link route="policy" accent="Secondary" class="p-2">
+                    Términos de uso y condiciones
+                </Link>
+                <Link route="about" accent="Secondary" class="p-2">
+                    Acerca del proyecto
+                </Link>
+            </div>
+        }};
+    }
+}
+
+publish(ServiceBanner::class);

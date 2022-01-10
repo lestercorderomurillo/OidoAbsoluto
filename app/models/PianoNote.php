@@ -7,7 +7,8 @@ use Cosmic\ORM\Bootstrap\Model;
 class PianoNote extends Model
 {
     public int $try;
+    public int $noteIndex;
     public string $expectedNote;
-    public string $playedNote;
-    public float $responseTime;
+    public string $selectedNote;
+    public float $reactionTime;
 }

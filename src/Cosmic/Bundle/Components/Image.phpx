@@ -1,0 +1,23 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class Image extends InlineComponent
+{
+    public function __construct(string $source)
+    {
+        $this->fullSource = __WEBCONTENT__ . "images/" . $source;
+    }
+
+    public function render()
+    {
+        return {{
+            <img class="d-inline {class}" src="{fullSource}">
+            <Spacing>
+        }};
+    }
+}
+
+publish(Image::class);

@@ -145,7 +145,7 @@ class Piano extends InlineComponent
 
             // For note management
             extern.loggedNotes = 0;
-            extern.notesPerTest = 2;
+            extern.notesPerTest = 30;
 
             extern.currentNoteIndex = 0;
             extern.currentNoteType = "$this->noteTypePiano";
@@ -512,7 +512,7 @@ class Piano extends InlineComponent
             $.ajax({
                 type: "post",
                 url: "$this->url" + "piano/submit",
-                data: JSON.stringify({ "mode" : "$this->displayMode", "notes" : parsedNotes}),
+                data: JSON.stringify({ "totalTime" : extern.totalTime, "mode" : "$this->displayMode", "notes" : parsedNotes}),
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     // he expects a JSON with the response of the token id to redirect to result

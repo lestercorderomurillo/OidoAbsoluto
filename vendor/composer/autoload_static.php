@@ -42,6 +42,7 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         ),
         'A' => 
         array (
+            'App\\ViewModels\\' => 15,
             'App\\Models\\' => 11,
             'App\\Middlewares\\' => 16,
             'App\\Controllers\\' => 16,
@@ -94,17 +95,21 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         array (
             0 => __DIR__ . '/../..' . '/src/Cosmic',
         ),
+        'App\\ViewModels\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/ViewModels',
+        ),
         'App\\Models\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app/models',
+            0 => __DIR__ . '/../..' . '/app/Models',
         ),
         'App\\Middlewares\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app/middlewares',
+            0 => __DIR__ . '/../..' . '/app/Middlewares',
         ),
         'App\\Controllers\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app/controllers',
+            0 => __DIR__ . '/../..' . '/app/Controllers',
         ),
     );
 

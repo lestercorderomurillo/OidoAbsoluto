@@ -1,0 +1,84 @@
+<View title="Detalles avanzados de una prueba">
+    <Container>
+        <Row>
+            <Column smallSize="12" mediumSize="12" size="12" xlSize="11">
+                <Card>
+                    <Title>
+                        Visualización avanzada de una prueba
+                    </Title>
+                    <PersistentError>
+                    <Subtitle class="font-weight-bold">
+                        Información de identificación
+                    </Subtitle>
+                    <Card padding="3">
+                        <Row>
+                            <Column size="6" mediumSize="12" smallSize="12" textPosition="center" padding="2" class="mt-2 pl-4 text-sm-center text-md-center text-xl-left">
+                                <div>
+                                    <strong>
+                                        Autor de la prueba:
+                                    </strong>
+                                    &nbsp; {author}
+                                </div>
+                                <div>
+                                    <strong>
+                                        Número de intento:
+                                    </strong>
+                                    &nbsp; Intento {try}
+                                </div>
+                                <div>
+                                    <strong>
+                                        Fecha de elaboración:
+                                    </strong>
+                                    &nbsp; {uploadDate}
+                                </div>
+                                <div>
+                                    <strong>
+                                        Modo de visualización de la prueba:
+                                    </strong>
+                                    &nbsp; {displayString}
+                                </div>
+                                <div>
+                                    <strong>
+                                        Tiempo total transcurrido:
+                                    </strong>
+                                    &nbsp; {totalTime}
+                                </div>
+                            </Column>
+                            <Column size="6" mediumSize="12" smallSize="12" textPosition="center" padding="2" class="mt-4 pr-4 text-sm-center text-md-center text-xl-right">
+                                <RedirectButton route="profile">
+                                    Volver al menu principal
+                                </RedirectButton>
+                                <RedirectButton route="excel" accent="Success">
+                                    Exportar en archivo de Excel
+                                </RedirectButton>
+                            </Column>
+                        </Row>
+                    </Card>
+                    <Spacing>
+                    <Subtitle class="font-weight-bold">
+                        Datos crudos sobre las notas
+                    </Subtitle>
+                    <Label>
+                        Se muestra los datos en detalle sobre cada una de las notas presionadas durante la realización de la prueba.
+                    </Label>
+                    <Spacing>
+                    <Card>
+                        <Row>
+                            <OverviewColumnStat title="Aciertos Totales" matches="{totalMatches}" total="{totalNotes}">
+                            <OverviewColumnStat title="Aciertos Piano" matches="{totalPianoMatches}" total="{totalPianoNotes}">
+                            <OverviewColumnStat title="Aciertos Sintéticos" matches="{totalSinMatches}" total="{totalSinNotes}">
+                            <OverviewColumnStat title="Aciertos Naturales" matches="{totalNaturalMatches}" total="{totalNaturalNotes}">
+                            <OverviewColumnStat title="Aciertos Sostenidos" matches="{totalSosMatches}" total="{totalSosNotes}">
+                        </Row>
+                        <hr>
+                        <Row>
+                            <OverviewColumnNote notes="{notes}" skip="0">
+                            <OverviewColumnNote notes="{notes}" skip="20">
+                            <OverviewColumnNote notes="{notes}" skip="40">
+                        </Row>
+                    </Card>
+                </Card>
+            </Column>
+        </Row>
+    </Container>
+</View>

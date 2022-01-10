@@ -1,14 +1,18 @@
 <View title="Inicio de sesión">
+    <ServiceBanner>
     <Container>
         <Row>
             <Column>
+                <Spacing>
+                <Image source="logo.png">
+                <Spacing>
                 <Card size="8" maxWidth="600px">
                     <Form id="loginForm" route="login/submit">
-                        <IconifiedTitle source="profile.png">Inicio de sesión</IconifiedTitle>
-                        <Span>
-                            Sírvase de acceder al servicio para realizar o consultar su historial de pruebas
-                        </Span>
                         <PersistentError>
+                        <Label>
+                            Sírvase de acceder al servicio para realizar nuevas pruebas o consultar su historial
+                        </Label>
+                        <Spacing>
                         <Label for="email">
                             Correo Electrónico
                         </Label> 

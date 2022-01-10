@@ -69,23 +69,11 @@ Body {
     transition: ease all 0s;
     overflow-x: hidden;
     padding: 0 !important;
+    margin: 0;
 }
 
 .BodyLoaded {
     opacity: 100% !important;
-}
-
-// Global link
-a {
-    color: $bg-secondary;
-    font-weight: bold;
-    text-decoration: none !important;
-    font-size: $font-size;
-}
-
-a:hover {
-    color: darken($bg-secondary, 35%);
-    text-decoration: underline !important;
 }
 
 // Primary Accent Color

@@ -17,45 +17,7 @@ class ForeachComponent extends Component
         $this->using = $using;
     }
 
-    private function createTokens(string $base, $arrays)
-    {
-        $tokens = [];
-
-        foreach ($arrays as $array) {
-            $tokens[] = $this->createTokensRecursive($base, $array);
-        }
-
-        return $tokens;
-    }
-
-    private function createTokensRecursive(string $base, $data)
-    {
-        $tokens = [];
-
-        foreach ($data as $key => $value) {
-
-            $tokenName = "$base.$key";
-
-            if (is_string($value) || is_int($value) || is_float($value)) {
-
-                $tokens[$tokenName] = $value;
-
-            } else if (is_array($value)) {
-
-                $recursiveTokens = $this->createTokensRecursive($tokenName, $value);
-                $tokens = Collection::mergeDictionary(
-                    $tokens,
-                    $recursiveTokens
-                );
-
-                $tokens[$tokenName] = Transport::arrayToString($value);
-            }
-        }
-
-        return $tokens;
-    }
-
-
+    
     public function render()
     {
         $html = __EMPTY__;
@@ -69,9 +31,10 @@ class ForeachComponent extends Component
                     ['random' => Cryptography::computeRandomKey(8)]
                 ));
             }
+            
         } else {
 
-            $compiledTokens = $this->createTokens($this->using, $this->from);
+            $compiledTokens = Collection::tokenize($this->using, $this->from);
 
             foreach ($compiledTokens as $tokens) {
 

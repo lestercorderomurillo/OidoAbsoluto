@@ -17,7 +17,7 @@ class Authentication extends Middleware
     public function handle(Request $request): Request
     {
         if (!Authorization::isLogged()) {
-            $this->danger("Acceso denegado (sin autorización).");
+            $this->error("Acceso denegado (sin autorización).");
             return $this->redirect("index");
         }
 

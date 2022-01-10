@@ -9,7 +9,10 @@ use Cosmic\Core\Result\ContentResult;
 use Cosmic\Core\Result\JSONResult;
 use Cosmic\Core\Result\RedirectResult;
 use Cosmic\Core\Result\ViewResult;
+use Cosmic\ORM\Bootstrap\Model;
+use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
+use Cosmic\Utilities\Transport;
 
 /**
  * This class represents actions that can be performed by a controller.
@@ -53,10 +56,10 @@ abstract class Controller
      * Returns a compiled view result. Internally will use Cosmic Binder to render this view.
      * If both parameters are left empty, the controller will assume the view is called the same as the function name.
      * 
-     * @param string|array $dynamicValue If it's a string, it will be considered as the view name. If it's an array, 
+     * @param string|array|Model $dynamicValue If it's a string, it will be considered as the view name. If it's an array or a model, 
      * it will be considered as the view data. Then the second parameter can be left blank.
      * 
-     * @param string|array $dynamicValueSecondary If the first parameter was the view name, this parameter can be used as view data.
+     * @param string|array|Model $dynamicValueSecondary If the first parameter was the view name, this parameter can be used as view data.
      * 
      * @return Response A valid HTTP response object with a rendered view.
      */
@@ -68,20 +71,61 @@ abstract class Controller
             $viewName = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
         }
 
-        if (is_array($dynamicValue)) {
+        if (is_array($dynamicValue) || $dynamicValue instanceof Model) {
             $viewData = $dynamicValue;
-        } else if (is_array($dynamicValueSecondary)) {
+        } else if (is_array($dynamicValueSecondary) || $dynamicValueSecondary instanceof Model) {
             $viewData = $dynamicValueSecondary;
         } else {
             $viewData = [];
         }
 
+        if($viewData instanceof Model){
+
+            $viewData = $viewData->getValues();
+        
+        }
+
         foreach ($viewData as $key => $value) {
+
             if ($value instanceof JSON) {
                 $viewData[$key] = $value->toString();
             }
-        }
 
+            if (is_array($value)) {
+
+                if(Collection::typeOf(Model::class, $value)){
+
+                    $values = [];
+    
+                    /** @var Model[] $input */
+                    foreach ($value as $model){
+                        $values[] = $model->getValues();
+                    }
+
+                    $viewData[$key] = Transport::arrayToString($values);
+                    
+                }else{
+
+                    if(Collection::isList($value)){
+                        
+                        $viewData[$key] = Transport::arrayToString($value);
+                        
+                    }else{
+
+                        $tokens = Collection::tokenize($key, $value);
+
+                        foreach ($tokens as $_key => $_value) {
+                            $viewData[$_key] = $_value;
+                        }
+                        
+                        $viewData[$key] = Transport::arrayToString($tokens);
+                    }
+
+                }
+
+            }
+        } 
+        
         $view = new View($this->getControllerName(), $viewName, $viewData);
         $result = new ViewResult($view);
 
@@ -164,7 +208,7 @@ abstract class Controller
      * 
      * @return void
      */
-    protected function danger(string $message): void
+    protected function error(string $message): void
     {
         $this->display($message, "Danger");
     }

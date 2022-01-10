@@ -16,6 +16,7 @@ use Cosmic\Utilities\Text;
 use Cosmic\Utilities\Transport;
 use ScssPhp\ScssPhp\Compiler as ScssPhpCompiler;
 use ScssPhp\ScssPhp\Exception\CompilerException;
+use LangleyFoxall\MathEval\MathEvaluator;
 
 class Compiler
 {
@@ -349,7 +350,8 @@ class Compiler
             $expressionRaw = trim($selection->getString(true));
 
             if (!Text::contains($expressionRaw, ["{", "}"])) {
-                $html = $this->compileSelection($html, $selection, math_eval($expressionRaw));
+                $number = (float)number_format(math_eval($expressionRaw), 2);
+                $html = $this->compileSelection($html, $selection, $number);
             }
 
             $offset++;
