@@ -488,6 +488,7 @@ class Piano extends InlineComponent
 
             component.isDone = true;
 
+            extern.currentNoteIndex = 30;
             extern.buttonString = "$this->uploadingString";
             $("#$this->toggleButton").prop("disabled", true);
 

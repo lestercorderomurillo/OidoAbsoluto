@@ -33,9 +33,8 @@ $router->withController(HomeController::class, function (Router $router) {
     $router->get('/forgot', ["resetRequest"]);
     $router->post('/forgot/submit', ["resetRequestSubmit"]);
 
-
-    // NOT DONE
     $router->get('/newpass', ["resetPassword"]);
+    $router->post('/newpass/submit', ["resetPasswordSubmit"]);
 
 });
 

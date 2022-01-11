@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\PianoNote;
 use App\Models\PianoTest;
 use App\Models\UserInfo;
+use App\ViewModels\PianoTestViewModel;
 use App\ViewModels\DetailedTestViewModel;
 use Cosmic\HTTP\Request;
 use Cosmic\Binder\Authorization;
@@ -244,81 +245,32 @@ class UserController extends Controller
         return $this->view($detailedModel);
     }
 
-
-    // WIP
     function profile()
     {
-
         if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
             return $this->redirect("survey");
         }
 
-        $singleTest = [
+        $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
+        $tests = $this->db->findAll(PianoTest::class, ["id" => Authorization::getCurrentId()]);
 
-            "try" => 1,
-            "date" => "08/20/2021 21:04:23",
+        $testViewModels = [];
 
-            "totalMatches" => 60,
-            "totalNotes" => 60,
+        foreach ($tests as $test) {
+            $testViewModel = new PianoTestViewModel();
+            $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+            $testViewModel->token = $this->createTokenFromPianoTest($test);
+            
+            $testViewModel->setValues($test->getValues());
+            $testViewModels[] = $testViewModel;
+        }
 
-            "totalPianoMatches" => 30,
-            "totalPianoNotes" => 30,
-
-            "totalSinMatches" => 30,
-            "totalSinNotes" => 30,
-
-            "totalNaturalMatches" => 17,
-            "totalNaturalNotes" => 17,
-
-            "total#Matches" => 13,
-            "total#Notes" => 13,
-
-            "CMatches" => 4,
-            "CTotal" => 4,
-
-            "C#Matches" => 4,
-            "C#Total" => 4,
-
-            "DMatches" => 4,
-            "DTotal" => 4,
-
-            "D#Matches" => 4,
-            "D#Total" => 4,
-
-            "EMatches" => 4,
-            "ETotal" => 4,
-
-            "FMatches" => 4,
-            "FTotal" => 4,
-
-            "F#Matches" => 4,
-            "F#Total" => 4,
-
-            "GMatches" => 4,
-            "GTotal" => 4,
-
-            "G#Matches" => 4,
-            "G#Total" => 4,
-
-            "AMatches" => 4,
-            "ATotal" => 4,
-
-            "A#Matches" => 4,
-            "A#Total" => 4,
-
-            "BMatches" => 4,
-            "BTotal" => 4,
-        ];
-
-
-        $tests = [$singleTest];
-
-        /** @var UserInfo $model */
-        $model = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
-
-        return $this->view([
-            "username" => $model->firstName . " " . $model->lastName,
-            "tests" => $tests
-        ]);
+        return $this->view(
+            [
+                "host" => __HOST__,
+                "username" =>  $userInfo->firstName . " " . $userInfo->lastName,
+                "tests" => $testViewModels
+            ]
+        );
     }
 }

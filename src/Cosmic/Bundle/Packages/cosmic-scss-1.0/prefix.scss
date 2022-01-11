@@ -76,6 +76,11 @@ Body {
     opacity: 100% !important;
 }
 
+.Hover:hover{
+    background-color: rgba($bg-secondary, 0.35) !important;
+    cursor: pointer;
+}
+
 // Primary Accent Color
 .AccentPrimary {
     background-color: $bg-primary !important;

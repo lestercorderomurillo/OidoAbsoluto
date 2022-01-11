@@ -13,7 +13,6 @@ use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Cryptography;
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 class HomeController extends Controller
 {
@@ -174,35 +173,53 @@ class HomeController extends Controller
 
         }
 
-        $this->info("Si el correo electrónico es valido, se enviará un mensaje con la información de recuperación");
+        $this->info("Si el correo electrónico que usted proporcionó existe en nuestro sistema, se le enviará un mensaje con instrucciones de recuperación.");
         return $this->redirect("index");
     }
 
-
-
-
-
-
-
-
-
-    // WIP
-
     function resetPassword(string $token)
     {
-        if ($token == __EMPTY__) {
-            return $this->response(500, "Invalid password reset token.");
+
+        $user = $this->db->find(User::class, ["token" => $token]);
+
+        if ($token == __EMPTY__ || $user == null) {
+            return $this->error("El token proporcionado es invalido para este contexto.");
+            return $this->redirect();
         }
 
-        return $this->view();
+
+        return $this->view(["token" => $token]);
     }
 
-    function resetPasswordSubmit(string $token)
+    function resetPasswordSubmit(string $token, string $password, string $confirmPassword)
     {
-        if ($token == "") {
-            return $this->response(500, "Invalid password reset token.");
+        Authorization::logOut();
+
+        $user = $this->db->find(User::class, ["token" => $token]);
+
+        if ($token == __EMPTY__ || $password == __EMPTY__ || $confirmPassword == __EMPTY__  || $user == null) {
+
+            $this->error("No se puede cambiar la contraseña en este contexto.");
+            return $this->redirect();
+
         }
 
-        return $this->view("reset-password");
+        if ($password != $confirmPassword) {
+
+            $this->error("Las contraseñas no coinciden.");
+            return $this->redirect();
+
+        }
+
+        $user->salt = Cryptography::computeRandomKey(32);
+        $user->password = password_hash($user->salt . $password, PASSWORD_BCRYPT);
+        $user->token = password_hash($user->salt . $user->email, PASSWORD_BCRYPT);
+
+        $this->db->save($user);
+        $this->db->commit($user);
+        
+        $this->success("Se ha cambiado con éxito la contraseña. Intente acceder.");
+
+        return $this->redirect();
     }
 }

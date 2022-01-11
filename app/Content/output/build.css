@@ -60,6 +60,10 @@ Body {
 .BodyLoaded {
   opacity: 100% !important;
 }
+.Hover:hover {
+  background-color: rgba(88, 82, 117, 0.35) !important;
+  cursor: pointer;
+}
 .AccentPrimary {
   background-color: #e4e5ec !important;
   color: #04081a !important;
@@ -134,6 +138,21 @@ Button.AccentDanger:hover {
 Button.AccentInfo:hover {
   background-color: #0a3048 !important;
   color: #a4c5da !important;
+}
+.Field {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: none;
+  border-bottom: 1px solid #585275;
+  border-radius: 0 !important;
+  color: #04081a;
+  outline: none;
+  outline-color: transparent;
+  outline-style: none;
+}
+.Field:focus {
+  border-bottom: 3px solid #2b2839 !important;
 }
 a {
   font-weight: bold;
@@ -358,7 +377,7 @@ Button.AccentInfo:hover {
   display: inline-block;
   border: solid rgba(168, 148, 148, 0.698);
   font-size: 1.75rem;
-  width: 140px;
+  width: 110px;
   height: 80px;
   line-height: 80px;
   background: linear-gradient(white, #e3e3e3);
@@ -367,7 +386,7 @@ Button.AccentInfo:hover {
 }
 @media (max-width: 1360px) {
   .PianoKeyWhiteSimple, .PianoKeyBlackSimple {
-    width: 100.8px;
+    width: 79.2px;
     height: 57.6px;
     font-size: 1.26rem;
     line-height: 57.6px;

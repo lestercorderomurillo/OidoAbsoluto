@@ -1,7 +1,8 @@
 <View title="Perfil de Usuario">
+    <Spacing>
     <Container>
         <Row>
-            <Column size="10">
+            <Column smallSize="12" mediumSize="10" size="9" xlSize="8">
                 <Card>
                     <Title>
                         Bienvenido de nuevo, {username}
@@ -21,157 +22,42 @@
                         Historial de pruebas realizadas
                     </Title>
                     <Label>
-                        Esta sección muestra un resumen breve de cada una de las pruebas realizadas asociadas al usuario actual.
+                        Esta sección muestra un resumen breve de cada una de las pruebas que usted ha realizado.
+                        <Spacing>
+                        Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular.
                     </Label>
                     <Spacing>
-                    <Foreach from="{tests}" using="i">
-                        <Card>
-                            <Row>
-                                <Column textPosition="left" smallSize="12" mediumSize="12" size="6" class="text-center text-sm-center text-md-center text-xl-left">
-                                    <Subtitle><strong>Prueba #{parent.i.try} ({parent.i.date})</strong></Subtitle>
-                                </Column>
-                                <Column textPosition="right" smallSize="12" mediumSize="12" size="6" class="text-center text-sm-center text-md-center text-xl-right">
-                                    <Link route="">Ver detalles avanzados de esta prueba &rarr;</Link>
-                                </Column>
-                            </Row>
-                            <Spacing>
-                            <Row>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>Aciertos Totales</Subtitle>
-                                    <div>
-                                        {parent.i.totalMatches} / {parent.i.totalNotes} 
-                                        ([{parent.i.totalMatches}/{parent.i.totalNotes}*100]%)
-                                    </div>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>Aciertos Piano</Subtitle>
-                                    <div>
-                                        {parent.i.totalPianoMatches} / {parent.i.totalPianoNotes} 
-                                        ([{parent.i.totalPianoMatches}/{parent.i.totalPianoNotes}*100]%)
-                                    </div>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>Aciertos Sintéticos</Subtitle>
-                                    <div>
-                                        {parent.i.totalSinMatches} / {parent.i.totalSinNotes} 
-                                        ([{parent.i.totalSinMatches}/{parent.i.totalSinNotes}*100]%)
-                                    </div>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>Aciertos Naturales</Subtitle>
-                                    <div>
-                                        {parent.i.totalNaturalMatches} / {parent.i.totalNaturalNotes} 
-                                        ([{parent.i.totalNaturalMatches}/{parent.i.totalNaturalNotes}*100]%)
-                                    </div>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>Aciertos Sostenidos</Subtitle>
-                                    <div>
-                                        {parent.i.total#Matches} / {parent.i.total#Notes} 
-                                        ([{parent.i.total#Matches}/{parent.i.total#Notes}*100]%)
-                                    </div>
-                                </Column>
-                            </Row>
-                            <hr>
-                            <Row>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>C / DO</Subtitle>
-                                    <div>
-                                        {parent.i.CMatches} / {parent.i.CTotal}
-                                        ([{parent.i.CMatches}/{parent.i.CTotal} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>C# / DO#</Subtitle>
-                                    <div>
-                                        {parent.i.C#Matches} / {parent.i.C#Total}
-                                        ([{parent.i.C#Matches}/{parent.i.C#Total} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>D / RE</Subtitle>
-                                    <div>
-                                        {parent.i.DMatches} / {parent.i.DTotal}
-                                        ([{parent.i.DMatches}/{parent.i.DTotal} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>D# / RE#</Subtitle>
-                                    <div>
-                                        {parent.i.D#Matches} / {parent.i.D#Total}
-                                        ([{parent.i.D#Matches}/{parent.i.D#Total} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>E / MI</Subtitle>
-                                    <div>
-                                        {parent.i.EMatches} / {parent.i.ETotal}
-                                        ([{parent.i.EMatches}/{parent.i.ETotal} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>F / FA</Subtitle>
-                                    <div>
-                                        {parent.i.FMatches} / {parent.i.FTotal}
-                                        ([{parent.i.FMatches}/{parent.i.FTotal} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>F# / FA#</Subtitle>
-                                    <div>
-                                        {parent.i.F#Matches} / {parent.i.F#Total}
-                                        ([{parent.i.F#Matches}/{parent.i.F#Total} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>G / SOL</Subtitle>
-                                    <div>
-                                        {parent.i.GMatches} / {parent.i.GTotal}
-                                        ([{parent.i.GMatches}/{parent.i.GTotal} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>G# / SOL#</Subtitle>
-                                    <div>
-                                        {parent.i.G#Matches} / {parent.i.G#Total}
-                                        ([{parent.i.G#Matches}/{parent.i.G#Total} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>A / LA</Subtitle>
-                                    <div>
-                                        {parent.i.AMatches} / {parent.i.ATotal}
-                                        ([{parent.i.AMatches}/{parent.i.ATotal} * 100]%)
-                                    </div>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>A# / LA#</Subtitle>
-                                    <div>
-                                        {parent.i.A#Matches} / {parent.i.A#Total}
-                                        ([{parent.i.A#Matches}/{parent.i.A#Total} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                                <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
-                                    <Subtitle>B / SI</Subtitle>
-                                    <div>
-                                        {parent.i.BMatches} / {parent.i.BTotal}
-                                        ([{parent.i.BMatches}/{parent.i.BTotal} * 100]%)
-                                    </div>
-                                    <Spacing>
-                                </Column>
-                            </Row>
-                        </Card>
-                    </Foreach>
+                        <Row>
+                        <Column smallSize="12" mediumSize="12" size="12" xlSize="12" padding="1">
+                            <Card padding="2">
+                                <table class="table">
+                                    <tr>
+                                        <th>Intento</th>
+                                        <th>Fecha de subida</th>
+                                        <th>Modo de visualización</th>
+                                        <th>Tiempo total transcurido</th>
+                                    </tr>
+                                    <Foreach from="{tests}" using="i">
+                                        <tr id="row-{parent.i.try}" (click)="window.location = '{host}overview?token={parent.i.token}'" class="Hover">
+                                            <td>
+                                                {parent.i.try}
+                                            </td>
+                                            <td>
+                                                {parent.i.uploadDate}
+                                            </td>
+                                            <td>
+                                                {parent.i.displayMode}
+                                            </td>
+                                            <td>
+                                                {parent.i.totalTime}
+                                            </td>
+                                        </tr>
+                                    </Foreach>
+                                </table>
+                            </Card>
+                        </Column>
+                        </Row>
+                    <Spacing>
                 </Card>
             </Column>
         </Row>
