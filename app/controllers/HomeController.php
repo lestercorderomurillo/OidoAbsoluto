@@ -12,6 +12,8 @@ use Cosmic\ORM\Bootstrap\Database;
 use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Cryptography;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class HomeController extends Controller
 {
@@ -129,6 +131,52 @@ class HomeController extends Controller
         return $this->redirect("profile");
     }
 
+    function resetRequest()
+    {
+        return $this->view();
+    }
+
+    function resetRequestSubmit(string $email)
+    {
+        $user = $this->db->find(User::class, ["email" => $email]);
+
+        if($user != null){
+
+            $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
+
+            $this->db->save($user);
+            $this->db->commit($user);
+
+            $link = __HOST__ . "newpass?token=" . $user->token;
+
+            $mail = new PHPMailer();
+            $mail->IsSMTP();
+            $mail->Mailer = "smtp";
+            $mail->SMTPDebug  = 1;  
+            $mail->SMTPAuth   = TRUE;
+            $mail->SMTPSecure = "tls";
+            $mail->Port       = 587;
+            $mail->Host       = "smtp.gmail.com";
+            $mail->Username   = "oidoabsolutocr@gmail.com";
+            $mail->Password   = "Hlj3sCJroVm";
+            $mail->IsHTML(true);
+            $mail->AddAddress($email, "recipient-name");
+            $mail->SetFrom("oidoabsolutocr@gmail.com", "Servicio Oido Absoluto");
+            $mail->Subject = "Solicitud de recuperación de contraseña";
+            $content = <<<HTML
+                <b>Si usted solicitó el cambio de su contraseña, presione el siguiente enlace: <br>$link</b>
+                <br>
+                <span>Si no solicitó esto, solamente ignore este mensaje</span>
+            HTML;
+            $mail->CharSet = 'UTF-8';
+            $mail->MsgHTML($content); 
+            $mail->Send();
+
+        }
+
+        $this->info("Si el correo electrónico es valido, se enviará un mensaje con la información de recuperación");
+        return $this->redirect("index");
+    }
 
 
 
@@ -149,11 +197,6 @@ class HomeController extends Controller
         return $this->view();
     }
 
-    function resetRequest()
-    {
-        return $this->view();
-    }
-
     function resetPasswordSubmit(string $token)
     {
         if ($token == "") {
@@ -161,10 +204,5 @@ class HomeController extends Controller
         }
 
         return $this->view("reset-password");
-    }
-
-    function resetRequestSubmit()
-    {
-        return $this->view("reset-request");
     }
 }

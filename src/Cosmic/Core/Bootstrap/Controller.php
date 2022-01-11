@@ -163,7 +163,7 @@ abstract class Controller
     }
 
     /**
-     * Displays a message on the PersistentError system component.
+     * Displays a message on the PersistentMessage system component.
      * Uses a session internally to manage the state between requests.
      * 
      * @param string $message The message to display.
@@ -178,7 +178,7 @@ abstract class Controller
     }
 
     /**
-     * Displays a warning message on the PersistentError system component.
+     * Displays a warning message on the PersistentMessage system component.
      * 
      * @param string $message The message to display.
      * 
@@ -190,7 +190,7 @@ abstract class Controller
     }
 
     /**
-     * Displays a success message on the PersistentError system component.
+     * Displays a success message on the PersistentMessage system component.
      * 
      * @param string $message The message to display.
      * 
@@ -202,7 +202,19 @@ abstract class Controller
     }
 
     /**
-     * Displays a danger message on the PersistentError system component.
+     * Displays a info message on the PersistentMessage system component.
+     * 
+     * @param string $message The message to display.
+     * 
+     * @return void
+     */
+    protected function info(string $message): void
+    {
+        $this->display($message, "Info");
+    }
+
+    /**
+     * Displays a danger message on the PersistentMessage system component.
      * 
      * @param string $message The message to display.
      * 

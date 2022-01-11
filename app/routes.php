@@ -30,9 +30,11 @@ $router->withController(HomeController::class, function (Router $router) {
 
     $router->get('/logout', ["logout"]);
 
+    $router->get('/forgot', ["resetRequest"]);
+    $router->post('/forgot/submit', ["resetRequestSubmit"]);
+
 
     // NOT DONE
-    $router->get('/forgot', ["resetRequest"]);
     $router->get('/newpass', ["resetPassword"]);
 
 });
