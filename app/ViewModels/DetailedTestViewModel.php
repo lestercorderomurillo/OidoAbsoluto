@@ -10,8 +10,10 @@ class DetailedTestViewModel extends Model
     public array $notes;
 
     public string $author;
+    public string $token;
 
     public int $try;
+
     public string $displayString;
     public string $uploadDate;
     public string $totalTime;

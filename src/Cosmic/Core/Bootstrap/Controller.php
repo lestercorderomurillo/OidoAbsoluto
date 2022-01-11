@@ -79,10 +79,9 @@ abstract class Controller
             $viewData = [];
         }
 
-        if($viewData instanceof Model){
+        if ($viewData instanceof Model) {
 
             $viewData = $viewData->getValues();
-        
         }
 
         foreach ($viewData as $key => $value) {
@@ -93,43 +92,56 @@ abstract class Controller
 
             if (is_array($value)) {
 
-                if(Collection::typeOf(Model::class, $value)){
+                if (Collection::typeOf(Model::class, $value)) {
 
                     $values = [];
-    
+
                     /** @var Model[] $input */
-                    foreach ($value as $model){
+                    foreach ($value as $model) {
                         $values[] = $model->getValues();
                     }
 
                     $viewData[$key] = Transport::arrayToString($values);
-                    
-                }else{
+                } else {
 
-                    if(Collection::isList($value)){
-                        
+                    if (Collection::isList($value)) {
+
                         $viewData[$key] = Transport::arrayToString($value);
-                        
-                    }else{
+                    } else {
 
                         $tokens = Collection::tokenize($key, $value);
 
                         foreach ($tokens as $_key => $_value) {
                             $viewData[$_key] = $_value;
                         }
-                        
+
                         $viewData[$key] = Transport::arrayToString($tokens);
                     }
-
                 }
-
             }
-        } 
-        
+        }
+
         $view = new View($this->getControllerName(), $viewName, $viewData);
         $result = new ViewResult($view);
 
         return $result->toResponse();
+    }
+
+    /**
+     * Download a file to the client browser.
+     * 
+     * @param string $fileName The file name.
+     * @param string $contentType The type of content to be downloaded.
+     * @param string $content The content to be downloaded.
+     * 
+     * @return void
+     */
+    protected function download(string $fileName, string $contentType, string $content): void
+    {
+        header("Content-Type: $contentType");
+        header('Content-Disposition: attachment; filename="' . urlencode($fileName) . '"');
+        file_put_contents('php://output', $content);
+        die();
     }
 
     /**

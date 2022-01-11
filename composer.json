@@ -28,6 +28,6 @@
         "gajus/dindent": "^2.0",
         "langleyfoxall/math_eval": "^2.0",
         "phpmailer/phpmailer": "^6.5",
-        "phpoffice/phpspreadsheet": "^1.21"
+        "shuchkin/simplexlsxgen": "^1.0"
     }
 }

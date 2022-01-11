@@ -7,37 +7,26 @@ namespace Composer\Autoload;
 class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
 {
     public static $files = array (
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         'ba448153faf7ec4e95af3e4f40fcd7bc' => __DIR__ . '/..' . '/langleyfoxall/math_eval/src/math_eval.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'Z' => 
-        array (
-            'ZipStream\\' => 10,
-        ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
             'ScssPhp\\ScssPhp\\' => 16,
         ),
         'P' => 
         array (
-            'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Server\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
-            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
         array (
-            'MyCLabs\\Enum\\' => 13,
             'Mimey\\' => 6,
-            'Matrix\\' => 7,
             'MathParser\\' => 11,
         ),
         'L' => 
@@ -51,7 +40,6 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'C' => 
         array (
             'Cosmic\\' => 7,
-            'Complex\\' => 8,
         ),
         'A' => 
         array (
@@ -63,21 +51,9 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
     );
 
     public static $prefixDirsPsr4 = array (
-        'ZipStream\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
-        ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
         'ScssPhp\\ScssPhp\\' => 
         array (
             0 => __DIR__ . '/..' . '/scssphp/scssphp/src',
-        ),
-        'Psr\\SimpleCache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
         'Psr\\Log\\' => 
         array (
@@ -90,8 +66,7 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -101,25 +76,13 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
-        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'MyCLabs\\Enum\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
-        ),
         'Mimey\\' => 
         array (
             0 => __DIR__ . '/..' . '/ralouphie/mimey/src',
-        ),
-        'Matrix\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
         'MathParser\\' => 
         array (
@@ -136,10 +99,6 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'Cosmic\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Cosmic',
-        ),
-        'Complex\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
         'App\\ViewModels\\' => 
         array (
@@ -159,18 +118,9 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'H' => 
-        array (
-            'HTMLPurifier' => 
-            array (
-                0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
-            ),
-        ),
-    );
-
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Shuchkin\\SimpleXLSXGen\\SimpleXLSXGen' => __DIR__ . '/..' . '/shuchkin/simplexlsxgen/src/SimpleXLSXGen.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -178,7 +128,6 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3144095f9327109f403a002d24f5c5f9::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3144095f9327109f403a002d24f5c5f9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3144095f9327109f403a002d24f5c5f9::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit3144095f9327109f403a002d24f5c5f9::$classMap;
 
         }, null, ClassLoader::class);

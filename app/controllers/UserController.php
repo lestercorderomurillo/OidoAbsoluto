@@ -19,6 +19,7 @@ use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
 use Cosmic\Utilities\Transport;
+use Shuchkin\SimpleXLSXGen\SimpleXLSXGen;
 
 class UserController extends Controller
 {
@@ -50,6 +51,7 @@ class UserController extends Controller
             if ($pianoTest !== null) {
 
                 $model = new DetailedTestViewModel();
+                $model->token = $token;
 
                 $userInfo = $this->db->find(UserInfo::class, ["id" => $parts[0]]);
                 $notes = $this->db->findAll(PianoNote::class, ["id" => $parts[0], "try" => $parts[1]]);
@@ -215,7 +217,7 @@ class UserController extends Controller
             $pianoNote->try = $try;
             $pianoNote->noteIndex = $noteIndex;
             $pianoNote->expectedNote = $note["expectedNote"];
-            $pianoNote->selectedNote = ($note["selectedNote"] == "No se seleccionó ninguna nota") ? "-" : str_replace("X", "#", $note["selectedNote"]);
+            $pianoNote->selectedNote = ($note["selectedNote"] == "No se seleccionó ninguna nota") ? "X" : str_replace("X", "#", $note["selectedNote"]);
             $pianoNote->reactionTime = (float)$note["reactionTime"];
 
             $pianoNotes[] = $pianoNote;
@@ -260,7 +262,7 @@ class UserController extends Controller
             $testViewModel = new PianoTestViewModel();
             $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
             $testViewModel->token = $this->createTokenFromPianoTest($test);
-            
+
             $testViewModel->setValues($test->getValues());
             $testViewModels[] = $testViewModel;
         }
@@ -272,5 +274,62 @@ class UserController extends Controller
                 "tests" => $testViewModels
             ]
         );
+    }
+
+    function exportTest(string $token)
+    {
+        $test = $this->getDetailedTestFromToken($token);
+
+        if ($test != null) {
+
+            $books = [
+                ["*", "Nombre completo: $test->author"],
+                ["*", "Número de intento: $test->try"],
+                ["*", "Fecha de subida: $test->uploadDate"],
+                ["*", "Modo de visualización: $test->displayString"],
+                ["*", "Tiempo total transcurrido: $test->totalTime"],
+                [],
+                ['#', 'Nota Reproducida', 'Nota Presionada', 'Tiempo de reacción (ms)', 'Octava Reproducida', 'Tipo Reproducido', 'Tipo Presionado', "Clasificación"]
+            ];
+
+            foreach ($test->notes as $note) {
+
+                $matches = null;
+                preg_match_all('/[0-9]+/', $note->expectedNote, $matches);
+
+                $octave = $matches[0][0];
+
+                $expectedNotewithoutOctave = preg_replace('/[0-9]+/', '', $note->expectedNote);
+
+                $expectedType = Text::contains($note->expectedNote, "#") ? "Sostenido" : "Natural";
+                $selectedType = Text::contains($note->selectedNote, "#") ? "Sostenido" : "Natural";
+                $kind = (($note->noteIndex + 1) < 30) ? "Piano" : "Puro";
+
+                $books[] = [$note->noteIndex + 1, $expectedNotewithoutOctave, $note->selectedNote,  $note->reactionTime, $octave, $expectedType, $selectedType, $kind];
+            }
+
+            $books[] = [];
+            $books[] = ['#', 'Pregunta', 'Respuesta'];
+
+            $questions = Collection::from(new File("app/Views/User/questions.json"));
+            $answers = $this->db->findAll(Answer::class, ["id" => $test->id]);
+
+            $questionsCount = count($questions);
+
+            for($count = 0; $count < $questionsCount; $count++){
+                $parsedAnswer = "Sin respuesta / No aplica";
+
+                foreach($answers as $answer){
+                    if ($answer->question == ($count + 1)){
+                        $parsedAnswer = $answer->value;
+                    }
+                }
+
+                $books[] = [($count + 1), $questions[$count]["subject"] , $parsedAnswer];
+            }
+
+            $xlsx = SimpleXLSXGen::fromArray($books);
+            $this->download("Notes_$token.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $xlsx);
+        }
     }
 }

@@ -91,7 +91,7 @@
     },
     {
         "id": 13,
-        "subject": "Ha estudiado con el método Suzuki?",
+        "subject": "¿Ha estudiado con el método Suzuki?",
         "type": "singleChoice",
         "choices": [
             "Sí",

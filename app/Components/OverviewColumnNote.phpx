@@ -22,8 +22,8 @@ class OverviewColumnNote extends InlineComponent
                         <tr>
                             <th>#</th>
                             <th>Real</th>
-                            <th>Usuario</th>
-                            <th>Respuesta</th>
+                            <th>Seleccionada</th>
+                            <th>Reacción</th>
                         </tr>
                         <Foreach using="i" from="{notes}" skip="{skip}" take="{take}">
                             <tr>
