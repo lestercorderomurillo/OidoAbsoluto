@@ -1,0 +1,40 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Authorization;
+use Cosmic\Binder\Component;
+
+class LoggedIn extends Component
+{
+    public function __construct(string $role = "*")
+    {
+        $this->role = $role;
+    }
+
+    public function render()
+    {
+
+        if (Authorization::isLogged()) {
+
+            if ($this->role == "*") {
+
+                return {{
+                    {body}
+                }};
+
+            } else {
+
+                if (Authorization::getCurrentRole() == (int)$this->role) {
+
+                    return {{
+                        {body}
+                    }};
+                    
+                }
+            }
+        }
+    }
+}
+
+publish(LoggedIn::class);

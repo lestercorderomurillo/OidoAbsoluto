@@ -137,18 +137,18 @@ if (!function_exists('session')) {
      * 
      * @return Session|mixed The session object, or a mixed value if necessary.
      */
-    function session(string $key = "", string $value = "")
+    function session(string $key = __EMPTY__, string $value = __EMPTY__)
     {
         /**
          * @var Session $session
          **/
         $session = app()->get(Session::class);
 
-        if ($key == "") {
+        if ($key == __EMPTY__) {
             return $session;
         }
 
-        if ($value == "") {
+        if ($value == __EMPTY__) {
             return $session->get($key);
         }
 

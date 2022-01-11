@@ -1,21 +1,23 @@
 <View title="Perfil de Usuario">
+    <ServiceBanner>
     <Spacing>
     <Container>
         <Row>
             <Column smallSize="12" mediumSize="10" size="9" xlSize="8">
                 <Card>
-                    <Title>
+                    <IconifiedTitle source="profile.png">
                         Bienvenido de nuevo, {username}
-                    </Title>
+                    </IconifiedTitle>
                     <PersistentMessage>
+                    <Label>
+                        A continuación se listan las acciones que puede realizar para el rol de su perfil.
+                    </Label>
+                    <Spacing>
                     <RedirectButton route="piano?displayMode=Full">
                         Iniciar Prueba con Piano Interactivo
                     </RedirectButton>
                     <RedirectButton route="piano?displayMode=Simple">
                         Iniciar Prueba Sencilla
-                    </RedirectButton>
-                    <RedirectButton route="logout" accent="Danger">
-                        Cerrar Sesión
                     </RedirectButton>
                     <Spacing size="3">
                     <Title>

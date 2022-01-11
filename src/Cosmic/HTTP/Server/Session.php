@@ -15,6 +15,14 @@ class Session implements ContainerInterface
      */
     public function __construct()
     {
+        $this->build();
+    }
+
+    /**
+     * Create a new PHP session.
+     */
+    private function build()
+    {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -68,5 +76,6 @@ class Session implements ContainerInterface
     public function clear(): void
     {
         session_destroy();
+        $this->build();
     }
 }

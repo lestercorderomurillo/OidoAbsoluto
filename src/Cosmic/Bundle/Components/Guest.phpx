@@ -1,0 +1,22 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Authorization;
+use Cosmic\Binder\Component;
+
+class Guest extends Component
+{
+    public function render()
+    {
+
+        if (!Authorization::isLogged()) {
+
+            return {{
+                {body}
+            }};
+        }
+    }
+}
+
+publish(Guest::class);

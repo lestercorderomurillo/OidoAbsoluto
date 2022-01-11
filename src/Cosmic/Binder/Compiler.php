@@ -145,7 +145,7 @@ class Compiler
 
                     if ($component->isInlineComponent()) {
 
-                        $component->body = "";
+                        $component->body = __EMPTY__;
 
                     } else {
 
@@ -207,7 +207,7 @@ class Compiler
      */
     public function compileRenderTemplateEvents(string $html, string $prefix): string
     {
-        $html = preg_replace("/(?= *)extern\.(?=[A-z0-9_]*\()/", "", $html);
+        $html = preg_replace("/(?= *)extern\.(?=[A-z0-9_]*\()/", __EMPTY__, $html);
         $html = preg_replace("/(?= *)component\.(?=[A-z0-9_]*\()/", $prefix, $html);
         $html =  preg_replace('/(\([a-z]+\)=")([^"]*)(?=")/', '$1' . $prefix . "$2", $html);
 

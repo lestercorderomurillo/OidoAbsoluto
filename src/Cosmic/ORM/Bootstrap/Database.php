@@ -63,7 +63,7 @@ abstract class Database
      * 
      * @return Model[] A collection of models.
      */
-    public abstract function findAll(string $modelClass, array $where = [], string $append = "");
+    public abstract function findAll(string $modelClass, array $where = [], string $append = __EMPTY__);
 
     /**
      * Save the the given models into the database.

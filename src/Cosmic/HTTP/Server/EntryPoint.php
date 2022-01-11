@@ -198,7 +198,7 @@ class EntryPoint extends Controller
                         switch($typeName){
                             case 'value': $value = 0; break;
                             case 'array': $value = []; break;
-                            case 'string': $value = ""; break;
+                            case 'string': $value = __EMPTY__; break;
                             default: $value = null; break;
                         }
 

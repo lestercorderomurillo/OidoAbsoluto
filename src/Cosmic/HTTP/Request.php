@@ -153,7 +153,7 @@ class Request
     public function __construct()
     {
         $this->statusCode = http_response_code();
-        $this->body = "";
+        $this->body = __EMPTY__;
         $this->headers = [];
         $this->protocolVersion = "1.1";
     }

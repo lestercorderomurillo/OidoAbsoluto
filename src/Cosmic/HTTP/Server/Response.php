@@ -116,7 +116,7 @@ class Response extends Request
                 }
             }
 
-            if ($this->getBody() != "") {
+            if ($this->getBody() != __EMPTY__) {
                 echo($this->getBody());
             }
         }

@@ -35,6 +35,15 @@ class HomeController extends Controller
 
     function loginSubmit(string $email, string $password)
     {
+
+        if (Authorization::isLogged()) {
+
+            Authorization::logOut();
+            $this->error("Se ha detectado actividad sospechosa, por lo que deberá logearse de nuevo.");
+            return $this->redirect("login");
+            
+        }
+
         if (Authorization::tryLogIn($email, $password, User::class)) {
             return $this->redirect("profile");
         }

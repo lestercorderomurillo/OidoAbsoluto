@@ -116,6 +116,16 @@ class Authorization
      */
     public static function logOut(): void
     {
+        $text = session("alertText");
+        $type = session("alertType");
+        
         session()->clear();
+
+        if($text != __EMPTY__ && $type != __EMPTY__){
+
+            session()->add("alertText", $text);
+            session()->add("alertType", $type);
+
+        }
     }
 }

@@ -99,7 +99,7 @@ class Terminal
         string $function_name = "__construct",
         string $function_content = "echo(\"Hello World\");",
         array $imports = [],
-        string $extends = ""
+        string $extends = __EMPTY__
     ) {
         $folder = str_replace("$class_name", "", $path);
         if (!is_dir($folder)) {
@@ -119,12 +119,12 @@ class Terminal
         $scope = ucwords($scope);
         $class_name = ucwords($class_name);
 
-        $imports_text = "";
+        $imports_text = __EMPTY__;
         foreach ($imports as $import) {
             $imports_text = "use Cosmic\\$import;\n";
         }
 
-        if ($imports_text != "") {
+        if ($imports_text != __EMPTY__) {
             $imports_text = "\n" . $imports_text;
         }
 

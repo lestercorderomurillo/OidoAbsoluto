@@ -37,7 +37,7 @@ class ConnectionString
      * 
      * @return string
      */
-    public function __construct(string $host, string $dbName, string $username = "", string $password = "")
+    public function __construct(string $host, string $dbName, string $username = __EMPTY__, string $password = __EMPTY__)
     {
         $this->host = $host;
         $this->dbName = $dbName;

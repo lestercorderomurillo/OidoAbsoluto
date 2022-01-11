@@ -10,9 +10,21 @@ class ServiceBanner extends InlineComponent
     {
         return {{
             <div class="p-2 m-0 bg-dark text-white" style="font-size: 1.25em;">
-                <Link route="index" accent="Secondary" class="p-2">
-                    Acceder
-                </Link>
+                <Guest>
+                    <Link route="index" accent="Secondary" class="p-2">
+                        Acceder
+                    </Link>
+                </Guest>
+                <LoggedIn>
+                    <Link route="profile" accent="Secondary" class="p-2">
+                        Perfil
+                    </Link>
+                </LoggedIn>
+                <LoggedIn>
+                    <Link route="logout" accent="Secondary" class="p-2">
+                        Deslogearse
+                    </Link>
+                </LoggedIn>
                 <Link route="policy" accent="Secondary" class="p-2">
                     Términos de uso y condiciones
                 </Link>

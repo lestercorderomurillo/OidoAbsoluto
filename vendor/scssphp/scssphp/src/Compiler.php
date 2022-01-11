@@ -9445,7 +9445,7 @@ will be an error in future versions of Sass.\n         on line $line of $fname";
         if ($mblength === strlen($stringContent)) {
             return $filter($stringContent);
         }
-        $filteredString = "";
+        $filteredString = __EMPTY__;
         for ($i = 0; $i < $mblength; $i++) {
             $char = Util::mbSubstr($stringContent, $i, 1);
             if (strlen($char) > 1) {

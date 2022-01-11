@@ -189,7 +189,7 @@ class Element
             $component->class = (isset($this->parameters["class"])) ? $this->parameters["class"] : __EMPTY__;
         }
 
-        $component->events = "";
+        $component->events = __EMPTY__;
 
         foreach ($this->events as $key => $event) {
             $component->events .= $key . '="' . $event . '" ';

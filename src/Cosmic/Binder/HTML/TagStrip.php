@@ -45,7 +45,7 @@ class TagStrip
      */
     public function toString(): string
     {
-        $attributesString = "";
+        $attributesString = __EMPTY__;
 
         $this->attributes = app()->get(Compiler::class)->compileMultivalueAttributes($this->attributes);
 

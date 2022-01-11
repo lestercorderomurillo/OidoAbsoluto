@@ -112,7 +112,7 @@ abstract class Environment extends Injectable
         $line = $exception->getLine();
         $traces = $exception->getTrace();
 
-        $stackTrace = "";
+        $stackTrace = __EMPTY__;
         $lastElement = end($traces);
         $number = count($traces);
         $time = date(DATE_RFC2822);

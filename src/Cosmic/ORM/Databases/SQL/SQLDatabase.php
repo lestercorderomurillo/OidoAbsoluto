@@ -76,7 +76,7 @@ class SQLDatabase extends Database
     /**
      * @inheritdoc
      */
-    public function findAll(string $modelClass, array $where = [], string $append = ""): array
+    public function findAll(string $modelClass, array $where = [], string $append = __EMPTY__): array
     {
         $models = [];
         $tableName = (new $modelClass())->getTableName();
