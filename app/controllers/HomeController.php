@@ -90,7 +90,7 @@ class HomeController extends Controller
                 $user->password = password_hash($user->salt . $password, PASSWORD_BCRYPT);
                 $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
                 $user->activated = 1;
-                $user->role = 1;
+                $user->role = Authorization::USER;
 
                 // Save the user model
                 $this->db->save($user);
@@ -132,8 +132,11 @@ class HomeController extends Controller
 
     function automaticSurveyProfileRedirect()
     {
-        if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
-            return $this->redirect("survey");
+
+        if (Authorization::getCurrentRole() == Authorization::USER){
+            if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+                return $this->redirect("survey");
+            }
         }
 
         return $this->redirect("profile");

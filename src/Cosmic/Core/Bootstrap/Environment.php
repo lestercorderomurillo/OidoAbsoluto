@@ -129,7 +129,7 @@ abstract class Environment extends Injectable
             $file = Text::getNamespaceBaseName(isset($trace['file']) ? $trace['file'] : "?");
 
             $class = strtolower($class);
-            $class = str_replace("\\", ".", $class);
+            $class = strtr($class, ["\\" => "."]);
 
             if (strlen($class) > 0) {
                 $class .= ".";

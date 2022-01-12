@@ -30,7 +30,7 @@ class Text
      */
     public static function getNamespaceBaseName(string $resource): string
     {
-        $resource = str_replace("\\", "/", $resource);
+        $resource = strtr($resource, ["\\" => "/"]);
         $lastIndex = strripos($resource, "/");
 
         if ($lastIndex == false) return $resource;

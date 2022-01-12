@@ -101,7 +101,7 @@ class Terminal
         array $imports = [],
         string $extends = __EMPTY__
     ) {
-        $folder = str_replace("$class_name", "", $path);
+        $folder = strtr($path, [$class_name => ""]);
         if (!is_dir($folder)) {
             mkdir($folder, 0777, true);
         }

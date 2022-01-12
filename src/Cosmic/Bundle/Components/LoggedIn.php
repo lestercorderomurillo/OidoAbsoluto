@@ -9,28 +9,36 @@ class LoggedIn extends Component
 {
     public function __construct(string $role = "*")
     {
-        $this->role = $role;
+        switch (strtolower($role)){
+            case "user": $this->role = Authorization::USER; break;
+            case "admin": $this->role = Authorization::ADMIN; break;
+            default: $this->role = "*"; break;
+        }
     }
 
     public function render()
     {
-
         if (Authorization::isLogged()) {
 
-            if ($this->role == "*") {
+            if ($this->role === "*") {
 
-                return {{
+                return <<<HTML
                     {body}
-                }};
+                HTML;
 
             } else {
 
                 if (Authorization::getCurrentRole() == (int)$this->role) {
 
-                    return {{
+                    return <<<HTML
                         {body}
-                    }};
+                    HTML;
                     
+                }else{
+
+                    $this->body = "";
+                    return __EMPTY__;
+
                 }
             }
         }

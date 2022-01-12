@@ -8,11 +8,6 @@ namespace Cosmic\Utilities;
 class Transport
 {
     /**
-     * @var mixed $__temp Used when doing transcriptions; 
-     */
-    private static $__temp;
-
-    /**
      * Convert the string to an array.
      * 
      * @param array $array The array to convert.
@@ -21,7 +16,8 @@ class Transport
      */
     public static function arrayToString(array $array): string
     {
-        return "@_ARRAY_" . str_replace("=", "_", base64_encode(var_export($array, true)));
+        $json = json_encode($array);
+        return "@ARR" . self::encodeBase64SafeURL($json);
     }
 
     /**
@@ -33,14 +29,11 @@ class Transport
      */
     public static function stringToArray(string $string): array
     {
-        $string = str_replace("@_ARRAY_", "", $string);
-        $string = str_replace("_", "=", $string);
-        $code = 'self::$__temp = ' . base64_decode($string);
-        if (!Text::endsWith($code, ")")) {
-            $code .= ")";
+        if(Text::startsWith($string, "@ARR")){
+            $string = substr($string, strlen("@ARR"));
         }
-        eval($code . ";");
-        return self::$__temp;
+        $decoded = json_decode(self::decodeBase64SafeURL($string), true);
+        return $decoded;
     }
 
     /**
@@ -52,7 +45,7 @@ class Transport
      */
     public static function encodeBase64SafeURL(string $input): string
     {
-        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($input));
+        return strtr(base64_encode($input), '+/=', '._-');
     }
 
     /**
@@ -62,13 +55,8 @@ class Transport
      *
      * @return string The encoded string.
      */
-    public static function decodeBase64SafeURL($input): string
+    public static function decodeBase64SafeURL(string $input): string
     {
-        $data = str_replace(['-', '_'], ['+', '/'], $input);
-        $mod4 = strlen($data) % 4;
-        if ($mod4) {
-            $data .= substr('====', $mod4);
-        }
-        return base64_decode($data);
+        return base64_decode(strtr($input, '._-', '+/='));
     }
 }

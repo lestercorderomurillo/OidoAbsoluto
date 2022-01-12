@@ -42,8 +42,7 @@ class Compiler
     {
         $value = FileSystem::read($phpsFile);
 
-        $value = str_replace('{{', "<<<'HTML'", $value);
-        $value = str_replace('}}', "HTML", $value);
+        $value = strtr($value, ['{{' => "<<<'HTML'", "}}" => "HTML"]);
         $value = preg_replace('/^[\n\r]+/m', '$1', $value);
 
         return preg_replace('/<\?php|\?>/', '$1 ', $value);
@@ -60,7 +59,7 @@ class Compiler
 
             // Preparations
             $scssCompiler = new ScssPhpCompiler();
-            $outputFile = new File(__CONTENT__ . "output/build.css");
+            $outputFile = new File(__CONTENT__ . "Output/Build.css");
 
             // Content loading
             $baseContent = FileSystem::read(new File(__CONTENT__ . "page.scss")) . "\n\n";
@@ -119,73 +118,72 @@ class Compiler
         while (($selection = Pattern::select($html, "<", ">", $offset))->isValid()) {
 
             $elementString = $selection->getString();
-
-            $isCloseTag = ($elementString[0] == "/") ? true : false;
             $offset++;
 
-            if ($isCloseTag) {
-                $elementString = substr($elementString, 1);
-            }
+            $isCommentTag = ($elementString[0] == "!") ? true : false;
 
-            if (!$isCloseTag) {
+            if (!$isCommentTag) {
+                $isCloseTag = ($elementString[0] == "/") ? true : false;
 
-                if ($this->isGenericElement($elementString)) {
+                if ($isCloseTag) {
+                    $elementString = substr($elementString, 1);
+                }
 
-                    $data = $this->extractRawData($elementString);
-                    $strip = new TagStrip($data[0], $data[1]);
-                    $html = $this->compileSelection($html, $selection, $strip);
+                if (!$isCloseTag) {
 
-                } else {
+                    if ($this->isGenericElement($elementString)) {
 
-                    $element = $this->createElementFromString($elementString);
-
-                    $component = $element->getComponentInstance();
-
-                    $elementComponentName = $element->getComponentName();
-
-                    if ($component->isInlineComponent()) {
-
-                        $component->body = __EMPTY__;
-
+                        $data = $this->extractRawData($elementString);
+                        $strip = new TagStrip($data[0], $data[1]);
+                        $html = $this->compileSelection($html, $selection, $strip);
                     } else {
 
-                        $bodySelection = HTML::findElementBody($html, $elementComponentName, $selection->getEndPosition());
+                        $element = $this->createElementFromString($elementString);
 
-                        if ($bodySelection == null) {
-                            throw new CompilerException("The element with the component '" . $component->getClassName() . "' has no body in the template/view, or it's not marked as an inline component");
+                        $component = $element->getComponentInstance();
+
+                        $elementComponentName = $element->getComponentName();
+
+                        if ($component->isInlineComponent()) {
+
+                            $component->body = __EMPTY__;
+                        } else {
+
+                            $bodySelection = HTML::findElementBody($html, $elementComponentName, $selection->getEndPosition());
+
+                            if ($bodySelection == null) {
+                                throw new CompilerException("The element with the component '" . $component->getClassName() . "' has no body in the template/view, or it's not marked as an inline component");
+                            }
+
+                            $bodySelection->moveStartPosition(-1);
+                            $bodySelection->moveEndPosition(1);
+
+                            $component->body = $bodySelection->toString();
                         }
 
-                        $bodySelection->moveStartPosition(-1);
-                        $bodySelection->moveEndPosition(1);
+                        $prefix = $component->getSimplifiedName() . "_" . $component->id . "_";
 
-                        $component->body = $bodySelection->toString();
+                        $componentTemplate = $component->getRenderTemplate();
+                        $componentTemplate = $this->compileRenderTemplateEvents($componentTemplate, $prefix);
+                        $componentTemplate = $this->compileClientSideTokens($componentTemplate, $component->id);
 
+                        $componentTokens = get_object_vars($component);
+
+                        if ($component->isInlineComponent()) {
+
+                            $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens);
+                            $selection->setEndPosition($selection->getEndPosition());
+                        } else {
+
+                            $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens, ["body" => $component->body]);
+                            $selection->setEndPosition($bodySelection->getEndPosition() + strlen("</$elementComponentName>"));
+                        }
+
+                        $output = $this->compileString($componentTemplate, $passdownTokens, $depth + 1);
+                        $component->tryDispose();
+
+                        $html = $this->compileSelection($html, $selection, $output);
                     }
-
-                    $prefix = $component->getSimplifiedName() . "_" . $component->id . "_";
-
-                    $componentTemplate = $component->getRenderTemplate();
-                    $componentTemplate = $this->compileRenderTemplateEvents($componentTemplate, $prefix);
-                    $componentTemplate = $this->compileClientSideTokens($componentTemplate, $component->id);
-
-                    $componentTokens = get_object_vars($component);
-
-                    if ($component->isInlineComponent()) {
-
-                        $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens);
-                        $selection->setEndPosition($selection->getEndPosition());
-
-                    } else {
-
-                        $passdownTokens = Collection::mergeDictionary($tokens, $componentTokens, ["body" => $component->body]);
-                        $selection->setEndPosition($bodySelection->getEndPosition() + strlen("</$elementComponentName>"));
-
-                    }
-
-                    $output = $this->compileString($componentTemplate, $passdownTokens, $depth + 1);
-                    $component->tryDispose();
-
-                    $html = $this->compileSelection($html, $selection, $output);
                 }
             }
         }
@@ -252,7 +250,7 @@ class Compiler
 
             $tokenRaw = trim($selection->getString());
 
-            if (strlen($tokenRaw) > 0 && $tokenRaw[0] != "?" && isset($tokens[$tokenRaw])) {
+            if (strlen($tokenRaw) > 0 && $tokenRaw[0] != "?" && $tokenRaw[0] != '"' && isset($tokens[$tokenRaw])) {
 
                 if (is_array($tokens[$tokenRaw])) {
                     $compiledValue = Transport::arrayToString($tokens[$tokenRaw]);
@@ -349,7 +347,7 @@ class Compiler
 
             $expressionRaw = trim($selection->getString(true));
 
-            if (!Text::contains($expressionRaw, ["{", "}"])) {
+            if (!Text::contains($expressionRaw, ["{", "}", '"'])) {
                 $number = (float)number_format(math_eval($expressionRaw), 2);
                 $html = $this->compileSelection($html, $selection, $number);
             }

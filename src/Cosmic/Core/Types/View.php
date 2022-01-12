@@ -49,7 +49,7 @@ class View
      */
     public function __construct(string $controllerName, string $viewName, array $viewData)
     {
-        $controllerName = Text::getNamespaceBaseName(str_replace("Controller", "", $controllerName));
+        $controllerName = Text::getNamespaceBaseName(strtr($controllerName, ["Controller" => ""]));
 
         $this->controllerName = $controllerName;
         $this->viewName = $viewName;

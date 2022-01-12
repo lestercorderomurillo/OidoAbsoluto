@@ -9,6 +9,9 @@ use Cosmic\ORM\Databases\SQL\SQLDatabase;
  */
 class Authorization
 {
+    const ADMIN = 0;
+    const USER = 1;
+
     /**
      * Check if the user is logged in or not.
      * 
@@ -30,26 +33,26 @@ class Authorization
             return session()->get("loggedId");
         }
 
-        return "NoUser";
+        return -1;
     }
 
     /**
      * Return the current active role for this user.
      * 
      * Can be any of the following:
-     * 0 = None
+     * -1 = None
+     * 0 = Admin
      * 1 = User
-     * 2 = Admin
      * 
      * @return int The role number.
      */
     public static function getCurrentRole(): int
     {
-        if (!session()->has("isLogged")) {
+        if (self::isLogged()) {
             return session()->get("loggedRole");
         }
 
-        return 0;
+        return -1;
     }
 
     /**
@@ -65,7 +68,7 @@ class Authorization
      */
     public static function tryLogIn(string $token, string $password, string $className, string $attribute = "email"): bool
     {
-        if (!session()->has("isLogged")) {
+        if (!self::isLogged()) {
 
             $db = app()->get(SQLDatabase::class);
 

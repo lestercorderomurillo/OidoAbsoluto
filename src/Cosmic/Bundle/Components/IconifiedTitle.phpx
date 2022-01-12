@@ -8,7 +8,7 @@ class IconifiedTitle extends Component
 {
     public function __construct(string $source)
     {
-        $this->fullSource = __WEBCONTENT__ . "images/" . $source;
+        $this->fullSource = __WEBCONTENT__ . "Images/" . $source;
     }
 
     public function render()

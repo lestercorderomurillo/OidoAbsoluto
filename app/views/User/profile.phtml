@@ -13,53 +13,127 @@
                         A continuación se listan las acciones que puede realizar para el rol de su perfil.
                     </Label>
                     <Spacing>
-                    <RedirectButton route="piano?displayMode=Full">
-                        Iniciar Prueba con Piano Interactivo
-                    </RedirectButton>
-                    <RedirectButton route="piano?displayMode=Simple">
-                        Iniciar Prueba Sencilla
-                    </RedirectButton>
-                    <Spacing size="3">
-                    <Title>
-                        Historial de pruebas realizadas
-                    </Title>
-                    <Label>
-                        Esta sección muestra un resumen breve de cada una de las pruebas que usted ha realizado.
+
+                    <LoggedIn role="User">
+
+                        <RedirectButton route="piano?displayMode=Full">
+                            Iniciar Prueba con Piano Interactivo
+                        </RedirectButton>
+                        <RedirectButton route="piano?displayMode=Simple">
+                            Iniciar Prueba Sencilla
+                        </RedirectButton>
+
                         <Spacing>
-                        Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular.
-                    </Label>
-                    <Spacing>
-                        <Row>
-                        <Column smallSize="12" mediumSize="12" size="12" xlSize="12" padding="1">
-                            <Card padding="2">
-                                <table class="table">
-                                    <tr>
-                                        <th>Intento</th>
-                                        <th>Fecha de subida</th>
-                                        <th>Modo de visualización</th>
-                                        <th>Tiempo total transcurido</th>
-                                    </tr>
-                                    <Foreach from="{tests}" using="i">
-                                        <tr id="row-{parent.i.try}" (click)="window.location = '{host}overview?token={parent.i.token}'" class="Hover">
-                                            <td>
-                                                {parent.i.try}
-                                            </td>
-                                            <td>
-                                                {parent.i.uploadDate}
-                                            </td>
-                                            <td>
-                                                {parent.i.displayMode}
-                                            </td>
-                                            <td>
-                                                {parent.i.totalTime}
-                                            </td>
+                        <Title>
+                            Historial de pruebas realizadas
+                        </Title>
+                        <Label>
+                            Esta sección muestra un resumen breve de cada una de las pruebas que usted ha realizado.
+                            <Spacing>
+                            Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular.
+                        </Label>
+                        <Spacing>
+                            <Row>
+                            <Column smallSize="12" mediumSize="12" size="12" xlSize="12" padding="1">
+                                <Card padding="2">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Intento</th>
+                                            <th>Fecha de subida</th>
+                                            <th>Modo de visualización</th>
+                                            <th>Tiempo total transcurido</th>
                                         </tr>
-                                    </Foreach>
-                                </table>
-                            </Card>
-                        </Column>
-                        </Row>
-                    <Spacing>
+                                        <Foreach from="{tests}" using="i">
+                                            <tr id="row-{parent.i.try}" (click)="window.location = '{host}overview?token={parent.i.token}'" class="Hover">
+                                                <td>
+                                                    {parent.i.try}
+                                                </td>
+                                                <td>
+                                                    {parent.i.uploadDate}
+                                                </td>
+                                                <td>
+                                                    {parent.i.displayMode}
+                                                </td>
+                                                <td>
+                                                    {parent.i.totalTime}
+                                                </td>
+                                            </tr>
+                                        </Foreach>
+                                    </table>
+                                </Card>
+                            </Column>
+                            </Row>
+                        <Spacing>
+
+                    </LoggedIn>
+
+                    <LoggedIn role="Admin">
+
+                        <RedirectButton route="" accent="Success">
+                            Exportar la base de datos completa en Excel
+                        </RedirectButton>
+
+                        <Spacing>
+                        <Title>
+                            Listado de todos los usuarios
+                        </Title>
+                        <Label>
+                            Esta sección muestra todos los usuarios registrados en el sitio web, y permite de forma rápida visualizar sus pruebas
+                            <Spacing>
+                            Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de ese usuario particular.
+                        </Label>
+                        <Spacing>
+                            <Row>
+                            <Column smallSize="12" mediumSize="12" size="12" xlSize="12" padding="1">
+                                <Card padding="2">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Nombre completo</th>
+                                            <th>Correo electrónico</th>
+                                            <th>Rol</th>
+                                            <th>Fecha de nacimiento</th>
+                                            <th>Teléfono</th>
+                                            <th>Género</th>
+                                            <th>País</th>
+                                        </tr>
+                                        <Foreach from="{users}" using="i">
+                                            <tr id="row-{parent.i.try}" (click)="window.location = '{host}profile?lookAt=1'" class="Hover">
+                                                <td>
+                                                    {parent.i.firstName} {parent.i.lastName}
+                                                </td>
+                                                <td>
+                                                    {parent.i.email}
+                                                </td>
+                                                <td>
+                                                    <If value="{parent.i.role}" equals="0">
+                                                        Administrador
+                                                    </If>
+                                                    <If value="{parent.i.role}" equals="1">
+                                                        Usuario
+                                                    </If>
+                                                </td>
+                                                <td>
+                                                    {parent.i.birthDay}
+                                                </td>
+                                                <td>
+                                                    {parent.i.phone}
+                                                </td>
+                                                <td>
+                                                    {parent.i.gender}
+                                                </td>
+                                                <td>
+                                                    {parent.i.country}
+                                                </td>
+                                            </tr>
+                                        </Foreach>
+                                    </table>
+                                </Card>
+                            </Column>
+                            </Row>
+                        <Spacing>
+
+                    </LoggedIn>
+                    
                 </Card>
             </Column>
         </Row>

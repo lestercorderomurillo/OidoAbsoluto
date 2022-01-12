@@ -3,7 +3,7 @@
     "application.production": false,
     "application.name": "Oido Absoluto",
     "application.url": "www.oidoabsoluto.dev.com",
-    "application.content": "Content",
+    "application.contentFolder": "Content",
     "application.routesFile": "Routes.php",
     "database.sql.driver": "MySQL",
     "database.sql.server": "localhost",
@@ -11,7 +11,6 @@
     "database.sql.pass": "localhost",
     "database.sql.db": "oidoabsoluto",
     "framework.errorLogging": true,
-    "framework.compileStylesheet": true,
     "framework.logging": true,
-    "framework.reload": false
+    "framework.compileStylesheet": false
 }

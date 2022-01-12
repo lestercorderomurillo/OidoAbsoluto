@@ -66,7 +66,8 @@ class PreparedQuery
 
         foreach ($this->data as $key => $value) {
             //$string = str_replace($key, htmlentities($value), $string);
-            $string = str_replace($key, $value, $string);
+            //$string = str_replace($key, $value, $string);
+            $string = strtr($string, [$key => $value]);
         }
 
         return $string;

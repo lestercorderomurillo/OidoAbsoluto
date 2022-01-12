@@ -28,7 +28,7 @@ abstract class MVCApplication extends Application
      */
     protected function onConfiguration(): void
     {
-        if(FileSystem::exists(new File(__CONTENT__ . "output/build.css"))){
+        if(FileSystem::exists(new File(__CONTENT__ . "Output/Build.css"))){
             $this->compileStylesheet = true;
         }
     }

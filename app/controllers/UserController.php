@@ -5,9 +5,11 @@ namespace App\Controllers;
 use App\Models\Answer;
 use App\Models\PianoNote;
 use App\Models\PianoTest;
+use App\Models\User;
 use App\Models\UserInfo;
 use App\ViewModels\PianoTestViewModel;
 use App\ViewModels\DetailedTestViewModel;
+use App\ViewModels\UserSummaryViewModel;
 use Cosmic\HTTP\Request;
 use Cosmic\Binder\Authorization;
 use Cosmic\Core\Bootstrap\Controller;
@@ -112,6 +114,10 @@ class UserController extends Controller
 
     function survey()
     {
+        if (Authorization::getCurrentRole() == Authorization::ADMIN) {
+            return $this->redirect("profile");
+        }
+
         if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
             return $this->redirect("profile");
         }
@@ -136,6 +142,10 @@ class UserController extends Controller
 
     function surveySubmit(Request $request)
     {
+        if (Authorization::getCurrentRole() == Authorization::ADMIN) {
+            return $this->redirect("profile");
+        }
+
         $formData = $request->getFormData();
 
         if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
@@ -175,7 +185,7 @@ class UserController extends Controller
             return $this->redirect("login");
         }
 
-        $audiosSources = FileSystem::URLFind(new Folder("app/Content/audio/"), "mp3");
+        $audiosSources = FileSystem::URLFind(new Folder("app/Content/Audio/"), "mp3");
         $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
 
         return $this->view(["displayMode" => $displayMode, "audiosSources" => $audiosSources, "displayString" => $displayString]);
@@ -249,31 +259,59 @@ class UserController extends Controller
 
     function profile()
     {
-        if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
-            return $this->redirect("survey");
+        if (Authorization::getCurrentRole() == Authorization::USER) {
+
+            if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+                return $this->redirect("survey");
+            }
+
+            $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
+            $tests = $this->db->findAll(PianoTest::class, ["id" => Authorization::getCurrentId()]);
+
+            $testViewModels = [];
+
+            foreach ($tests as $test) {
+                $testViewModel = new PianoTestViewModel();
+                $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+                $testViewModel->token = $this->createTokenFromPianoTest($test);
+
+                $testViewModel->setValues($test->getValues());
+                $testViewModels[] = $testViewModel;
+            }
+
+            return $this->view(
+                [
+                    "host" => __HOST__,
+                    "username" =>  $userInfo->firstName . " " . $userInfo->lastName,
+                    "tests" => $testViewModels
+                ]
+            );
+
+        } else if (Authorization::getCurrentRole() == Authorization::ADMIN) {
+
+            $adminInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
+
+            $users = $this->db->findAll(User::class, [], "WHERE NOT id='$adminInfo->id'");
+            $usersInfo = $this->db->findAll(UserInfo::class, [], "WHERE NOT id='$adminInfo->id'");
+
+            $usersCount = count($users);
+            $usersSummary = [];
+
+            for($count = 0; $count < $usersCount; $count++){
+                $userSummary = new UserSummaryViewModel();
+                $userSummary->setValues($users[$count]->getValues());
+                $userSummary->setValues($usersInfo[$count]->getValues());
+                $usersSummary[] = $userSummary;
+            }
+
+            return $this->view(
+                [
+                    "host" => __HOST__,
+                    "username" =>  $adminInfo->firstName . " " . $adminInfo->lastName,
+                    "users" => $usersSummary
+                ]
+            );
         }
-
-        $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
-        $tests = $this->db->findAll(PianoTest::class, ["id" => Authorization::getCurrentId()]);
-
-        $testViewModels = [];
-
-        foreach ($tests as $test) {
-            $testViewModel = new PianoTestViewModel();
-            $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
-            $testViewModel->token = $this->createTokenFromPianoTest($test);
-
-            $testViewModel->setValues($test->getValues());
-            $testViewModels[] = $testViewModel;
-        }
-
-        return $this->view(
-            [
-                "host" => __HOST__,
-                "username" =>  $userInfo->firstName . " " . $userInfo->lastName,
-                "tests" => $testViewModels
-            ]
-        );
     }
 
     function exportTest(string $token)
@@ -316,16 +354,16 @@ class UserController extends Controller
 
             $questionsCount = count($questions);
 
-            for($count = 0; $count < $questionsCount; $count++){
+            for ($count = 0; $count < $questionsCount; $count++) {
                 $parsedAnswer = "Sin respuesta / No aplica";
 
-                foreach($answers as $answer){
-                    if ($answer->question == ($count + 1)){
+                foreach ($answers as $answer) {
+                    if ($answer->question == ($count + 1)) {
                         $parsedAnswer = $answer->value;
                     }
                 }
 
-                $books[] = [($count + 1), $questions[$count]["subject"] , $parsedAnswer];
+                $books[] = [($count + 1), $questions[$count]["subject"], $parsedAnswer];
             }
 
             $xlsx = SimpleXLSXGen::fromArray($books);

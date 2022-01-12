@@ -70,7 +70,7 @@ class TagStrip
 
                     if ($event == "update") {
 
-                        $value = str_replace("()", "", $value);
+                        $value = strtr($value, ["()" => ""]);
 
                         $handleCode = <<<JS
                         $(window).on("load", function() {

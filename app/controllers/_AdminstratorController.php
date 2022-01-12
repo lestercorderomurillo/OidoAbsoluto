@@ -7,6 +7,7 @@ use Cosmic\Core\Bootstrap\Controller;
 
 class AdminstratorController extends Controller
 {
+
     function overview()
     {
         $charts = [

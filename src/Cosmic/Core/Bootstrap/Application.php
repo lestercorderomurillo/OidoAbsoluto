@@ -71,7 +71,7 @@ abstract class Application extends Environment
      */
     public function getRootFolderString(): string
     {
-        return str_replace("\\", DIRECTORY_SEPARATOR, dirname(__DIR__, 4) . "\\");
+        return strtr( dirname(__DIR__, 4) . "\\", ["\\" => DIRECTORY_SEPARATOR]);
     }
 
     /**
@@ -81,7 +81,7 @@ abstract class Application extends Environment
      */
     public function getContentFolderString(): string
     {
-        return $this->getRootFolderString() . "app\\" . $this->getConfiguration("application.content")  . "\\";
+        return $this->getRootFolderString() . "app\\" . $this->getConfiguration("application.contentFolder")  . "\\";
     }
 
     /**

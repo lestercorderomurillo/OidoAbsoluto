@@ -66,7 +66,8 @@ abstract class BasePath
      */
     public function setPath(string $path): void
     {
-        $this->path = str_replace(app()->getRootFolderString(), "", $path);
+        //$this->path = str_replace(app()->getRootFolderString(), "", $path);
+        $this->path = strtr($path, [app()->getRootFolderString() => ""]);
     }
 
     /**

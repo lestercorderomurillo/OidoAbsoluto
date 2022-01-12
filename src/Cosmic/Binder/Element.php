@@ -155,7 +155,7 @@ class Element
 
                     $parameterCompiled = $this->parameters[$parameter->getName()];
 
-                    if (Text::startsWith($parameterCompiled, "@_ARRAY_")) {
+                    if (Text::startsWith($parameterCompiled, "@ARR")) {
                         $parameterCompiled = Transport::stringToArray($parameterCompiled);
                     }
 

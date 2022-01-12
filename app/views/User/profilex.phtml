@@ -1,0 +1,58 @@
+
+<LoggedIn role="User">
+
+    <Foreach from="{tests}" using="i">
+        <tr id="row-{parent.i.try}" (click)="window.location = '{host}overview?token={parent.i.token}'" class="Hover">
+            <td>
+                {parent.i.try}
+            </td>
+            <td>
+                {parent.i.uploadDate}
+            </td>
+            <td>
+                {parent.i.displayMode}
+            </td>
+            <td>
+                {parent.i.totalTime}
+            </td>
+        </tr>
+    </Foreach>
+
+</LoggedIn>
+
+<LoggedIn role="Admin">
+
+    <Foreach from="{users}" using="i">
+        <tr id="row-{parent.i.try}" (click)="window.location = '{host}profile?lookAt=1'" class="Hover">
+            <td>
+                {parent.i.firstName} {parent.i.lastName}
+            </td>
+            <td>
+                {parent.i.email}
+            </td>
+            <td>
+                <If value="{parent.i.role}" equals="0">
+                    Administrador
+                </If>
+                <If value="{parent.i.role}" equals="1">
+                    Usuario
+                </If>
+            </td>
+            <td>
+                {parent.i.birthDay}
+            </td>
+            <td>
+                {parent.i.phone}
+            </td>
+            <td>
+                {parent.i.gender}
+            </td>
+            <td>
+                {parent.i.country}
+            </td>
+        </tr>
+    </Foreach>
+
+</LoggedIn>
+                    
+                
