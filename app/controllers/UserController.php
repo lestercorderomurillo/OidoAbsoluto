@@ -22,9 +22,12 @@ use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
 use Cosmic\Utilities\Transport;
 use Shuchkin\SimpleXLSXGen\SimpleXLSXGen;
+use ZipArchive;
 
 class UserController extends Controller
 {
+    const usersPerPage = 8;
+
     private Database $db;
 
     function __construct(SQLDatabase $db)
@@ -32,31 +35,50 @@ class UserController extends Controller
         $this->db = $db;
     }
 
-    function createTokenFromPianoTest($pianoTest): string
+    function encodeTokenFromPianoTest($pianoTest): string
     {
-        return Transport::encodeBase64SafeURL($pianoTest->id . "-x-" . $pianoTest->try);
+        return Transport::encodeBase64SafeURL(Authorization::getCurrentSecretKey() . $pianoTest->id . Authorization::getCurrentSecretKey() . $pianoTest->try);
     }
+
+    function getUserFromPianoToken(string $token): string
+    {
+        $decoded = Transport::decodeBase64SafeURL($token);
+        $parts = explode(Authorization::getCurrentSecretKey(), $decoded);
+
+        if (!isset($parts[1]) || !isset($parts[2])) {
+            return null;
+        }
+
+        $user = $this->db->find(User::class, ["id" => $parts[1]]);
+
+        if ($user != null) {
+            return $user->token;
+        }
+
+        return __EMPTY__;
+    }
+
 
     function getDetailedTestFromToken(string $token = __EMPTY__)
     {
         if ($token != __EMPTY__) {
 
             $decoded = Transport::decodeBase64SafeURL($token);
-            $parts = explode("-x-", $decoded);
+            $parts = explode(Authorization::getCurrentSecretKey(), $decoded);
 
-            if (!isset($parts[0]) || !isset($parts[1])) {
+            if (!isset($parts[1]) || !isset($parts[2])) {
                 return null;
             }
 
-            $pianoTest = $this->db->find(PianoTest::class, ["id" => $parts[0], "try" => $parts[1]]);
+            $pianoTest = $this->db->find(PianoTest::class, ["id" => $parts[1], "try" => $parts[2]]);
 
             if ($pianoTest !== null) {
 
                 $model = new DetailedTestViewModel();
                 $model->token = $token;
 
-                $userInfo = $this->db->find(UserInfo::class, ["id" => $parts[0]]);
-                $notes = $this->db->findAll(PianoNote::class, ["id" => $parts[0], "try" => $parts[1]]);
+                $userInfo = $this->db->find(UserInfo::class, ["id" => $parts[1]]);
+                $notes = $this->db->findAll(PianoNote::class, ["id" => $parts[1], "try" => $parts[2]]);
 
                 if ($notes !== []) {
 
@@ -114,10 +136,6 @@ class UserController extends Controller
 
     function survey()
     {
-        if (Authorization::getCurrentRole() == Authorization::ADMIN) {
-            return $this->redirect("profile");
-        }
-
         if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
             return $this->redirect("profile");
         }
@@ -142,10 +160,6 @@ class UserController extends Controller
 
     function surveySubmit(Request $request)
     {
-        if (Authorization::getCurrentRole() == Authorization::ADMIN) {
-            return $this->redirect("profile");
-        }
-
         $formData = $request->getFormData();
 
         if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
@@ -160,7 +174,7 @@ class UserController extends Controller
 
             foreach ($formData as $key => $value) {
 
-                if (Text::startsWith($key, "q-")) {
+                if (str_starts_with($key, "q-")) {
 
                     $question = (int)str_replace("q-", __EMPTY__, $key);
                     $answer = new Answer();
@@ -237,17 +251,25 @@ class UserController extends Controller
         $this->db->save($pianoNotes);
         $this->db->commit();
 
-        return $this->redirect("overview?token=" . $this->createTokenFromPianoTest($pianoTest));
+        return $this->redirect("overview?token=" . $this->encodeTokenFromPianoTest($pianoTest));
     }
 
-    function overview(string $token = __EMPTY__)
+    function overview(string $testToken = __EMPTY__)
     {
-        if ($token == __EMPTY__) {
+        if ($testToken == __EMPTY__) {
             $this->error("El token especificado no es valido en este contexto.");
             return $this->redirect("index");
         }
 
-        $detailedModel = $this->getDetailedTestFromToken($token);
+        $isAdmin = (Authorization::getCurrentRole() === Authorization::ADMIN);
+        $isOwner = ($this->db->find(User::class, ["token" => $this->getUserFromPianoToken($testToken)]) != null);
+
+        if (!$isAdmin && !$isOwner) {
+            $this->error("Solo administradores o el dueño pueden visualizar esta prueba.");
+            return $this->redirect("index");
+        }
+
+        $detailedModel = $this->getDetailedTestFromToken($testToken);
 
         if ($detailedModel === null) {
             $this->error("El token proporcionado no corresponde a ninguna prueba en el sistema.");
@@ -257,7 +279,63 @@ class UserController extends Controller
         return $this->view($detailedModel);
     }
 
-    function profile()
+    function roleChange(int $to, string $userToken)
+    {
+        $user = $this->db->find(User::class, ["token" => $userToken]);
+        $user->role = $to;
+        
+        if($user->role == Authorization::ADMIN || $user->role == Authorization::USER){
+            $this->db->save($user);
+            $this->db->commit();
+            $this->success("Se ha cambiado el rol del usuario exitosamente.");
+            return $this->redirect("lookup?userToken=$userToken");
+        }
+
+        $this->error("No se puede cambiar el rol de este usuario.");
+        return $this->redirect("lookup?userToken=$userToken");
+    }
+
+    function lookup(string $userToken)
+    {
+        $user = $this->db->find(User::class, ["token" => $userToken]);
+
+        if (!$user == null) {
+
+            $userRole = $user->role;
+            $userInfo = $this->db->find(UserInfo::class, ["id" => $user->id]);
+            $userInfo->gender = ($userInfo->gender === "M") ? "Masculino" : "Femenino";
+            $tests = $this->db->findAll(PianoTest::class, ["id" => $user->id]);
+
+            $testViewModels = [];
+
+            foreach ($tests as $test) {
+                $testViewModel = new PianoTestViewModel();
+                $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+                $testViewModel->token = $this->encodeTokenFromPianoTest($test);
+
+                $testViewModel->setValues($test->getValues());
+                $testViewModels[] = $testViewModel;
+            }
+
+            return $this->view(
+                [
+                    "adminRoleId" => Authorization::ADMIN,
+                    "userRoleId" => Authorization::USER,
+                    "userToken" => $userToken,
+                    "userRole" => $userRole,
+                    "host" => __HOST__,
+                    "userInfo" => $userInfo,
+                    "tests" => $testViewModels,
+                    "noTests" => (count($testViewModels) == 0) ? "true" : "false",
+                    "disableSurvey" => (!($this->db->exists(Answer::class, ["id" => $userInfo->id]))) ? "true" : "false"
+                ]
+            );
+        }
+
+        return $this->redirect();
+    }
+
+    function profile(int $page = 0)
     {
         if (Authorization::getCurrentRole() == Authorization::USER) {
 
@@ -273,7 +351,7 @@ class UserController extends Controller
             foreach ($tests as $test) {
                 $testViewModel = new PianoTestViewModel();
                 $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
-                $testViewModel->token = $this->createTokenFromPianoTest($test);
+                $testViewModel->token = $this->encodeTokenFromPianoTest($test);
 
                 $testViewModel->setValues($test->getValues());
                 $testViewModels[] = $testViewModel;
@@ -283,29 +361,44 @@ class UserController extends Controller
                 [
                     "host" => __HOST__,
                     "username" =>  $userInfo->firstName . " " . $userInfo->lastName,
-                    "tests" => $testViewModels
+                    "tests" => $testViewModels,
+                    "noTests" => (count($testViewModels) == 0) ? "true" : "false",
                 ]
             );
-
         } else if (Authorization::getCurrentRole() == Authorization::ADMIN) {
 
             $adminInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
 
-            $users = $this->db->findAll(User::class, [], "WHERE NOT id='$adminInfo->id'");
-            $usersInfo = $this->db->findAll(UserInfo::class, [], "WHERE NOT id='$adminInfo->id'");
+            $limit = self::usersPerPage + 1;
+            $offset = $page * self::usersPerPage;
+
+            $users = $this->db->findAll(User::class, [], "WHERE NOT id='$adminInfo->id' LIMIT $limit OFFSET $offset");
+            $usersInfo = $this->db->findAll(UserInfo::class, [], "WHERE NOT id='$adminInfo->id' LIMIT $limit OFFSET $offset");
+
+            $isLastPage = (count($users) <= self::usersPerPage) ? "true" : "false";
+
+            $users = array_slice($users, 0, self::usersPerPage);
+            $usersInfo = array_slice($usersInfo, 0, self::usersPerPage);
 
             $usersCount = count($users);
+
             $usersSummary = [];
 
-            for($count = 0; $count < $usersCount; $count++){
+            for ($count = 0; $count < $usersCount; $count++) {
+
                 $userSummary = new UserSummaryViewModel();
                 $userSummary->setValues($users[$count]->getValues());
                 $userSummary->setValues($usersInfo[$count]->getValues());
+                $pianoTests = $this->db->findAll(PianoTest::class, ["id" => $users[$count]->id]);
+                $userSummary->tries = count($pianoTests);
                 $usersSummary[] = $userSummary;
             }
 
             return $this->view(
                 [
+                    "page" => $page,
+                    "isFirstPage" => ($page == 0) ? "true" : "false",
+                    "isLastPage" => $isLastPage,
                     "host" => __HOST__,
                     "username" =>  $adminInfo->firstName . " " . $adminInfo->lastName,
                     "users" => $usersSummary
@@ -314,9 +407,82 @@ class UserController extends Controller
         }
     }
 
-    function exportTest(string $token)
+    function exportUserTests(string $userToken)
     {
-        $test = $this->getDetailedTestFromToken($token);
+        $user = $this->db->find(User::class, ["token" => $userToken]);
+
+        if($user != null){
+
+            $tests = $this->db->findAll(PianoTest::class, ["id" => $user->id]);
+
+            if ($tests != []){
+
+                $xlsx = [];
+
+                $zipName = "Pruebas.zip";
+                $zip = new ZipArchive();
+                $zip->open($zipName, ZipArchive::CREATE);
+    
+                $counter = 0;
+    
+                foreach($tests as $test){
+    
+                    $testToken = $this->encodeTokenFromPianoTest($test);
+                    $xlsx[] = $this->exportTest($testToken, true);
+
+                    $zip->addFromString('Prueba-' . $counter . '.xlsx', $xlsx[$counter++]);
+    
+                }
+    
+                $zip->close();
+                $this->download($zipName, "application/zip", __EMPTY__ , true);
+
+            }
+            
+        }
+        
+        $this->error("Algo ha salido mal, contacte al administrator.");
+        return $this->redirect();
+        
+    }
+
+    function exportSurvey(string $userToken)
+    {
+        $user = $this->db->find(User::class, ["token" => $userToken]);
+
+        if ($user == null) {
+            $this->error("El token de usuario proporcionado es incorrecto.");
+            $this->redirect();
+        }
+
+        $userInfo = $this->db->find(UserInfo::class, ["id" => $user->id]);
+        $surveyBook = $this->generateSurveyBook($user->id);
+
+        if ($surveyBook == null || $userInfo == null) {
+            $this->error("Este usuario no ha completado el cuestionario.");
+            $this->redirect();
+        }
+
+        $books = [
+            ["*", "Nombre completo: " . $userInfo->firstName . " " . $userInfo->lastName],
+            [],
+        ];
+
+        $xlsx = SimpleXLSXGen::fromArray(Collection::mergeList($books, $surveyBook));
+        $this->download("Cuestionario.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $xlsx);
+    }
+
+    function exportTest(string $testToken, bool $returnExcel = false)
+    {
+        $isAdmin = (Authorization::getCurrentRole() === Authorization::ADMIN);
+        $isOwner = ($this->db->find(User::class, ["token" => $this->getUserFromPianoToken($testToken)]) != null);
+
+        if (!$isAdmin && !$isOwner) {
+            $this->error("Solo administradores o el dueño pueden visualizar esta prueba.");
+            return $this->redirect("index");
+        }
+
+        $test = $this->getDetailedTestFromToken($testToken);
 
         if ($test != null) {
 
@@ -347,27 +513,49 @@ class UserController extends Controller
             }
 
             $books[] = [];
-            $books[] = ['#', 'Pregunta', 'Respuesta'];
 
-            $questions = Collection::from(new File("app/Views/User/questions.json"));
-            $answers = $this->db->findAll(Answer::class, ["id" => $test->id]);
+            $surveyBook = $this->generateSurveyBook($test->id);
 
-            $questionsCount = count($questions);
-
-            for ($count = 0; $count < $questionsCount; $count++) {
-                $parsedAnswer = "Sin respuesta / No aplica";
-
-                foreach ($answers as $answer) {
-                    if ($answer->question == ($count + 1)) {
-                        $parsedAnswer = $answer->value;
-                    }
-                }
-
-                $books[] = [($count + 1), $questions[$count]["subject"], $parsedAnswer];
+            if ($surveyBook != null) {
+                $books = Collection::mergeList($books, $surveyBook);
             }
 
             $xlsx = SimpleXLSXGen::fromArray($books);
-            $this->download("Notes_$token.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $xlsx);
+
+            if($returnExcel){
+                return $xlsx;
+            }
+
+            $this->download("Prueba.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $xlsx);
         }
+    }
+
+    function generateSurveyBook(string $id)
+    {
+        $answers = $this->db->findAll(Answer::class, ["id" => $id]);
+
+        if ($answers == []) {
+            return null;
+        }
+
+        $books = [];
+        $books[] = ['#', 'Pregunta', 'Respuesta'];
+
+        $questions = Collection::from(new File("app/Views/User/questions.json"));
+        $questionsCount = count($questions);
+
+        for ($count = 0; $count < $questionsCount; $count++) {
+            $parsedAnswer = "Sin respuesta / No aplica";
+
+            foreach ($answers as $answer) {
+                if ($answer->question == ($count + 1)) {
+                    $parsedAnswer = $answer->value;
+                }
+            }
+
+            $books[] = [($count + 1), $questions[$count]["subject"], $parsedAnswer];
+        }
+
+        return $books;
     }
 }

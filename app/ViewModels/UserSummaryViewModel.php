@@ -6,6 +6,7 @@ use Cosmic\ORM\Bootstrap\Model;
 
 class UserSummaryViewModel extends Model
 {
+    public string $token;
     public string $email;
     public string $role;
     public string $firstName;
@@ -14,4 +15,5 @@ class UserSummaryViewModel extends Model
     public string $birthDay;
     public string $phone;
     public string $gender;
+    public int $tries;
 }

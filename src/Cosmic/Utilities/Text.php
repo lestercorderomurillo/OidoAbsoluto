@@ -131,37 +131,4 @@ class Text
         preg_match_all('/[A-Z][a-z]+/', $value, $matches);
         return strtolower(implode('-', $matches[0]));
     }
-
-    /**
-     * Checks if the given string starts with another one.
-     * The search will start at the offset position.
-     * 
-     * @param string $text The input string.
-     * @param string $check The string to search.
-     * @param int $offset The initial offset of the search.
-     * 
-     * @return bool True if it does, false otherwise.
-     */
-    public static function startsWith(string $text, string $check, int $offset = 0): bool
-    {
-        $length = strlen($check);
-        return substr($text, $offset, $length) === $check;
-    }
-
-    /**
-     * Checks if the given string ends with another one.
-     * 
-     * @param string $text The input string.
-     * @param string $check The string to search.
-     * 
-     * @return bool True if it does, false otherwise.
-     */
-    public static function endsWith(string $text, string $check): bool
-    {
-        $length = strlen($check);
-        if (!$length) {
-            return true;
-        }
-        return substr($text, -$length) === $check;
-    }
 }

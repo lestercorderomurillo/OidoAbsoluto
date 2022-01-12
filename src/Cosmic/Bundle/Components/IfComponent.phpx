@@ -33,13 +33,13 @@ class IfComponent extends Component
         }
 
         if ($startsWith != __EMPTY__) {
-            if (!Text::startsWith($value, $startsWith)) {
+            if (!str_starts_with($value, $startsWith)) {
                 $this->allowed = false;
             }
         }
 
         if ($endsWith != __EMPTY__) {
-            if (!Text::startsWith($value, $endsWith)) {
+            if (!str_starts_with($value, $endsWith)) {
                 $this->allowed = false;
             }
         }

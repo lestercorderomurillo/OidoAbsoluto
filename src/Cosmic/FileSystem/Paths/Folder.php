@@ -20,7 +20,7 @@ class Folder extends BasePath
     public function __construct(string $folder)
     {
         parent::__construct();
-        if (!Text::endsWith($folder, "/") && !Text::endsWith($folder, "\\")) {
+        if (!str_ends_with($folder, "/") && !str_ends_with($folder, "\\")) {
             throw new IOException("Folder path must end with a slash");
         }
         

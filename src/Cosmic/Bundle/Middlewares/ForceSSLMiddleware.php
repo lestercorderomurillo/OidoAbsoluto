@@ -10,7 +10,7 @@ use Cosmic\HTTP\Server\Response;
  * This middleware will ensure that if the HTTPS protocol is enabled, all incoming users requests will be
  * automatically redirected if they don't comply with established configuration policy.
  */
-class ForceSSL extends Middleware
+class ForceSSLMiddleware extends Middleware
 {
     public function handle(Request $request): Request
     {

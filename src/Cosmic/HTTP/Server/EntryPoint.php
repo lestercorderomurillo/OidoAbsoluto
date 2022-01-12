@@ -194,11 +194,25 @@ class EntryPoint extends Controller
                         $outputParameters[] = $formData[$parameter->getName()];
     
                     } else {
+
+                        try{
+                            $default = $parameter->getDefaultValue();
+                        }catch(\Exception $e){
+
+                            switch($typeName){
+                                case 'bool': $default = false; break;
+                                case 'int': $default = 0; break;
+                                case 'array': $default = []; break;
+                                case 'string': $default = __EMPTY__; break;
+                                default: $default = null; break;
+                            }
+                        }
                         
                         switch($typeName){
-                            case 'value': $value = 0; break;
-                            case 'array': $value = []; break;
-                            case 'string': $value = __EMPTY__; break;
+                            case 'bool': $value = $default; break;
+                            case 'int': $value = $default; break;
+                            case 'array': $value = $default; break;
+                            case 'string': $value = $default; break;
                             default: $value = null; break;
                         }
 
@@ -257,8 +271,11 @@ class EntryPoint extends Controller
         foreach ($this->middlewares as $middleware) {
 
             if ($request != null) {
-                $middlewareInstance = app()->create($middleware);
-                $request = $middlewareInstance->handle($request);
+
+                if (!$request instanceof Response){
+                    $middlewareInstance = app()->create($middleware);
+                    $request = $middlewareInstance->handle($request);
+                }
             }
         }
 
@@ -310,6 +327,7 @@ class EntryPoint extends Controller
             } else {
 
                 $request->send();
+                
             }
         }
 

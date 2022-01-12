@@ -1,0 +1,122 @@
+<View title="Perfil de Usuario">
+    <ServiceBanner>
+    <Spacing>
+    <Container>
+        <Row>
+            <Column smallSize="12" mediumSize="12" size="9" xlSize="8">
+                <Card>
+                    <IconifiedTitle source="lookup.png">
+                        Visualizando el perfil de {userInfo.firstName} {userInfo.lastName}
+                    </IconifiedTitle>
+                    <PersistentMessage>
+                    <Label>
+                        A continuación se listan las acciones que puede realizar su rol en este perfil ajeno.
+                    </Label>
+                    <Spacing>
+                    <RedirectButton route="profile">
+                        <i class="fa fa-arrow-left fa-lg pr-2" aria-hidden="true"></i>
+                        Regresar
+                    </RedirectButton>
+                    <RedirectButton route="lookup/exportUserTests?userToken={userToken}" disabled="{noTests}">
+                        <i class="fa fa-file-archive-o fa-lg pr-2" aria-hidden="true"></i>
+                        Exportar todas las pruebas
+                    </RedirectButton>
+                    <RedirectButton accent="Success" route="lookup/exportSurvey?userToken={userToken}" disabled="{disableSurvey}">
+                        <i class="fa fa-list fa-lg pr-2" aria-hidden="true"></i>
+                        Exportar el cuestionario en Excel
+                    </RedirectButton>
+                    <If value="{userRole}" notEquals="{adminRoleId}">
+                        <RedirectButton accent="Info" route="roleChange?to={adminRoleId}&userToken={userToken}">
+                            <i class="fa fa-user fa-lg pr-2" aria-hidden="true"></i>
+                            Convertir en Administrator
+                        </RedirectButton>
+                    </If>
+                    <If value="{userRole}" notEquals="{userRoleId}">
+                        <RedirectButton accent="Info" route="roleChange?to={userRoleId}&userToken={userToken}">
+                            <i class="fa fa-user fa-lg pr-2" aria-hidden="true"></i>
+                            Convertir en Usuario Regular
+                        </RedirectButton>
+                    </If>
+                    <Spacing>
+                    <Subtitle class="font-weight-bold">
+                        Información de identificación
+                    </Subtitle>
+                    <Card padding="3">
+                        <div>
+                            <strong>
+                                Fecha de nacimiento:
+                            </strong> 
+                            {userInfo.birthDay}
+                        </div>
+                        <div>
+                            <strong>
+                                País:
+                            </strong>
+                            {userInfo.country}
+                        </div>
+                        <div>
+                            <strong>
+                                Teléfono:
+                            </strong> 
+                            {userInfo.phone}
+                        </div>
+                        <div>
+                            <strong>
+                                Género:
+                            </strong> 
+                            {userInfo.gender}
+                        </div>
+                    </Card>
+                    <Spacing>
+                    <Title>
+                        Historial de pruebas realizadas
+                    </Title>
+                    <If value="{noTests}" equals="true">
+                        Este usuario no ha realizado ninguna prueba hasta el momento.
+                    </If>
+                    <If value="{noTests}" equals="false">
+                        <Label>
+                        Esta sección muestra un resumen breve de cada una de las pruebas que este usuario ha realizado.
+                        <Spacing>
+                        Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular.
+                        </Label>
+                        <Spacing>
+                            <Row>
+                                <Column smallSize="12" mediumSize="12" size="12" xlSize="12" padding="1">
+                                    <Card padding="2">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <th>Intento</th>
+                                                    <th>Fecha de subida</th>
+                                                    <th>Modo de visualización</th>
+                                                    <th>Tiempo total transcurido</th>
+                                                </tr>
+                                                <Foreach from="{tests}" using="i">
+                                                    <tr id="row-{parent.i.try}" (click)="window.location = '{host}overview?testToken={parent.i.token}'" class="Hover">
+                                                        <td>
+                                                            {parent.i.try}
+                                                        </td>
+                                                        <td>
+                                                            {parent.i.uploadDate}
+                                                        </td>
+                                                        <td>
+                                                            {parent.i.displayMode}
+                                                        </td>
+                                                        <td>
+                                                            {parent.i.totalTime}
+                                                        </td>
+                                                    </tr>
+                                                </Foreach>
+                                            </table>
+                                        </div>
+                                    </Card>
+                                </Column>
+                            </Row>
+                        <Spacing>
+                    </If>
+                </Card>
+            </Column>
+        </Row>
+    </Container>
+</View>

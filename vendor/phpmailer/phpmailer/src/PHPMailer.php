@@ -318,7 +318,7 @@ class PHPMailer
     public $SMTPAutoTLS = true;
 
     /**
-     * Whether to use SMTP authentication.
+     * Whether to use SMTP AuthenticationMiddleware.
      * Uses the Username and Password properties.
      *
      * @see PHPMailer::$Username

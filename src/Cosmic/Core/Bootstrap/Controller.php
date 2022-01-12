@@ -86,6 +86,26 @@ abstract class Controller
 
         foreach ($viewData as $key => $value) {
 
+            if ($value instanceof Model) {
+                
+                $value = $value->getValues();
+                
+                if (Collection::isList($value)) {
+
+                    $viewData[$key] = Transport::arrayToString($value);
+                    
+                } else {
+
+                    $tokens = Collection::tokenize($key, $value);
+
+                    foreach ($tokens as $_key => $_value) {
+                        $viewData[$_key] = $_value;
+                    }
+
+                    $viewData[$key] = Transport::arrayToString($tokens);
+                }
+            }
+
             if ($value instanceof JSON) {
                 $viewData[$key] = $value->toString();
             }
@@ -102,11 +122,13 @@ abstract class Controller
                     }
 
                     $viewData[$key] = Transport::arrayToString($values);
+
                 } else {
 
                     if (Collection::isList($value)) {
 
                         $viewData[$key] = Transport::arrayToString($value);
+
                     } else {
 
                         $tokens = Collection::tokenize($key, $value);
@@ -136,11 +158,19 @@ abstract class Controller
      * 
      * @return void
      */
-    protected function download(string $fileName, string $contentType, string $content): void
+    protected function download(string $fileName, string $contentType, string $content, bool $buffered = false): void
     {
+
         header("Content-Type: $contentType");
         header('Content-Disposition: attachment; filename="' . urlencode($fileName) . '"');
-        file_put_contents('php://output', $content);
+        
+        if($buffered === true){
+            readfile($fileName);
+            unlink($fileName);
+        }else{
+            file_put_contents('php://output', $content);
+        }
+
         die();
     }
 

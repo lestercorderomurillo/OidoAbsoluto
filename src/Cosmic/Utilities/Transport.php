@@ -29,7 +29,7 @@ class Transport
      */
     public static function stringToArray(string $string): array
     {
-        if(Text::startsWith($string, "@ARR")){
+        if(str_starts_with($string, "@ARR")){
             $string = substr($string, strlen("@ARR"));
         }
         $decoded = json_decode(self::decodeBase64SafeURL($string), true);

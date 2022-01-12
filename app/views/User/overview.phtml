@@ -47,11 +47,13 @@
                                 </div>
                             </Column>
                             <Column size="6" mediumSize="12" smallSize="12" textPosition="center" padding="2" class="mt-4 pr-4 text-sm-center text-md-center text-xl-right">
-                                <RedirectButton route="profile">
-                                    Volver al menu principal
-                                </RedirectButton>
-                                <RedirectButton route="overview/export?token={token}" accent="Success">
-                                    Exportar en archivo de Excel
+                                <Button (click)="history.back();">
+                                    <i class="fa fa-arrow-left fa-lg pr-2" aria-hidden="true"></i>
+                                    Regresar a la vista anterior
+                                </Button>
+                                <RedirectButton route="overview/exportTest?testToken={token}" accent="Success">
+                                    <i class="fa fa-file-archive-o fa-lg pr-2" aria-hidden="true"></i>
+                                    Exportar prueba de Excel
                                 </RedirectButton>
                             </Column>
                         </Row>

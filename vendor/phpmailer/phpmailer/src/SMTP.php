@@ -474,7 +474,7 @@ class SMTP
     }
 
     /**
-     * Perform SMTP authentication.
+     * Perform SMTP AuthenticationMiddleware.
      * Must be run after hello().
      *
      * @see    hello()
@@ -482,7 +482,7 @@ class SMTP
      * @param string $username The user name
      * @param string $password The password
      * @param string $authtype The auth type (CRAM-MD5, PLAIN, LOGIN, XOAUTH2)
-     * @param OAuth  $OAuth    An optional OAuth instance for XOAUTH2 authentication
+     * @param OAuth  $OAuth    An optional OAuth instance for XOAUTH2 AuthenticationMiddleware
      *
      * @return bool True if successfully authenticated
      */
@@ -493,15 +493,15 @@ class SMTP
         $OAuth = null
     ) {
         if (!$this->server_caps) {
-            $this->setError('Authentication is not allowed before HELO/EHLO');
+            $this->setError('AuthenticationMiddleware is not allowed before HELO/EHLO');
 
             return false;
         }
 
         if (array_key_exists('EHLO', $this->server_caps)) {
-            //SMTP extensions are available; try to find a proper authentication method
+            //SMTP extensions are available; try to find a proper AuthenticationMiddleware method
             if (!array_key_exists('AUTH', $this->server_caps)) {
-                $this->setError('Authentication is not allowed at this stage');
+                $this->setError('AuthenticationMiddleware is not allowed at this stage');
                 //'at this stage' means that auth may be allowed after the stage changes
                 //e.g. after STARTTLS
 
@@ -530,7 +530,7 @@ class SMTP
                     }
                 }
                 if (empty($authtype)) {
-                    $this->setError('No supported authentication methods found');
+                    $this->setError('No supported AuthenticationMiddleware methods found');
 
                     return false;
                 }
@@ -538,7 +538,7 @@ class SMTP
             }
 
             if (!in_array($authtype, $this->server_caps['AUTH'], true)) {
-                $this->setError("The requested authentication method \"$authtype\" is not supported by the server");
+                $this->setError("The requested AuthenticationMiddleware method \"$authtype\" is not supported by the server");
 
                 return false;
             }
@@ -547,7 +547,7 @@ class SMTP
         }
         switch ($authtype) {
             case 'PLAIN':
-                //Start authentication
+                //Start AuthenticationMiddleware
                 if (!$this->sendCommand('AUTH', 'AUTH PLAIN', 334)) {
                     return false;
                 }
@@ -565,7 +565,7 @@ class SMTP
                 }
                 break;
             case 'LOGIN':
-                //Start authentication
+                //Start AuthenticationMiddleware
                 if (!$this->sendCommand('AUTH', 'AUTH LOGIN', 334)) {
                     return false;
                 }
@@ -577,7 +577,7 @@ class SMTP
                 }
                 break;
             case 'CRAM-MD5':
-                //Start authentication
+                //Start AuthenticationMiddleware
                 if (!$this->sendCommand('AUTH CRAM-MD5', 'AUTH CRAM-MD5', 334)) {
                     return false;
                 }
@@ -596,13 +596,13 @@ class SMTP
                 }
                 $oauth = $OAuth->getOauth64();
 
-                //Start authentication
+                //Start AuthenticationMiddleware
                 if (!$this->sendCommand('AUTH', 'AUTH XOAUTH2 ' . $oauth, 235)) {
                     return false;
                 }
                 break;
             default:
-                $this->setError("Authentication method \"$authtype\" is not supported");
+                $this->setError("AuthenticationMiddleware method \"$authtype\" is not supported");
 
                 return false;
         }

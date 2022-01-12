@@ -8,7 +8,7 @@ use Cosmic\HTTP\Request;
 use Cosmic\FileSystem\Exceptions\IOException;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\Bundle\Middlewares\ForceSSL;
+use Cosmic\Bundle\Middlewares\ForceSSLMiddleware;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
 
@@ -54,7 +54,7 @@ class Router extends Controller
         $this->controllerClassName = __EMPTY__;
 
         if (configuration("application.https")) {
-            $this->middlewares[] = ForceSSL::class;
+            $this->middlewares[] = ForceSSLMiddleware::class;
         }
     }
 

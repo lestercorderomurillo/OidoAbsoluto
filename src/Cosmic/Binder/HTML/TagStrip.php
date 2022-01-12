@@ -56,7 +56,7 @@ class TagStrip
                 $attributesString .= " $value";
             } else {
 
-                if (Text::startsWith($key, "(") && Text::endsWith($key, ")")) {
+                if (str_starts_with($key, "(") && str_ends_with($key, ")")) {
 
                     $event = substr($key, 1, -1);
 
@@ -87,7 +87,7 @@ class TagStrip
 
                             $id = '"#' . $id . '"';
 
-                            if (!Text::endsWith($value, ";")) {
+                            if (!str_ends_with($value, ";")) {
                                 $value .= ";";
                             }
                         }

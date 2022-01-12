@@ -59,7 +59,7 @@ class MySQLDriver extends Driver
 
             $result->setLastestInsertedId($this->pdo->lastInsertId());
 
-            if (Text::startsWith($preparedQuery, "SELECT")) {
+            if (str_starts_with($preparedQuery, "SELECT")) {
 
                 $data = $handler->fetchAll(\PDO::FETCH_ASSOC);
 

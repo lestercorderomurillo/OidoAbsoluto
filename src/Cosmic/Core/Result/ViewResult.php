@@ -49,6 +49,7 @@ class ViewResult implements ResultGeneratorInterface
         $bundleScripts[] = new File("src/Cosmic/Bundle/Packages/observable-slim-0.1.5/observable-slim.min.js");
         $bundleScripts[] = new File("src/Cosmic/Bundle/Packages/jquery-validate-1.11.1/jquery.validate.min.js");
         $bundleScripts[] = new File("src/Cosmic/Bundle/Packages/canvas-js/canvasjs.min.js");
+        $bundleScripts[] = new File("src/Cosmic/Bundle/Packages/font-awesome-4.7.0/fa.js");
 
         // 2. Load all runtime scripts
         $bundleScripts = FileSystem::toWebPaths($bundleScripts);

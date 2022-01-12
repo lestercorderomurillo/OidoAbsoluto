@@ -5,7 +5,7 @@ namespace Cosmic\Bundle\Components;
 use Cosmic\Binder\Authorization;
 use Cosmic\Binder\Component;
 
-class Guest extends Component
+class GuestMiddleware extends Component
 {
     public function render()
     {
@@ -19,4 +19,4 @@ class Guest extends Component
     }
 }
 
-publish(Guest::class);
+publish(GuestMiddleware::class);

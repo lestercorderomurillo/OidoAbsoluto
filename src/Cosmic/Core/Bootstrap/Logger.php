@@ -28,20 +28,20 @@ class Logger extends AbstractLogger
         $date = date("Y.m.d");
         $time = date("H:i:s");
 
-        $string = Pattern::substituteTokens($message, $context, "{", "}");
+        $message = vsprintf($message, $context);
         
         $file = new File("app/Logs/$level.$date.log");
 
         if ($level == LogLevel::ERROR || $level == LogLevel::EMERGENCY || $level == LogLevel::CRITICAL) {
             
             if (app()->hasErrorLoggingEnabled()) {
-                FileSystem::write($file, "$time >> $string");
+                FileSystem::write($file, "$time >> $message");
             }
 
         }
 
         if (app()->hasDevelopmentLoggingEnabled()) {
-            FileSystem::write($file, "$time >> $string");
+            FileSystem::write($file, "$time >> $message");
         }
     }
 }

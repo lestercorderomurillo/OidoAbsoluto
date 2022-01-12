@@ -27,7 +27,7 @@ class RedirectResult implements ResultGeneratorInterface
      */
     public function __construct(string $destinationURL)
     {
-        if(Text::startsWith($destinationURL, "/")){
+        if(str_starts_with($destinationURL, "/")){
             throw new \InvalidArgumentException("URL must not start with a slash.");
         }
         

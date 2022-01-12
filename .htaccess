@@ -6,6 +6,9 @@ RewriteRule .* - [L]
 RewriteCond %{REQUEST_URI}  /src/Cosmic/Binder.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
+RewriteCond %{REQUEST_URI}  /src/Cosmic/Bundle.+(gif|png|jpg|jpeg|mp3|js|css|map|woff|svg|ttf|eot)$
+RewriteRule .* - [L]
+
 RewriteCond %{REQUEST_URI}  /app/Views.+(js|css)$
 RewriteRule .* - [L]
 

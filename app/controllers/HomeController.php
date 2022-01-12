@@ -23,33 +23,35 @@ class HomeController extends Controller
         $this->db = $db;
     }
 
-    function login()
+    function index()
     {
         if (Authorization::isLogged()) {
 
-            return $this->automaticSurveyProfileRedirect();
+            if (Authorization::getCurrentRole() == Authorization::USER) {
+                if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
+                    return $this->redirect("survey");
+                }
+            }
+
+            return $this->redirect("profile");
         }
 
+        return $this->redirect("login");
+    }
+
+    function login()
+    {
         return $this->view();
     }
 
     function loginSubmit(string $email, string $password)
     {
-
-        if (Authorization::isLogged()) {
-
-            Authorization::logOut();
-            $this->error("Se ha detectado actividad sospechosa, por lo que deberá logearse de nuevo.");
-            return $this->redirect("login");
-            
+        if (!Authorization::tryLogIn($email, $password, User::class)) {
+            $this->error("El usuario o contraseña ingresada no son correctos.");
+            return $this->view("login");
         }
 
-        if (Authorization::tryLogIn($email, $password, User::class)) {
-            return $this->redirect("profile");
-        }
-
-        $this->error("El usuario o contraseña ingresada no son correctos.");
-        return $this->view("login");
+        return $this->redirect("profile");
     }
 
     function logout()
@@ -130,18 +132,6 @@ class HomeController extends Controller
         return ($result != null);
     }
 
-    function automaticSurveyProfileRedirect()
-    {
-
-        if (Authorization::getCurrentRole() == Authorization::USER){
-            if (!$this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
-                return $this->redirect("survey");
-            }
-        }
-
-        return $this->redirect("profile");
-    }
-
     function resetRequest()
     {
         return $this->view();
@@ -151,7 +141,7 @@ class HomeController extends Controller
     {
         $user = $this->db->find(User::class, ["email" => $email]);
 
-        if($user != null){
+        if ($user != null) {
 
             $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
 
@@ -163,7 +153,7 @@ class HomeController extends Controller
             $mail = new PHPMailer();
             $mail->IsSMTP();
             $mail->Mailer = "smtp";
-            $mail->SMTPDebug  = 1;  
+            $mail->SMTPDebug  = 1;
             $mail->SMTPAuth   = TRUE;
             $mail->SMTPSecure = "tls";
             $mail->Port       = 587;
@@ -180,9 +170,8 @@ class HomeController extends Controller
                 <span>Si no solicitó esto, solamente ignore este mensaje</span>
             HTML;
             $mail->CharSet = 'UTF-8';
-            $mail->MsgHTML($content); 
+            $mail->MsgHTML($content);
             $mail->Send();
-
         }
 
         $this->info("Si el correo electrónico que usted proporcionó existe en nuestro sistema, se le enviará un mensaje con instrucciones de recuperación.");
@@ -191,7 +180,6 @@ class HomeController extends Controller
 
     function resetPassword(string $token)
     {
-
         $user = $this->db->find(User::class, ["token" => $token]);
 
         if ($token == __EMPTY__ || $user == null) {
@@ -213,14 +201,12 @@ class HomeController extends Controller
 
             $this->error("No se puede cambiar la contraseña en este contexto.");
             return $this->redirect();
-
         }
 
         if ($password != $confirmPassword) {
 
             $this->error("Las contraseñas no coinciden.");
             return $this->redirect();
-
         }
 
         $user->salt = Cryptography::computeRandomKey(32);
@@ -229,7 +215,7 @@ class HomeController extends Controller
 
         $this->db->save($user);
         $this->db->commit($user);
-        
+
         $this->success("Se ha cambiado con éxito la contraseña. Intente acceder.");
 
         return $this->redirect();

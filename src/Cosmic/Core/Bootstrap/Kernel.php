@@ -204,3 +204,38 @@ if (!function_exists('getClassType')) {
         return null;
     }
 }
+
+if (!function_exists('str_starts_with')) {
+    /**
+     * Checks if the given string starts with another one.
+     * The search will start at the offset position.
+     * 
+     * @param string $text The input string.
+     * @param string $check The string to search.
+     * 
+     * @return bool True if it does, false otherwise.
+     */
+    function str_starts_with(string $text, string $check): bool
+    {
+        return substr($text, 0, strlen($check)) === $check;
+    }
+}
+
+if (!function_exists('str_ends_with')) {
+    /**
+     * Checks if the given string ends with another one.
+     * 
+     * @param string $text The input string.
+     * @param string $check The string to search.
+     * 
+     * @return bool True if it does, false otherwise.
+     */
+    function str_ends_with(string $text, string $check): bool
+    {
+        $length = strlen($check);
+        if (!$length) {
+            return true;
+        }
+        return substr($text, -$length) === $check;
+    }
+}

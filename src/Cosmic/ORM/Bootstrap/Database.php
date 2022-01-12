@@ -4,6 +4,7 @@ namespace Cosmic\ORM\Bootstrap;
 
 use Cosmic\ORM\Common\PreparedQuery;
 use Cosmic\ORM\Common\ConnectionString;
+use Cosmic\ORM\Common\QueryResult;
 
 /**
  * This class represents an abstract model-based database. 
@@ -106,15 +107,29 @@ abstract class Database
     }
 
     /**
+     * Perform a custom query and return the results.
+     * 
+     * @param string $query A query statement.
+     * @param array $data Context for the query.
+     * 
+     * @return QueryResult — The result data-set from the database.
+     */
+    protected function query(string $query, array $queryData = []): QueryResult
+    {
+        $this->addQueryToNextBatch($query, $queryData);
+        return $this->commit()[0];
+    }
+
+    /**
      * Append a new query to the commit queue.
      * 
      * @param string $query A query statement.
-     * @param array $queryData Context for this new query.
+     * @param array $data Context for the query.
      * 
      * @return void
      */
-    protected function addQueryToNextBatch(string $query, array $queryData = []): void
+    protected function addQueryToNextBatch(string $query, array $data = []): void
     {
-        $this->queryQueue[] = new PreparedQuery(trim($query), $queryData);
+        $this->queryQueue[] = new PreparedQuery(trim($query), $data);
     }
 }

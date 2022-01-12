@@ -69,12 +69,12 @@ class Request
     protected array $formData;
 
     /**
-     * @var string $username The authentication username.
+     * @var string $username The AuthenticationMiddleware username.
      */
     protected string $username;
 
     /**
-     * @var string $password The authentication password.
+     * @var string $password The AuthenticationMiddleware password.
      */
     protected string $password;
 
@@ -112,7 +112,7 @@ class Request
         404 => 'Not Found',
         405 => 'Method Not Allowed',
         406 => 'Not Acceptable',
-        407 => 'Proxy Authentication Required',
+        407 => 'Proxy AuthenticationMiddleware Required',
         408 => 'Request Timeout',
         409 => 'Conflict',
         410 => 'Gone',
@@ -144,7 +144,7 @@ class Request
         507 => 'Insufficient Storage',
         508 => 'Loop Detected',
         510 => 'Not Extended',
-        511 => 'Network Authentication Required',
+        511 => 'Network AuthenticationMiddleware Required',
     ];
     /**
      * Constructor.
@@ -170,7 +170,21 @@ class Request
 
         $request->protocol = isset($_SERVER["HTTPS"]) ? "https" : "http";
         $request->uri = $_SERVER["REQUEST_URI"];
+
+        /*if(str_ends_with($request->uri, "/")){
+            $request->uri = substr($request->uri, 0, -1);
+        }*/
+
         $request->action = explode("?", $request->uri, 2)[0];
+
+        if(str_ends_with($request->action, "/")){
+            $request->action = substr($request->action, 0, -1);
+        }
+
+        if($request->action == __EMPTY__){
+            $request->action = "/";
+        }
+
         $request->headers = array_change_key_case(getallheaders(), CASE_LOWER);
 
         $request->username = Text::sanitizeString(safe($_SERVER["PHP_AUTH_USER"], ""));
@@ -342,7 +356,7 @@ class Request
     }
 
     /**
-     * Return the username used for authentication in this request.
+     * Return the username used for AuthenticationMiddleware in this request.
      *  
      * @return string The username.
      */
@@ -352,7 +366,7 @@ class Request
     }
 
     /**
-     * Return the password used for authentication in this request.
+     * Return the password used for AuthenticationMiddleware in this request.
      *  
      * @return string The password.
      */

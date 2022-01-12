@@ -125,7 +125,7 @@ class DOM
         $files = [];
 
         foreach ($all as $key => $value) {
-            if (Text::startsWith($key, "Component@")) {
+            if (str_starts_with($key, "Component@")) {
                 $value = $value->get();
                 $files = Collection::mergeList($files, Component::getStyleFilesPath($value));
             }

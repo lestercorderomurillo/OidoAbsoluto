@@ -43,7 +43,7 @@ class Element
         $this->parameters = [];
 
         foreach ($parameters as $key => $value){
-            if (Text::startsWith($key, "(") && Text::endsWith($key, ")")){
+            if (str_starts_with($key, "(") && str_ends_with($key, ")")){
                 $this->events[$key] = $value;
             }else{
                 $this->parameters[$key] = $value;
@@ -155,7 +155,7 @@ class Element
 
                     $parameterCompiled = $this->parameters[$parameter->getName()];
 
-                    if (Text::startsWith($parameterCompiled, "@ARR")) {
+                    if (str_starts_with($parameterCompiled, "@ARR")) {
                         $parameterCompiled = Transport::stringToArray($parameterCompiled);
                     }
 

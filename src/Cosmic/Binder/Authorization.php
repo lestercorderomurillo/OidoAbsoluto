@@ -3,6 +3,7 @@
 namespace Cosmic\Binder;
 
 use Cosmic\ORM\Databases\SQL\SQLDatabase;
+use Cosmic\Utilities\Cryptography;
 
 /**
  * Manages the state of the current user.
@@ -56,6 +57,20 @@ class Authorization
     }
 
     /**
+     * Return the current secret key for this user.
+     * 
+     * @return string The secret key.
+     */
+    public static function getCurrentSecretKey(): string
+    {
+        if (self::isLogged()) {
+            return session()->get("secretKey");
+        }
+
+        return __EMPTY__;
+    }
+
+    /**
      * Check if the given username and password are valid for logging in.
      * The model schema MUST have salt and password fields.
      * 
@@ -81,32 +96,11 @@ class Authorization
                     session()->add("isLogged", true);
                     session()->add("loggedId", $userModel->getId());
                     session()->add("loggedRole", $userModel->role);
+                    session()->add("secretKey", Cryptography::computeRandomKey());
 
                     return true;
                 }
             }
-        }
-
-        return false;
-    }
-
-    /**
-     * LogIn the current active session using a role and an username.
-     * 
-     * @param int $username The user ID to log in.
-     * @param int $role The role to set the current active session.
-     * 
-     * @return bool True if successfully logged out, false otherwise.
-     */
-    public static function logIn(int $id, int $role): bool
-    {
-        if (!session()->has("isLogged")) {
-
-            session()->add("isLogged", true);
-            session()->add("loggedId", $id);
-            session()->add("loggedRole", $role);
-
-            return true;
         }
 
         return false;

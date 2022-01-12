@@ -57,7 +57,7 @@ abstract class Environment extends Injectable
             $this->urlScheme = "https";
         }
 
-        if (!Text::endsWith($this->configuration["application.url"], "/")) {
+        if (!str_ends_with($this->configuration["application.url"], "/")) {
             $this->configuration["application.url"] .= "/";
         }
     }
