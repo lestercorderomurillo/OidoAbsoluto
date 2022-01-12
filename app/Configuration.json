@@ -1,6 +1,6 @@
 {
     "application.https": true,
-    "application.production": false,
+    "application.production": true,
     "application.name": "Oido Absoluto",
     "application.url": "www.oidoabsoluto.dev.com",
     "application.contentFolder": "Content",

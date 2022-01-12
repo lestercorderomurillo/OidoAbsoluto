@@ -171,10 +171,6 @@ class Request
         $request->protocol = isset($_SERVER["HTTPS"]) ? "https" : "http";
         $request->uri = $_SERVER["REQUEST_URI"];
 
-        /*if(str_ends_with($request->uri, "/")){
-            $request->uri = substr($request->uri, 0, -1);
-        }*/
-
         $request->action = explode("?", $request->uri, 2)[0];
 
         if(str_ends_with($request->action, "/")){
@@ -197,7 +193,7 @@ class Request
 
             $input = file_get_contents('php://input');
             
-            if($input !== false){
+            if($input !== false && $input != __EMPTY__){
                 $request->formData = json_decode($input, true);
             }
 

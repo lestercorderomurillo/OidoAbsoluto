@@ -488,7 +488,7 @@ class Piano extends InlineComponent
 
             component.isDone = true;
 
-            extern.currentNoteIndex = 30;
+            extern.currentNoteIndex = 29;
             extern.buttonString = "$this->uploadingString";
             $("#$this->toggleButton").prop("disabled", true);
 
@@ -508,16 +508,13 @@ class Piano extends InlineComponent
                 parsedNotes[i].reactionTime = selectedNote.reactionTime;
             }
 
-            console.log(parsedNotes);
-
             $.ajax({
                 type: "post",
                 url: "$this->url" + "piano/submit",
                 data: JSON.stringify({ "totalTime" : extern.totalTime, "mode" : "$this->displayMode", "notes" : parsedNotes}),
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    // he expects a JSON with the response of the token id to redirect to result
-                    console.log(response);
+                    window.location.replace("$this->url");
                 },
             });
 

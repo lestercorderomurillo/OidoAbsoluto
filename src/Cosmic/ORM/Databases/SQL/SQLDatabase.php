@@ -108,7 +108,7 @@ class SQLDatabase extends Database
     /**
      * @inheritdoc
      */
-    public function save($models): void
+    public function save($models, bool $forceInsert = false): void
     {
         $models = Collection::normalize($models);
 
@@ -127,7 +127,7 @@ class SQLDatabase extends Database
                 $placeholders = $model->getAttributesPlaceholders();
             }
 
-            if ($shouldInsert) {
+            if ($shouldInsert || $forceInsert) {
                 $this->addQueryToNextBatch("INSERT INTO `$tableName` SET $placeholders", $values);
             } else {
                 $this->addQueryToNextBatch("UPDATE `$tableName` SET $placeholders WHERE id = :id", $values);

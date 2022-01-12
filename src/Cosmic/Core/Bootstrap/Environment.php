@@ -106,6 +106,12 @@ abstract class Environment extends Injectable
      */
     private function printException(\Throwable $exception): void
     {
+        if(app()->inProductionMode()){
+            die(<<<HTML
+                Ha ocurrido un error, contacte al desarrollador: lestercorderomurillo@gmail.com
+            HTML);
+        }
+
         $message = $exception->getMessage();
         $code = $exception->getCode();
         $file = $exception->getFile();

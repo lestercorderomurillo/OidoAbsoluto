@@ -247,7 +247,7 @@ class UserController extends Controller
             $pianoNotes[] = $pianoNote;
         }
 
-        $this->db->save($pianoTest);
+        $this->db->save($pianoTest, true);
         $this->db->save($pianoNotes);
         $this->db->commit();
 

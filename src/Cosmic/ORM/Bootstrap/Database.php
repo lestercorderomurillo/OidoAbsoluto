@@ -73,7 +73,7 @@ abstract class Database
      * 
      * @return void
      */
-    public abstract function save($models): void;
+    public abstract function save($models, bool $forceInsert = false): void;
 
     /**
      * Delete the entity model from the database. If the model is not found, nothing will happen.
