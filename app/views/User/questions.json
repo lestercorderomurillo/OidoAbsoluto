@@ -211,6 +211,7 @@
             "Correctamente menos de la mitad del tiempo",
             "Correctamente la mitad del tiempo",
             "Mayoría correctas, con algunos errores",
+            "Casi nunca acierto",
             "No fallo casi nunca"
         ]
     },
@@ -333,7 +334,8 @@
         "type": "singleChoice",
         "choices": [
             "Sí",
-            "No"
+            "No",
+            "No sé"
         ]
     },
     {

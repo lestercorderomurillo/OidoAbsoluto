@@ -17,7 +17,7 @@ use ScssPhp\ScssPhp\Exception\CompilerException;
 /**
  * Source Map Generator
  *
- * {@internal Derivative of oyejorge/less.php's lib/SourceMap/Generator.php, relicensed with permission. }}
+ * {@internal Derivative of oyejorge/less.php's lib/SourceMap/Generator.php, relicensed with permission. HTML
  *
  * @author Josh Schmidt <oyejorge@gmail.com>
  * @author Nicolas FRANÇOIS <nicolas.francois@frog-labs.com>

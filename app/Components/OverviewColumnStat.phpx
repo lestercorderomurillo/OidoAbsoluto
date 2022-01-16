@@ -15,7 +15,7 @@ class OverviewColumnStat extends InlineComponent
 
     public function render()
     {
-        return {{
+        return <<<HTML
             <Column textPosition="center" smallSize="4" mediumSize="2" size="2" class="pb-5">
                 <Subtitle>{title}</Subtitle>
                 <div>
@@ -23,7 +23,7 @@ class OverviewColumnStat extends InlineComponent
                     ([{matches}/{total}*100]%)
                 </div>
             </Column>
-        }};
+        HTML;
     }
 }
 

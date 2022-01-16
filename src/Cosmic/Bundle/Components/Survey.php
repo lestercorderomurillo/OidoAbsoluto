@@ -1,0 +1,78 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\InlineComponent;
+
+class Survey extends InlineComponent
+{
+    public function __construct(array $from, int $skip, int $take, array $exclude = [], string $minWidth = "10px", string $minHeight = "125px")
+    {
+        $this->from = $from;
+        $this->skip = $skip;
+        $this->take = $take;
+        $this->minWidth = $minWidth;
+        $this->minHeight = $minHeight;
+    }
+
+    public function scripts()
+    {
+        return <<<JS
+        function manageOptionalForm(affectedID, requiredID, requiredValue){
+            if(requiredID != "q-{parent.q.requiredID}"){
+                $("#" + requiredID).change(function(){
+                    var currentValue = "none";
+                    var type = $("#" + requiredID).prop("tagName");
+                    if (type == "DIV"){
+                        currentValue = $('[name="' + requiredID + '"]:checked').val();
+                    }else{
+                        currentValue = $("#" + requiredID).val();
+                    }
+                    if(currentValue == requiredValue){
+                        $("#" + affectedID).prop("disabled", false);
+                        $("#" + affectedID + "-c").show();
+                    }else {
+                        $("#" + affectedID).prop("disabled", true);
+                        $("#" + affectedID + "-c").hide();
+                    };
+                }).change(); 
+            }
+        }
+        JS;
+    }
+
+    public function render()
+    {
+        return <<<HTML
+            <Foreach using="q" from="{from}" skip="{skip}" take="{take}">
+                <Card id="q-{parent.q.id}-c" padding="3" minWidth="{minWidth}" minHeight="{minHeight}" class="pb-4">
+                    <div>{parent.q.subject}</div>
+                    <If value="{parent.q.type}" equals="text">
+                       <Textfield id="q-{parent.q.id}" (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                    </If>
+                    <If value="{parent.q.type}" equals="number">
+                        <Textfield id="q-{parent.q.id}" (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                    </If>
+                    <If value="{parent.q.type}" equals="singleChoice">
+                        <Select 
+                        id="q-{parent.q.id}" 
+                        from="{parent.q.choices}" 
+                        (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                    </If>
+                    <If value="{parent.q.type}" equals="multipleChoice">
+                        <br>
+                        <div id="q-{parent.q.id}">
+                            <Foreach using="c" from="{parent.q.choices}">
+                                <br>
+                                <Radio id="q-{parent.q.id}" option="{parent.c}" value="{parent.c}" 
+                                (load)="manageOptionalForm('q-{parent.q.id}', 'q-{parent.q.requiredID}', '{parent.q.requiredValue}')"> 
+                            </Foreach>
+                        </div>
+                    </If>
+                </Card>
+            </Foreach>
+        HTML;
+    }
+}
+
+publish(Survey::class);

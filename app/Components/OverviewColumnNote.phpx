@@ -15,7 +15,7 @@ class OverviewColumnNote extends InlineComponent
 
     public function render()
     {
-        return {{
+        return <<<HTML
             <Column smallSize="12" mediumSize="12" size="12" xlSize="4" padding="1">
                 <Card padding="0">
                     <table class="table">
@@ -44,7 +44,7 @@ class OverviewColumnNote extends InlineComponent
                     </table>
                 </Card>
             </Column>
-        }};
+        HTML;
     }
 }
 

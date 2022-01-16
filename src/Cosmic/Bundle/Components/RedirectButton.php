@@ -1,0 +1,43 @@
+<?php
+
+namespace Cosmic\Bundle\Components;
+
+use Cosmic\Binder\Component;
+
+class RedirectButton extends Component
+{
+    const Styles = [
+        "Button.scss"
+    ];
+    
+    public function __construct(string $route, string $accent = "Secondary", string $disabled = "false")
+    {
+        $this->accent = $accent;
+        $this->disabled = $disabled;
+        $this->fullRoute = __HOST__ . $route;
+    }
+
+    public function render()
+    {
+
+        if($this->disabled === "true"){
+
+            return <<<HTML
+                <button disabled class="Button small text-uppercase btn rounded-0 m-1 d-inline-block Accent{accent}" type="button">
+                    {body}
+                </button>
+            HTML;
+
+        }
+
+        return <<<HTML
+            <a id="{id}" href="{fullRoute}" class="d-inline-block">
+                <button class="Button small text-uppercase btn rounded-0 m-1 d-inline-block Accent{accent}" type="button">
+                    {body}
+                </button>
+            </a>
+        HTML;
+    }
+}
+
+publish(RedirectButton::class);

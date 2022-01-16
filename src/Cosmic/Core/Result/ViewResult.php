@@ -59,7 +59,7 @@ class ViewResult implements ResultGeneratorInterface
 
         // 3. CSS from packages
         $styles = FileSystem::URLFind(new Folder("src/Cosmic/Bundle/Packages/"), "css");
-        $styles[] = (new File(__CONTENT__ . "Output/Build.css"))->toWebPath()->toString();
+        $styles[] = (new File(__CONTENT__ . "Output/build.css"))->toWebPath()->toString();
 
         // 4. Headers
         $headers =

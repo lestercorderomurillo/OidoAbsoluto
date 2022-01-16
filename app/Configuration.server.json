@@ -1,0 +1,16 @@
+{
+    "application.https": true,
+    "application.production": false,
+    "application.name": "Oido Absoluto",
+    "application.url": "www.oidoabsoluto.net",
+    "application.contentFolder": "Content",
+    "application.routesFile": "Routes.php",
+    "database.sql.driver": "MySQL",
+    "database.sql.server": "localhost",
+    "database.sql.user": "u296367154_oa",
+    "database.sql.pass": "Hlj3sCJroVm",
+    "database.sql.db": "u296367154_oa",
+    "framework.errorLogging": true,
+    "framework.logging": true,
+    "framework.compileStylesheet": true
+}

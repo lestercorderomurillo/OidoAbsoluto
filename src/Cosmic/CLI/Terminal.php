@@ -80,7 +80,7 @@ class Terminal
         $controller_name = ucwords($controller_name . "Controller");
 
         $this->createTemplateFile(
-            dirname(__DIR__, 3) . "/app/Controllers/$controller_name",
+            dirname(__DIR__, 3) . "/App/Controllers/$controller_name",
             $vendor,
             "Controllers",
             $controller_name,

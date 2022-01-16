@@ -1462,7 +1462,7 @@ class Parser
     /**
      * Match string looking for either ending delim, escape, or string interpolation
      *
-     * {@internal This is a workaround for preg_match's 250K string match limit. }}
+     * {@internal This is a workaround for preg_match's 250K string match limit. HTML
      *
      * @param array  $m     Matches (passed by reference)
      * @param string $delim Delimiter
@@ -3584,7 +3584,7 @@ class Parser
      *
      * {@internal
      *     div[yes=no]#something.hello.world:nth-child(-2n+1)%placeholder
-     * }}
+     * HTML
      *
      * @param array          $out
      * @param string|bool $subSelector

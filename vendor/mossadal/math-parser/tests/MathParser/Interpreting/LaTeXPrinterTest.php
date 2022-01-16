@@ -67,7 +67,7 @@ class LaTeXPrinterTest extends TestCase
         $this->assertResult('xyz', 'xyz');
         $this->assertResult('xy/z', '\frac{xy}{z}');
         $this->assertResult('x/yz', '\frac{x}{y}z');
-        $this->assertResult('x/y/z', '\frac{\frac{x}{y}}{z}');
+        $this->assertResult('x/y/z', '\frac{\frac{x}{yHTML{z}');
     }
 
     public function testCanPrintExponentiation()

@@ -85,7 +85,7 @@ class TagStrip
 
                         } else {
 
-                            $id = '"#' . $id . '"';
+                            $id = '"#' . strtr($id, ["#" => "\\\#"]) . '"';
 
                             if (!str_ends_with($value, ";")) {
                                 $value .= ";";

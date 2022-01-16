@@ -18,8 +18,8 @@ return array(
     'LangleyFoxall\\MathEval\\' => array($vendorDir . '/langleyfoxall/math_eval/src'),
     'Gajus\\Dindent\\' => array($vendorDir . '/gajus/dindent/src'),
     'Cosmic\\' => array($baseDir . '/src/Cosmic'),
-    'App\\ViewModels\\' => array($baseDir . '/app/ViewModels'),
-    'App\\Models\\' => array($baseDir . '/app/Models'),
-    'App\\Middlewares\\' => array($baseDir . '/app/Middlewares'),
-    'App\\Controllers\\' => array($baseDir . '/app/Controllers'),
+    'App\\ViewModels\\' => array($baseDir . '/App/ViewModels'),
+    'App\\Models\\' => array($baseDir . '/App/Models'),
+    'App\\Middlewares\\' => array($baseDir . '/App/Middlewares'),
+    'App\\Controllers\\' => array($baseDir . '/App/Controllers'),
 );

@@ -78,7 +78,7 @@ abstract class Component
             foreach ($constant as $line) {
 
                 $path = new File("src/Cosmic/Bundle/Components/$line");
-                $pathInApp = new File("app/Components/$line");
+                $pathInApp = new File("App/Components/$line");
 
                 if(FileSystem::exists($path)) {
                     $paths[] = $path;

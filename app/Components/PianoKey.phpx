@@ -6,22 +6,23 @@ use Cosmic\Binder\InlineComponent;
 
 class PianoKey extends InlineComponent
 {
-    public function __construct(string $displayMode, string $keyColor, string $noteName)
+    public function __construct(string $displayMode, string $keyColor, string $noteName, string $noteText)
     {
         $this->displayMode = $displayMode;
         $this->noteName = $noteName;
+        $this->noteText = $noteText;
         $this->keyColor = $keyColor;
     }
 
     public function render()
     {
-        return {{
+        return <<<HTML
             <div {events} id="{noteName}" class="PianoKey{keyColor}{displayMode} text-center">
                 <If value="{displayMode}" equals="Simple">
-                    {noteName}
+                    {noteText}
                 </If>
             </div>
-        }};
+        HTML;
     }
 }
 

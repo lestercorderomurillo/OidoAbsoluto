@@ -27,7 +27,7 @@ use ScssPhp\ScssPhp\Util;
  *     This is a work-in-progress.
  *
  *     The \ArrayAccess interface is temporary until the migration is complete.
- * }}
+ * HTML
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  *

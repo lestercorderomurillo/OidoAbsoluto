@@ -8,31 +8,31 @@ class ServiceBanner extends InlineComponent
 {
     public function render()
     {
-        return {{
-            <div class="p-2 m-0 bg-dark text-white" style="font-size: 1.25em;">
+        return <<<HTML
+            <div class="p-2 m-0 bg-xdark" style="font-size: 1.25em;">
                 <GuestMiddleware>
-                    <Link route="index" accent="Secondary" class="p-2">
+                    <Link route="index" accent="Primary" class="p-2">
                         Acceder
                     </Link>
                 </GuestMiddleware>
                 <LoggedIn>
-                    <Link route="profile" accent="Secondary" class="p-2">
+                    <Link route="profile" accent="Primary" class="p-2">
                         Perfil
                     </Link>
                 </LoggedIn>
                 <LoggedIn>
-                    <Link route="logout" accent="Secondary" class="p-2">
+                    <Link route="logout" accent="Primary" class="p-2">
                         Deslogearse
                     </Link>
                 </LoggedIn>
-                <Link route="policy" accent="Secondary" class="p-2">
+                <Link route="policy" accent="Primary" class="p-2">
                     Términos de uso y condiciones
                 </Link>
-                <Link route="about" accent="Secondary" class="p-2">
+                <Link route="about" accent="Primary" class="p-2">
                     Acerca del proyecto
                 </Link>
             </div>
-        }};
+        HTML;
     }
 }
 

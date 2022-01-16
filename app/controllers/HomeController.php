@@ -119,6 +119,7 @@ class HomeController extends Controller
                 $this->error("No se puede validar los datos ingresados en el servidor remoto. ");
                 return $this->redirect("signup");
             }
+            
         } else {
 
             $this->error("No se puede registrar el usuario ingresado porque el correo utilizado se encuentra asociado a otra cuenta ya existente.");

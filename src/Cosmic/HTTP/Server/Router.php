@@ -182,11 +182,11 @@ class Router extends Controller
             }
 
             $controllerName = Text::getNamespaceBaseName($controllerClassName);
-            $controllerPath = new File("app/Controllers/$controllerName.php");
+            $controllerPath = new File("App/Controllers/$controllerName.php");
 
             if (!FileSystem::exists($controllerPath)) {
 
-                throw new IOException("Controller file does not exist in app/Controllers/ folder");
+                throw new IOException("Controller file does not exist in App/Controllers/ folder");
             }
 
             FileSystem::import($controllerPath, true, true);

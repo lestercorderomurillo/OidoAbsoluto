@@ -42,7 +42,7 @@ class Compiler
     {
         $value = FileSystem::read($phpsFile);
 
-        $value = strtr($value, ['{{' => "<<<'HTML'", "}}" => "HTML"]);
+        $value = strtr($value, ['{{' => "<<<'HTML'", "HTML" => "HTML"]);
         $value = preg_replace('/^[\n\r]+/m', '$1', $value);
 
         return preg_replace('/<\?php|\?>/', '$1 ', $value);
@@ -59,7 +59,7 @@ class Compiler
 
             // Preparations
             $scssCompiler = new ScssPhpCompiler();
-            $outputFile = new File(__CONTENT__ . "Output/Build.css");
+            $outputFile = new File(__CONTENT__ . "Output/build.css");
 
             // Content loading
             $baseContent = FileSystem::read(new File(__CONTENT__ . "page.scss")) . "\n\n";

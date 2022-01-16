@@ -181,7 +181,7 @@ if (!function_exists('generateID')) {
      */
     function generateID(): string
     {
-        return md5(com_create_guid());
+        return md5(random_bytes(16));
     }
 }
 
