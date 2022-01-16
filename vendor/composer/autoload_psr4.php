@@ -19,6 +19,7 @@ return array(
     'Gajus\\Dindent\\' => array($vendorDir . '/gajus/dindent/src'),
     'Cosmic\\' => array($baseDir . '/src/Cosmic'),
     'App\\ViewModels\\' => array($baseDir . '/app/ViewModels'),
+    'App\\Providers\\' => array($baseDir . '/app/Providers'),
     'App\\Models\\' => array($baseDir . '/app/Models'),
     'App\\Middlewares\\' => array($baseDir . '/app/Middlewares'),
     'App\\Controllers\\' => array($baseDir . '/app/Controllers'),

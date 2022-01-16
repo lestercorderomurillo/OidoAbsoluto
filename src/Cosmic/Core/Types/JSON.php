@@ -1,15 +1,23 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\Core\Types;
 
-use Cosmic\FileSystem\FileSystem;
-use Cosmic\FileSystem\Paths\File;
+use Cosmic\Core\Interfaces\FactoryInterface;
+use Cosmic\FileSystem\FS;
 use Cosmic\Traits\StringableTrait;
 
 /**
- * This class encapsulates methods useful for manipulating JSON objects and files.
+ * This class represents a json type. This class encapsulates useful methods for manipulating JSON objects with files.
  */
-class JSON
+class JSON implements FactoryInterface
 {
     use StringableTrait;
 
@@ -43,53 +51,29 @@ class JSON
     }
 
     /**
-     * Creates a new JSON object from the given value.
-     * 
-     * @param mixed[] $value The data to be stored.
-     * @param int $hints JSON Hints. [optional]
-     * 
-     * Bitmask consisting of:
-     * JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, 
-     * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT, 
-     * JSON_UNESCAPED_UNICODE. JSON_THROW_ON_ERROR 
-     * 
-     * The behaviour of these constants is described on the JSON constants page of php documentation.
-     * 
-     * @return JSON A instance of JSON.
-     */
-    public static function create($value, int $hints = 0): JSON
-    {
-        $instance = new JSON($value, $hints);
-        return $instance;
-    }
-
-    /**
      * Creates a new JSON object from a file path.
      * 
-     * @param File $file The file to parse from.
-     * @param int $hints JSON Hints. [optional]
-     * 
-     * Bitmask consisting of:
-     * JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, 
-     * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT, 
-     * JSON_UNESCAPED_UNICODE. JSON_THROW_ON_ERROR 
+     * @param File|string $dataSource The file to parse from.
      * 
      * The behaviour of these constants is described on the JSON constants page of php documentation.
-     * 
      * @return JSON An instance of JSON.
+     * @inheritdoc
      */
-    public static function from(File $file, int $hints = 0): JSON
+    public static function from($dataSource): JSON
     {
-        $instance = new JSON(json_decode(FileSystem::read($file), true), $hints);
-        return $instance;
+        return new JSON(json_decode(FS::read($dataSource), true));
     }
 
     /**
      * Adds a new hint to this JSON object.
      * Returns a copy of this object.
      * 
-     * @param int $hint The hint to add.
+     * Bitmask consisting of:
+     * JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, 
+     * JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT, 
+     * JSON_UNESCAPED_UNICODE. JSON_THROW_ON_ERROR 
      * 
+     * @param int $hint The hint bitmask to add.
      * @return JSON The json instance.
      */
     public function addHint(int $hint): JSON

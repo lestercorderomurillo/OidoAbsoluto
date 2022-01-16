@@ -1,7 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . "/vendor/autoload.php");
+array_shift($argv);
+define('__CONSOLE__', true);
 
-use Cosmic\CLI\Terminal;
-new Terminal($argc, $argv);
-
+require_once(dirname(__FILE__) . "/app/Index.php");

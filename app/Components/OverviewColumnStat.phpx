@@ -2,7 +2,7 @@
 
 namespace app\Components;
 
-use Cosmic\Binder\InlineComponent;
+use Cosmic\DOM\InlineComponent;
 
 class OverviewColumnStat extends InlineComponent
 {

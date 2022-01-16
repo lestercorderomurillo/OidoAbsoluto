@@ -11,12 +11,12 @@ use App\ViewModels\PianoTestViewModel;
 use App\ViewModels\DetailedTestViewModel;
 use App\ViewModels\UserSummaryViewModel;
 use Cosmic\HTTP\Request;
-use Cosmic\Binder\Authorization;
-use Cosmic\Core\Bootstrap\Controller;
+use Cosmic\DOM\Authorization;
+use Cosmic\Core\Abstracts\Controller;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\Folder;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\ORM\Bootstrap\Database;
+use Cosmic\ORM\Abstracts\Database;
 use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Text;
@@ -99,7 +99,7 @@ class UserController extends Controller
 
                         $isNatural = false;
 
-                        if (!Text::contains($expectedNotewithoutOctave, "#")) {
+                        if (!Strcontains($expectedNotewithoutOctave, "#")) {
 
                             $model->totalNaturalNotes++;
                             $isNatural = true;
@@ -141,7 +141,7 @@ class UserController extends Controller
         }
 
         $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
-        $questions = Collection::from(new File("app/Views/User/questions.json"));
+        $questions = Collections::from(new FilePath("app/Views/User/questions.json"));
 
         $fixedQuestions = [];
 
@@ -194,12 +194,12 @@ class UserController extends Controller
 
     function piano(string $displayMode)
     {
-        if (!Text::equals($displayMode, ["Simple", "Full"])) {
+        if (!Strequals($displayMode, ["Simple", "Full"])) {
             $this->warning("No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
             return $this->redirect("login");
         }
 
-        $audiosSources = FileSystem::URLFind(new Folder("app/Content/Audio/"), "mp3");
+        $audiosSources = FileSystem::lookup(new FolderPath("app/Content/Audio/"), "mp3");
         $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
 
         return $this->view(["displayMode" => $displayMode, "audiosSources" => $audiosSources, "displayString" => $displayString]);
@@ -468,7 +468,7 @@ class UserController extends Controller
             [],
         ];
 
-        $xlsx = SimpleXLSXGen::fromArray(Collection::mergeList($books, $surveyBook));
+        $xlsx = SimpleXLSXGen::fromArray(Collections::merge($books, $surveyBook));
         $this->download("Cuestionario.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $xlsx);
     }
 
@@ -505,8 +505,8 @@ class UserController extends Controller
 
                 $expectedNotewithoutOctave = preg_replace('/[0-9]+/', '', $note->expectedNote);
 
-                $expectedType = Text::contains($note->expectedNote, "#") ? "Sostenido" : "Natural";
-                $selectedType = Text::contains($note->selectedNote, "#") ? "Sostenido" : "Natural";
+                $expectedType = Strcontains($note->expectedNote, "#") ? "Sostenido" : "Natural";
+                $selectedType = Strcontains($note->selectedNote, "#") ? "Sostenido" : "Natural";
                 $kind = (($note->noteIndex + 1) < 30) ? "Piano" : "Puro";
 
                 $books[] = [$note->noteIndex + 1, $expectedNotewithoutOctave, $note->selectedNote,  $note->reactionTime, $octave, $expectedType, $selectedType, $kind];
@@ -517,7 +517,7 @@ class UserController extends Controller
             $surveyBook = $this->generateSurveyBook($test->id);
 
             if ($surveyBook != null) {
-                $books = Collection::mergeList($books, $surveyBook);
+                $books = Collections::merge($books, $surveyBook);
             }
 
             $xlsx = SimpleXLSXGen::fromArray($books);
@@ -541,7 +541,7 @@ class UserController extends Controller
         $books = [];
         $books[] = ['#', 'Pregunta', 'Respuesta'];
 
-        $questions = Collection::from(new File("app/Views/User/questions.json"));
+        $questions = Collections::from(new FilePath("app/Views/User/questions.json"));
         $questionsCount = count($questions);
 
         for ($count = 0; $count < $questionsCount; $count++) {

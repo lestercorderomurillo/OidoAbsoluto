@@ -26,9 +26,9 @@ Button.AccentWarning:hover{
     color: $bg-warning !important;
 }
 
-Button.AccentDanger:hover{
-    background-color: $text-danger !important;
-    color: $bg-danger !important;
+Button.AccentError:hover{
+    background-color: $text-error !important;
+    color: $bg-error !important;
 }
 
 Button.AccentInfo:hover{

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Cosmic\Core\Bootstrap\Controller;
+use Cosmic\Core\Abstracts\Controller;
 
 class InformationController extends Controller
 {

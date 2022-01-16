@@ -1,8 +1,17 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\ORM\Common;
 
 use Cosmic\Traits\StringableTrait;
+use Cosmic\Utilities\Strings;
 
 /**
  * This class represents a simple database query that can be executed using a database.
@@ -65,8 +74,11 @@ class PreparedQuery
         $string = $this->statement;
 
         foreach ($this->data as $key => $value) {
-            //$string = str_replace($key, htmlentities($value), $string);
-            //$string = str_replace($key, $value, $string);
+
+            if(__EXPERIMENTAL__){
+                $value = Strings::sanitize($value);
+            }
+
             $string = strtr($string, [$key => $value]);
         }
 

@@ -1,0 +1,333 @@
+<?php
+
+namespace Cosmic\Core\Abstracts;
+
+use Cosmic\Core\Dependency;
+use Cosmic\Core\Interfaces\ContainerInterface;
+use Cosmic\Core\Exceptions\DependencyException;
+use Cosmic\Core\Exceptions\DuplicatedKeyException;
+use Cosmic\Core\Exceptions\NotFoundDependencyException;
+
+/**
+ * This class represents a injectable container that can resolve dependencies to other instances.
+ */
+class DIContainer implements ContainerInterface
+{
+    /**
+     * @var Dependency[] $dependencies A dictionary of dependencies already injected.
+     */
+    private array $dependencies = [];
+
+    /**
+     * Return the complete list of dependencies as an array.
+     * 
+     * @return Dependency[] The list of dependencies.
+     */
+    public function all(): array
+    {
+        return $this->dependencies;
+    }
+
+    /**
+     * Clears all registered dependencies.
+     * 
+     * @return void
+     */
+    public function clear(): void
+    {
+        $this->dependencies = [];
+    }
+
+    /**
+     * Add the given dependency to the container.
+     * 
+     * @param Dependency $value The dependency to add.
+     * @throws DuplicatedKeyException If a dependency with the same alias already exists.
+     * @inheritdoc
+     */
+    public function add($key, $value): bool
+    {
+        if ($this->has($key)) 
+        {
+            throw new DuplicatedKeyException("The key \"$key\" used for the given dependency already exists. Use another alias instead");
+        }
+
+        $this->dependencies[] = $value;
+        return true;
+    }
+
+    /**
+     * Check if the dependency has been already injected to this container.
+     * 
+     * @inheritdoc
+     */
+    public function has($key): bool
+    {
+        foreach($this->dependencies as $dependency){
+            if($dependency->match($key)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return the dependency that matches the given key.
+     * 
+     * @return mixed
+     * @throws NotFoundDependencyException if the dependency does not exist.
+     * @inheritdoc
+     */
+    public function &get($key)
+    {
+        foreach($this->dependencies as $dependency){
+            if($dependency->match($key)){
+                return $dependency->get();
+            }
+        }
+
+        throw new NotFoundDependencyException("The requested dependency with alias: \"$key\" is not injected yet in the IoC Container");
+    }
+
+    /**
+     * Delete the dependency who matches the given key.
+     * 
+     * @inheritdoc
+     */
+    public function delete($key): bool
+    {
+        $index = 0;
+        foreach($this->dependencies as $dependency){
+
+            if($dependency->match($key)){
+                unset($dependency[$index]);
+            }
+            $index++;
+        }
+
+        return false;
+    }
+
+    public function fillNamedArgs(\Closure $closure, array $namedParameters): array
+    {
+        $reflectionFunc = new \ReflectionFunction($closure);
+        $parameters  = $reflectionFunc->getParameters();
+        
+        foreach ($parameters as $param) {
+            $isRequired = !$param->isOptional();
+
+            if($isRequired)
+        }
+
+        /** @var \ReflectionParameter $parameter*/
+        foreach ($requiredParameters as $parameter) {
+            
+            if(!isset($namedParameters[$parameter->getName()]) && $parameter->hasType()){
+                $namedParameters[$parameter->getName()] = app()->get(getNativeType($parameter));
+            }else if ($parameter->isOptional()){
+                $namedParameters[$parameter->getName()] = $parameter->getDefaultValue();
+            }else{
+                throw new \InvalidArgumentException("test");
+            }
+
+        }
+    }
+
+    public function sortArgsForCall(array $namedParameters, \Closure $closure): array
+    {
+        $reflection = new \ReflectionFunction($closure);
+        $parameters  = $reflection->getParameters();
+        $callableParameters  = $reflection->getParameters();
+
+        foreach ($parameters as $parameter) {
+
+            if(isset($namedParameters[$parameter->getName()])){
+                $callableParameters[] = $namedParameters[$parameter->getName()];
+            }
+        }
+
+        return $callableParameters;
+    }
+
+    /**
+     * Check if the dependency requires autowire, if not, try to use the arguments.
+     * 
+     * @param string $className The class to check.
+     * @return array|null True if the class requires autowire, false otherwise.
+     */
+    public function provideFromContainer($instance, array $parameters, bool $namedParameters = false): array
+    {
+
+        $outputParameters = [];
+
+        if(is_object($instance)){
+
+            /*if($namedParameters){
+
+                $this->createCallableSortedParameters($namedParameters)
+            }*/
+
+            /*$reflectionClass = new \ReflectionClass($instance);
+            $constructor = $reflectionClass->getConstructor();
+            $constructorParameters = $constructor->getParameters();
+
+            if($namedParameters){
+
+                foreach ($constructorParameters as $parameter){
+
+                    if(isset($parameters[$parameter->getName()])){
+                        $namedParameters[$parameter->getName()] = $parameters[$parameter->getName()];
+                    }
+    
+                    if($parameter->hasType()){
+    
+                    }
+    
+                }
+
+            }*/
+
+            
+            
+
+        }
+
+
+        if ($constructor != null) {
+
+            $numberOfParameters = $constructor->getNumberOfParameters();
+            $parameterMatch = (count($this->parameters) == $numberOfParameters) ? true : false;
+
+            if (!$parameterMatch && $this->parameters == []) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the dependency requires autowire, if not, try to use the arguments.
+     * 
+     * @param string $className The class to check.
+     * @return bool True if the class requires autowire, false otherwise.
+     */
+    public function requireAutowire($className)
+    {
+        $reflectionClass = new \ReflectionClass($className);
+
+        $constructor = $reflectionClass->getConstructor();
+
+        if ($constructor != null) {
+
+            $numberOfParameters = $constructor->getNumberOfParameters();
+            $parameterMatch = (count($this->parameters) == $numberOfParameters) ? true : false;
+
+            if (!$parameterMatch && $this->parameters == []) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Inject a primitive. Must be either a string, array or an object instance.
+     * 
+     * @param string $key The key to inject the primitive.
+     * 
+     * @return void
+     */
+    public function primitive(string $key, $primitive): void
+    {
+        $this->add($key, new Dependency(Dependency::PRIMITIVE, $primitive));
+    }
+
+    /**
+     * Inject a singleton class. The first time the class is requested, a new instance will be created.
+     * 
+     * @param string $className The class to inject.
+     * @param string $parameters [Optional] If left blank, then all parameters will be injected using autowire.
+     * @param string $alias [Optional] If left blank, the alias will be the same as the class name.
+     * 
+     * @return void
+     */
+    public function singleton(string $className, array $parameters = [], string $alias = ""): void
+    {
+        $alias = ($alias != "") ? $alias : $className;
+        $this->add($alias, new Dependency(Dependency::SINGLETON, $className, $parameters));
+    }
+
+    /**
+     * Inject a class. When the dependency is requested, a new instance will be created.
+     * 
+     * @param string $className The class to inject.
+     * @param string $parameters [Optional] If left blank, then all parameters will be injected using autowire.
+     * @param string $alias [Optional] If left blank, the alias will be the same as the class name.
+     * 
+     * @return void
+     */
+    public function class(string $className, array $parameters = [], string $alias = ""): void
+    {
+        $alias = ($alias != "") ? $alias : $className;
+        $this->add($alias, new Dependency(Dependency::CONTEXTUAL, $className, $parameters));
+    }
+
+    /**
+     * Returns a new instance of the given class. Can be invoked using custom names.
+     * If failed to autowire a new instance, null will be returned instead.
+     * 
+     * @param string $className The alias to try to instantiate.
+     * @return mixed|null
+     */
+    public function instantiate(string $className)
+    {
+
+
+
+        $constructor = $class->getConstructor();
+
+        if ($constructor == null) {
+            return new $alias();
+        }
+
+        /** @var \ReflectionParameter $parameter*/
+        foreach ($parameters as $parameter) {
+
+            $type = getNativeType($parameter);
+            $dependency = $this->get($type);
+
+            if ($dependency == null) {
+                return null;
+            }
+            $dependencies[] = $dependency;
+        }
+
+        return new $alias(...$dependencies);
+
+        /*$dependencies = [];
+        $class = new \ReflectionClass($alias);
+
+        $constructor = $class->getConstructor();
+
+        if ($constructor == null) {
+            return new $alias();
+        }
+
+        $parameters = $constructor->getParameters();
+
+        foreach ($parameters as $parameter) {
+
+            $type = $parameter->getType();
+            $dependency = $this->get($type);
+
+            if ($dependency == null) {
+                return null;
+            }
+            $dependencies[] = $dependency;
+        }
+
+        return new $alias(...$dependencies);*/
+    }
+}

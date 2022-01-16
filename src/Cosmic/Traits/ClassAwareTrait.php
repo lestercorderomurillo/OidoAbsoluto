@@ -1,10 +1,16 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\Traits;
 
-use Cosmic\ORM\Bootstrap\Model;
-use Cosmic\Utilities\Collection;
-use Cosmic\Utilities\Text;
+use Cosmic\Utilities\Strings;
 
 /**
  * This trait provides classes with methods for dealing with reflection in a simpler way.
@@ -27,13 +33,11 @@ trait ClassAwareTrait
      * Get the value of a constant for this class (extern form).
      * 
      * @param string $constant The constant to check for.
-     * @param string $className If not null, this class  will be used in the reflection call.
-     * 
      * @return mixed|false The constant value, or false if the constant is not found.
      */
-    public static function getClassConstant(string $constant, $className)
+    public static function getStaticConstant(string $constant)
     {
-        $reflectionClass = new \ReflectionClass($className);
+        $reflectionClass = new \ReflectionClass(static::class);
         return $reflectionClass->getConstant($constant);
     }
 
@@ -80,7 +84,7 @@ trait ClassAwareTrait
 
             if(!is_array($value)) {
 
-                $value = Text::sanitizeString($value);
+                $value = Strings::sanitize($value);
 
             }
 
@@ -123,9 +127,8 @@ trait ClassAwareTrait
     /**
      * Check if the current class object contains the given trait.
      * 
-     * @param string $trait The trait to check.
-     * 
-     * @return bool True if class has the given trait, false otherwise.
+     * @param string $trait The trait to verify.
+     * @return bool True when the class has the given trait, false otherwise.
      */
     public function hasTrait(string $trait): bool
     {
@@ -136,7 +139,7 @@ trait ClassAwareTrait
     /**
      * Return the class name for instantiation.
      *
-     * @return string The class name.
+     * @return string The complete class name.
      */
     public function getClassName(): string
     {

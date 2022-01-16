@@ -5,10 +5,10 @@ namespace App\Controllers;
 use App\Models\Answer;
 use App\Models\User;
 use App\Models\UserInfo;
-use Cosmic\Binder\Authorization;
+use Cosmic\DOM\Authorization;
 use Cosmic\FileSystem\Paths\File;
-use Cosmic\Core\Bootstrap\Controller;
-use Cosmic\ORM\Bootstrap\Database;
+use Cosmic\Core\Abstracts\Controller;
+use Cosmic\ORM\Abstracts\Database;
 use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Cryptography;
@@ -62,7 +62,7 @@ class HomeController extends Controller
 
     function signup()
     {
-        $countries = Collection::from(new File("src/Cosmic/Bundle/Common/countries.json"));
+        $countries = Collections::from(new FilePath("src/Cosmic/Bundle/Common/countries.json"));
         return $this->view("signup", ["countries" => $countries]);
     }
 
@@ -89,8 +89,8 @@ class HomeController extends Controller
                 // Fill the user model
                 $user->email = $email;
                 $user->salt = Cryptography::computeRandomKey(32);
-                $user->password = password_hash($user->salt . $password, PASSWORD_BCRYPT);
-                $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
+                $user->token = Cryptography::computeRandomKey(32);
+                $user->password = Cryptography::hashPassword($user->salt, $password);
                 $user->activated = 1;
                 $user->role = Authorization::USER;
 
@@ -143,7 +143,7 @@ class HomeController extends Controller
 
         if ($user != null) {
 
-            $user->token = password_hash($user->salt . $email, PASSWORD_BCRYPT);
+            $user->token = Cryptography::computeRandomKey(32);
 
             $this->db->save($user);
             $this->db->commit($user);
@@ -210,8 +210,8 @@ class HomeController extends Controller
         }
 
         $user->salt = Cryptography::computeRandomKey(32);
-        $user->password = password_hash($user->salt . $password, PASSWORD_BCRYPT);
-        $user->token = password_hash($user->salt . $user->email, PASSWORD_BCRYPT);
+        $user->token = Cryptography::computeRandomKey(32);
+        $user->password = Cryptography::hashPassword($user->salt, $password);
 
         $this->db->save($user);
         $this->db->commit($user);

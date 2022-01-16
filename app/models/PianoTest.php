@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Cosmic\ORM\Bootstrap\Model;
+use Cosmic\ORM\Abstracts\Model;
 
 class PianoTest extends Model
 {

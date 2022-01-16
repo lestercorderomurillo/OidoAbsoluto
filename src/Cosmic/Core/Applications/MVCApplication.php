@@ -1,17 +1,21 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\Core\Applications;
 
-use Cosmic\Core\Bootstrap\Application;
-use Cosmic\Binder\DOM;
-use Cosmic\Binder\Compiler;
-use Cosmic\FileSystem\FileSystem;
-use Cosmic\FileSystem\Paths\File;
-use Cosmic\HTTP\Request;
-use Cosmic\HTTP\Server\WebServer;
-use Cosmic\HTTP\Server\DOMServer;
-use Cosmic\HTTP\Server\Router;
-use Cosmic\HTTP\Server\Session;
+use Cosmic\Core\Abstracts\Application;
+use Cosmic\Core\Logger;
+use Cosmic\HTTP\Runnables\HttpServer;
+use Cosmic\HTTP\Providers\HttpServerProvider;
+use Cosmic\HTTP\Router;
+use Cosmic\VDOM\Compiler;
 
 /**
  * This class represents a MVC application.
@@ -19,45 +23,38 @@ use Cosmic\HTTP\Server\Session;
 abstract class MVCApplication extends Application
 {
     /**
-     * @var bool $compileStylesheet On true, the server will compile the stylesheets on the onInitialization() method.
-     */
-    private bool $compileStylesheet = false;
-
-    /**
      * @inheritdoc
      */
-    protected function onConfiguration(): void
+    public function boot(): void
     {
-        if(FileSystem::exists(new File(__CONTENT__ . "Output/Build.css"))){
-            $this->compileStylesheet = true;
-        }
+        parent::boot();
+        
+        HttpServerProvider::default();
+
+        app()->singleton(Compiler::class);
+
+        /*$this->primitive(Request::class, Request::intercept());
+        $this->singleton(Session::class);
+        $this->singleton(Router::class);
+        $this->singleton(Compiler::class);
+        $this->singleton(Bindings::class);
+        $this->singleton(DOMServer::class);
+        $this->singleton(HttpServer::class);*/
     }
 
     /**
      * @inheritdoc
      */
-    protected function onServicesInjection(): void
+    public function dispose(): void
     {
-        $this->injectPrimitive(Request::class, Request::intercept());
-        $this->injectSingleton(Session::class);
-        $this->injectSingleton(Router::class);
-        $this->injectSingleton(Compiler::class);
-        $this->injectSingleton(DOM::class);
-        $this->injectSingleton(DOMServer::class);
-        $this->injectSingleton(WebServer::class);
     }
 
     /**
-     * @inheritdoc
+     * Run this application.
      */
-    protected function onInitialization(): void
+    public function run(): int
     {
-        $this->get(DOMServer::class)->run();
-
-        if($this->compileStylesheet){
-            $this->get(Compiler::class)->compileStylesheet();
-        }
-
-        $this->get(WebServer::class)->run();
+        $httpServer = create(HttpServer::class);
+        return $httpServer->run();
     }
 }

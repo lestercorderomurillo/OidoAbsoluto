@@ -1,15 +1,22 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\HTTP\Server;
 
-use Cosmic\Core\Bootstrap\Controller;
-use Cosmic\Core\Bootstrap\Middleware;
-use Cosmic\Core\Interfaces\ResultGeneratorInterface;
+use Cosmic\Core\Abstracts\Controller;
+use Cosmic\Core\Interfaces\ResponseGenerator;
 use Cosmic\Core\Types\JSON;
 use Cosmic\HTTP\Request;
 use Cosmic\HTTP\Exceptions\EntryPointException;
 use Cosmic\HTTP\Exceptions\InvalidParameterBinding;
-use Cosmic\Utilities\Collection;
+use Cosmic\Utilities\Collections;
 
 /**
  * This class represents a entry point. 
@@ -42,24 +49,24 @@ class EntryPoint extends Controller
     private array $lateMiddlewares;
 
     /**
-     * @var \Closure $closure A function that is called when the entry point is matched.
+     * @var callable $callable A function that is called when the entry point is matched.
      */
-    private \Closure $closure;
+    private $callable;
 
     /**
-     * Constructor.
+     * Constructor. Creates a new entry point instance.
      * 
      * @param string $pathRegex The regular expression to match the current entry point.
      * @param string $method The method used to match the current entry point. Can be "get" or "post" only.
-     * @param \Closure $closure The regular expression to match the current entry point.
+     * @param callable $callable The regular expression to match the current entry point.
      * @param array $middlewares The collection of middlewares to execute before the request has been sent to the closure.
      * @param array $lateMiddlewares The collection of middlewares to execute after the response has been sent to the client.
      */
-    public function __construct(string $pathRegex, string $method, \Closure $closure, array $middlewares = [], array $lateMiddlewares = [])
+    public function __construct(string $pathRegex, string $method, callable $callable, array $middlewares = [], array $lateMiddlewares = [])
     {
         $this->pathRegex = $pathRegex;
         $this->method = $method;
-        $this->closure = $closure;
+        $this->callable = $callable;
         $this->middlewares = $middlewares;
         $this->lateMiddlewares = $lateMiddlewares;
     }
@@ -67,51 +74,57 @@ class EntryPoint extends Controller
     /**
      * Add a new middleware class to the list of middlewares.
      * 
-     * @param string $middleware A middleware class.
-     * 
+     * @param string[]|string $middlewares A middleware class, or a collection of middleware classes.
      * @return void
      */
-    public function addMiddleware(string $middleware): void
+    public function addMiddlewares($middlewares): void
     {
-        $this->middlewares[] = $middleware;
+        if (Collections::isList($middlewares)) {
+            foreach ($middlewares as $middleware) {
+                $this->middlewares[] = $middleware;
+            }
+        } else {
+            $this->middlewares[] = $middlewares;
+        }
     }
 
     /**
-     * Remove the passed middlewares from the list of registered middlewares.
+     * Add a new late middleware class to the list of middlewares.
      * 
-     * @param string[]|string $middleware A middleware class, or a collection of middleware classes.
+     * @param string[]|string $middlewares A middleware class, or a collection of middleware classes.
+     * @return void
+     */
+    public function addLateMiddlewares($middlewares): void
+    {
+        if (Collections::isList($middlewares)) {
+            foreach ($middlewares as $middleware) {
+                $this->lateMiddlewares[] = $middleware;
+            }
+        } else {
+            $this->lateMiddlewares[] = $middlewares;
+        }
+    }
+
+    /**
+     * Remove the given middlewares from the list of scheduled middlewares.
      * 
+     * @param string[]|string $middlewares A middleware class, or a collection of middleware classes.
      * @return void
      */
     public function excludeMiddlewares($middlewares): void
     {
-        $this->middlewares = array_diff($this->middlewares, Collection::normalize($middlewares));
+        $this->middlewares = array_diff($this->middlewares, Collections::normalizeToList($middlewares));
     }
 
     /**
-     * Sets the middlewares for this entry point. Should be only the class name.
-     * This method is not expecting any instances.
+     * Remove the given middlewares from the list of scheduled late middlewares. (After the request is sent)
      * 
-     * @param Middleware[]|Middleware $middlewares The collection of middlewares. Accepts single instance.
-     * 
+     * @param string[]|string $middlewares A middleware class, or a collection of middleware classes.
      * @return void
      */
-    public function setMiddlewares($middlewares): void
+    public function excludeLateMiddlewares($middlewares): void
     {
-        $this->middlewares = Collection::normalize($middlewares);
-    }
-
-    /**
-     * Sets the lateMiddlewares for this entry point. 
-     * This kind of middlewares are executed after the response has been sent to the end user.
-     * 
-     * @param Middleware[]|Middleware $middlewares The collection of middlewares. Accepts single instance.
-     * 
-     * @return void
-     */
-    public function setLateMiddlewares($lateMiddlewares): void
-    {
-        $this->lateMiddlewares = Collection::normalize($lateMiddlewares);
+        $this->lateMiddlewares = array_diff($this->lateMiddlewares, Collections::normalizeToList($middlewares));
     }
 
     /**
@@ -152,11 +165,11 @@ class EntryPoint extends Controller
      * 
      * @return mixed
      */
-    private function executeUsingNoBinding()
+    /*private function executeUsingNoBinding()
     {
         $entryPoint = $this->closure;
         return $entryPoint();
-    }
+    }*/
 
     /**
      * Execute this entry point using reflection to try to match all the formData and dependencies into the closure arguments.
@@ -167,7 +180,7 @@ class EntryPoint extends Controller
      * @return mixed
      * @throws InvalidParameterBinding
      */
-    private function executeUsingAutowire(Request $request)
+    /*private function executeUsingAutowire(Request $request)
     {
         $formData = $request->getFormData();
         $outputParameters = [];
@@ -179,60 +192,73 @@ class EntryPoint extends Controller
 
             $type = $parameter->getType();
 
-            if($type instanceof \ReflectionNamedType){
+            if ($type instanceof \ReflectionNamedType) {
 
                 $typeName = $type->getName();
 
-                if(app()->has($typeName)){
+                if (app()->has($typeName)) {
 
                     $outputParameters[] = app()->get($typeName);
-    
-                }else{
-    
+                } else {
+
                     if (isset($formData[$parameter->getName()])) {
-    
+
                         $outputParameters[] = $formData[$parameter->getName()];
-    
                     } else {
 
-                        try{
+                        try {
                             $default = $parameter->getDefaultValue();
-                        }catch(\Exception $e){
+                        } catch (\Exception $e) {
 
-                            switch($typeName){
-                                case 'bool': $default = false; break;
-                                case 'int': $default = 0; break;
-                                case 'array': $default = []; break;
-                                case 'string': $default = __EMPTY__; break;
-                                default: $default = null; break;
+                            switch ($typeName) {
+                                case 'bool':
+                                    $default = false;
+                                    break;
+                                case 'int':
+                                    $default = 0;
+                                    break;
+                                case 'array':
+                                    $default = [];
+                                    break;
+                                case 'string':
+                                    $default = __EMPTY__;
+                                    break;
+                                default:
+                                    $default = null;
+                                    break;
                             }
                         }
-                        
-                        switch($typeName){
-                            case 'bool': $value = $default; break;
-                            case 'int': $value = $default; break;
-                            case 'array': $value = $default; break;
-                            case 'string': $value = $default; break;
-                            default: $value = null; break;
+
+                        switch ($typeName) {
+                            case 'bool':
+                                $value = $default;
+                                break;
+                            case 'int':
+                                $value = $default;
+                                break;
+                            case 'array':
+                                $value = $default;
+                                break;
+                            case 'string':
+                                $value = $default;
+                                break;
+                            default:
+                                $value = null;
+                                break;
                         }
 
                         $outputParameters[] = $value;
-
                     }
-    
                 }
-
-            }else{
+            } else {
 
                 throw new InvalidParameterBinding("The parameter '$parameter' must have a type in the method definition");
-
             }
-
         }
 
         $entryPoint = $this->closure;
         return $entryPoint(...$outputParameters);
-    }
+    }*/
 
     /**
      * Delegate the current request to the corresponding function.
@@ -243,19 +269,17 @@ class EntryPoint extends Controller
      * @return mixed
      * @throws EntryPointException
      */
-    private function delegate(Request $request)
+    /*private function delegate(Request $request)
     {
         $reflectionFunction = new \ReflectionFunction($this->closure);
 
         if ($reflectionFunction->getNumberOfParameters() == 0) {
 
             return $this->executeUsingNoBinding();
-
         }
-        
-        return $this->executeUsingAutowire($request);
 
-    }
+        return $this->executeUsingAutowire($request);
+    }*/
 
     /**
      * Execute this entry point. Will run all the middlewares and late middlewares.
@@ -270,46 +294,41 @@ class EntryPoint extends Controller
     {
         foreach ($this->middlewares as $middleware) {
 
-            if ($request != null) {
-
-                if (!$request instanceof Response){
-                    $middlewareInstance = app()->create($middleware);
-                    $request = $middlewareInstance->handle($request);
-                }
+            if ($request != null && !$request instanceof Response) {
+                $middlewareInstance = create($middleware);
+                $request = $middlewareInstance->handle($request);
             }
         }
 
         if ($request != null) {
 
-            if (!$request instanceof Response) {
+            if ($request instanceof Response) {
 
-                $response = null;
-                $request = $this->delegate($request);
+                $request->send();
 
-                if (!isset($request) && ob_get_contents() == false) {
+            }else{
 
-                    $response = $this->content("Timestamp:" . time());
+                $response = create($this->callable);
 
-                } else if ($request instanceof Response) {
+                if (!isset($response) && ob_get_contents() == false) {
 
-                    $response = $request;
+                    $response = $this->content("200 OK");
 
-                } else if ($request instanceof ResultGeneratorInterface) {
+                }else if ($response instanceof ResponseGenerator) {
 
-                    $response = $request->toResponse();
+                    $response = $response->toResponse();
 
-                } else if (is_string($request) || is_int($request)) {
+                } else if (is_string($response) || is_int($response)) {
 
-                    $response = $this->content($request);
+                    $response = $this->content($response);
 
-                } else if (method_exists($request, "toString")) {
+                } else if (method_exists($response, "toString")) {
 
-                    $response = $this->content($request->toString());
+                    $response = $this->content($response->toString());
 
-                } else if ($request instanceof JSON || is_array($request) || is_object($request)) {
+                } else if ($response instanceof JSON || is_array($response) || is_object($response)) {
 
-                    $response = $this->JSON($request);
-
+                    $response = $this->JSON($response);
                 }
 
                 if ($response != null) {
@@ -319,16 +338,11 @@ class EntryPoint extends Controller
                 foreach ($this->lateMiddlewares as $lateMiddleware) {
 
                     if ($response != null) {
-                        $lateMiddlewareInstance = new $lateMiddleware();
+                        $lateMiddlewareInstance = create($lateMiddleware);
                         $response = $lateMiddlewareInstance->handle($response);
                     }
                 }
-
-            } else {
-
-                $request->send();
-                
-            }
+            } 
         }
 
         exit();

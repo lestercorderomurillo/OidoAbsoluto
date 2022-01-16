@@ -17,7 +17,7 @@
                         "component.name",
                     ],
                     "settings": {
-                        "foreground": "#ffb759"
+                        "foreground": "#e1bd62"
                     }
                 },
                 {
@@ -26,7 +26,7 @@
                         "component.name.keyword"
                     ],
                     "settings": {
-                        "foreground": "#ff5959"
+                        "foreground": "#569CD6"
                     }
                 },
                 {
@@ -34,7 +34,7 @@
                         "component.attributes",
                     ],
                     "settings": {
-                        "foreground": "#b995e7"
+                        "foreground": "#9CDCFE"
                     }
                 },
                 {
@@ -42,7 +42,7 @@
                         "component.string",
                     ],
                     "settings": {
-                        "foreground": "#adc097"
+                        "foreground": "#CE9178"
                     }
                 },
                 {
@@ -50,7 +50,7 @@
                         "language.separator.entity"
                     ],
                     "settings": {
-                        "foreground": "#817f7f"
+                        "foreground": "#808080"
                     }
                 },
                 {
@@ -69,7 +69,7 @@
                         "language.separator.quote"
                     ],
                     "settings": {
-                        "foreground": "#cccccc"
+                        "foreground": "#CE9178"
                     }
                 },
                 {
@@ -86,7 +86,7 @@
                         "component.attributes.event"
                     ],
                     "settings": {
-                        "foreground": "#6f71f1"
+                        "foreground": "#7577da"
                     }
                 },
                 {

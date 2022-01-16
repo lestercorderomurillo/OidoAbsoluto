@@ -3,7 +3,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI}  /src/Cosmic/Bundle.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
-RewriteCond %{REQUEST_URI}  /src/Cosmic/Binder.+(gif|png|jpg|jpeg|mp3|js|css|map)$
+RewriteCond %{REQUEST_URI}  /src/Cosmic/DOM.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
 RewriteCond %{REQUEST_URI}  /src/Cosmic/Bundle.+(gif|png|jpg|jpeg|mp3|js|css|map|woff|svg|ttf|eot)$
@@ -15,4 +15,4 @@ RewriteRule .* - [L]
 RewriteCond %{REQUEST_URI}  /app/Content.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 
-RewriteRule .* app/Startup.php [L]
+RewriteRule .* app/Index.php [L]

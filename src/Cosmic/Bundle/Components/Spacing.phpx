@@ -2,7 +2,7 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\InlineComponent;
+use Cosmic\DOM\InlineComponent;
 
 class Spacing extends InlineComponent
 {

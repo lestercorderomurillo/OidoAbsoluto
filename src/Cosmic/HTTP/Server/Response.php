@@ -1,8 +1,17 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\HTTP\Server;
 
 use Cosmic\HTTP\Request;
+use Cosmic\Core\Interfaces\FactoryInterface;
 
 /**
  * The extended version of the request class. Simple HTTP response object.
@@ -10,30 +19,37 @@ use Cosmic\HTTP\Request;
  * 
  * Only responses can be modified and sent to the server. Request are read-only.
  */
-class Response extends Request
+class Response extends Request implements FactoryInterface
 {
     /**
      * Create a new response object form the given request object. 
      * 
-     * @param Request $request The request to use as the template.
-     *  
+     * @param Request $dataSource The request to use as the template.
      * @return Response The converted response object.
+     * @inheritdoc
      */
-    public static function create(Request $request): Response
+    public static function from($dataSource)
     {
         $response = new Response();
 
-        $response->protocol = $request->getProtocol();
-        $response->protocolVersion = $request->getProtocolVersion();
-        $response->statusCode = $request->getStatusCode();
-        $response->uri = $request->getURI();
-        $response->action = $request->getAction();
-        $response->method = $request->getMethod();
-        $response->headers = $request->getHeaders();
-        $response->body = $request->getBody();
-        $response->formData = $request->getFormData();
-        $response->username = $request->getUsername();
-        $response->password = $request->getPassword();
+        if(__EXPERIMENTAL__){
+
+            $response->setValues($dataSource->getRuntimeValues());
+            
+        }else{
+
+            $response->protocol = $dataSource->getProtocol();
+            $response->protocolVersion = $dataSource->getProtocolVersion();
+            $response->statusCode = $dataSource->getStatusCode();
+            $response->uri = $dataSource->getURI();
+            $response->action = $dataSource->getAction();
+            $response->method = $dataSource->getMethod();
+            $response->headers = $dataSource->getHeaders();
+            $response->body = $dataSource->getBody();
+            $response->formData = $dataSource->getFormData();
+            $response->username = $dataSource->getUsername();
+            $response->password = $dataSource->getPassword();
+        }
 
         return $response;
     }

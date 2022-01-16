@@ -1,46 +1,24 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\Utilities;
 
 /**
- * This helper class is used to provide methods to move objects and arrays as strings.
+ * This utility class provides methods for transfering and encoding.
  */
 class Transport
 {
     /**
-     * Convert the string to an array.
-     * 
-     * @param array $array The array to convert.
-     *
-     * @return string The encoded string.
-     */
-    public static function arrayToString(array $array): string
-    {
-        $json = json_encode($array);
-        return "@ARR" . self::encodeBase64SafeURL($json);
-    }
-
-    /**
-     * Convert the array to a string.
-     * 
-     * @param string $string The string to convert.
-     *
-     * @return array The decoded array.
-     */
-    public static function stringToArray(string $string): array
-    {
-        if(str_starts_with($string, "@ARR")){
-            $string = substr($string, strlen("@ARR"));
-        }
-        $decoded = json_decode(self::decodeBase64SafeURL($string), true);
-        return $decoded;
-    }
-
-    /**
      * Convert the given string into a valid base64 encoded string.
      * 
      * @param string $input The string to convert.
-     *
      * @return string The encoded string.
      */
     public static function encodeBase64SafeURL(string $input): string
@@ -52,7 +30,6 @@ class Transport
      * Convert the given string into a valid base64 encoded string.
      * 
      * @param string $input The string to convert.
-     *
      * @return string The encoded string.
      */
     public static function decodeBase64SafeURL(string $input): string

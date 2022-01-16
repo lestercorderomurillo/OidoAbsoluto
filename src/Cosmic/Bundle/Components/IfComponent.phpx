@@ -2,7 +2,7 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\DOM\Component;
 use Cosmic\Utilities\Text;
 
 class IfComponent extends Component

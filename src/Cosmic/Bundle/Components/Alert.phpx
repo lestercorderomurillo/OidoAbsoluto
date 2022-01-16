@@ -2,7 +2,7 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\DOM\Component;
 
 class Alert extends Component
 {
@@ -22,7 +22,7 @@ class Alert extends Component
         }
 
         switch($type){
-            case "Danger": $this->strongMessage = "¡Ha ocurrido un problema!"; break;
+            case "Error": $this->strongMessage = "¡Ha ocurrido un problema!"; break;
             case "Warning": $this->strongMessage = "¡Advertencia!"; break;
             case "Info": $this->strongMessage = "¡Aviso!"; break;
             default: $this->strongMessage = "¡Excelente!"; break;

@@ -1,15 +1,22 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\Core\Types;
 
-use Cosmic\FileSystem\FileSystem;
-use Cosmic\FileSystem\Paths\File;
-use Cosmic\FileSystem\Paths\Folder;
-use Cosmic\Reload\ChangeDetector;
-use Cosmic\Utilities\Text;
+use Cosmic\FileSystem\FS;
+use Cosmic\FileSystem\Paths\FilePath;
+use Cosmic\FileSystem\Paths\FolderPath;
+use Cosmic\Utilities\Strings;
 
 /**
- * This class represents a COSMIC view.
+ * This class represents a COSMIC view type.
  */
 class View
 {
@@ -49,26 +56,26 @@ class View
      */
     public function __construct(string $controllerName, string $viewName, array $viewData)
     {
-        $controllerName = Text::getNamespaceBaseName(strtr($controllerName, ["Controller" => ""]));
+        $controllerName = Strings::getClassBaseName(strtr($controllerName, ["Controller" => ""]));
 
         $this->controllerName = $controllerName;
         $this->viewName = $viewName;
         $this->viewData = $viewData;
 
-        $file = new File("App/Views/$this->controllerName/$this->viewName.phtml");
+        $file = new FilePath("App/Views/$this->controllerName/$this->viewName.phtml");
 
-        $this->html = FileSystem::read($file);
+        $this->html = FS::read($file);
         $this->timestamp = filemtime($file);
     }
 
     /**
      * Returns the directory that holds the view in the file system.
      * 
-     * @return Folder The directory.
+     * @return FolderPath The directory.
      */
-    public function getFolder(): Folder
+    public function getFolderPath(): FolderPath
     {
-        return new Folder("App/Views/$this->controllerName/");
+        return new FolderPath("App/Views/$this->controllerName/");
     }
 
     /**
@@ -82,7 +89,7 @@ class View
     }
 
     /**
-     * Returns the static source Binder/HTML markup for this view.
+     * Returns the static source DOM/HTML markup for this view.
      * 
      * @return string The HTML.
      */
@@ -108,18 +115,18 @@ class View
      */
     public function getViewIdentifier(): string
     {
-        return md5(new File("App/Views/$this->controllerName/$this->viewName.phtml"));
+        return md5(new FilePath("App/Views/$this->controllerName/$this->viewName.phtml"));
     }
 
     /**
      * Returns the source-file path of this view.
      * 
-     * @return File The path of the view. Can be converted to string by using it.
+     * @return FilePath The path of the view. Can be converted to string by using it.
      */
-    public function getViewPath(): File
+    public function getViewPath(): FilePath
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        return new File("App/Views/$path.phtml");
+        return new FilePath("App/Views/$path.phtml");
     }
 
     /**

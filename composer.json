@@ -8,7 +8,8 @@
             "App\\Controllers\\": "app/Controllers/",
             "App\\Models\\": "app/Models/",
             "App\\ViewModels\\": "app/ViewModels/",
-            "App\\Middlewares\\": "app/Middlewares/"
+            "App\\Middlewares\\": "app/Middlewares/",
+            "App\\Providers\\": "app/Providers/"
         }
     },
     "authors": [

@@ -2,7 +2,7 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Component;
+use Cosmic\DOM\Component;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Cryptography;
 use Cosmic\Utilities\Transport;
@@ -22,11 +22,11 @@ class ForeachComponent extends Component
     {
         $html = __EMPTY__;
 
-        if (!Collection::is2Dimensional($this->from)) {
+        if (!Collections::isArrayCollection($this->from)) {
 
             foreach ($this->from as $token) {
 
-                $html .= $this->renderChilds(Collection::mergeDictionary(
+                $html .= $this->renderChilds(Collections::merge(
                     [$this->using => $token],
                     ['random' => Cryptography::computeRandomKey(8)]
                 ));
@@ -34,11 +34,11 @@ class ForeachComponent extends Component
             
         } else {
 
-            $compiledTokens = Collection::tokenize($this->using, $this->from);
+            $compiledTokens = Collections::tokenize($this->using, $this->from);
 
             foreach ($compiledTokens as $tokens) {
 
-                $html .= $this->renderChilds(Collection::mergeDictionary($tokens, ['random' => Cryptography::computeRandomKey(8)]));
+                $html .= $this->renderChilds(Collections::merge($tokens, ['random' => Cryptography::computeRandomKey(8)]));
             }
         }
 

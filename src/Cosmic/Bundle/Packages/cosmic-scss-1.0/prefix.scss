@@ -11,7 +11,7 @@ input[type="number"] {
 
 label.error {
     font-size: 0.8em;
-    background-color: $bg-danger;
+    background-color: $bg-error;
     color: white;
     border-radius: 5px;
     padding: 5px;
@@ -20,7 +20,7 @@ label.error {
 }
 
 input.error {
-    color: $bg-danger !important;
+    color: $bg-error !important;
 }
 
 @mixin Unselectable {
@@ -102,9 +102,9 @@ Body {
     color: $text-warning !important;
 }
 
-.AccentDanger {
-    background-color: $bg-danger !important;
-    color: $text-danger !important;
+.AccentError {
+    background-color: $bg-error !important;
+    color: $text-error !important;
 }
 
 .AccentInfo {

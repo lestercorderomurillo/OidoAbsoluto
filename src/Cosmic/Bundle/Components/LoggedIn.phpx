@@ -2,8 +2,8 @@
 
 namespace Cosmic\Bundle\Components;
 
-use Cosmic\Binder\Authorization;
-use Cosmic\Binder\Component;
+use Cosmic\DOM\Authorization;
+use Cosmic\DOM\Component;
 
 class LoggedIn extends Component
 {

@@ -275,7 +275,7 @@ class SMTP
                 error_log($str);
                 break;
             case 'html':
-                //Cleans up output a bit for a better looking, HTML-safe output
+                //Cleans up output a bit for a better looking, HTML-tryGet output
                 echo gmdate('Y-m-d H:i:s'), ' ', htmlentities(
                     preg_replace('/[\r\n]+/', '', $str),
                     ENT_QUOTES,
@@ -314,11 +314,11 @@ class SMTP
     public function connect($host, $port = null, $timeout = 30, $options = [])
     {
         //Clear errors to avoid confusion
-        $this->setError('');
+        $this->setValidationError('');
         //Make sure we are __not__ connected
         if ($this->connected()) {
             //Already connected, generate error
-            $this->setError('Already connected to a server');
+            $this->setValidationError('Already connected to a server');
 
             return false;
         }
@@ -411,7 +411,7 @@ class SMTP
 
         //Verify we connected properly
         if (!is_resource($connection)) {
-            $this->setError(
+            $this->setValidationError(
                 'Failed to connect to server',
                 '',
                 (string) $errno,
@@ -493,7 +493,7 @@ class SMTP
         $OAuth = null
     ) {
         if (!$this->server_caps) {
-            $this->setError('AuthenticationMiddleware is not allowed before HELO/EHLO');
+            $this->setValidationError('AuthenticationMiddleware is not allowed before HELO/EHLO');
 
             return false;
         }
@@ -501,7 +501,7 @@ class SMTP
         if (array_key_exists('EHLO', $this->server_caps)) {
             //SMTP extensions are available; try to find a proper AuthenticationMiddleware method
             if (!array_key_exists('AUTH', $this->server_caps)) {
-                $this->setError('AuthenticationMiddleware is not allowed at this stage');
+                $this->setValidationError('AuthenticationMiddleware is not allowed at this stage');
                 //'at this stage' means that auth may be allowed after the stage changes
                 //e.g. after STARTTLS
 
@@ -530,7 +530,7 @@ class SMTP
                     }
                 }
                 if (empty($authtype)) {
-                    $this->setError('No supported AuthenticationMiddleware methods found');
+                    $this->setValidationError('No supported AuthenticationMiddleware methods found');
 
                     return false;
                 }
@@ -538,7 +538,7 @@ class SMTP
             }
 
             if (!in_array($authtype, $this->server_caps['AUTH'], true)) {
-                $this->setError("The requested AuthenticationMiddleware method \"$authtype\" is not supported by the server");
+                $this->setValidationError("The requested AuthenticationMiddleware method \"$authtype\" is not supported by the server");
 
                 return false;
             }
@@ -602,7 +602,7 @@ class SMTP
                 }
                 break;
             default:
-                $this->setError("AuthenticationMiddleware method \"$authtype\" is not supported");
+                $this->setValidationError("AuthenticationMiddleware method \"$authtype\" is not supported");
 
                 return false;
         }
@@ -681,7 +681,7 @@ class SMTP
      */
     public function close()
     {
-        $this->setError('');
+        $this->setValidationError('');
         $this->server_caps = null;
         $this->helo_rply = null;
         if (is_resource($this->smtp_conn)) {
@@ -987,13 +987,13 @@ class SMTP
     protected function sendCommand($command, $commandstring, $expect)
     {
         if (!$this->connected()) {
-            $this->setError("Called $command without being connected");
+            $this->setValidationError("Called $command without being connected");
 
             return false;
         }
         //Reject line breaks in all commands
         if ((strpos($commandstring, "\n") !== false) || (strpos($commandstring, "\r") !== false)) {
-            $this->setError("Command '$command' contained line breaks");
+            $this->setValidationError("Command '$command' contained line breaks");
 
             return false;
         }
@@ -1022,7 +1022,7 @@ class SMTP
         $this->edebug('SERVER -> CLIENT: ' . $this->last_reply, self::DEBUG_SERVER);
 
         if (!in_array($code, (array) $expect, true)) {
-            $this->setError(
+            $this->setValidationError(
                 "$command command failed",
                 $detail,
                 $code,
@@ -1036,7 +1036,7 @@ class SMTP
             return false;
         }
 
-        $this->setError('');
+        $this->setValidationError('');
 
         return true;
     }
@@ -1094,7 +1094,7 @@ class SMTP
      */
     public function turn()
     {
-        $this->setError('The SMTP TURN command is not implemented');
+        $this->setValidationError('The SMTP TURN command is not implemented');
         $this->edebug('SMTP NOTICE: ' . $this->error['error'], self::DEBUG_CLIENT);
 
         return false;
@@ -1167,7 +1167,7 @@ class SMTP
     public function getServerExt($name)
     {
         if (!$this->server_caps) {
-            $this->setError('No HELO/EHLO was sent');
+            $this->setValidationError('No HELO/EHLO was sent');
 
             return null;
         }
@@ -1179,7 +1179,7 @@ class SMTP
             if ('EHLO' === $name || array_key_exists('EHLO', $this->server_caps)) {
                 return false;
             }
-            $this->setError('HELO handshake was used; No information about server extensions available');
+            $this->setValidationError('HELO handshake was used; No information about server extensions available');
 
             return null;
         }
@@ -1242,7 +1242,7 @@ class SMTP
                         'SMTP -> get_lines(): retrying stream_select',
                         self::DEBUG_LOWLEVEL
                     );
-                    $this->setError('');
+                    $this->setValidationError('');
                     continue;
                 }
 
@@ -1318,7 +1318,7 @@ class SMTP
      * @param string $smtp_code    An associated SMTP error code
      * @param string $smtp_code_ex Extended SMTP code
      */
-    protected function setError($message, $detail = '', $smtp_code = '', $smtp_code_ex = '')
+    protected function setValidationError($message, $detail = '', $smtp_code = '', $smtp_code_ex = '')
     {
         $this->error = [
             'error' => $message,
@@ -1399,7 +1399,7 @@ class SMTP
     protected function errorHandler($errno, $errmsg, $errfile = '', $errline = 0)
     {
         $notice = 'Connection failed.';
-        $this->setError(
+        $this->setValidationError(
             $notice,
             $errmsg,
             (string) $errno

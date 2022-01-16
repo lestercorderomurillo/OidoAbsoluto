@@ -2,7 +2,7 @@
 
 namespace app\Components;
 
-use Cosmic\Binder\InlineComponent;
+use Cosmic\DOM\InlineComponent;
 
 class Piano extends InlineComponent
 {
@@ -14,8 +14,8 @@ class Piano extends InlineComponent
     {
         $this->displayMode = $displayMode;
         $this->audiosSources = json_encode($audiosSources, JSON_UNESCAPED_SLASHES);
-        $this->noteTypePiano = "1/2 (Piano) Tonos reales";
-        $this->noteTypeSin = "2/2 (Puros) Tonos artificiales";
+        $this->noteTypePiano = "1/2 (Tonos de Piano)";
+        $this->noteTypeSin = "2/2 (Tonos Puros)";
         $this->unselectedNote = "No se seleccionó ninguna nota";
         $this->loadingNotes = "Cargando audios en memoria...";
         $this->readyString = "Inicializar la prueba";

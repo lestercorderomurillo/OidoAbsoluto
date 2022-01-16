@@ -1,12 +1,25 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\ORM\Common;
+
+use Cosmic\Traits\StringableTrait;
+use Cosmic\Core\Interfaces\FactoryInterface;
 
 /**
  * A simple abstraction for database connection strings.
  */
-class ConnectionString
+class ConnectionString implements FactoryInterface
 {
+    use StringableTrait;
+
     /**
      * @var string $host The host used to connect to the database.
      */
@@ -23,26 +36,34 @@ class ConnectionString
     private string $password;
 
     /**
-     * @var string $dbName The stored database name.
+     * @var string $dataSource The stored database name.
      */
-    private string $dbName;
+    private string $dataSource;
 
     /**
      * Constructor.
      * 
      * @param string $host The source of the host.
-     * @param string $dbName The database to select.
+     * @param string $dataSource The database to select.
      * @param string $username The username to use to authentificate. Empty by default.
      * @param string $password The password for this user. Empty by default.
      * 
      * @return string
      */
-    public function __construct(string $host, string $dbName, string $username = __EMPTY__, string $password = __EMPTY__)
+    public function __construct(string $host, string $dataSource, string $username = __EMPTY__, string $password = __EMPTY__)
     {
         $this->host = $host;
-        $this->dbName = $dbName;
+        $this->dataSource = $dataSource;
         $this->username = $username;
         $this->password = $password;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function from($dataSource)
+    {
+        return json_decode($dataSource);
     }
 
     /**
@@ -56,13 +77,13 @@ class ConnectionString
     }
 
     /**
-     * Return the database name.
+     * Return the dataSource name.
      * 
-     * @return string The database name.
+     * @return string The dataSource name.
      */
-    public function getDatabaseName()
+    public function getDataSourceName()
     {
-        return $this->dbName;
+        return $this->dataSource;
     }
 
     /**
@@ -83,5 +104,13 @@ class ConnectionString
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(): string
+    {
+        return json_encode($this);
     }
 }

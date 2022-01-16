@@ -1,14 +1,14 @@
-$('#signupForm').submit(function (event) {
+$('#signupForm').on("submit", function () {
 
-    if (!Validator.validateDate("birthDay")) {
-        event.preventDefault();
-        return false;
+    if (allComponentsValidated()){
+
+        $('#submit').prop("disabled", true);
+        $('#submit').html("Subiendo formulario...");
+        
+        return true;
     }
 
-    Validator.disableDateSubComponents("birthDay");
-
-    $('#submit').prop("disabled", true);
-    $('#submit').html("Subiendo formulario...");
+    return false;
     
 });
 

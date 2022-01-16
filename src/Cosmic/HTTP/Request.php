@@ -1,8 +1,18 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\HTTP;
 
-use Cosmic\Utilities\Text;
+use Cosmic\Utilities\Strings;
+use Cosmic\Traits\ValuesGetterTrait;
+use Cosmic\Traits\ValuesSetterTrait;
 
 /**
  * Representation of an incoming, client-side request.
@@ -22,6 +32,8 @@ use Cosmic\Utilities\Text;
  */
 class Request
 {
+    use ValuesSetterTrait;
+    use ValuesGetterTrait;
 
     /**
      * @var string $protocol The HTTP protocol. Accepts only "http" or "https".
@@ -146,6 +158,7 @@ class Request
         510 => 'Not Extended',
         511 => 'Network AuthenticationMiddleware Required',
     ];
+
     /**
      * Constructor.
      * Creates a new empty request object. (200 OK by default)
@@ -162,7 +175,7 @@ class Request
      * Intercept the new incoming request from the client.
      * This method will build the client request from the PHP variables.
      * 
-     * @return Request 
+     * @return Request The new request object from the client.
      */
     public static function intercept(): Request
     {
@@ -173,51 +186,47 @@ class Request
 
         $request->action = explode("?", $request->uri, 2)[0];
 
-        if(str_ends_with($request->action, "/")){
+        if (str_ends_with($request->action, "/")) {
             $request->action = substr($request->action, 0, -1);
         }
 
-        if($request->action == __EMPTY__){
+        if ($request->action == __EMPTY__) {
             $request->action = "/";
         }
 
         $request->headers = array_change_key_case(getallheaders(), CASE_LOWER);
 
-        $request->username = Text::sanitizeString(safe($_SERVER["PHP_AUTH_USER"], ""));
-        $request->password = Text::sanitizeString(safe($_SERVER["PHP_AUTH_PW"], ""));
+        $request->username = Strings::sanitize(tryGet($_SERVER["PHP_AUTH_USER"], ''));
+        $request->password = Strings::sanitize(tryGet($_SERVER["PHP_AUTH_PW"], ''));
 
         $request->formData = [];
         $request->method = strtolower($_SERVER['REQUEST_METHOD']);
 
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 
             $input = file_get_contents('php://input');
-            
-            if($input !== false && $input != __EMPTY__){
+
+            if ($input !== false && $input != __EMPTY__) {
                 $request->formData = json_decode($input, true);
             }
-
-        }else{
+        } else {
 
             if ($request->method == "get") {
                 foreach ($_GET as $parameter => $value) {
-                    $request->formData[$parameter] = Text::sanitizeString($value);
+                    $request->formData[$parameter] = Strings::sanitize($value);
                 }
             } else if ($request->method == "post") {
                 foreach ($_POST as $parameter => $value) {
-                    $request->formData[$parameter] = Text::sanitizeString($value);
+                    $request->formData[$parameter] = Strings::sanitize($value);
                 }
             }
-
         }
-
-        
 
         return $request;
     }
 
     /**
-     * Return the used protocol for this request. Can be "http" or "https".
+     * Return the used protocol for this request. Can be either "http" or "https".
      * 
      * @return string The HTTP protocol.
      */

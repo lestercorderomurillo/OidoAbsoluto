@@ -34,7 +34,7 @@ use ScssPhp\ScssPhp\Formatter\Compressed;
 use ScssPhp\ScssPhp\Formatter\Expanded;
 use ScssPhp\ScssPhp\Formatter\OutputBlock;
 use ScssPhp\ScssPhp\Logger\LoggerInterface;
-use ScssPhp\ScssPhp\Logger\StreamLogger;
+use ScssPhp\ScssPhp\Logger\StringseamLogger;
 use ScssPhp\ScssPhp\Node\Number;
 use ScssPhp\ScssPhp\SourceMap\SourceMapGenerator;
 use ScssPhp\ScssPhp\Util\Path;
@@ -412,9 +412,9 @@ class Compiler
      *
      * @deprecated Use {@see setLogger} instead
      */
-    public function setErrorOuput($handle)
+    public function setValidationErrorOuput($handle)
     {
-        @trigger_error('The method "setErrorOuput" is deprecated. Use "setLogger" instead.', E_USER_DEPRECATED);
+        @trigger_error('The method "setValidationErrorOuput" is deprecated. Use "setLogger" instead.', E_USER_DEPRECATED);
 
         $this->logger = new StreamLogger($handle);
     }
@@ -2484,7 +2484,7 @@ class Compiler
                             $default = $start . 'all';
                         }
 
-                        // all can be safely ignored and mixed with whatever else
+                        // all can be tryGetly ignored and mixed with whatever else
                         if ($newType !== ['all']) {
                             if ($type) {
                                 $type = $this->mergeMediaTypes($type, $newType);
@@ -3837,14 +3837,14 @@ EOL;
     /**
      * Find a function reference
      * @param string $name
-     * @param bool $safeCopy
+     * @param bool $tryGetCopy
      * @return array
      */
-    protected function getFunctionReference($name, $safeCopy = false)
+    protected function getFunctionReference($name, $tryGetCopy = false)
     {
         // SCSS @function
         if ($func = $this->get(static::$namespaces['function'] . $name, false)) {
-            if ($safeCopy) {
+            if ($tryGetCopy) {
                 $func = clone $func;
             }
 

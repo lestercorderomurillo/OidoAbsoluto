@@ -235,7 +235,7 @@ abstract class Formatter
     }
 
     /**
-     * Test and clean safely empty children
+     * Test and clean tryGetly empty children
      *
      * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
      *

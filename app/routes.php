@@ -1,6 +1,6 @@
 <?php
 
-use Cosmic\HTTP\Server\Router;
+use Cosmic\HTTP\Router;
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
 use App\Controllers\InformationController;
@@ -8,6 +8,8 @@ use Cosmic\Bundle\Middlewares\GuestMiddleware;
 use Cosmic\Bundle\Middlewares\RegularUserMiddleware;
 use Cosmic\Bundle\Middlewares\AdministratorMiddleware;
 use Cosmic\Bundle\Middlewares\AuthenticationMiddleware;
+use Cosmic\HTTP\Request;
+use Cosmic\VDOM\Compiler;
 
 /** 
  * --- Routes -----------------------------------------------------------------------------
@@ -18,8 +20,8 @@ use Cosmic\Bundle\Middlewares\AuthenticationMiddleware;
  * @var Router $router The Router instance.
  */
 
-$router = app()->get(Router::class);
-
+$router = app(Router::class);
+/*
 $router->withController(HomeController::class, function (Router $router) {
 
     $router->get('/', ["index"]);
@@ -79,10 +81,12 @@ $router->withController(InformationController::class, function (Router $router) 
     $router->get('/about', ["about"]);
     $router->get('/policy', ["policy"]);
 
-});
+});*/
 
-$router->any(function (Router $router) {
+$router->any(function (Compiler $compiler, Request $request) {
     
-    return $router->view("404");
+    return $compiler->compileString("", []); 
+    
+    //return $router->view("404");
 
 });

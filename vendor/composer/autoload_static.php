@@ -44,6 +44,7 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'A' => 
         array (
             'App\\ViewModels\\' => 15,
+            'App\\Providers\\' => 14,
             'App\\Models\\' => 11,
             'App\\Middlewares\\' => 16,
             'App\\Controllers\\' => 16,
@@ -103,6 +104,10 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         'App\\ViewModels\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/ViewModels',
+        ),
+        'App\\Providers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Providers',
         ),
         'App\\Models\\' => 
         array (

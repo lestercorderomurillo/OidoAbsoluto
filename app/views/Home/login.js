@@ -1,4 +1,4 @@
-$("#loginForm").validate({
+validateForm("loginForm", {
     rules: {
         email: {
             required: true,

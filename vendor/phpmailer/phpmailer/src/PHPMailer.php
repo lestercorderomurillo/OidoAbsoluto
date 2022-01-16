@@ -842,7 +842,7 @@ class PHPMailer
     }
 
     /**
-     * Call mail() in a safe_mode-aware fashion.
+     * Call mail() in a tryGet_mode-aware fashion.
      * Also, unless sendmail_path points to sendmail (or something that
      * claims to be sendmail), don't pass params (not a perfect fix,
      * but it will do).
@@ -913,7 +913,7 @@ class PHPMailer
                 error_log($str);
                 break;
             case 'html':
-                //Cleans up output a bit for a better looking, HTML-safe output
+                //Cleans up output a bit for a better looking, HTML-tryGet output
                 echo htmlentities(
                     preg_replace('/[\r\n]+/', '', $str),
                     ENT_QUOTES,
@@ -1086,7 +1086,7 @@ class PHPMailer
                 $kind,
                 $address
             );
-            $this->setError($error_message);
+            $this->setValidationError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
                 throw new \Exception($error_message);
@@ -1136,7 +1136,7 @@ class PHPMailer
                 $this->lang('Invalid recipient kind'),
                 $kind
             );
-            $this->setError($error_message);
+            $this->setValidationError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
                 throw new \Exception($error_message);
@@ -1151,7 +1151,7 @@ class PHPMailer
                 $kind,
                 $address
             );
-            $this->setError($error_message);
+            $this->setValidationError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
                 throw new \Exception($error_message);
@@ -1293,7 +1293,7 @@ class PHPMailer
                 $this->lang('invalid_address'),
                 $address
             );
-            $this->setError($error_message);
+            $this->setValidationError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
                 throw new \Exception($error_message);
@@ -1491,7 +1491,7 @@ class PHPMailer
             return $this->postSend();
         } catch (\Exception $exc) {
             $this->mailHeader = '';
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
             }
@@ -1558,7 +1558,7 @@ class PHPMailer
                         $address_kind,
                         $this->$address_kind
                     );
-                    $this->setError($error_message);
+                    $this->setValidationError($error_message);
                     $this->edebug($error_message);
                     if ($this->exceptions) {
                         throw new \Exception($error_message);
@@ -1625,7 +1625,7 @@ class PHPMailer
 
             return true;
         } catch (\Exception $exc) {
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
             }
@@ -1665,7 +1665,7 @@ class PHPMailer
             if ($this->Mailer === 'smtp' && $this->SMTPKeepAlive == true) {
                 $this->smtp->reset();
             }
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -1786,7 +1786,7 @@ class PHPMailer
     }
 
     /**
-     * Fix CVE-2016-10033 and CVE-2016-10045 by disallowing potentially unsafe shell characters.
+     * Fix CVE-2016-10033 and CVE-2016-10045 by disallowing potentially untryGet shell characters.
      * Note that escapeshellarg and escapeshellcmd are inadequate for our purposes, especially on Windows.
      *
      * @see https://github.com/PHPMailer/PHPMailer/issues/924 CVE-2016-10045 bug report
@@ -1837,7 +1837,7 @@ class PHPMailer
     }
 
     /**
-     * Check whether a file path is safe, accessible, and readable.
+     * Check whether a file path is tryGet, accessible, and readable.
      *
      * @param string $path A relative or absolute path to a file
      *
@@ -1988,7 +1988,7 @@ class PHPMailer
             $smtp_from = $this->Sender;
         }
         if (!$this->smtp->mail($smtp_from)) {
-            $this->setError($this->lang('from_failed') . $smtp_from . ' : ' . implode(',', $this->smtp->getError()));
+            $this->setValidationError($this->lang('from_failed') . $smtp_from . ' : ' . implode(',', $this->smtp->getError()));
             throw new \Exception($this->ErrorInfo, self::STOP_CRITICAL);
         }
 
@@ -3186,7 +3186,7 @@ class PHPMailer
                 7 => $name,
             ];
         } catch (\Exception $exc) {
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -3343,7 +3343,7 @@ class PHPMailer
 
             return $file_buffer;
         } catch (\Exception $exc) {
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -3390,7 +3390,7 @@ class PHPMailer
                 $encoded = $this->encodeQP($str);
                 break;
             default:
-                $this->setError($this->lang('encoding') . $encoding);
+                $this->setValidationError($this->lang('encoding') . $encoding);
                 if ($this->exceptions) {
                     throw new \Exception($this->lang('encoding') . $encoding);
                 }
@@ -3676,7 +3676,7 @@ class PHPMailer
                 7 => 0,
             ];
         } catch (\Exception $exc) {
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -3748,7 +3748,7 @@ class PHPMailer
                 7 => $cid,
             ];
         } catch (\Exception $exc) {
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -3809,7 +3809,7 @@ class PHPMailer
                 7 => $cid,
             ];
         } catch (\Exception $exc) {
-            $this->setError($exc->getMessage());
+            $this->setValidationError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -3996,7 +3996,7 @@ class PHPMailer
      *
      * @param string $msg
      */
-    protected function setError($msg)
+    protected function setValidationError($msg)
     {
         ++$this->error_count;
         if ('smtp' === $this->Mailer && null !== $this->smtp) {
@@ -4476,8 +4476,8 @@ class PHPMailer
     }
 
     /**
-     * Multi-byte-safe pathinfo replacement.
-     * Drop-in replacement for pathinfo(), but multibyte- and cross-platform-safe.
+     * Multi-byte-tryGet pathinfo replacement.
+     * Drop-in replacement for pathinfo(), but multibyte- and cross-platform-tryGet.
      *
      * @see http://www.php.net/manual/en/function.pathinfo.php#107461
      *
@@ -4544,7 +4544,7 @@ class PHPMailer
 
             return true;
         }
-        $this->setError($this->lang('variable_set') . $name);
+        $this->setValidationError($this->lang('variable_set') . $name);
 
         return false;
     }

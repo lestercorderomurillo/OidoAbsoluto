@@ -80,7 +80,7 @@ Body {
   background-color: #f4e295 !important;
   color: #7a501a !important;
 }
-.AccentDanger {
+.AccentError {
   background-color: #7e2020 !important;
   color: #ce8888 !important;
 }
@@ -95,7 +95,7 @@ Body {
   color: #0a3048;
   background-color: #a4c5da;
 }
-.AlertDanger {
+.AlertError {
   color: #ce8888;
   background-color: #7e2020;
 }
@@ -131,7 +131,7 @@ Button.AccentWarning:hover {
   background-color: #7a501a !important;
   color: #f4e295 !important;
 }
-Button.AccentDanger:hover {
+Button.AccentError:hover {
   background-color: #ce8888 !important;
   color: #7e2020 !important;
 }
@@ -237,7 +237,7 @@ Button.AccentWarning:hover {
   background-color: #7a501a !important;
   color: #f4e295 !important;
 }
-Button.AccentDanger:hover {
+Button.AccentError:hover {
   background-color: #ce8888 !important;
   color: #7e2020 !important;
 }
@@ -269,7 +269,7 @@ Button.AccentWarning:hover {
   background-color: #7a501a !important;
   color: #f4e295 !important;
 }
-Button.AccentDanger:hover {
+Button.AccentError:hover {
   background-color: #ce8888 !important;
   color: #7e2020 !important;
 }

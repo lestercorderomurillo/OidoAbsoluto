@@ -147,7 +147,7 @@ class LaTeXPrinter implements Visitor
 
     /**
      * Check if a multiplication needs an inserted \cdot or if
-     * it can be safely written with implicit multiplication.
+     * it can be tryGetly written with implicit multiplication.
      *
      * @retval bool
      * @param $left  AST of first factor

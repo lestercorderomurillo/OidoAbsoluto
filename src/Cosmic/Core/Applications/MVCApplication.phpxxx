@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
+namespace Cosmic\Core\Applications;
+
+use Cosmic\Core\Abstracts\Application;
+use Cosmic\DOM\Bindings;
+use Cosmic\DOM\Compiler;
+use Cosmic\FileSystem\FS;
+use Cosmic\FileSystem\Paths\FilePath;
+use Cosmic\HTTP\Request;
+use Cosmic\HTTP\Server\HttpServer;
+use Cosmic\HTTP\Server\DOMServer;
+use Cosmic\HTTP\Router;
+use Cosmic\HTTP\Server\Session;
+
+/**
+ * This class represents a MVC application.
+ */
+abstract class MVCApplication extends Application
+{
+    /**
+     * @var bool $compileStylesheet On true, the server will compile the stylesheets on the onInitialization() method.
+     */
+    private bool $compileStylesheet = false;
+
+    /**
+     * @inheritdoc
+     */
+    protected function onConfiguration(): void
+    {
+        if(FS::exists(new FilePath(__CONTENT__ . "Output/Build.css"))){
+            $this->compileStylesheet = true;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function onServicesInjection(): void
+    {
+        $this->primitive(Request::class, Request::intercept());
+        $this->singleton(Session::class);
+        $this->singleton(Router::class);
+        $this->singleton(Compiler::class);
+        $this->singleton(Bindings::class);
+        $this->singleton(DOMServer::class);
+        $this->singleton(HttpServer::class);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function onInitialization(): void
+    {
+        $this->get(DOMServer::class)->run();
+
+        if($this->compileStylesheet){
+            $this->get(Compiler::class)->compileStylesheet();
+        }
+
+        $this->get(HttpServer::class)->run();
+    }
+}

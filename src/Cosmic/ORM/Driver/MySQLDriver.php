@@ -1,12 +1,18 @@
 <?php
 
+/**
+ * The Cosmic Framework 1.0 Beta
+ * Quick MVC enviroment with scoped component rendering capability.
+ * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+
+ * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
+ */
+
 namespace Cosmic\ORM\Driver;
 
-use Cosmic\Utilities\Text;
-use Cosmic\ORM\Bootstrap\Driver;
+use Cosmic\ORM\Abstracts\Driver;
 use Cosmic\ORM\Common\QueryResult;
 use Cosmic\ORM\Exceptions\QueryExecutionException;
-use Cosmic\ORM\Exceptions\UnreacheableDatabaseException;
 
 /**
  * Represents a driver for a SQL database.
@@ -16,48 +22,16 @@ class MySQLDriver extends Driver
     /**
      * @inheritdoc
      */
-    public function openConnection(): void
-    {
-        try {
-
-            $host = $this->connectionString->getHost();
-            $dbName = $this->connectionString->getDatabaseName();
-
-            $this->pdo = new \PDO(
-                "mysql:host=$host;dbname=$dbName",
-                $this->connectionString->getUsername(),
-                $this->connectionString->getPassword()
-            );
-
-            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        } catch (\Exception $e) {
-
-            throw new UnreacheableDatabaseException($e->getMessage);
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function closeConnection(): void
-    {
-        $this->pdo = null;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function execute(string $preparedQuery, array $values): QueryResult
     {
         $result = new QueryResult($preparedQuery);
 
         try {
 
-            $handler = $this->pdo->prepare($preparedQuery, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
+            $handler = $this->getConnection()->getStream()->prepare($preparedQuery, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
             $handler->execute($values);
 
-            $result->setLastestInsertedId($this->pdo->lastInsertId());
+            $result->setLastestInsertedId($this->getConnection()->getStream()->lastInsertId());
 
             if (str_starts_with($preparedQuery, "SELECT")) {
 
