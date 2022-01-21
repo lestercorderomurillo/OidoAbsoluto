@@ -3,7 +3,7 @@
 /**
  * The Cosmic Framework 1.0 Beta
  * Quick MVC enviroment with scoped component rendering capability.
- * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+ * Supports PHP, HPHP for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
 
  * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
  */
@@ -102,15 +102,14 @@ class ErrorHandlingProvider extends AutoProvider
 
             $parsedNumber = sprintf('%02d', $number);
             $function = Strings::getClassBaseName($trace['function']);
-            $stackTrace .= "<div>$parsedNumber at $class$function ($file:$line)</div>";
+            $stackTrace .= "\n<div>$parsedNumber at $class$function ($file:$line)</div>";
             $number--;
         }
 
         if (__CONSOLE__) {
 
             cout("An error has occurred while processing your command.", [], LogLevel::EMERGENCY);
-            cout("Error message: {0}", ["{0}" => $message], LogLevel::EMERGENCY);
-            cout("Error code: {0}", ["{0}" => $code], LogLevel::EMERGENCY);
+            cout("{0}", ["{0}" => $message], LogLevel::EMERGENCY);
 
             die();
 

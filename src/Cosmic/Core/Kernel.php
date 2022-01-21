@@ -3,7 +3,7 @@
 /**
  * The Cosmic Framework 1.0 Beta
  * Quick MVC enviroment with scoped component rendering capability.
- * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+ * Supports PHP, HPHP for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
 
  * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
  */
@@ -56,6 +56,19 @@ if (!function_exists('create')) {
     }
 }
 
+if (!function_exists('command')) {
+    /**
+     */
+    function command($alias)
+    {
+        $hphpCommand = create($alias);
+        return $hphpCommand->execute();
+    }
+}
+
+
+
+
 if (!function_exists('publish')) {
     /**
      * Publish a component into the IoC container.
@@ -100,24 +113,23 @@ if (!function_exists('cout')) {
      */
     function cout($message, $context = [], $level = LogLevel::DEBUG): void
     {
-        try{
+        try {
 
             if (__CONSOLE__) {
                 $logger = app('ConsoleLogger');
             } else {
                 $logger = app('Logger');
             }
-
-        }catch(NotFoundDependencyException $e){
+        } catch (NotFoundDependencyException $e) {
 
             $logger = null;
         }
 
         $GLOBALS["stdoutQueue"][]  = [$level, $message, $context];
 
-        if($logger != null){
+        if ($logger != null) {
 
-            foreach($GLOBALS["stdoutQueue"] as $out) {
+            foreach ($GLOBALS["stdoutQueue"] as $out) {
                 $logger->log($out[0], $out[1], $out[2]);
             }
 

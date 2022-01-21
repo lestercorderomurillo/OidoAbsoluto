@@ -1,0 +1,28 @@
+<?hphp
+
+namespace App\Components;
+
+use Cosmic\HPHP\Node;
+use Cosmic\HPHP\Component;
+
+class MyComponent extends Component
+{ 
+    private float $type = null;
+
+    public function __construct(string $name, array $from)
+    {
+        $this->name = $name;
+        $this->from = $from;
+    }
+
+    public function render()
+    {
+        return <div>
+            <Component>
+                <Foreach from={$this->from} using={$iterator}>
+                    <Component>$iterator</Component>
+                </Foreach>
+            </Component>
+        </div>;
+    }
+}

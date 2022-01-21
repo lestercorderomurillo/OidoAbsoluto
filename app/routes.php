@@ -8,8 +8,9 @@ use Cosmic\Bundle\Middlewares\GuestMiddleware;
 use Cosmic\Bundle\Middlewares\RegularUserMiddleware;
 use Cosmic\Bundle\Middlewares\AdministratorMiddleware;
 use Cosmic\Bundle\Middlewares\AuthenticationMiddleware;
+use Cosmic\CLI\Commands\CompileHPHPCommand;
 use Cosmic\HTTP\Request;
-use Cosmic\VDOM\Compiler;
+use Cosmic\HPHP\Compiler;
 
 /** 
  * --- Routes -----------------------------------------------------------------------------
@@ -83,9 +84,10 @@ $router->withController(InformationController::class, function (Router $router) 
 
 });*/
 
-$router->any(function (Compiler $compiler, Request $request) {
-    
-    return $compiler->compileString("", []); 
+$router->any(function () {
+
+    $exitCode = command(CompileHPHPCommand::class);
+    //return $compiler->compileString("", []); 
     
     //return $router->view("404");
 

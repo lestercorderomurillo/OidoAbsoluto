@@ -6374,18 +6374,18 @@ EOL;
             $prototypes = [$prototypes];
         }
 
-        $parsedPrototypes = array_map([$this, 'parseFunctionPrototype'], $prototypes);
-        assert(!empty($parsedPrototypes));
-        $matchedPrototype = $this->selectFunctionPrototype($parsedPrototypes, \count($positionalArgs), $names);
+        $parsedHPHPs = array_map([$this, 'parseFunctionHPHP'], $prototypes);
+        assert(!empty($parsedHPHPs));
+        $matchedHPHP = $this->selectFunctionHPHP($parsedHPHPs, \count($positionalArgs), $names);
 
-        $this->verifyPrototype($matchedPrototype, \count($positionalArgs), $names, $hasSplat);
+        $this->verifyHPHP($matchedHPHP, \count($positionalArgs), $names, $hasSplat);
 
-        $vars = $this->applyArgumentsToDeclaration($matchedPrototype, $positionalArgs, $namedArgs, $separator);
+        $vars = $this->applyArgumentsToDeclaration($matchedHPHP, $positionalArgs, $namedArgs, $separator);
 
         $finalArgs = [];
         $keyArgs = [];
 
-        foreach ($matchedPrototype['arguments'] as $argument) {
+        foreach ($matchedHPHP['arguments'] as $argument) {
             list($normalizedName, $originalName, $default) = $argument;
 
             if (isset($vars[$normalizedName])) {
@@ -6403,11 +6403,11 @@ EOL;
             $keyArgs[$originalName] = $value;
         }
 
-        if ($matchedPrototype['rest_argument'] !== null) {
-            $value = $vars[$matchedPrototype['rest_argument']];
+        if ($matchedHPHP['rest_argument'] !== null) {
+            $value = $vars[$matchedHPHP['rest_argument']];
 
             $finalArgs[] = $value;
-            $keyArgs[$matchedPrototype['rest_argument']] = $value;
+            $keyArgs[$matchedHPHP['rest_argument']] = $value;
         }
 
         return [$finalArgs, $keyArgs];
@@ -6429,7 +6429,7 @@ EOL;
      * @return array
      * @phpstan-return array{arguments: list<array{0: string, 1: string, 2: array|Number|null}>, rest_argument: string|null}
      */
-    private function parseFunctionPrototype(array $prototype)
+    private function parseFunctionHPHP(array $prototype)
     {
         static $parser = null;
 
@@ -6489,14 +6489,14 @@ EOL;
      * @phpstan-param non-empty-list<array{arguments: list<array{0: string, 1: string, 2: array|Number|null}>, rest_argument: string|null}> $prototypes
      * @phpstan-return array{arguments: list<array{0: string, 1: string, 2: array|Number|null}>, rest_argument: string|null}
      */
-    private function selectFunctionPrototype(array $prototypes, $positional, array $names)
+    private function selectFunctionHPHP(array $prototypes, $positional, array $names)
     {
         $fuzzyMatch = null;
         $minMismatchDistance = null;
 
         foreach ($prototypes as $prototype) {
             // Ideally, find an exact match.
-            if ($this->checkPrototypeMatches($prototype, $positional, $names)) {
+            if ($this->checkHPHPMatches($prototype, $positional, $names)) {
                 return $prototype;
             }
 
@@ -6524,7 +6524,7 @@ EOL;
     /**
      * Checks whether the argument invocation matches the callable prototype.
      *
-     * The rules are similar to {@see verifyPrototype}. The boolean return value
+     * The rules are similar to {@see verifyHPHP}. The boolean return value
      * avoids the overhead of building and catching exceptions when the reason of
      * not matching the prototype does not need to be known.
      *
@@ -6536,7 +6536,7 @@ EOL;
      *
      * @phpstan-param array{arguments: list<array{0: string, 1: string, 2: array|Number|null}>, rest_argument: string|null} $prototype
      */
-    private function checkPrototypeMatches(array $prototype, $positional, array $names)
+    private function checkHPHPMatches(array $prototype, $positional, array $names)
     {
         $nameUsed = 0;
 
@@ -6583,7 +6583,7 @@ EOL;
      *
      * @phpstan-param array{arguments: list<array{0: string, 1: string, 2: array|Number|null}>, rest_argument: string|null} $prototype
      */
-    private function verifyPrototype(array $prototype, $positional, array $names, $hasSplat)
+    private function verifyHPHP(array $prototype, $positional, array $names, $hasSplat)
     {
         $nameUsed = 0;
 
@@ -6808,7 +6808,7 @@ EOL;
 
         list($positionalArgs, $namedArgs, $names, $splatSeparator, $hasSplat) = $this->evaluateArguments($argValues, $reduce);
 
-        $this->verifyPrototype($prototype, \count($positionalArgs), $names, $hasSplat);
+        $this->verifyHPHP($prototype, \count($positionalArgs), $names, $hasSplat);
 
         $vars = $this->applyArgumentsToDeclaration($prototype, $positionalArgs, $namedArgs, $splatSeparator);
 
@@ -6866,7 +6866,7 @@ EOL;
      * Apply argument values per definition.
      *
      * This method assumes that the arguments are valid for the provided prototype.
-     * The validation with {@see verifyPrototype} must have been run before calling
+     * The validation with {@see verifyHPHP} must have been run before calling
      * it.
      * Arguments are returned as a map from the normalized argument names to the
      * value. Additional arguments are collected in a sass argument list available

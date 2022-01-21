@@ -3,31 +3,30 @@
 /**
  * The Cosmic Framework 1.0 Beta
  * Quick MVC enviroment with scoped component rendering capability.
- * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+ * Supports PHP, HPHP for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
 
  * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
  */
 
-namespace Cosmic\VDOM\Engine;
+namespace Cosmic\HPHP\Engine\Selectors;
+
+use Cosmic\HPHP\Engine\Selector;
 
 /**
  * This helper class is used to select substrings inside strings. Extremelly useful when doing string replacements.
  */
 class TokenSelector extends Selector
 {
-
     /**
-     * Selects the given string, starting at the given position and ending at the other position.
+     * Selects the given string, 'cutting' the input string from the start to the end position.
      * 
-     * @param string $input The string to select.
-     * @param int|null $startPosition The initial position of the selection.
-     * @param int|null $endPosition The final position of the selection.
-     * @param string $startDelimiter The initial delimiter used to select this string. Can be left blank
-     * @param $endDelimiter The final delimiter used to select this string. Can be left blank
-     * 
-     * @return void
+     * @param string $input The string to select from.
+     * @param int $startPosition The initial position of the selection.
+     * @param int|false $endPosition The final position of the selection.
+     * @param string $startDelimiter The entry point delimiter for this selector.
+     * @param string $endDelimiter The exit point delimiter for this selector.
      */
-    public function __construct(string $input, $startPosition, $endPosition, string $startDelimiter = "{", $endDelimiter = "}")
+    public function __construct(string $input, int $startPosition, $endPosition, string $startDelimiter = "{", $endDelimiter = "}")
     {
         parent::__construct($input, $startPosition, $endPosition);
         $this->startDelimiter = $startDelimiter;

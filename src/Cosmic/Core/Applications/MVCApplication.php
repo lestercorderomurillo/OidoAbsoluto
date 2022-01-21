@@ -3,7 +3,7 @@
 /**
  * The Cosmic Framework 1.0 Beta
  * Quick MVC enviroment with scoped component rendering capability.
- * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+ * Supports PHP, HPHP for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
 
  * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
  */
@@ -15,7 +15,8 @@ use Cosmic\Core\Logger;
 use Cosmic\HTTP\Runnables\HttpServer;
 use Cosmic\HTTP\Providers\HttpServerProvider;
 use Cosmic\HTTP\Router;
-use Cosmic\VDOM\Compiler;
+use Cosmic\HPHP\Compiler;
+use Cosmic\HPHP\Providers\CSSPropertyNamesProvider;
 
 /**
  * This class represents a MVC application.
@@ -28,7 +29,8 @@ abstract class MVCApplication extends Application
     public function boot(): void
     {
         parent::boot();
-        
+
+        CSSPropertyNamesProvider::boot();
         HttpServerProvider::default();
 
         app()->singleton(Compiler::class);

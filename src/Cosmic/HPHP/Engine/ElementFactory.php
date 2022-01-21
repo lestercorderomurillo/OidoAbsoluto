@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Cosmic\VDOM;
+namespace Cosmic\HPHP;
 
 use Cosmic\Core\Interfaces\FactoryInterface;
 

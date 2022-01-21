@@ -3,7 +3,7 @@
 /**
  * The Cosmic Framework 1.0 Beta
  * Quick MVC enviroment with scoped component rendering capability.
- * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+ * Supports PHP, HPHP for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
 
  * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
  */
@@ -51,5 +51,16 @@ class FilePath extends Path
     public function getExtension(): string
     {
         return $this->extension;
+    }
+
+    /**
+     * Returns the extension of the file. The dot is not included.
+     * 
+     * @return string The file extension. Ex: php or js.
+     */
+    public function setExtension(string $extension)
+    {
+        $this->setPath(strtr($this->toString(), [".$this->extension" => ".$extension"]));
+        $this->extension = $extension;
     }
 }

@@ -3,11 +3,13 @@
 namespace Cosmic\Core\Applications;
 
 use Psr\Log\LogLevel;
+use Cosmic\Utilities\Collections;
 use Cosmic\CLI\Abstracts\Command;
 use Cosmic\CLI\Providers\CommandProvider;
 use Cosmic\Core\Abstracts\Application;
 use Cosmic\Core\Abstracts\DIContainer;
-use Cosmic\Utilities\Collections;
+use Cosmic\HPHP\Providers\CompilerProvider;
+use Cosmic\HPHP\Providers\CSSPropertyNamesProvider;
 
 class ConsoleApplication extends Application
 {
@@ -26,6 +28,9 @@ class ConsoleApplication extends Application
         cout("$this->framework Console Environment $this->version is starting...", [], LogLevel::INFO);
 
         parent::boot();
+        
+        CompilerProvider::boot();
+        CSSPropertyNamesProvider::boot();
         CommandProvider::boot();
         
         cout("$this->framework Console Environment $this->version is ready...", [], LogLevel::INFO);

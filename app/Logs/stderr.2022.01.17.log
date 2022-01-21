@@ -1,0 +1,12 @@
+[2022.01.17-05:18:47] An error has occurred while processing your command.
+[2022.01.17-05:18:47] Cannot inject the closure. Expected parameter 'Parameter #0 [ <required> Cosmic\HPHP\Compiler $compiler ]'
+[2022.01.17-05:19:23] An error has occurred while processing your command.
+[2022.01.17-05:19:23] Cannot inject the closure. Expected parameter 'Parameter #0 [ <required> Cosmic\HPHP\Compiler $compiler ]'
+[2022.01.17-05:30:11] An error has occurred while processing your command.
+[2022.01.17-05:30:11] Class 'Cosmic\Core\Applications\HPHPProvider' not found
+[2022.01.17-06:04:03] An error has occurred while processing your command.
+[2022.01.17-06:04:03] Class Cosmic\CLI\Commands\CompileHPHPCommand does not exist
+[2022.01.17-06:05:39] An error has occurred while processing your command.
+[2022.01.17-06:05:39] Undefined variable: tagName
+[2022.01.17-07:38:46] An error has occurred while processing your command.
+[2022.01.17-07:38:46] Undefined property: Cosmic\FileSystem\Paths\FilePath::$path

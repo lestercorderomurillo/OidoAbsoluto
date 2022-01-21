@@ -3,6 +3,7 @@
 namespace Cosmic\CLI\Providers;
 
 use Cosmic\Core\Abstracts\AutoProvider;
+use Cosmic\CLI\Commands\CompileHPHPCommand;
 use Cosmic\CLI\Commands\CreateControllerCommand;
 
 class CommandProvider extends AutoProvider
@@ -12,6 +13,7 @@ class CommandProvider extends AutoProvider
     public static function boot(): void
     {
         static::$commands[] = create(CreateControllerCommand::class);
+        static::$commands[] = create(CompileHPHPCommand::class);
     }
 
     public static function provide()

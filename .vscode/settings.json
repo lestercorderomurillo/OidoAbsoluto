@@ -14,16 +14,70 @@
             "textMateRules": [
                 {
                     "scope": [
-                        "component.name",
+                        "source.hphp",
                     ],
                     "settings": {
-                        "foreground": "#e1bd62"
+                        "foreground": "#d4d4d4"
                     }
                 },
                 {
                     "scope": [
-                        "component.default",
-                        "component.name.keyword"
+                        "source.hphp.puntuaction",
+                        "source.hphp.block.fn",
+                        "source.hphp.node.prop.value"
+                    ],
+                    "settings": {
+                        "foreground": "#a0a0a0"
+                    }
+                },
+                {
+                    "scope": [
+                        "source.hphp.doctype",
+                        "source.hphp.keyword",
+                    ],
+                    "settings": {
+                        "foreground": "#7d69f0"
+                    }
+                },
+                {
+                    "scope": [
+                        "source.hphp.type",
+                        "source.hphp.namespace.definition",
+                        "source.hphp.use.definition"
+                    ],
+                    "settings": {
+                        "foreground": "#4EC9B0"
+                    }
+                },
+                {
+                    "scope": [
+                        "source.hphp.fn.name",
+                    ],
+                    "settings": {
+                        "foreground": "#eedaa3"
+                    }
+                },
+                {
+                    "scope": [
+                        "source.hphp.variable",
+                        "source.hphp.node.content",
+                        "source.hphp.fn.variable"
+                    ],
+                    "settings": {
+                        "foreground": "#97eaf5"
+                    }
+                },
+                {
+                    "scope": [
+                        "source.hphp.comments",
+                    ],
+                    "settings": {
+                        "foreground": "#abdd8e"
+                    }
+                },
+                {
+                    "scope": [
+                        "source.hphp.node._content",
                     ],
                     "settings": {
                         "foreground": "#569CD6"
@@ -31,110 +85,10 @@
                 },
                 {
                     "scope": [
-                        "component.attributes",
+                        "source.hphp.keyword.node.component",
                     ],
                     "settings": {
-                        "foreground": "#9CDCFE"
-                    }
-                },
-                {
-                    "scope": [
-                        "component.string",
-                    ],
-                    "settings": {
-                        "foreground": "#CE9178"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.entity"
-                    ],
-                    "settings": {
-                        "foreground": "#808080"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.bracket",
-                        "language.separator.parenthesis",
-                        "component.separator.equals",
-                        "expression.callback.separator"
-                    ],
-                    "settings": {
-                        "foreground": "#747474"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.quote"
-                    ],
-                    "settings": {
-                        "foreground": "#CE9178"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.property"
-                    ],
-                    "settings": {
-                        "foreground": "#d6c5c5"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.property.keyword",
-                        "component.attributes.event"
-                    ],
-                    "settings": {
-                        "foreground": "#7577da"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.callback.action"
-                    ],
-                    "settings": {
-                        "foreground": "#DCDCAA"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.callback.parameters"
-                    ],
-                    "settings": {
-                        "foreground": "#cacaca"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.math"
-                    ],
-                    "settings": {
-                        "foreground": "#2daeeb"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.math.keyword"
-                    ],
-                    "settings": {
-                        "foreground": "#c7ac54"
-                    }
-                },
-                {
-                    "scope": [
-                        "language.separator.parenthesis.callback"
-                    ],
-                    "settings": {
-                        "foreground": "#c5c5c5"
-                    }
-                },
-                {
-                    "scope": [
-                        "expression.componentReference"
-                    ],
-                    "settings": {
-                        "foreground": "#9CDCFE"
+                        "foreground": "#f8d86e"
                     }
                 }
             ]

@@ -1,0 +1,143 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.associations": {
+        "*.pexec": "php",
+        "*.phar": "php",
+    },
+    "intelephense.files.associations": [
+        "*.php",
+        "*.phps"
+    ],
+    "debug.allowBreakpointsEverywhere": true,
+    "editor.tokenColorCustomizations": {
+        "[Default Dark+]": {
+            "textMateRules": [
+                {
+                    "scope": [
+                        "component.name",
+                    ],
+                    "settings": {
+                        "foreground": "#e1bd62"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.default",
+                        "component.name.keyword"
+                    ],
+                    "settings": {
+                        "foreground": "#569CD6"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.attributes",
+                    ],
+                    "settings": {
+                        "foreground": "#9CDCFE"
+                    }
+                },
+                {
+                    "scope": [
+                        "component.string",
+                    ],
+                    "settings": {
+                        "foreground": "#CE9178"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.entity"
+                    ],
+                    "settings": {
+                        "foreground": "#808080"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.bracket",
+                        "language.separator.parenthesis",
+                        "component.separator.equals",
+                        "expression.callback.separator"
+                    ],
+                    "settings": {
+                        "foreground": "#747474"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.quote"
+                    ],
+                    "settings": {
+                        "foreground": "#CE9178"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.property"
+                    ],
+                    "settings": {
+                        "foreground": "#d6c5c5"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.property.keyword",
+                        "component.attributes.event"
+                    ],
+                    "settings": {
+                        "foreground": "#7577da"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.callback.action"
+                    ],
+                    "settings": {
+                        "foreground": "#DCDCAA"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.callback.parameters"
+                    ],
+                    "settings": {
+                        "foreground": "#cacaca"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.math"
+                    ],
+                    "settings": {
+                        "foreground": "#2daeeb"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.math.keyword"
+                    ],
+                    "settings": {
+                        "foreground": "#c7ac54"
+                    }
+                },
+                {
+                    "scope": [
+                        "language.separator.parenthesis.callback"
+                    ],
+                    "settings": {
+                        "foreground": "#c5c5c5"
+                    }
+                },
+                {
+                    "scope": [
+                        "expression.componentReference"
+                    ],
+                    "settings": {
+                        "foreground": "#9CDCFE"
+                    }
+                }
+            ]
+        }
+    }
+}

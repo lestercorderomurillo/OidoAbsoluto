@@ -6,3 +6,17 @@
 [2022.01.16-07:23:28] An error has occurred while processing your command.
 [2022.01.16-07:23:28] Error message: Undefined offset: 1
 [2022.01.16-07:23:28] Error code: 8
+[2022.01.16-11:00:51] An error has occurred while processing your command.
+[2022.01.16-11:00:51] Error message: Undefined offset: 1
+[2022.01.16-11:00:51] Error code: 8
+[2022.01.16-18:49:38] An error has occurred while processing your command.
+[2022.01.16-18:49:38] Error message: Undefined offset: 1
+[2022.01.16-18:49:38] Error code: 8
+[2022.01.16-18:51:19] An error has occurred while processing your command.
+[2022.01.16-18:51:19] Error message: Too few arguments to function Cosmic\CLI\Commands\CreateControllerCommand::call(), 0 passed in C:\wamp64\www\oidoabsoluto\src\Cosmic\CLI\Commands\CreateControllerCommand.php on line 31 and exactly 1 expected
+[2022.01.16-18:51:19] Error code: 0
+[2022.01.16-20:20:13] An error has occurred while processing your command.
+[2022.01.16-20:20:13] Undefined offset: 1
+[2022.01.16-20:20:13] At 8
+[2022.01.16-20:20:31] An error has occurred while processing your command.
+[2022.01.16-20:20:31] Undefined offset: 1

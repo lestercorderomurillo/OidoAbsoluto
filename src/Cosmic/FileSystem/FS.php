@@ -3,7 +3,7 @@
 /**
  * The Cosmic Framework 1.0 Beta
  * Quick MVC enviroment with scoped component rendering capability.
- * Supports PHP, PHPX for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
+ * Supports PHP, HPHP for improved syntax suggar, javascripts callbacks, event handling and quick style embedding.
 
  * @author Lester Cordero Murillo <lestercorderomurillo@gmail.com>
  */
@@ -95,7 +95,7 @@ class FS
                 throw new IOException("The request file does not exist: $file");
             }
     
-            if (in_array($file->getExtension(), ['phps', 'phpx'])) {
+            if (in_array($file->getExtension(), ['phps', 'hphp'])) {
                 $precompiled = app()->get(Compiler::class)->precompileFilePath($file);
                 return eval($precompiled);
             }
