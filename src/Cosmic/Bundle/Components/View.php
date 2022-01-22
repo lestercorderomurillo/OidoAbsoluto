@@ -51,8 +51,9 @@ class View extends Component
                 </head>
                 <body id="{id}" (load)="awake()">
                     { body }
+                    { bindings }
+                    { documentJS }
                 </body>
-                { bindings }
             </html>
         HTML;
     }

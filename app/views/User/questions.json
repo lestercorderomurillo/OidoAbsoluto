@@ -75,7 +75,7 @@
     },
     {
         "id": 11,
-        "subject": "¿Ha realizado entrenamiento de oído musical?",
+        "subject": "¿Ha realizado entrenamiento de oído musical? (no es necesario que sea educación formal)",
         "type": "singleChoice",
         "choices": [
             "Sí",
@@ -91,7 +91,7 @@
     },
     {
         "id": 13,
-        "subject": "¿Ha estudiado con el método Suzuki?",
+        "subject": "¿Ha estudiado el método Suzuki? ¿Ha escuchado hablar de este antes?",
         "type": "singleChoice",
         "choices": [
             "Sí",
@@ -133,7 +133,7 @@
         "choices": [
             "Sí",
             "No",
-            "Otros"
+            "Otros (Justifique)"
         ]
     },
     {
@@ -141,7 +141,7 @@
         "subject": "Describa que otros método/justifique",
         "type": "text",
         "requiredID": 18,
-        "requiredValue": "Otros"
+        "requiredValue": "Otros (Justifique)"
     },
     {
         "id": 20,
@@ -181,8 +181,8 @@
         "type": "singleChoice",
         "choices": [
             "Sí",
-            "No sé",
-            "No"
+            "No",
+            "No sé"
         ]
     },
     {
@@ -191,7 +191,8 @@
         "type": "singleChoice",
         "choices": [
             "Sí",
-            "No"
+            "No",
+            "No sé"
         ],
         "requiredID": 24,
         "requiredValue": "Sí"
@@ -208,11 +209,12 @@
         "subject": "¿Cómo clasificaría su habilidad de identificar notas?",
         "type": "singleChoice",
         "choices": [
+            "Casi nunca acierto",
+            "Suelo fallar mucho",
             "Correctamente menos de la mitad del tiempo",
             "Correctamente la mitad del tiempo",
             "Mayoría correctas, con algunos errores",
-            "Casi nunca acierto",
-            "No fallo casi nunca"
+            "Siempre acierto, no fallo casi nunca"
         ]
     },
     {
@@ -222,9 +224,10 @@
         "choices": [
             "Instantáneamente",
             "En 3 segundos",
+            "En 7 segundos",
             "En 15 segundos",
             "En un minuto",
-            "Otros"
+            "Otros (Justifique)"
         ]
     },
     {
@@ -232,16 +235,18 @@
         "subject": "Explique/justifique el punto anterior",
         "type": "text",
         "requiredID": 28,
-        "requiredValue": "Otros"
+        "requiredValue": "Otros (Justifique)"
     },
     {
         "id": 30,
         "subject": "¿A qué edad se dio cuenta (o cree) de que tenía oído absoluto?",
+        "requiredID": 24,
         "type": "number"
     },
     {
         "id": 31,
-        "subject": "¿Cómo se dio cuenta?",
+        "subject": "¿Cómo se dio cuenta de que tenía oído absoluto?",
+        "requiredID": 24,
         "type": "text"
     },
     {
@@ -253,7 +258,7 @@
             "Violín",
             "Voz",
             "Cualquier instrumento",
-            "Otros/Varios (Escriba)"
+            "Otros (Justifique)"
         ]
     },
     {
@@ -261,7 +266,7 @@
         "subject": "Explique/justifique el punto anterior",
         "type": "text",
         "requiredID": 32,
-        "requiredValue": "Otros/Varios (Escriba)"
+        "requiredValue": "Otros (Justifique)"
     },
     {
         "id": 34,
@@ -308,7 +313,7 @@
     },
     {
         "id": 39,
-        "subject": "Explique/justifique que medicamentos",
+        "subject": "Explique/justifique que medicamentos afectaron su capacidad de identificar notas",
         "type": "text",
         "requiredID": 38,
         "requiredValue": "Sí"
@@ -330,7 +335,7 @@
     },
     {
         "id": 42,
-        "subject": "¿Tiene algún familiar oído absoluto?",
+        "subject": "¿Tiene algún familiar oído absoluto? (o cree)",
         "type": "singleChoice",
         "choices": [
             "Sí",
@@ -370,6 +375,7 @@
         "subject": "¿Cómo clasificaría su habilidad para aprender idiomas?",
         "type": "singleChoice",
         "choices": [
+            "Muy Alta",
             "Alta",
             "Promedio",
             "Baja",
@@ -383,6 +389,7 @@
         "choices": [
             "Sí",
             "No",
+            "No sé",
             "Prefiero no responder"
         ]
     }

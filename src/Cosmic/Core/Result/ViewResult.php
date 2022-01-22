@@ -90,14 +90,16 @@ class ViewResult implements ResultGeneratorInterface
         $dom = app()->get(DOM::class);
 
         $html = $compiler->compileString($this->view->getSourceHTML(), $this->view->getViewData());
-        $html = $compiler->compileServerSideTokens($html, ["bindings" => $dom->getOuputJavascript()]);
-        $html = $compiler->compileClientSideTokens($html);
+        
 
         $jsFile = new File($this->view->getFolder() . $this->view->getViewName() . ".js");
-
+        $documentJSFile = '';
         if (FileSystem::exists($jsFile)){
-            $html .= "\n" . HTML::encodeInJScript(FileSystem::read($jsFile));
+            $documentJSFile = "\n" . HTML::encodeInJScript(FileSystem::read($jsFile));
         }
+
+        $html = $compiler->compileServerSideTokens($html, ["documentJS" => $documentJSFile . "\n", "bindings" => $dom->getOuputJavascript()]);
+        $html = $compiler->compileClientSideTokens($html);
 
         $response = new Response();
         $response->addHeader("Content-Type", "text/html");
