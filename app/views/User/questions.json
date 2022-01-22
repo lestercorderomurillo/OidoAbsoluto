@@ -91,7 +91,7 @@
     },
     {
         "id": 13,
-        "subject": "¿Ha estudiado el método Suzuki? ¿Ha escuchado hablar de este antes?",
+        "subject": "¿Ha estudiado el método Suzuki?",
         "type": "singleChoice",
         "choices": [
             "Sí",

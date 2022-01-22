@@ -551,7 +551,7 @@ class UserController extends Controller
 
             foreach ($answers as $answer) {
                 if ($answer->question == ($count + 1)) {
-                    $parsedAnswer = $answer->value;
+                    $parsedAnswer = (strlen($answer->value > 0)) ? $answer->value : "Sin respuesta / No aplica";
                 }
             }
 
