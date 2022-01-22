@@ -199,7 +199,9 @@ class UserController extends Controller
             return $this->redirect("login");
         }
 
-        $audiosSources = FileSystem::URLFind(new Folder("app/Content/Audio/"), "mp3");
+        $audiosSourcesPiano = FileSystem::URLFind(new Folder("app/Content/Audio/Piano/"), "mp3");
+        $audiosSourcesSin = FileSystem::URLFind(new Folder("app/Content/Audio/Sin/"), "mp3");
+        $audiosSources = Collection::mergeList($audiosSourcesPiano, $audiosSourcesSin);
         $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
 
         return $this->view(["displayMode" => $displayMode, "audiosSources" => $audiosSources, "displayString" => $displayString]);
