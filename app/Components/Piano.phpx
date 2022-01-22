@@ -224,6 +224,7 @@ class Piano extends InlineComponent
 
             var audiosSources = $this->audiosSources;
             var audiosCount = audiosSources.length;
+            
 
             for (const source of audiosSources) {
 
@@ -242,11 +243,19 @@ class Piano extends InlineComponent
                 }, false);
 
                 component.audiosInMemory.push(audioElement);
+
+                delay(function(){
+                    component.buildExpectedNotes();
+                }, 1000 * 20);
             }
 
         }
 
         function buildExpectedNotes(){
+
+            if(extern.expectedPianoNotes == []){
+                return;
+            }
 
             var expectedNotes = [];
 
@@ -261,9 +270,6 @@ class Piano extends InlineComponent
 
             extern.expectedPianoNotes = component.shuffleArray(extern.expectedPianoNotes).slice(0, extern.notesPerTest);
             extern.expectedSinNotes = component.shuffleArray(extern.expectedSinNotes).slice(0, extern.notesPerTest);
-
-            console.log(extern.expectedPianoNotes);
-            console.log(extern.expectedSinNotes);
 
             extern.buttonString = "$this->readyString";
 
@@ -541,7 +547,7 @@ class Piano extends InlineComponent
     public function render()
     {
         return <<<HTML
-            <div id="{id}" (load)="awake()" (update)="update()" class="Piano{displayMode} text-center">
+            <div id="{id}" (load)="awake();" (update)="update()" class="Piano{displayMode} text-center">
                     <Foreach from="{notesNames}">
                         <PianoKey (click)="selectNote('{parent.iterator.noteName}')" keyColor="{parent.iterator.keyColor}" noteName="{parent.iterator.noteName}" noteText="{parent.iterator.noteText}" displayMode="{displayMode}">
                     </Foreach>

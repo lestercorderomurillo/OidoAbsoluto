@@ -100,6 +100,7 @@ class TagStrip
                     }
 
                     app()->get(DOM::class)->registerJavascriptSourceCode($handleCode);
+
                 } else if (Text::contains($key, ["id", "name", "for", "key"])) {
 
                     if (strlen($value) > 0) {

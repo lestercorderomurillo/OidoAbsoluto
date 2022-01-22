@@ -22,7 +22,7 @@ class ServiceBanner extends InlineComponent
                 </LoggedIn>
                 <LoggedIn>
                     <Link route="logout" accent="Primary" class="p-2">
-                        Deslogearse
+                        Desloguearse
                     </Link>
                 </LoggedIn>
                 <Link route="policy" accent="Primary" class="p-2">

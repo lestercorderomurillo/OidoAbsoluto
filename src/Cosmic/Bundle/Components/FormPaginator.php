@@ -64,7 +64,7 @@ class FormPaginator extends Component
     public function render()
     {
         return <<<HTML
-            <div (load)="awake()" id="{id}">
+            <div (load)="awake();" id="{id}">
                 <For from="0" to="{numberOfPages}">
                     <FormPaginatorPage paginator="{id}" page="{parent.iterator}">
                         {body}
