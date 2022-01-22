@@ -5,6 +5,11 @@ $('#signupForm').submit(function (event) {
         return false;
     }
 
+    if(!$('#signupForm').valid()){
+        event.preventDefault();
+        return false;
+    }
+
     Validator.disableDateSubComponents("birthDay");
 
     $('#submit').prop("disabled", true);
