@@ -280,6 +280,38 @@ Button.AccentInfo:hover {
   background-color: #0a3048 !important;
   color: #80cba2 !important;
 }
+.Button {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  background-color: #2a463a;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: bolder;
+}
+Button.AccentPrimary:hover {
+  background-color: #1d4e49 !important;
+  color: #e0f5ed !important;
+}
+Button.AccentSecondary:hover {
+  background-color: #a1c9bb !important;
+  color: #2a463a !important;
+}
+Button.AccentSuccess:hover {
+  background-color: #184318 !important;
+  color: #468d44 !important;
+}
+Button.AccentWarning:hover {
+  background-color: #7a501a !important;
+  color: #eed97c !important;
+}
+Button.AccentDanger:hover {
+  background-color: #ce8888 !important;
+  color: #6f2020 !important;
+}
+Button.AccentInfo:hover {
+  background-color: #0a3048 !important;
+  color: #80cba2 !important;
+}
 .Field {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -339,7 +371,7 @@ Button.AccentInfo:hover {
 }
 .PianoKeyWhiteFull {
   display: inline-block;
-  border: solid rgba(168, 103, 103, 0.698);
+  border: solid rgba(207, 165, 165, 0.698);
   width: 80px;
   height: 240px;
   margin-left: -6px;
@@ -362,7 +394,7 @@ Button.AccentInfo:hover {
   box-shadow: inset 0.25em 0.25em 0.25em 0 rgba(255, 255, 255, 0.15), inset -0.2em -0.2em 0.2em 0 rgba(149, 149, 149, 0.25);
   border-radius: 4px;
   display: inline-block;
-  border: solid rgba(168, 103, 103, 0.698);
+  border: solid rgba(207, 165, 165, 0.698);
   width: 40px !important;
   height: 158.4px !important;
   background: linear-gradient(#242424, #1c1c1c);
@@ -386,7 +418,7 @@ Button.AccentInfo:hover {
   margin: 4px;
   border-radius: 6px;
   display: inline-block;
-  border: solid rgba(168, 103, 103, 0.698);
+  border: solid rgba(207, 165, 165, 0.698);
   font-size: 1.75rem;
   width: 110px;
   height: 80px;

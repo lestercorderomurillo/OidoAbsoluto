@@ -38,6 +38,7 @@ class View extends Component
                 <head>
                     <title>{ title }</title>
                     <meta style="font-size: 12px;" charset="UTF-8">
+                    <meta name="viewport" content="width=600">
                     <Foreach from="{ metaBundles }" using="meta">
                         <meta name="{ parent.meta.name }" content="{ parent.meta.content }">
                     </Foreach>

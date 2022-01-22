@@ -14,14 +14,14 @@
                             A continuación se listan las acciones que puede realizar para el rol de su perfil.
                         </Label>
                         <Spacing>
-                        <RedirectButton route="piano?displayMode=Full">
+                        <RedirectButtonTooltip route="piano?displayMode=Full" tooltip="Esta opción muestra un teclado de piano completo en el que se puede presionar la nota que se escucha.">
                             <i class="fa fa-play fa-lg pr-2" aria-hidden="true"></i>
                             Iniciar Prueba con Piano Interactivo
-                        </RedirectButton>
-                        <RedirectButton route="piano?displayMode=Simple">
+                        </RedirectButtonTooltip>
+                        <RedirectButtonTooltip route="piano?displayMode=Simple" tooltip="Esta opción muestra los nombres de las notas musicales en botones sencillos rectangulares, para simplemente escoger la que se escucha.">
                             <i class="fa fa-keyboard-o fa-lg pr-2" aria-hidden="true"></i>
                             Iniciar Prueba Sencilla
-                        </RedirectButton>
+                        </RedirectButtonTooltip>
                         <Spacing>
                         <Title>
                             Historial de pruebas realizadas
