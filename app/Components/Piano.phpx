@@ -167,6 +167,7 @@ class Piano extends InlineComponent
             $("#$this->toggleButton").prop("disabled", true);
 
             // For form submission
+            extern.ready = false;
             extern.expectedPianoNotes = [];
             extern.expectedSinNotes = [];
             extern.selectedPianoNotes = [];
@@ -237,6 +238,7 @@ class Piano extends InlineComponent
                     component.audiosFetched++;
 
                     if(component.audiosFetched == audiosCount){
+                        extern.ready = true;
                         component.buildExpectedNotes();
                     }
 
@@ -245,8 +247,10 @@ class Piano extends InlineComponent
                 component.audiosInMemory.push(audioElement);
 
                 delay(function(){
-                    component.buildExpectedNotes();
-                }, 1000 * 20);
+                    if(!extern.ready){
+                        location.reload();
+                    }
+                }, 1000 * 25);
             }
 
         }
