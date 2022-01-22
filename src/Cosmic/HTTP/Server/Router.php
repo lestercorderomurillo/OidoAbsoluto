@@ -182,7 +182,7 @@ class Router extends Controller
             }
 
             $controllerName = Text::getNamespaceBaseName($controllerClassName);
-            $controllerPath = new File("App/Controllers/$controllerName.php");
+            $controllerPath = new File("app/Controllers/$controllerName.php");
 
             if (!FileSystem::exists($controllerPath)) {
 

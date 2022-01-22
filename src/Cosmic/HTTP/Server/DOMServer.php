@@ -21,7 +21,7 @@ class DOMServer implements ServerInterface
         $files = FileSystem::find(
             [
                 new Folder("src/Cosmic/Bundle/Components/"),
-                new Folder("App/Components/")
+                new Folder("app/Components/")
             ],
             [
                 "php", "phps", "phpx"

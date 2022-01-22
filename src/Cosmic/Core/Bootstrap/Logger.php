@@ -30,7 +30,7 @@ class Logger extends AbstractLogger
 
         $message = vsprintf($message, $context);
         
-        $file = new File("App/Logs/$level.$date.log");
+        $file = new File("app/Logs/$level.$date.log");
 
         if ($level == LogLevel::ERROR || $level == LogLevel::EMERGENCY || $level == LogLevel::CRITICAL) {
             

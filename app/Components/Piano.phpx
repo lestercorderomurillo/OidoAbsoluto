@@ -31,62 +31,62 @@ class Piano extends InlineComponent
         [
             [
                 "noteName" => "C",
-                "noteText" => "C",
+                "noteText" => "C - Do",
                 "keyColor" => "White"
             ],
             [
                 "noteName" => "CX",
-                "noteText" => "C#",
+                "noteText" => "C# - Do#",
                 "keyColor" => "Black"
             ],
             [
                 "noteName" => "D",
-                "noteText" => "D",
+                "noteText" => "D - Re",
                 "keyColor" => "White"
             ],
             [
                 "noteName" => "DX",
-                "noteText" => "D#",
+                "noteText" => "D# - Re#",
                 "keyColor" => "Black"
             ],
             [
                 "noteName" => "E",
-                "noteText" => "E",
+                "noteText" => "E - Mi",
                 "keyColor" => "White"
             ],
             [
                 "noteName" => "F",
-                "noteText" => "F",
+                "noteText" => "F - Fa",
                 "keyColor" => "White"
             ],
             [
                 "noteName" => "FX",
-                "noteText" => "F#",
+                "noteText" => "F# - Fa#",
                 "keyColor" => "Black"
             ],
             [
                 "noteName" => "G",
-                "noteText" => "G",
+                "noteText" => "G - Sol",
                 "keyColor" => "White"
             ],
             [
                 "noteName" => "GX",
-                "noteText" => "G#",
+                "noteText" => "G# - Sol#",
                 "keyColor" => "Black"
             ],
             [
                 "noteName" => "A",
-                "noteText" => "A",
+                "noteText" => "A - La",
                 "keyColor" => "White"
             ],
             [
                 "noteName" => "AX",
-                "noteText" => "A#",
+                "noteText" => "A# - La#",
                 "keyColor" => "Black"
             ],
             [
                 "noteName" => "B",
-                "noteText" => "B",
+                "noteText" => "B - Si",
                 "keyColor" => "White"
             ]
         ];
@@ -542,12 +542,12 @@ class Piano extends InlineComponent
     {
         return <<<HTML
             <div id="{id}" (load)="awake()" (update)="update()" class="Piano{displayMode} text-center">
-                <Foreach from="{notesNames}">
-                     <PianoKey (click)="selectNote('{parent.iterator.noteName}')" keyColor="{parent.iterator.keyColor}" noteName="{parent.iterator.noteName}" noteText="{parent.iterator.noteText}" displayMode="{displayMode}">
-                </Foreach>
+                    <Foreach from="{notesNames}">
+                        <PianoKey (click)="selectNote('{parent.iterator.noteName}')" keyColor="{parent.iterator.keyColor}" noteName="{parent.iterator.noteName}" noteText="{parent.iterator.noteText}" displayMode="{displayMode}">
+                    </Foreach>
             </div>
             <div id="{id}-testDelay" class="text-center h-100 w-100 row align-items-center justify-content-center" style="top: 0; left: 0; position:fixed; z-index: 25;">
-                <div class="col" style="color: #ffff66; font-size: 30em; text-shadow: 0px 0px 7px #000000;">
+                <div class="col" style="color: white; font-size: 30em; text-shadow: 0px 0px 7px #000000;">
                     {?testDelay}
                 </div>
             </div>

@@ -102,19 +102,19 @@ class ComposerStaticInit3144095f9327109f403a002d24f5c5f9
         ),
         'App\\ViewModels\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/App/ViewModels',
+            0 => __DIR__ . '/../..' . '/app/ViewModels',
         ),
         'App\\Models\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/App/Models',
+            0 => __DIR__ . '/../..' . '/app/Models',
         ),
         'App\\Middlewares\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/App/Middlewares',
+            0 => __DIR__ . '/../..' . '/app/Middlewares',
         ),
         'App\\Controllers\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/App/Controllers',
+            0 => __DIR__ . '/../..' . '/app/Controllers',
         ),
     );
 

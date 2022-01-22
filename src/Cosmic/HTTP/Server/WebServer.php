@@ -18,7 +18,7 @@ class WebServer implements ServerInterface
     public function run(): void
     {
         // Load the file from the configuration file
-        FileSystem::import(new File("App/" . configuration("application.routesFile")));
+        FileSystem::import(new File("app/" . configuration("application.routesFile")));
 
         // Now handle the request using the registered routes
         app()->get(Router::class)->process(Request::intercept());

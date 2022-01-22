@@ -1,12 +1,12 @@
 
-$piano-color-bg: hsl(26, 37%, 19%);
+$piano-color-bg: hsl(26, 44%, 25%);
 $piano-color-bg-simple: hsl(0, 0%, 89%);
-$piano-progress-color-bg: hsl(231, 19%, 79%);
-$pianoKey-color-border: hsla(0, 10%, 62%, 0.698);
+$piano-progress-color-bg: hsl(93, 52%, 82%);
+$pianoKey-color-border: hsla(0, 27%, 53%, 0.698);
 $piano-wk-color-bg: hsl(0, 0%, 100%);
 $piano-wk-color-bg-end: hsl(0, 0%, 89%);
 $piano-bk-color-bg: hsl(0, 0%, 14%);
-$piano-bk-color-bg-end: hsl(0, 0%, 8%);
+$piano-bk-color-bg-end: hsl(0, 0%, 11%);
 
 $piano-scale: 1.00;
 $piano-downscale: 0.72;
@@ -43,6 +43,15 @@ $piano-log-height: 220px;
     border-radius: 8px;
     display: inline-block;
     box-shadow: 0px 0px 30px 11px rgba(0,0,0,0.28);
+}
+
+.PianoSimple{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
 }
 
 .PianoKeyFull{

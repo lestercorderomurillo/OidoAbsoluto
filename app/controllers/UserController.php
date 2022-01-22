@@ -141,7 +141,7 @@ class UserController extends Controller
         }
 
         $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
-        $questions = Collection::from(new File("App/Views/User/questions.json"));
+        $questions = Collection::from(new File("app/Views/User/questions.json"));
 
         $fixedQuestions = [];
 
@@ -199,7 +199,7 @@ class UserController extends Controller
             return $this->redirect("login");
         }
 
-        $audiosSources = FileSystem::URLFind(new Folder("App/Content/Audio/"), "mp3");
+        $audiosSources = FileSystem::URLFind(new Folder("app/Content/Audio/"), "mp3");
         $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
 
         return $this->view(["displayMode" => $displayMode, "audiosSources" => $audiosSources, "displayString" => $displayString]);
@@ -541,7 +541,7 @@ class UserController extends Controller
         $books = [];
         $books[] = ['#', 'Pregunta', 'Respuesta'];
 
-        $questions = Collection::from(new File("App/Views/User/questions.json"));
+        $questions = Collection::from(new File("app/Views/User/questions.json"));
         $questionsCount = count($questions);
 
         for ($count = 0; $count < $questionsCount; $count++) {

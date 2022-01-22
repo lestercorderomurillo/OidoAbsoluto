@@ -81,7 +81,7 @@ abstract class Application extends Environment
      */
     public function getContentFolderString(): string
     {
-        return $this->getRootFolderString() . "App\\" . $this->getConfiguration("application.contentFolder")  . "\\";
+        return $this->getRootFolderString() . "app\\" . $this->getConfiguration("application.contentFolder")  . "\\";
     }
 
     /**

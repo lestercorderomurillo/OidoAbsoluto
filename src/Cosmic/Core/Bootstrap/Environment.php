@@ -41,7 +41,7 @@ abstract class Environment extends Injectable
     protected function createHostEnvironment(): void
     {
         $this->failureCount = 0;
-        $this->configuration = JSON::from(new File("App/Configuration.json"))->toArray();
+        $this->configuration = JSON::from(new File("app/Configuration.json"))->toArray();
     }
 
     /**

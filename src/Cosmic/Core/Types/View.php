@@ -55,7 +55,7 @@ class View
         $this->viewName = $viewName;
         $this->viewData = $viewData;
 
-        $file = new File("App/Views/$this->controllerName/$this->viewName.phtml");
+        $file = new File("app/Views/$this->controllerName/$this->viewName.phtml");
 
         $this->html = FileSystem::read($file);
         $this->timestamp = filemtime($file);
@@ -68,7 +68,7 @@ class View
      */
     public function getFolder(): Folder
     {
-        return new Folder("App/Views/$this->controllerName/");
+        return new Folder("app/Views/$this->controllerName/");
     }
 
     /**
@@ -108,7 +108,7 @@ class View
      */
     public function getViewIdentifier(): string
     {
-        return md5(new File("App/Views/$this->controllerName/$this->viewName.phtml"));
+        return md5(new File("app/Views/$this->controllerName/$this->viewName.phtml"));
     }
 
     /**
@@ -119,7 +119,7 @@ class View
     public function getViewPath(): File
     {
         $path = $this->getControllerName() . "/" . $this->getViewName();
-        return new File("App/Views/$path.phtml");
+        return new File("app/Views/$path.phtml");
     }
 
     /**
