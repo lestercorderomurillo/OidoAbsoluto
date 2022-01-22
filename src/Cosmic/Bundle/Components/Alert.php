@@ -31,7 +31,7 @@ class Alert extends Component
 
     public function render()
     {
-        return {{
+        return  <<<HTML
             <div class="alert Alert{type} {dismissible} fade show">
                 <If value="{canClose}" equals="true">
                     <span class="close mt-1" data-dismiss="alert" aria-label="Close">
@@ -45,7 +45,7 @@ class Alert extends Component
                     {body}
                 </div>
             </div>
-        }};
+        HTML;
     }
 }
 
