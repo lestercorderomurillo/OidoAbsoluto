@@ -108,7 +108,7 @@ class DOM
      */
     public function getOuputJavascript(): string
     {
-        $initialOutput = HTML::encodeInJScript(trim("state[\"_globalComponent_\"] = {};\n" . implode("\n", $this->initialStates)));
+        $initialOutput = HTML::encodeInJScript(trim("state[\"_globalComponent_\"] = {};\n" . implode("\n", $this->initialStates)), false);
         $output = HTML::encodeInJScript(trim(implode("\n", $this->functions)), false);
 
         return "\n" . $initialOutput . "\n" . $output;
