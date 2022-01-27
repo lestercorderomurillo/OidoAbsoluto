@@ -239,7 +239,7 @@ class Piano extends InlineComponent
                 audioElement.addEventListener('canplay', function () {
 
                     component.audiosFetched++;
-                    console.log("sector " + audiosFetched + " fetched.");
+                    console.log("sector " + component.audiosFetched + " fetched.");
 
                     if(component.audiosFetched == audiosCount){
                         extern.ready = true;
