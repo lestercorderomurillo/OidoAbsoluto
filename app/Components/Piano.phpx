@@ -226,8 +226,9 @@ class Piano extends InlineComponent
             var audiosSources = $this->audiosSources;
             var audiosCount = audiosSources.length;
 
-            console.log("entry: " + audiosCount);
-            
+            console.log("total entries: " + audiosCount);
+            console.log("required entries: " + 60);
+
             component.audiosFetched = 0;
 
             for (const source of audiosSources) {
@@ -241,7 +242,7 @@ class Piano extends InlineComponent
                     component.audiosFetched++;
                     console.log("sector " + component.audiosFetched + " fetched.");
 
-                    if(component.audiosFetched == audiosCount){
+                    if(component.audiosFetched == 60){
                         extern.ready = true;
                         console.log("all sector loaded successfully, test can be executed.");
                         component.buildExpectedNotes();
