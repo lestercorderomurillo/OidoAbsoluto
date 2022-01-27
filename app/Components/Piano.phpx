@@ -225,7 +225,10 @@ class Piano extends InlineComponent
 
             var audiosSources = $this->audiosSources;
             var audiosCount = audiosSources.length;
+
+            console.log("entry: " + audiosCount);
             
+            component.audiosFetched = 0;
 
             for (const source of audiosSources) {
 
@@ -236,9 +239,11 @@ class Piano extends InlineComponent
                 audioElement.addEventListener('canplay', function () {
 
                     component.audiosFetched++;
+                    console.log("sector " + audiosFetched + " fetched.");
 
                     if(component.audiosFetched == audiosCount){
                         extern.ready = true;
+                        console.log("all sector loaded successfully, test can be executed.");
                         component.buildExpectedNotes();
                     }
 
@@ -250,7 +255,7 @@ class Piano extends InlineComponent
                     if(!extern.ready){
                         location.reload();
                     }
-                }, 1000 * 25);
+                }, 1000 * 50);
             }
 
         }
@@ -274,6 +279,9 @@ class Piano extends InlineComponent
 
             extern.expectedPianoNotes = component.shuffleArray(extern.expectedPianoNotes).slice(0, extern.notesPerTest);
             extern.expectedSinNotes = component.shuffleArray(extern.expectedSinNotes).slice(0, extern.notesPerTest);
+
+            console.log(extern.expectedPianoNotes);
+            console.log(extern.expectedSinNotes);
 
             extern.buttonString = "$this->readyString";
 
