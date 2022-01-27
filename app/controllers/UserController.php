@@ -200,11 +200,12 @@ class UserController extends Controller
         }
 
         $audiosSourcesPiano = FileSystem::URLFind(new Folder("app/Content/Audio/Piano/"), "mp3");
+        shuffle($audiosSourcesPiano);
         $audiosSourcesPiano = array_slice($audiosSourcesPiano, 0, 30);
+
         $audiosSourcesSin = FileSystem::URLFind(new Folder("app/Content/Audio/Sin/"), "mp3");
+        shuffle($audiosSourcesSin);
         $audiosSourcesSin = array_slice($audiosSourcesSin, 0, 30);
-
-
 
         $audiosSources = Collection::mergeList($audiosSourcesPiano, $audiosSourcesSin);
         $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";

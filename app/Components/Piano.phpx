@@ -273,7 +273,7 @@ class Piano extends InlineComponent
                 expectedNotes.push(new ExpectedNote(audioElement.__getTarget));
             }
 
-            var slicePoint = 69;
+            var slicePoint = 30;
 
             extern.expectedPianoNotes = expectedNotes.slice(0, slicePoint);
             extern.expectedSinNotes = expectedNotes.slice(slicePoint);
