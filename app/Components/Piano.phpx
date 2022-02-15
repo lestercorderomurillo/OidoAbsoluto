@@ -235,6 +235,7 @@ class Piano extends InlineComponent
 
                 var audioElement = document.createElement('audio');
 
+                audioElement.crossOrigin = 'anonymous';
                 audioElement.setAttribute('src', source);
                 audioElement.addEventListener('ended', fn.noteComplete, false);
                 audioElement.addEventListener('canplay', function () {
