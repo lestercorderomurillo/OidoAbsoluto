@@ -89,6 +89,8 @@ class Validator {
         var dateString = year + "/" + month + "/" + days;
         var dateObject = Date.parse(dateString);
 
+        console.log(lang);
+
         if (!Validator.isDateInRange(dateObject, year, month, days, minYear, maxYear)) {
             if (lang == 'es') { return `La fecha no está en el rango admitido.`; }
             if (lang == 'en') { return `Wrong date values.`; }

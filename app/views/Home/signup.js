@@ -1,6 +1,7 @@
 $('#signupForm').submit(function (event) {
 
-    let lang = document.documentElement.lang.toLowerCase();
+    let lang = $('html').prop("lang");
+
     if (!Validator.validateDate(lang, "birthDay")) {
         event.preventDefault();
         return false;
