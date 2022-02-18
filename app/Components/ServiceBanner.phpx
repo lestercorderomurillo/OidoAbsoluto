@@ -58,7 +58,7 @@ class ServiceBanner extends InlineComponent
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <Link route="lang?set=es" accent="Primary" class="dropdown-item p-2">
-                                    Español
+                                    Spanish
                                 </Link>
                                 <Link route="lang?set=en" accent="Primary" class="dropdown-item p-2">
                                     English
