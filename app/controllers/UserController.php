@@ -143,7 +143,7 @@ class UserController extends Controller
 
         $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
 
-        $questions = Collection::from(new File("app/Views/User/questions." . session("lang") . ".json"));
+        $questions = Collection::from(new File("app/Views/User/questions." . Language::getLanguage() . ".json"));
 
         $fixedQuestions = [];
 
@@ -546,8 +546,8 @@ class UserController extends Controller
 
         $books = [];
         $books[] = ['#', Language::getString("misc41"), Language::getString("misc42")];
-
-        $questions = Collection::from(new File("app/Views/User/questions.json"));
+        $lang = Language::getLanguage();
+        $questions = Collection::from(new File("app/Views/User/questions.$lang.json"));
         $questionsCount = count($questions);
 
         for ($count = 0; $count < $questionsCount; $count++) {
