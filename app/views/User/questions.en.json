@@ -1,0 +1,396 @@
+[
+    {
+        "id": 1,
+        "subject": "What was the first language you learned to speak?",
+        "type": "text"
+    },
+    {
+        "id": 2,
+        "subject": "Do you speak several languages?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 3,
+        "subject": "Write the other languages you speak and at what age you started learning them",
+        "type": "text",
+        "requiredID": 2,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 4,
+        "subject": "Did you live in other countries as a child?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 5,
+        "subject": "Specify which countries and the age when it happened",
+        "type": "text",
+        "requiredID": 4,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 6,
+        "subject": "Have you received formal music education?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 7,
+        "subject": "For what reason? (parent's decision, own decision, etc.)",
+        "type": "text",
+        "requiredID": 6,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 8,
+        "subject": "At what age did you begin your formal musical training? (Music class)",
+        "type": "number",
+        "requiredID": 6,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 9,
+        "subject": "How many years of training have you had?",
+        "type": "number",
+        "requiredID": 6,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 10,
+        "subject": "What is your average training intensity in hours per week? If it has changed over time, describe it.",
+        "type": "text",
+        "requiredID": 6,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 11,
+        "subject": "Have you had musical ear training? (formal education is not necessary)",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 12,
+        "subject": "At what age did you undergo ear training?",
+        "type": "text",
+        "requiredID": 11,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 13,
+        "subject": "Have you studied the Suzuki method?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 14,
+        "subject": "At what age did you study with the Suzuki method?",
+        "type": "text",
+        "requiredID": 13,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 15,
+        "subject": "What was the first instrument you started playing?",
+        "type": "text",
+        "requiredID": 13,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 16,
+        "subject": "What instruments do you play today?",
+        "type": "text"
+    },
+    {
+        "id": 17,
+        "subject": "How do you preferably designate the music notes?",
+        "type": "singleChoice",
+        "choices": [
+            "Do, Re, Mi, Fa, Sol, La, Si",
+            "C, D, E, F, G, A, B"
+        ]
+    },
+    {
+        "id": 18,
+        "subject": "Have you tried training to develop absolute hearing?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No",
+            "Other (Justify)"
+        ]
+    },
+    {
+        "id": 19,
+        "subject": "Describe what other method/justify",
+        "type": "text",
+        "requiredID": 18,
+        "requiredValue": "Other (Justify)"
+    },
+    {
+        "id": 20,
+        "subject": "Are you a music professional?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 21,
+        "subject": "Indicate your profession in music",
+        "type": "text",
+        "requiredID": 20,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 22,
+        "subject": "Do you participate in any musical group or organization?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 23,
+        "subject": "Explain/justify",
+        "type": "text",
+        "requiredID": 22,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 24,
+        "subject": "Do you have absolute hearing? (or believe)",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No",
+            "I do not know"
+        ]
+    },
+    {
+        "id": 25,
+        "subject": "Is your note identification ability influenced or limited by the instrument you play?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No",
+            "I do not know"
+        ],
+        "requiredID": 24,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 26,
+        "subject": "Explain (Example: Absolute hearing for piano only)",
+        "type": "text",
+        "requiredID": 25,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 27,
+        "subject": "How would you rate your ability to identify notes?",
+        "type": "singleChoice",
+        "choices": [
+            "I almost never get it right",
+            "I tend to fail a lot",
+            "Correctly less than half the time",
+            "Correctly half the time",
+            "Mostly correct, with some errors",
+            "I always get it right, I almost never miss"
+        ]
+    },
+    {
+        "id": 28,
+        "subject": "Approximately how quickly can you identify a note?",
+        "type": "singleChoice",
+        "choices": [
+            "Instantly",
+            "In 3 seconds",
+            "In 7 seconds",
+            "In 15 seconds",
+            "In one minute",
+            "Other (Justify)"
+        ]
+    },
+    {
+        "id": 29,
+        "subject": "Explain/justify the previous point",
+        "type": "text",
+        "requiredID": 28,
+        "requiredValue": "Other (Justify)"
+    },
+    {
+        "id": 30,
+        "subject": "At what age did you realize (or do you believe) that you had absolute hearing?",
+        "requiredID": 24,
+        "type": "number"
+    },
+    {
+        "id": 31,
+        "subject": "How did you realize that you had absolute hearing?",
+        "requiredID": 24,
+        "type": "text"
+    },
+    {
+        "id": 32,
+        "subject": "On which instrument can you identify the notes?",
+        "type": "multipleChoice",
+        "choices": [
+            "Piano",
+            "Violin",
+            "Voice",
+            "Any instrument",
+            "Other (Justify)"
+        ]
+    },
+    {
+        "id": 33,
+        "subject": "Explain/justify the previous point",
+        "type": "text",
+        "requiredID": 32,
+        "requiredValue": "Other (Justify)"
+    },
+    {
+        "id": 34,
+        "subject": "Can you identify non-musical tones? (such as a car horn, for example)",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 35,
+        "subject": "Can you produce a note with your voice without reference? (Example: If you are told to \"sing a D sharp\")",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 36,
+        "subject": "Have you noticed any decrease in your ability to identify notes with age?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 37,
+        "subject": "At what age did the changes begin?",
+        "type": "text",
+        "requiredID": 36,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 38,
+        "subject": "Have you noticed any alteration in your ability to identify notes with any medication?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 39,
+        "subject": "Explain/justify which medications affected your ability to identify notes",
+        "type": "text",
+        "requiredID": 38,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 40,
+        "gender": "F",
+        "subject": "Have you noticed any alterations in your ability to identify notes with the phases of the menstrual cycle?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No"
+        ]
+    },
+    {
+        "id": 41,
+        "subject": "How many brothers and sisters do you have?",
+        "type": "number"
+    },
+    {
+        "id": 42,
+        "subject": "Do you have a relative with absolute hearing? (or do you believe)",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No",
+            "I do not know"
+        ]
+    },
+    {
+        "id": 43,
+        "subject": "Explain in detail who they are",
+        "type": "text",
+        "requiredID": 42,
+        "requiredValue": "Yes"
+    },
+    {
+        "id": 44,
+        "subject": "Do you have synesthesia? (mixing of the senses, e.g.: feeling a taste when seeing a color)",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No",
+            "I do not know"
+        ]
+    },
+    {
+        "id": 45,
+        "subject": "With which hand do you write?",
+        "type": "singleChoice",
+        "choices": [
+            "Right",
+            "Left",
+            "I am ambidextrous"
+        ]
+    },
+    {
+        "id": 46,
+        "subject": "How would you rate your ability to learn languages?",
+        "type": "singleChoice",
+        "choices": [
+            "Very High",
+            "High",
+            "Average",
+            "Low",
+            "Unknown"
+        ]
+    },
+    {
+        "id": 47,
+        "subject": "Have you or a family member been diagnosed with an autism spectrum disorder (including what was formerly known as Asperger's)?",
+        "type": "singleChoice",
+        "choices": [
+            "Yes",
+            "No",
+            "I do not know",
+            "I prefer not to answer"
+        ]
+    }
+]

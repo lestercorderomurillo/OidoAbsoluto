@@ -9,29 +9,66 @@ class ServiceBanner extends InlineComponent
     public function render()
     {
         return <<<HTML
-            <div class="p-2 m-0 bg-xdark" style="font-size: 1.25em;">
-                <GuestMiddleware>
-                    <Link route="index" accent="Primary" class="p-2">
-                        Acceder
-                    </Link>
-                </GuestMiddleware>
-                <LoggedIn>
-                    <Link route="profile" accent="Primary" class="p-2">
-                        Perfil
-                    </Link>
-                </LoggedIn>
-                <LoggedIn>
-                    <Link route="logout" accent="Primary" class="p-2">
-                        Desloguearse
-                    </Link>
-                </LoggedIn>
-                <Link route="policy" accent="Primary" class="p-2">
-                    Términos de uso y condiciones
-                </Link>
-                <Link route="about" accent="Primary" class="p-2">
-                    Acerca del proyecto
-                </Link>
-            </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-xdark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+
+                        <GuestMiddleware>
+                            <li class="nav-item">
+                                <Link route="index" accent="Primary" class="nav-link p-2">
+                                    %%login%%
+                                </Link>
+                            </li>
+                        </GuestMiddleware>
+
+                        <LoggedIn>
+                            <li class="nav-item">
+                                <Link route="profile" accent="Primary" class="nav-link p-2">
+                                    %%profile%%
+                                </Link>
+                            </li>
+                        </LoggedIn>
+
+                        <LoggedIn>
+                            <li class="nav-item">
+                                <Link route="logout" accent="Primary" class="nav-link p-2">
+                                    %%logout%%
+                                </Link>
+                            </li>
+                        </LoggedIn>
+
+                        <li class="nav-item">
+                            <Link route="policy" accent="Primary" class="nav-link p-2">
+                                %%policy%%
+                            </Link>
+                        </li>
+
+                        <li class="nav-item">
+                            <Link route="about" accent="Primary" class="nav-link p-2">
+                                %%about%%
+                            </Link>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                %%languageselect%%
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <Link route="lang?set=es" accent="Primary" class="dropdown-item p-2">
+                                    Español
+                                </Link>
+                                <Link route="lang?set=en" accent="Primary" class="dropdown-item p-2">
+                                    English
+                                </Link>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
         HTML;
     }
 }

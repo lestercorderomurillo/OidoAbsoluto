@@ -12,6 +12,7 @@ use App\ViewModels\DetailedTestViewModel;
 use App\ViewModels\UserSummaryViewModel;
 use Cosmic\HTTP\Request;
 use Cosmic\Binder\Authorization;
+use Cosmic\Bundle\Common\Language;
 use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\Folder;
@@ -84,7 +85,7 @@ class UserController extends Controller
 
                     $model->setValues($pianoTest->getValues());
 
-                    $model->displayString = ($pianoTest->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+                    $model->displayString = ($pianoTest->mode == "Full") ? Language::getString("misc12") : Language::getString("misc13");
                     $model->author = $userInfo->firstName . " " . $userInfo->lastName;
                     $model->notes = $notes;
                     $model->totalNotes = 60;
@@ -141,7 +142,8 @@ class UserController extends Controller
         }
 
         $userInfo = $this->db->find(UserInfo::class, ["id" => Authorization::getCurrentId()]);
-        $questions = Collection::from(new File("app/Views/User/questions.json"));
+
+        $questions = Collection::from(new File("app/Views/User/questions." . session("lang") . ".json"));
 
         $fixedQuestions = [];
 
@@ -164,7 +166,7 @@ class UserController extends Controller
 
         if ($this->db->exists(Answer::class, ["id" => Authorization::getCurrentId()])) {
 
-            $this->error("El formulario solo puede ser subido al servidor una única vez por usuario.");
+            $this->error(Language::getString("misc14"));
             return $this->redirect("profile");
         }
 
@@ -195,7 +197,7 @@ class UserController extends Controller
     function piano(string $displayMode)
     {
         if (!Text::equals($displayMode, ["Simple", "Full"])) {
-            $this->warning("No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero.");
+            $this->warning(Language::getString("misc15"));
             return $this->redirect("login");
         }
 
@@ -208,7 +210,7 @@ class UserController extends Controller
         $audiosSourcesSin = array_slice($audiosSourcesSin, 0, 30);
 
         $audiosSources = Collection::mergeList($audiosSourcesPiano, $audiosSourcesSin);
-        $displayString = ($displayMode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+        $displayString = ($displayMode == "Full") ? Language::getString("misc12") : Language::getString("misc13");
 
         return $this->view(["displayMode" => $displayMode, "audiosSources" => $audiosSources, "displayString" => $displayString]);
     }
@@ -249,7 +251,7 @@ class UserController extends Controller
             $pianoNote->try = $try;
             $pianoNote->noteIndex = $noteIndex;
             $pianoNote->expectedNote = $note["expectedNote"];
-            $pianoNote->selectedNote = ($note["selectedNote"] == "No se seleccionó ninguna nota") ? "X" : str_replace("X", "#", $note["selectedNote"]);
+            $pianoNote->selectedNote = ($note["selectedNote"] == Language::getString("misc16")) ? "X" : str_replace("X", "#", $note["selectedNote"]);
             $pianoNote->reactionTime = (float)$note["reactionTime"];
 
             $pianoNotes[] = $pianoNote;
@@ -265,7 +267,7 @@ class UserController extends Controller
     function overview(string $testToken = __EMPTY__)
     {
         if ($testToken == __EMPTY__) {
-            $this->error("El token especificado no es valido en este contexto.");
+            $this->error(Language::getString("misc17"));
             return $this->redirect("index");
         }
 
@@ -273,14 +275,14 @@ class UserController extends Controller
         $isOwner = ($this->db->find(User::class, ["token" => $this->getUserFromPianoToken($testToken)]) != null);
 
         if (!$isAdmin && !$isOwner) {
-            $this->error("Solo administradores o el dueño pueden visualizar esta prueba.");
+            $this->error(Language::getString("misc18"));
             return $this->redirect("index");
         }
 
         $detailedModel = $this->getDetailedTestFromToken($testToken);
 
         if ($detailedModel === null) {
-            $this->error("El token proporcionado no corresponde a ninguna prueba en el sistema.");
+            $this->error(Language::getString("misc19"));
             return $this->redirect("index");
         }
 
@@ -291,15 +293,15 @@ class UserController extends Controller
     {
         $user = $this->db->find(User::class, ["token" => $userToken]);
         $user->role = $to;
-        
-        if($user->role == Authorization::ADMIN || $user->role == Authorization::USER){
+
+        if ($user->role == Authorization::ADMIN || $user->role == Authorization::USER) {
             $this->db->save($user);
             $this->db->commit();
-            $this->success("Se ha cambiado el rol del usuario exitosamente.");
+            $this->success(Language::getString("misc20"));
             return $this->redirect("lookup?userToken=$userToken");
         }
 
-        $this->error("No se puede cambiar el rol de este usuario.");
+        $this->error(Language::getString("misc21"));
         return $this->redirect("lookup?userToken=$userToken");
     }
 
@@ -311,14 +313,14 @@ class UserController extends Controller
 
             $userRole = $user->role;
             $userInfo = $this->db->find(UserInfo::class, ["id" => $user->id]);
-            $userInfo->gender = ($userInfo->gender === "M") ? "Masculino" : "Femenino";
+            $userInfo->gender = ($userInfo->gender === "M") ? Language::getString("male") : Language::getString("female");
             $tests = $this->db->findAll(PianoTest::class, ["id" => $user->id]);
 
             $testViewModels = [];
 
             foreach ($tests as $test) {
                 $testViewModel = new PianoTestViewModel();
-                $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+                $testViewModel->displayMode = ($test->mode == "Full") ? Language::getString("misc12") : Language::getString("misc13");
                 $testViewModel->token = $this->encodeTokenFromPianoTest($test);
 
                 $testViewModel->setValues($test->getValues());
@@ -358,7 +360,7 @@ class UserController extends Controller
 
             foreach ($tests as $test) {
                 $testViewModel = new PianoTestViewModel();
-                $testViewModel->displayMode = ($test->mode == "Full") ?  "Piano Interactivo" : "Teclado Interactivo";
+                $testViewModel->displayMode = ($test->mode == "Full") ? Language::getString("misc12") : Language::getString("misc13");
                 $testViewModel->token = $this->encodeTokenFromPianoTest($test);
 
                 $testViewModel->setValues($test->getValues());
@@ -419,39 +421,35 @@ class UserController extends Controller
     {
         $user = $this->db->find(User::class, ["token" => $userToken]);
 
-        if($user != null){
+        if ($user != null) {
 
             $tests = $this->db->findAll(PianoTest::class, ["id" => $user->id]);
 
-            if ($tests != []){
+            if ($tests != []) {
 
                 $xlsx = [];
 
                 $zipName = "Pruebas.zip";
                 $zip = new ZipArchive();
                 $zip->open($zipName, ZipArchive::CREATE);
-    
+
                 $counter = 0;
-    
-                foreach($tests as $test){
-    
+
+                foreach ($tests as $test) {
+
                     $testToken = $this->encodeTokenFromPianoTest($test);
                     $xlsx[] = $this->exportTest($testToken, true);
 
                     $zip->addFromString('Prueba-' . $counter . '.xlsx', $xlsx[$counter++]);
-    
                 }
-    
-                $zip->close();
-                $this->download($zipName, "application/zip", __EMPTY__ , true);
 
+                $zip->close();
+                $this->download($zipName, "application/zip", __EMPTY__, true);
             }
-            
         }
-        
-        $this->error("Algo ha salido mal, contacte al administrator.");
+
+        $this->error(Language::getString("misc22"));
         return $this->redirect();
-        
     }
 
     function exportSurvey(string $userToken)
@@ -459,7 +457,7 @@ class UserController extends Controller
         $user = $this->db->find(User::class, ["token" => $userToken]);
 
         if ($user == null) {
-            $this->error("El token de usuario proporcionado es incorrecto.");
+            $this->error(Language::getString("misc23"));
             $this->redirect();
         }
 
@@ -467,12 +465,12 @@ class UserController extends Controller
         $surveyBook = $this->generateSurveyBook($user->id);
 
         if ($surveyBook == null || $userInfo == null) {
-            $this->error("Este usuario no ha completado el cuestionario.");
+            $this->error(Language::getString("misc24"));
             $this->redirect();
         }
 
         $books = [
-            ["*", "Nombre completo: " . $userInfo->firstName . " " . $userInfo->lastName],
+            ["*", Language::getString("misc25") . " " . $userInfo->firstName . " " . $userInfo->lastName],
             [],
         ];
 
@@ -486,7 +484,7 @@ class UserController extends Controller
         $isOwner = ($this->db->find(User::class, ["token" => $this->getUserFromPianoToken($testToken)]) != null);
 
         if (!$isAdmin && !$isOwner) {
-            $this->error("Solo administradores o el dueño pueden visualizar esta prueba.");
+            $this->error(Language::getString("misc26"));
             return $this->redirect("index");
         }
 
@@ -495,13 +493,13 @@ class UserController extends Controller
         if ($test != null) {
 
             $books = [
-                ["*", "Nombre completo: $test->author"],
-                ["*", "Número de intento: $test->try"],
-                ["*", "Fecha de subida: $test->uploadDate"],
-                ["*", "Modo de visualización: $test->displayString"],
-                ["*", "Tiempo total transcurrido: $test->totalTime"],
+                ["*", Language::getString("misc27") . "$test->author"],
+                ["*", Language::getString("misc28") . "$test->try"],
+                ["*", Language::getString("misc29") . "$test->uploadDate"],
+                ["*", Language::getString("misc30") . "$test->displayString"],
+                ["*", Language::getString("misc31") . "$test->totalTime"],
                 [],
-                ['#', 'Nota Reproducida', 'Nota Presionada', 'Tiempo de reacción (ms)', 'Octava Reproducida', 'Tipo Reproducido', 'Tipo Presionado', "Clasificación"]
+                ['#', Language::getString("misc32"), Language::getString("misc33"), Language::getString("misc34"), Language::getString("misc35"), Language::getString("misc36"), Language::getString("misc37"), Language::getString("misc38")]
             ];
 
             foreach ($test->notes as $note) {
@@ -513,8 +511,8 @@ class UserController extends Controller
 
                 $expectedNotewithoutOctave = preg_replace('/[0-9]+/', '', $note->expectedNote);
 
-                $expectedType = Text::contains($note->expectedNote, "#") ? "Sostenido" : "Natural";
-                $selectedType = Text::contains($note->selectedNote, "#") ? "Sostenido" : "Natural";
+                $expectedType = Text::contains($note->expectedNote, "#") ? Language::getString("misc39") : Language::getString("misc40");
+                $selectedType = Text::contains($note->selectedNote, "#") ? Language::getString("misc39") : Language::getString("misc40");
                 $kind = (($note->noteIndex + 1) < 30) ? "Piano" : "Puro";
 
                 $books[] = [$note->noteIndex + 1, $expectedNotewithoutOctave, $note->selectedNote,  $note->reactionTime, $octave, $expectedType, $selectedType, $kind];
@@ -530,7 +528,7 @@ class UserController extends Controller
 
             $xlsx = SimpleXLSXGen::fromArray($books);
 
-            if($returnExcel){
+            if ($returnExcel) {
                 return $xlsx;
             }
 
@@ -547,17 +545,17 @@ class UserController extends Controller
         }
 
         $books = [];
-        $books[] = ['#', 'Pregunta', 'Respuesta'];
+        $books[] = ['#', Language::getString("misc41"), Language::getString("misc42")];
 
         $questions = Collection::from(new File("app/Views/User/questions.json"));
         $questionsCount = count($questions);
 
         for ($count = 0; $count < $questionsCount; $count++) {
-            $parsedAnswer = "Sin respuesta / No aplica";
+            $parsedAnswer = Language::getString("misc43");
 
             foreach ($answers as $answer) {
                 if ($answer->question == ($count + 1)) {
-                    $parsedAnswer = (strlen($answer->value > 0)) ? $answer->value : "Sin respuesta / No aplica";
+                    $parsedAnswer = (strlen($answer->value > 0)) ? $answer->value : Language::getString("misc43");
                 }
             }
 

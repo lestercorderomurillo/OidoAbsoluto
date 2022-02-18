@@ -25,6 +25,7 @@ $router->withController(HomeController::class, function (Router $router) {
     $router->get('/', ["index"]);
     $router->get('/index', ["index"]);
     $router->get('/logout', ["logout"]);
+    $router->get('/lang', ["lang"]);
 
     $router->withMiddlewares(GuestMiddleware::class, function (Router $router){
 

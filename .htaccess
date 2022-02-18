@@ -1,7 +1,5 @@
 RewriteEngine On
 
-BrowserMatch "iPhone|iPad|iPod" nokeepalive
-
 RewriteCond %{REQUEST_URI}  /src/Cosmic/Bundle.+(gif|png|jpg|jpeg|mp3|js|css|map)$
 RewriteRule .* - [L]
 

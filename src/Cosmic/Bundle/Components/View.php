@@ -3,13 +3,14 @@
 namespace Cosmic\Bundle\Components;
 
 use Cosmic\Binder\Component;
+use Cosmic\Bundle\Common\Language;
 
 class View extends Component
 {
-    public function __construct(string $title, string $language = "es")
+    public function __construct(string $title)
     {
         $this->title = $title;
-        $this->language = $language;
+        $this->language = Language::getLanguage();
     }
 
     public function scripts()

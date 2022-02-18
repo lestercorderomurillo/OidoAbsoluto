@@ -30,7 +30,7 @@ class Card extends Component
     public function render()
     {
         return <<<HTML
-            <div id&name="{id}" class="text-{textPosition} mx-auto {class}" style="min-width: {minWidth}; max-width: {maxWidth}; min-height: {minHeight}; max-height: {maxHeight};">
+            <div id="{id}" class="text-{textPosition} mx-auto {class}" style="min-width: {minWidth}; max-width: {maxWidth}; min-height: {minHeight}; max-height: {maxHeight};">
                 <div class="shadow shadow-lg text-left Accent{accent} p-{padding} rounded h-100" style="font-size: {fontSize}; min-height: {minHeight};">
                     {body}
                 </div>

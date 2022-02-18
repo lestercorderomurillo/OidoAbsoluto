@@ -15,9 +15,9 @@ class Span extends Component
     public function render()
     {
         return <<<HTML
-            <label class="w-100 text-color pt-2 pb-2 text-{textPosition}" style="font-size: {fontSize};">
+            <div class="w-100 text-color pt-2 pb-2 text-{textPosition}" style="font-size: {fontSize};">
                 {body}
-            </label>
+            </div>
         HTML;
     }
 }

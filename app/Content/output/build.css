@@ -333,7 +333,7 @@ Button.AccentInfo:hover {
 }
 #pianoLog {
   overflow-y: scroll;
-  height: 220px !important;
+  height: 275px !important;
 }
 /* Full piano */
 .PianoFull {

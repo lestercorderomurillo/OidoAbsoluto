@@ -1,4 +1,4 @@
-<View title="Inicio de sesión">
+<View title="%%logintitle%%">
     <ServiceBanner>
     <Container>
         <Row>
@@ -10,34 +10,33 @@
                     <Form id="loginForm" route="login/submit">
                         <PersistentMessage>
                         <Label>
-                            Sírvase de acceder al servicio para realizar nuevas pruebas o consultar su historial
+                            %%welcome%%
                         </Label>
                         <Spacing>
                         <Label for="email">
-                            Correo Electrónico
+                            %%email%%
                         </Label> 
                         <Textfield id="email">
                         <Label for="password">
-                            Contraseña
+                            %%password%%
                         </Label>   
                         <Passfield id="password">
                         <SubmitButton>
-                            Acceder
+                            %%login%%
                         </SubmitButton>
                         <RedirectButton route="signup">
-                            Registrarse
+                            %%signup%%
                         </RedirectButton>
                         <Spacing>
                         <Span>
-                            ¿Olvidó su contraseña o no puede acceder a su cuenta?
+                            %%forgot%%
                         </Span>
                         <Link route="forgot">
-                            Haga click en este enlace para recuperar su contraseña
+                            %%recover%%
                         </Link>
                     </Form>
                 </Card>
                 <Spacing>
-                <div class="text-white">Desarrollador: lestercorderomurillo@gmail.com</div>
             </Column>
         </Row>
     </Container>

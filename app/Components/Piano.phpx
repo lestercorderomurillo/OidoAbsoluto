@@ -3,6 +3,7 @@
 namespace app\Components;
 
 use Cosmic\Binder\InlineComponent;
+use Cosmic\Bundle\Common\Language;
 
 class Piano extends InlineComponent
 {
@@ -14,14 +15,14 @@ class Piano extends InlineComponent
     {
         $this->displayMode = $displayMode;
         $this->audiosSources = json_encode($audiosSources, JSON_UNESCAPED_SLASHES);
-        $this->noteTypePiano = "1/2 (Piano) Tonos reales";
-        $this->noteTypeSin = "2/2 (Puros) Tonos artificiales";
-        $this->unselectedNote = "No se seleccionó ninguna nota";
-        $this->loadingNotes = "Cargando audios en memoria...";
-        $this->readyString = "Inicializar la prueba";
-        $this->inTestString = "Prueba en proceso...";
-        $this->continueString = "Continuar con la segunda parte";
-        $this->uploadingString = "Subiendo resultados...";
+        $this->noteTypePiano = Language::getString('pianocomp00');
+        $this->noteTypeSin = Language::getString('pianocomp01');
+        $this->unselectedNote = Language::getString('pianocomp02');
+        $this->loadingNotes = Language::getString('pianocomp03');
+        $this->readyString = Language::getString('pianocomp04');
+        $this->inTestString = Language::getString('pianocomp05');
+        $this->continueString = Language::getString('pianocomp06');
+        $this->uploadingString = "...";
         $this->url = __HOST__;
         $this->toggleButton = $toggleButton;
         $this->pianoLog = $pianoLog;
@@ -162,7 +163,8 @@ class Piano extends InlineComponent
             extern.currentNoteIndex = 0;
             extern.currentNoteType = "$this->noteTypePiano";
             extern.currentNoteName = "$this->unselectedNote";
-            extern.buttonString = "$this->loadingNotes";
+            //extern.buttonString = "$this->loadingNotes";
+            $("#$this->toggleButton").html("$this->loadingNotes");
             
             $("#$this->toggleButton").prop("disabled", true);
 
@@ -226,8 +228,8 @@ class Piano extends InlineComponent
             var audiosSources = $this->audiosSources;
             var audiosCount = audiosSources.length;
 
-            console.log("total entries: " + audiosCount);
-            console.log("required entries: " + 60);
+            //console.log("total entries: " + audiosCount);
+            //console.log("required entries: " + 60);
 
             component.audiosFetched = 0;
 
@@ -241,11 +243,11 @@ class Piano extends InlineComponent
                 audioElement.addEventListener('canplay', function () {
 
                     component.audiosFetched++;
-                    console.log("sector " + component.audiosFetched + " fetched.");
+                    //console.log("sector " + component.audiosFetched + " fetched.");
 
                     if(component.audiosFetched == 60){
                         extern.ready = true;
-                        console.log("all sector loaded successfully, test can be executed.");
+                        //console.log("all sector loaded successfully, test can be executed.");
                         component.buildExpectedNotes();
                     }
 
@@ -282,11 +284,12 @@ class Piano extends InlineComponent
             extern.expectedPianoNotes = component.shuffleArray(extern.expectedPianoNotes).slice(0, extern.notesPerTest);
             extern.expectedSinNotes = component.shuffleArray(extern.expectedSinNotes).slice(0, extern.notesPerTest);
 
-            console.log(extern.expectedPianoNotes);
-            console.log(extern.expectedSinNotes);
+            //console.log(extern.expectedPianoNotes);
+            //console.log(extern.expectedSinNotes);
 
-            extern.buttonString = "$this->readyString";
+            //extern.buttonString = "$this->readyString";
 
+            $("#$this->toggleButton").html("$this->readyString");
             $("#$this->toggleButton").prop("disabled", false);
             $("#$this->toggleButton").on("click", function() {
                 
@@ -313,7 +316,8 @@ class Piano extends InlineComponent
 
         function prePhaseStart(){
 
-            extern.buttonString = "$this->inTestString";
+            //extern.buttonString = "$this->inTestString";
+            $("#$this->toggleButton").html("$this->inTestString");
             $("#$this->toggleButton").prop("disabled", true);
 
             extern.currentNoteIndex = 0;
@@ -352,7 +356,7 @@ class Piano extends InlineComponent
                 extern.currentNoteType = "$this->noteTypeSin";
 
                 component.isRunning = false;
-                extern.buttonString = "$this->continueString";
+                $("#$this->toggleButton").html("$this->continueString");
                 $("#$this->toggleButton").prop("disabled", false);
                 
 
@@ -507,7 +511,7 @@ class Piano extends InlineComponent
             templateContents.html(noteName);
 
             if (reactionTime > 0) {
-                templateContents.html(noteName + " con duración de " + reactionTime + " ms");
+                templateContents.html(noteName + " (" + reactionTime + " ms)");
             }
 
             template.html(templateContents);
@@ -524,7 +528,8 @@ class Piano extends InlineComponent
             component.isDone = true;
 
             extern.currentNoteIndex = 29;
-            extern.buttonString = "$this->uploadingString";
+            //extern.buttonString = "$this->uploadingString";
+            $("#$this->toggleButton").html("$this->uploadingString");
             $("#$this->toggleButton").prop("disabled", true);
 
             var parsedNotes = {};
@@ -562,9 +567,9 @@ class Piano extends InlineComponent
     {
         return <<<HTML
             <div id="{id}" (load)="awake();" (update)="update()" class="Piano{displayMode} text-center">
-                    <Foreach from="{notesNames}">
-                        <PianoKey (click)="selectNote('{parent.iterator.noteName}')" keyColor="{parent.iterator.keyColor}" noteName="{parent.iterator.noteName}" noteText="{parent.iterator.noteText}" displayMode="{displayMode}">
-                    </Foreach>
+                <Foreach from="{notesNames}">
+                    <PianoKey (click)="selectNote('{parent.iterator.noteName}')" keyColor="{parent.iterator.keyColor}" noteName="{parent.iterator.noteName}" noteText="{parent.iterator.noteText}" displayMode="{displayMode}">
+                </Foreach>
             </div>
             <div id="{id}-testDelay" class="text-center h-100 w-100 row align-items-center justify-content-center" style="top: 0; left: 0; position:fixed; z-index: 25;">
                 <div class="col" style="color: white; font-size: 30em; text-shadow: 0px 0px 7px #000000;">

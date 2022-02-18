@@ -28,7 +28,7 @@ class HTML
             }
 
             $value = <<<HTML
-            <script type="text/javascript">
+            <script>
             $value
             </script>
             HTML;

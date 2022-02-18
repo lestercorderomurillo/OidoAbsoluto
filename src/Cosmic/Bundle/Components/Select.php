@@ -16,7 +16,7 @@ class Select extends InlineComponent
     {
         return <<<HTML
             <select {events} id&name="{id}" class="form-control Field">
-                <option value="">Seleccione una opción...</option>
+                <option value="">%%selectOne%%</option>
                 <Foreach using="item" from="{from}">
                     <option value="{parent.item}">{parent.item}</option>
                 </Foreach>

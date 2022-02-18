@@ -1,4 +1,4 @@
-<View title="Detalles avanzados de una prueba">
+<View title="%%overview00%%">
     <ServiceBanner>
     <Spacing>
     <Container>
@@ -6,42 +6,42 @@
             <Column smallSize="12" mediumSize="12" size="12" xlSize="11">
                 <Card>
                     <Title>
-                        Visualización avanzada de una prueba
+                        %%overview01%%
                     </Title>
                     <PersistentMessage>
                     <Subtitle class="font-weight-bold">
-                        Información de identificación
+                        %%overview02%%
                     </Subtitle>
                     <Card padding="3">
                         <Row>
                             <Column size="6" mediumSize="12" smallSize="12" textPosition="center" padding="2" class="mt-2 pl-4 text-sm-center text-md-center text-xl-left">
                                 <div>
                                     <strong>
-                                        Autor de la prueba:
+                                        %%overview03%%:
                                     </strong>
                                     &nbsp; {author}
                                 </div>
                                 <div>
                                     <strong>
-                                        Número de intento:
+                                        %%overview04%%:
                                     </strong>
-                                    &nbsp; Intento {try}
+                                    &nbsp; %%overview05%% {try}
                                 </div>
                                 <div>
                                     <strong>
-                                        Fecha de elaboración:
+                                        %%overview06%%:
                                     </strong>
                                     &nbsp; {uploadDate}
                                 </div>
                                 <div>
                                     <strong>
-                                        Modo de visualización de la prueba:
+                                        %%overview07%%:
                                     </strong>
                                     &nbsp; {displayString}
                                 </div>
                                 <div>
                                     <strong>
-                                        Tiempo total transcurrido:
+                                        %%overview08%%:
                                     </strong>
                                     &nbsp; {totalTime}
                                 </div>
@@ -49,30 +49,30 @@
                             <Column size="6" mediumSize="12" smallSize="12" textPosition="center" padding="2" class="mt-4 pr-4 text-sm-center text-md-center text-xl-right">
                                 <Button (click)="history.back();">
                                     <i class="fa fa-arrow-left fa-lg pr-2" aria-hidden="true"></i>
-                                    Regresar a la vista anterior
+                                    %%overview09%%
                                 </Button>
                                 <RedirectButton route="overview/exportTest?testToken={token}" accent="Success">
                                     <i class="fa fa-file-archive-o fa-lg pr-2" aria-hidden="true"></i>
-                                    Exportar prueba de Excel
+                                    %%overview10%%
                                 </RedirectButton>
                             </Column>
                         </Row>
                     </Card>
                     <Spacing>
                     <Subtitle class="font-weight-bold">
-                        Datos crudos sobre las notas
+                        %%overview11%%
                     </Subtitle>
                     <Label>
-                        Se muestra los datos en detalle sobre cada una de las notas presionadas durante la realización de la prueba.
+                        %%overview12%%
                     </Label>
                     <Spacing>
                     <Card>
                         <Row>
-                            <OverviewColumnStat title="Aciertos Totales" matches="{totalMatches}" total="{totalNotes}">
-                            <OverviewColumnStat title="Aciertos Piano" matches="{totalPianoMatches}" total="{totalPianoNotes}">
-                            <OverviewColumnStat title="Aciertos Sintéticos" matches="{totalSinMatches}" total="{totalSinNotes}">
-                            <OverviewColumnStat title="Aciertos Naturales" matches="{totalNaturalMatches}" total="{totalNaturalNotes}">
-                            <OverviewColumnStat title="Aciertos Sostenidos" matches="{totalSosMatches}" total="{totalSosNotes}">
+                            <OverviewColumnStat title="%%overview13%%" matches="{totalMatches}" total="{totalNotes}">
+                            <OverviewColumnStat title="%%overview14%%" matches="{totalPianoMatches}" total="{totalPianoNotes}">
+                            <OverviewColumnStat title="%%overview15%%" matches="{totalSinMatches}" total="{totalSinNotes}">
+                            <OverviewColumnStat title="%%overview16%%" matches="{totalNaturalMatches}" total="{totalNaturalNotes}">
+                            <OverviewColumnStat title="%%overview17%%" matches="{totalSosMatches}" total="{totalSosNotes}">
                         </Row>
                         <hr>
                         <Row>

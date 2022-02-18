@@ -3,15 +3,16 @@
 namespace Cosmic\Bundle\Components;
 
 use Cosmic\Binder\Component;
+use Cosmic\Bundle\Common\Language;
 
 class FormPaginator extends Component
 {
     public function __construct(string $numberOfPages, string $form)
     {
         $this->numberOfPages = $numberOfPages;
-        $this->prevPageText = "Página anterior";
-        $this->nextPageText = "Página siguiente";
-        $this->lastPageText = "Subir formulario";
+        $this->prevPageText = Language::getString("paginator00");
+        $this->nextPageText = Language::getString("paginator01");
+        $this->lastPageText = Language::getString("paginator02");
         $this->prevButtonID = generateID();
         $this->nextButtonID = generateID();
         $this->form = $form;

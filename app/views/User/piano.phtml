@@ -1,28 +1,26 @@
-<View title="{displayString}">
-    <ServiceBanner>
+<View title="%%piano00%%">
     <Container>
         <FluidRow padding="4">
             <Column size="7" padding="1">
                 <Card class="h-100">
                     <Title>{displayString}</Title>
-                    <Label fontSize="1.3em">
-                        <strong>Instrucciones de utilización</strong>
+                    <Span fontSize="1.3em">
+                        <strong>
+                            %%piano01%%
+                        </strong>
                         <Spacing>
-                        Antes de realizar esta prueba se recomienda hacer la prueba con audífonos.
+                        %%piano02%%
                         <Spacing>
-                        Una vez usted escucha una nota musical, tiene un intervalo breve de 3 segundos para
-                        identificar y marcar la nota que cree que escuchó en el {displayString}.
+                        %%piano03%%
                         <If value="{displayMode}" equals="Full">
                             <Spacing>
                             <div>
-                                Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. 
-                                Para el caso de notas blancas, utilice las teclas "ZXCVBNM" y para las negras utilice "SDGHJ".
+                                %%piano04%%
                             </div>
                         </If>
-                        <br>
                         <Spacing>
-                        Cuando se reproduzcan {?noteMax} notas consecutivas, se pasará automaticamente a la siguiente etapa.
-                    </Label>
+                        %%piano05%% {?noteMax} %%piano06%%
+                    </Span>
                     <Spacing>
                     <div class="text-center">
                         <Piano displayMode="{displayMode}" audiosSources="{audiosSources}" toggleButton="pianoToggleButton" pianoLog="pianoLog" pianoLogTemplate="pianoLogTemplate">
@@ -32,23 +30,23 @@
             <Column size="4" padding="1">
                 <Card padding="4" class="h-100">
                     <Title>
-                        Información recolectada
+                        %%piano07%%
                     </Title>
                     <Card id="progressLog" padding="3">      
-                        Tipo de sonido: {?currentNoteType}
+                        %%piano08%%: {?currentNoteType}
                         <Spacing>
-                        Reproduciendo la nota {?currentNoteIndexString} de {?notesPerTest}
+                        %%piano09%% {?currentNoteIndexString} / {?notesPerTest}
                         <Spacing>
-                        Tiempo total transcurido: {?totalTime}
+                        %%piano10%%: {?totalTime}
                     </Card>
                     <Spacing>
                     <Button id="pianoToggleButton">
-                        {?buttonString}
+                        ...
                     </Button>
                     <Spacing>
                     <Card id="pianoLog" padding="1" accent="Primary" class="Hide">
                         <Subtitle id="pianoLogTitle" class="m-2">
-                            Historial de notas
+                            %%piano11%%
                         </Subtitle>
                         <Card id="pianoLogTemplate" padding="2" class="Hide m-1">
                         </Card>

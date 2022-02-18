@@ -6,12 +6,14 @@ use App\Models\Answer;
 use App\Models\User;
 use App\Models\UserInfo;
 use Cosmic\Binder\Authorization;
+use Cosmic\Bundle\Common\Language;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\Core\Bootstrap\Controller;
 use Cosmic\ORM\Bootstrap\Database;
 use Cosmic\ORM\Databases\SQL\SQLDatabase;
 use Cosmic\Utilities\Collection;
 use Cosmic\Utilities\Cryptography;
+use Cosmic\Utilities\Text;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class HomeController extends Controller
@@ -21,6 +23,15 @@ class HomeController extends Controller
     function __construct(SQLDatabase $db)
     {
         $this->db = $db;
+    }
+
+    function lang(string $set)
+    {
+        if (Text::contains($set, ['es', 'en'])) {
+            session('lang', $set);
+        }
+
+        return $this->redirect("index");
     }
 
     function index()
@@ -47,7 +58,7 @@ class HomeController extends Controller
     function loginSubmit(string $email, string $password)
     {
         if (!Authorization::tryLogIn($email, $password, User::class)) {
-            $this->error("El usuario o contraseña ingresada no son correctos.");
+            $this->error(Language::getString("misc00"));
             return $this->view("login");
         }
 
@@ -112,17 +123,16 @@ class HomeController extends Controller
                 $this->db->save($info);
                 $this->db->commit();
 
-                $this->success("Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales a continuación.");
+                $this->success(Language::getString("misc01"));
                 return $this->redirect("login");
             } else {
 
-                $this->error("No se puede validar los datos ingresados en el servidor remoto. ");
+                $this->error(Language::getString("misc02"));
                 return $this->redirect("signup");
             }
-            
         } else {
 
-            $this->error("No se puede registrar el usuario ingresado porque el correo utilizado se encuentra asociado a otra cuenta ya existente.");
+            $this->error(Language::getString("misc03"));
             return $this->redirect("signup");
         }
     }
@@ -164,18 +174,22 @@ class HomeController extends Controller
             $mail->IsHTML(true);
             $mail->AddAddress($email, "recipient-name");
             $mail->SetFrom("oidoabsolutocr@gmail.com", "Servicio Oido Absoluto");
-            $mail->Subject = "Solicitud de recuperación de contraseña";
+            $mail->Subject = Language::getString("misc04");
+
+            $misc05 = Language::getString("misc05");
+            $misc06 = Language::getString("misc06");
+
             $content = <<<HTML
-                <b>Si usted solicitó el cambio de su contraseña, presione el siguiente enlace: <br>$link</b>
+                <b>$misc05: <br>$link</b>
                 <br>
-                <span>Si no solicitó esto, solamente ignore este mensaje</span>
+                <span>$misc06</span>
             HTML;
             $mail->CharSet = 'UTF-8';
             $mail->MsgHTML($content);
             $mail->Send();
         }
 
-        $this->info("Si el correo electrónico que usted proporcionó existe en nuestro sistema, se le enviará un mensaje con instrucciones de recuperación.");
+        $this->info(Language::getString("misc07"));
         return $this->redirect("index");
     }
 
@@ -184,7 +198,7 @@ class HomeController extends Controller
         $user = $this->db->find(User::class, ["token" => $token]);
 
         if ($token == __EMPTY__ || $user == null) {
-            return $this->error("El token proporcionado es invalido para este contexto.");
+            return $this->error(Language::getString("misc08"));
             return $this->redirect();
         }
 
@@ -200,13 +214,13 @@ class HomeController extends Controller
 
         if ($token == __EMPTY__ || $password == __EMPTY__ || $confirmPassword == __EMPTY__  || $user == null) {
 
-            $this->error("No se puede cambiar la contraseña en este contexto.");
+            $this->error(Language::getString("misc09"));
             return $this->redirect();
         }
 
         if ($password != $confirmPassword) {
 
-            $this->error("Las contraseñas no coinciden.");
+            $this->error(Language::getString("misc10"));
             return $this->redirect();
         }
 
@@ -217,7 +231,7 @@ class HomeController extends Controller
         $this->db->save($user);
         $this->db->commit($user);
 
-        $this->success("Se ha cambiado con éxito la contraseña. Intente acceder.");
+        $this->success(Language::getString("misc11"));
 
         return $this->redirect();
     }

@@ -1,4 +1,4 @@
-<View title="Perfil de Usuario">
+<View title="%%profile00%%">
     <ServiceBanner>
     <Spacing>
     <Container>
@@ -6,34 +6,34 @@
             <Column smallSize="12" mediumSize="12" size="9" xlSize="8">
                 <Card>
                     <IconifiedTitle source="profile.png">
-                        Bienvenido/a, {username}
+                        %%profile01%% {username}
                     </IconifiedTitle>
                     <PersistentMessage>
                     <LoggedIn role="User">
                         <Label>
-                            A continuación se listan las acciones que puede realizar para el rol de su perfil.
+                            %%profile02%%
                         </Label>
                         <Spacing>
-                        <RedirectButtonTooltip route="piano?displayMode=Full" tooltip="Esta opción muestra un teclado de piano completo en el que se puede presionar la nota que se escucha.">
+                        <RedirectButtonTooltip route="piano?displayMode=Full" tooltip="%%profile26%%">
                             <i class="fa fa-play fa-lg pr-2" aria-hidden="true"></i>
-                            Iniciar Prueba con Piano Interactivo
+                            %%profile03%%
                         </RedirectButtonTooltip>
-                        <RedirectButtonTooltip route="piano?displayMode=Simple" tooltip="Esta opción muestra los nombres de las notas musicales en botones sencillos rectangulares, para simplemente escoger la que se escucha.">
+                        <RedirectButtonTooltip route="piano?displayMode=Simple" tooltip="%%profile27%%">
                             <i class="fa fa-keyboard-o fa-lg pr-2" aria-hidden="true"></i>
-                            Iniciar Prueba Sencilla
+                            %%profile04%%
                         </RedirectButtonTooltip>
                         <Spacing>
                         <Title>
-                            Historial de pruebas realizadas
+                            %%profile05%%
                         </Title>
                         <If value="{noTests}" equals="true">
-                            Usted no ha ha realizado ninguna prueba hasta el momento. ¿Por qué no lo intenta?
+                            %%profile06%%
                         </If>
                         <If value="{noTests}" equals="false">
                             <Label>
-                                Esta sección muestra un resumen breve de cada una de las pruebas que usted ha realizado.
+                                %%profile07%%
                                 <Spacing>
-                                Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular.
+                                %%profile08%%
                             </Label>
                             <Spacing>
                             <Row>
@@ -42,10 +42,10 @@
                                         <div class="table-responsive">
                                             <table class="table table-sm">
                                                 <tr>
-                                                    <th>Intento</th>
-                                                    <th>Fecha de subida</th>
-                                                    <th>Modo de visualización</th>
-                                                    <th>Tiempo total transcurido</th>
+                                                    <th>%%profile09%%</th>
+                                                    <th>%%profile10%%</th>
+                                                    <th>%%profile11%%</th>
+                                                    <th>%%profile12%%</th>
                                                 </tr>
                                                 <Foreach from="{tests}" using="i">
                                                     <tr id="row-{parent.i.try}" (click)="window.location = '{host}overview?testToken={parent.i.token}'" class="Hover">
@@ -73,12 +73,12 @@
                     </LoggedIn>
                     <LoggedIn role="Admin">
                         <Title>
-                            Listado de todos los usuarios
+                            %%profile13%%
                         </Title>
                         <Label>
-                            Esta sección muestra todos los usuarios registrados en el sitio web, y permite de forma rápida visualizar sus pruebas
+                            %%profile14%%
                             <Spacing>
-                            Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de ese usuario particular.
+                            %%profile15%%
                         </Label>
                         <Spacing>
                         <Row>
@@ -87,14 +87,14 @@
                                     <div class="table-responsive">
                                         <table class="table table-sm">
                                             <tr>
-                                                <th>Nombre completo</th>
-                                                <th>Correo electrónico</th>
-                                                <th>Rol</th>
-                                                <th>Fecha de nacimiento</th>
-                                                <th>Teléfono</th>
-                                                <th>Género</th>
-                                                <th>País</th>
-                                                <th>Pruebas completas</th>
+                                                <th>%%profile16%%</th>
+                                                <th>%%profile17%%</th>
+                                                <th>%%profile18%%</th>
+                                                <th>%%profile19%%</th>
+                                                <th>%%profile20%%</th>
+                                                <th>%%profile21%%</th>
+                                                <th>%%profile22%%</th>
+                                                <th>%%profile23%%</th>
                                             </tr>
                                             <Foreach from="{users}" using="i">
                                                 <tr id="{parent.random}" (click)="window.location = '{host}lookup?userToken={parent.i.token}'" class="Hover">
@@ -106,10 +106,10 @@
                                                     </td>
                                                     <td>
                                                         <If value="{parent.i.role}" equals="0">
-                                                            Administrador
+                                                            %%profile24%%
                                                         </If>
                                                         <If value="{parent.i.role}" equals="1">
-                                                            Usuario
+                                                            %%profile25%%
                                                         </If>
                                                     </td>
                                                     <td>

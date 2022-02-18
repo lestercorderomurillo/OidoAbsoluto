@@ -1,4 +1,4 @@
-<View title="Recuperación de Contraseña">
+<View title="%%recovertitle%%">
     <ServiceBanner>
     <Container>
         <Row>
@@ -9,23 +9,22 @@
                 <Card maxWidth="600px">
                     <Form id="resetRequestForm" route="forgot/submit">
                         <IconifiedTitle source="profile.png">
-                            Recuperación de Contraseña
+                            %%recovertitle%%
                         </IconifiedTitle>
                         <h6>
-                            ¿Problemas para acceder a su cuenta?
+                            %%problems%%
                         </h6>
                         <Spacing>
                         <Label for="email">
-                            Correo Electrónico
+                            %%email%%
                         </Label>  
                         <Textfield id="email">
                         <Span>
-                            Si el correo se encuentra previamente registrado en nuestra base de datos, 
-                            se le enviará un correo a esa dirección con las instrucciones de recuperación.
+                            %%resethint%%
                         </Span>
                         <Spacing>
                         <SubmitButton>
-                            Enviar correo electrónico
+                            %%sendmail%%
                         </SubmitButton>
                         <Spacing>
                     </Form>

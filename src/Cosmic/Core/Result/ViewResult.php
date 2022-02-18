@@ -4,6 +4,7 @@ namespace Cosmic\Core\Result;
 
 use Cosmic\Binder\Compiler;
 use Cosmic\Binder\DOM;
+use Cosmic\Bundle\Common\Language;
 use Cosmic\Core\Types\View;
 use Cosmic\Core\Interfaces\ResultGeneratorInterface;
 use Cosmic\FileSystem\FileSystem;
@@ -63,16 +64,16 @@ class ViewResult implements ResultGeneratorInterface
 
         // 4. Headers
         $headers =
-        [
             [
-                "name" => "timestamp",
-                "content" => $this->view->getTimestamp()
-            ],
-            [
-                "name" => "page",
-                "content" => $this->view->getViewIdentifier()
-            ]
-        ];
+                [
+                    "name" => "timestamp",
+                    "content" => $this->view->getTimestamp()
+                ],
+                [
+                    "name" => "page",
+                    "content" => $this->view->getViewIdentifier()
+                ]
+            ];
 
         // 5. Inject bundles to app and start the rendering
         app()->injectPrimitive("scriptBundles", $scripts);
@@ -90,12 +91,18 @@ class ViewResult implements ResultGeneratorInterface
         $dom = app()->get(DOM::class);
 
         $html = $compiler->compileString($this->view->getSourceHTML(), $this->view->getViewData());
-        
 
         $jsFile = new File($this->view->getFolder() . $this->view->getViewName() . ".js");
         $documentJSFile = '';
-        if (FileSystem::exists($jsFile)){
+        if (FileSystem::exists($jsFile)) {
             $documentJSFile = "\n" . HTML::encodeInJScript(FileSystem::read($jsFile));
+        }
+
+        if (Language::getLanguage() == 'es') {
+            $jqueryLang = new File("app/Views/validation.es.js");
+            if (FileSystem::exists($jqueryLang)) {
+                $documentJSFile .= "\n" . HTML::encodeInJScript(FileSystem::read($jqueryLang));
+            }
         }
 
         $html = $compiler->compileServerSideTokens($html, ["documentJS" => $documentJSFile . "\n", "bindings" => $dom->getOuputJavascript()]);

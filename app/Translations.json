@@ -1,0 +1,937 @@
+[
+    {
+        "id": "logintitle",
+        "es": "Oido Absoluto",
+        "en": "Absolute Hearing"
+    },
+    {
+        "id": "welcome",
+        "es": "Sírvase de acceder al servicio para realizar nuevas pruebas o consultar su historial",
+        "en": "Feel free to access the service to perform new tests or consult your test history!"
+    },
+    {
+        "id": "email",
+        "es": "Correo Electrónico",
+        "en": "Email"
+    },
+    {
+        "id": "password",
+        "es": "Contraseña",
+        "en": "Password"
+    },
+    {
+        "id": "login",
+        "es": "Acceder",
+        "en": "Login"
+    },
+    {
+        "id": "signup",
+        "es": "Registrarse",
+        "en": "Signup"
+    },
+    {
+        "id": "forgot",
+        "es": "¿Olvidó su contraseña o no puede acceder a su cuenta?",
+        "en": "Forgot your password or can't access your account?"
+    },
+    {
+        "id": "recover",
+        "es": "Haga click en este enlace para recuperar su contraseña",
+        "en": "Click here to recover your password"
+    },
+    {
+        "id": "profile",
+        "es": "Perfil",
+        "en": "Profile"
+    },
+    {
+        "id": "logout",
+        "es": "Desloguearse",
+        "en": "Logout"
+    },
+    {
+        "id": "policy",
+        "es": "Términos de uso y condiciones",
+        "en": "Terms and conditions of use"
+    },
+    {
+        "id": "about",
+        "es": "Acerca del proyecto",
+        "en": "About"
+    },
+    {
+        "id": "passchange",
+        "es": "Cambio de contraseña",
+        "en": "Password change"
+    },
+    {
+        "id": "newpass",
+        "es": "Porfavor, ingrese la nueva contraseña",
+        "en": "Type the new password"
+    },
+    {
+        "id": "confirmpass",
+        "es": "Confirme la contraseña",
+        "en": "Rewrite the same password"
+    },
+    {
+        "id": "updatepass",
+        "es": "Actualizar contraseña",
+        "en": "Update password"
+    },
+    {
+        "id": "postpass",
+        "es": "Después de actualizar su contraseña, debera iniciar sesión nuevamente.",
+        "en": "After updating your password, you will need to log in again."
+    },
+    {
+        "id": "recovertitle",
+        "es": "Recuperación de Contraseña",
+        "en": "Password Recovery"
+    },
+    {
+        "id": "problems",
+        "es": "¿Problemas para acceder a su cuenta?",
+        "en": "Problems signing in to your account?"
+    },
+    {
+        "id": "resethint",
+        "es": "Si el correo se encuentra previamente registrado en nuestra base de datos, se le enviará un correo a esa dirección con las instrucciones de recuperación.",
+        "en": "If the email is previously registered in our database, an email will be sent to that address with the recovery instructions"
+    },
+    {
+        "id": "sendmail",
+        "es": "Enviar correo electrónico",
+        "en": "Send email"
+    },
+    {
+        "id": "firstName",
+        "es": "Nombre",
+        "en": "First Name"
+    },
+    {
+        "id": "lastName",
+        "es": "Apellidos",
+        "en": "Last Name"
+    },
+    {
+        "id": "lastName",
+        "es": "Apellidos",
+        "en": "Last Name"
+    },
+    {
+        "id": "passhintfull",
+        "es": "La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -",
+        "en": "The password can only contain letters, numbers and the following symbols: # @ . -"
+    },
+    {
+        "id": "country",
+        "es": "País de nacimiento",
+        "en": "Country"
+    },
+    {
+        "id": "birthDay",
+        "es": "Fecha de nacimiento",
+        "en": "Birth day"
+    },
+    {
+        "id": "phone",
+        "es": "Teléfono",
+        "en": "Phone number"
+    },
+    {
+        "id": "country",
+        "es": "País de nacimiento",
+        "en": "Country"
+    },
+    {
+        "id": "selectOne",
+        "es": "Seleccione una opción...",
+        "en": "Select an option..."
+    },
+    {
+        "id": "selectGender",
+        "es": "Seleccione su género",
+        "en": "Gender"
+    },
+    {
+        "id": "male",
+        "es": "Masculino",
+        "en": "Male"
+    },
+    {
+        "id": "female",
+        "es": "Femenino",
+        "en": "Female"
+    },
+    {
+        "id": "other",
+        "es": "Otro",
+        "en": "Other"
+    },
+    {
+        "id": "notanswer",
+        "es": "No responder",
+        "en": "Do not answer"
+    },
+    {
+        "id": "signuptitle",
+        "es": "Registro de usuario",
+        "en": "Signup"
+    },
+    {
+        "id": "abouttitle",
+        "es": "Acerca del proyecto",
+        "en": "About the proyect"
+    },
+    {
+        "id": "about1",
+        "es": "Esta prueba de oído absoluto es parte de un proyecto de la investigación de la Universidad de Costa Rica a cargo de la Dra. Gabriela Chavarría. Sus resultados pueden ser utilizados de forma anónima en publicaciones científicas. ",
+        "en": "This test is part of a research project at the University of Costa Rica led by Dr. Gabriela Chavarría. Their results can and will be used anonymously in scientific publications."
+    },
+    {
+        "id": "about2",
+        "es": "Para cualquier consulta puede escribir al siguiente correo electrónico",
+        "en": "For any remaining questions, you can write to the following e-mail address "
+    },
+    {
+        "id": "about3",
+        "es": "Detalles de la prueba",
+        "en": "Test details"
+    },
+    {
+        "id": "about4",
+        "es": "La prueba de oído absoluto tiene dos partes, una con notas de piano y otra con tonos puros. En cada parte de la prueba escuchará 30 tonos con un segundo de duración y luego tendrá tres segundos para identificar la nota que escuchó. Al concluir la prueba podrá saber cuántas notas identificó correctamente. Como parte de la prueba se le solicita inicialmente información de contacto e información acerca del instrumentos que toca, la edad de inicio de su formación musical, etc.",
+        "en": "The absolute hearing test has two parts, one with piano notes and one with pure tones. In each part of the test you will hear 30 one-second long tones and then you will have about three seconds to identify the note you think you heard. At the end of the test you will be able to tell how many notes you identified correctly. As part of the test you are initially asked for contact information and information about the instruments you play, the age at which you began your musical training, etc."
+    },
+    {
+        "id": "termstitle",
+        "es": "TÉRMINOS DE USO Y CONDICIONES DEL SERVICIO",
+        "en": "TERMS OF USE AND CONDITIONS OF SERVICE"
+    },
+    {
+        "id": "policy1",
+        "es": "INFORMACIÓN RELEVANTE",
+        "en": "RELEVANT INFORMATION"
+    },
+    {
+        "id": "policy2",
+        "es": "El uso de nuestros servicios implicará que usted ha leído y aceptado los Términos y Condiciones de Uso en el presente documento de esta sección de la página. El usuario puede elegir y cambiar su clave de acceso en cualquier momento, en caso de que se haya registrado y que sea necesario, no obstante nuestro sitio web no asume la responsabilidad en caso de que entregue dicha clave a terceros.",
+        "en": "The use of our services will imply that you have read and accepted the Terms and Conditions of Use in the present document in this section of the page. You can change your password at any time, in case it is necessary, however our website assumes no responsibility in case you give such password to third parties."
+    },
+    {
+        "id": "policy3",
+        "es": "PRIVACIDAD",
+        "en": "PRIVACY"
+    },
+    {
+        "id": "policy4",
+        "es": "Este garantiza que la información personal que usted envía cuenta con la seguridad necesaria. Los datos ingresados son recolectados para fines investigativos y solo serán compartidos en el caso de cumplimiento a una orden judicial o requerimientos legales.",
+        "en": "It ensures that the personal information you submit has the necessary security protocols in place. The data entered is collected for investigative purposes and will only be shared in the case of compliance with a court order or legal requirements."
+    },
+    {
+        "id": "policy5",
+        "es": "USO NO AUTORIZADO",
+        "en": "UNAUTHORIZED USE"
+    },
+    {
+        "id": "policy6",
+        "es": "En caso de que aplique (para venta de software, distribución, u otro producto de diseño y programación) usted no puede colocar uno de nuestros productos, modificado o sin modificar, en un CD, sitio web o ningún otro medio y ofrecerlos para la redistribución o la reventa de ningún tipo.",
+        "en": "If applicable (for software sales, distribution, or other design and programming products) you may not place one of our products, modified or unmodified, on a CD, website or any other media and offer them for redistribution or resale of any kind."
+    },
+    {
+        "id": "policy7",
+        "es": "PROPIEDAD",
+        "en": "PROPERTY"
+    },
+    {
+        "id": "policy8",
+        "es": "Usted no puede declarar propiedad intelectual o exclusiva a ninguno de nuestros productos, modificado o sin modificar. En caso de que no se especifique lo contrario, nuestros productos se proporcionan sin ningún tipo de garantía, expresa o implícita. En ningún caso esta compañía será responsable de ningún tipo de daño incluyendo, pero no limitado a, daños directos, indirectos, especiales, fortuitos o consecuentes u otras pérdidas resultantes del uso o de la imposibilidad de utilizar nuestros productos.",
+        "en": "You may not claim intellectual or exclusive property in any of our products, modified or unmodified. Unless otherwise specified, our products are provided without warranty of any kind, express or implied. In no event shall this company be liable for any type of damage including, but not limited to, direct, indirect, special, incidental or consequential damages or other losses resulting from the use or inability to use our products."
+    },
+    {
+        "id": "lookuptitle",
+        "es": "Perfil de Usuario",
+        "en": "User Profile"
+    },
+    {
+        "id": "lookup1",
+        "es": "Visualizando el perfil de",
+        "en": "Viewing the profile of"
+    },
+    {
+        "id": "lookup2",
+        "es": "A continuación se listan las acciones que puede realizar su rol en este perfil ajeno.",
+        "en": "List of all actions that your current role can perform in this external profile."
+    },
+    {
+        "id": "lookup3",
+        "es": "Regresar",
+        "en": "Go back"
+    },
+    {
+        "id": "lookup4",
+        "es": "Exportar todas las pruebas",
+        "en": "Export all the tests"
+    },
+    {
+        "id": "lookup5",
+        "es": "Exportar el cuestionario en Excel",
+        "en": "Export user info in Excel"
+    },
+    {
+        "id": "lookup6",
+        "es": "Convertir en Administrator",
+        "en": "Make admin"
+    },
+    {
+        "id": "lookup7",
+        "es": "Convertir en Usuario Regular",
+        "en": "Make regular user"
+    },
+    {
+        "id": "lookup8",
+        "es": "Información de identificación",
+        "en": "Identification information"
+    },
+    {
+        "id": "lookup9",
+        "es": "Fecha de nacimiento",
+        "en": "Birth date"
+    },
+    {
+        "id": "lookup010",
+        "es": "País",
+        "en": "Country"
+    },
+    {
+        "id": "lookup011",
+        "es": "Teléfono",
+        "en": "Phone"
+    },
+    {
+        "id": "lookup012",
+        "es": "Género",
+        "en": "Gender"
+    },
+    {
+        "id": "lookup013",
+        "es": "Historial de pruebas realizadas",
+        "en": "History of tests performed"
+    },
+    {
+        "id": "lookup014",
+        "es": "Este usuario no ha realizado ninguna prueba hasta el momento",
+        "en": "This user has not performed any tests to this date"
+    },
+    {
+        "id": "lookup015",
+        "es": "Esta sección muestra un resumen breve de cada una de las pruebas que este usuario ha realizado",
+        "en": "This section shows a brief summary of each of the tests that this user has performed"
+    },
+    {
+        "id": "lookup016",
+        "es": "Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular",
+        "en": "You can click on each row to access an extended view with all the information for that particular test"
+    },
+    {
+        "id": "lookup017",
+        "es": "Intento",
+        "en": "Attempt"
+    },
+    {
+        "id": "lookup018",
+        "es": "Fecha de subida",
+        "en": "Upload date"
+    },
+    {
+        "id": "lookup019",
+        "es": "Modo de visualización",
+        "en": "Display mode"
+    },
+    {
+        "id": "lookup020",
+        "es": "Tiempo total transcurido",
+        "en": "Total elapsed time"
+    },
+    {
+        "id": "profile00",
+        "es": "Perfil de Usuario",
+        "en": "User Profile"
+    },
+    {
+        "id": "profile01",
+        "es": "Bienvenido/a,",
+        "en": "Welcome,"
+    },
+    {
+        "id": "profile02",
+        "es": "A continuación se listan las acciones que puede realizar para el rol de su perfil.",
+        "en": "List of all actions that you can perform for your role."
+    },
+    {
+        "id": "profile03",
+        "es": "Iniciar Prueba con Piano Interactivo",
+        "en": "Start Interactive Piano Test"
+    },
+    {
+        "id": "profile04",
+        "es": "Iniciar Prueba Sencilla",
+        "en": "Start Simple Test"
+    },
+    {
+        "id": "profile05",
+        "es": "Historial de pruebas realizadas",
+        "en": "History of tests performed"
+    },
+    {
+        "id": "profile06",
+        "es": "Usted no ha ha realizado ninguna prueba hasta el momento. ¿Por qué no lo intenta?",
+        "en": "You have not performed any tests so far, why don't you try it?"
+    },
+    {
+        "id": "profile07",
+        "es": "Esta sección muestra un resumen breve de cada una de las pruebas que usted ha realizado.",
+        "en": "This section shows a brief summary of each of the tests you have performed."
+    },
+    {
+        "id": "profile08",
+        "es": "Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de esa prueba particular.",
+        "en": "You can click on each row to access an extended view with all the information for that particular test."
+    },
+    {
+        "id": "profile09",
+        "es": "Intento",
+        "en": "Attempt"
+    },
+    {
+        "id": "profile10",
+        "es": "Fecha de subida",
+        "en": "Upload date"
+    },
+    {
+        "id": "profile11",
+        "es": "Modo de visualización",
+        "en": "Display mode"
+    },
+    {
+        "id": "profile12",
+        "es": "Tiempo total transcurido",
+        "en": "Total elapsed time"
+    },
+    {
+        "id": "profile13",
+        "es": "Listado de todos los usuarios",
+        "en": "List of all users"
+    },
+    {
+        "id": "profile14",
+        "es": "Esta sección muestra todos los usuarios registrados en el sitio web, y permite de forma rápida visualizar sus pruebas",
+        "en": "This section shows all the users registered on the website, and allows you to quickly view their tests"
+    },
+    {
+        "id": "profile15",
+        "es": "Puede hacer click sobre cada fila para acceder a una vista extendida con toda la información de ese usuario particular",
+        "en": "You can click on each row to access an extended view with all the information for that particular user"
+    },
+    {
+        "id": "profile16",
+        "es": "Nombre completo",
+        "en": "Full name"
+    },
+    {
+        "id": "profile17",
+        "es": "Correo electrónico",
+        "en": "Email"
+    },
+    {
+        "id": "profile18",
+        "es": "Rol",
+        "en": "Role"
+    },
+    {
+        "id": "profile19",
+        "es": "Fecha de nacimiento",
+        "en": "Birth date"
+    },
+    {
+        "id": "profile20",
+        "es": "Teléfono",
+        "en": "Phone"
+    },
+    {
+        "id": "profile21",
+        "es": "Género",
+        "en": "Gender"
+    },
+    {
+        "id": "profile22",
+        "es": "País",
+        "en": "Country"
+    },
+    {
+        "id": "profile23",
+        "es": "Pruebas completas",
+        "en": "Completed tests"
+    },
+    {
+        "id": "profile24",
+        "es": "Administrador",
+        "en": "Administrator"
+    },
+    {
+        "id": "profile25",
+        "es": "Usuario",
+        "en": "User"
+    },
+    {
+        "id": "profile26",
+        "es": "Esta opción muestra un teclado de piano completo en el que se puede presionar la nota que se escucha.",
+        "en": "This option displays a full piano keyboard on which you can press the note you hear."
+    },
+    {
+        "id": "profile27",
+        "es": "Esta opción muestra los nombres de las notas musicales en botones sencillos rectangulares, para simplemente escoger la que escuchó.",
+        "en": "This option displays the names of the musical notes in simple rectangular buttons, to simply choose the one you heard."
+    },
+    {
+        "id": "piano00",
+        "es": "Ejecución de la prueba",
+        "en": "Test execution"
+    },
+    {
+        "id": "piano01",
+        "es": "Instrucciones de utilización",
+        "en": "Instructions for use"
+    },
+    {
+        "id": "piano02",
+        "es": "Antes de realizar esta prueba se recomienda hacer la prueba con audífonos.",
+        "en": "Before performing this test, it is recommended to test with hearing aids."
+    },
+    {
+        "id": "piano03",
+        "es": "Una vez usted escucha una nota musical, tiene un intervalo breve de 3 segundos para identificar y marcar la nota que cree que escuchó.",
+        "en": "Once you hear a musical note, you have a brief 3-second interval to identify and mark the note you think you heard."
+    },
+    {
+        "id": "piano04",
+        "es": "Las notas pueden ser marcadas adicionalmente mediante el uso de teclas. Para el caso de notas blancas, utilice las teclas \"ZXCVBNM\" y para las negras utilice \"SDGHJ\".",
+        "en": "Notes can be additionally selected by using keys. For white notes, use the keys \"ZXCVBNM\" and for black notes use \"SDGHJ\"."
+    },
+    {
+        "id": "piano05",
+        "es": "Cuando se reproduzcan",
+        "en": "When at least"
+    },
+    {
+        "id": "piano06",
+        "es": "notas consecutivas, se pasará automaticamente a la siguiente etapa.",
+        "en": "consecutive sounds are played, you will automatically move on to the next stage."
+    },
+    {
+        "id": "piano07",
+        "es": "Información recolectada",
+        "en": "Collected data"
+    },
+    {
+        "id": "piano08",
+        "es": "Tipo de sonido",
+        "en": "Sound type"
+    },
+    {
+        "id": "piano09",
+        "es": "Reproduciendo la nota",
+        "en": "Playing note"
+    },
+    {
+        "id": "piano10",
+        "es": "Tiempo total transcurido",
+        "en": "Total elapsed time"
+    },
+    {
+        "id": "piano11",
+        "es": "Historial de notas",
+        "en": "Played notes"
+    },
+    {
+        "id": "overview00",
+        "es": "Detalles avanzados de una prueba",
+        "en": "Expanded test details"
+    },
+    {
+        "id": "overview01",
+        "es": "Visualización avanzada de una prueba",
+        "en": "Expanded test details"
+    },
+    {
+        "id": "overview02",
+        "es": "Información de identificación",
+        "en": "Identification information"
+    },
+    {
+        "id": "overview03",
+        "es": "Autor de la prueba",
+        "en": "Author of the test"
+    },
+    {
+        "id": "overview04",
+        "es": "Número de intento",
+        "en": "Attempt number"
+    },
+    {
+        "id": "overview05",
+        "es": "Intento",
+        "en": "Attempt"
+    },
+    {
+        "id": "overview06",
+        "es": "Fecha de elaboración",
+        "en": "Upload date"
+    },
+    {
+        "id": "overview07",
+        "es": "Modo de visualización de la prueba",
+        "en": "Display mode"
+    },
+    {
+        "id": "overview08",
+        "es": "Tiempo total transcurrido",
+        "en": "Total elapsed time"
+    },
+    {
+        "id": "overview09",
+        "es": "Regresar a la vista anterior",
+        "en": "Go back"
+    },
+    {
+        "id": "overview10",
+        "es": "Exportar prueba en Excel",
+        "en": "Export test in Excel"
+    },
+    {
+        "id": "overview11",
+        "es": "Datos crudos sobre las notas",
+        "en": "Raw data on notes"
+    },
+    {
+        "id": "overview12",
+        "es": "Se muestra los datos en detalle sobre cada una de las notas presionadas durante la realización de la prueba.",
+        "en": "Detailed data is displayed for each of the notes pressed during the test."
+    },
+    {
+        "id": "overview13",
+        "es": "Aciertos Totales",
+        "en": "Total Hits"
+    },
+    {
+        "id": "overview14",
+        "es": "Aciertos Piano",
+        "en": "Piano Hits"
+    },
+    {
+        "id": "overview15",
+        "es": "Aciertos Puros",
+        "en": "Pure Hits"
+    },
+    {
+        "id": "overview16",
+        "es": "Aciertos Naturales",
+        "en": "Natural Hits"
+    },
+    {
+        "id": "overview17",
+        "es": "Aciertos Sostenidos",
+        "en": "Sharp Hits"
+    },
+    {
+        "id": "survey00",
+        "es": "Recolección de información",
+        "en": "Information gathering"
+    },
+    {
+        "id": "survey01",
+        "es": "Se le pedirá que conteste el siguiente formulario antes de poder utilizar el resto de la aplicación",
+        "en": "You will be asked to answer the following form before you can use the rest of the application"
+    },
+    {
+        "id": "survey02",
+        "es": "Algunas preguntas dependen de la respuestas de preguntas anteriores, por lo que pueden verse ocultadas. Asi mismo, hay preguntas que varian en función del género biológico que usted seleccionó anteriormente.",
+        "en": "Some questions depend on the answers to previous questions, so they may be hidden. Also, there are questions that vary depending on the biological gender you selected earlier."
+    },
+    {
+        "id": "misc00",
+        "es": "El usuario o contraseña ingresada no son correctos.",
+        "en": "The user or password entered is not correct."
+    },
+    {
+        "id": "misc01",
+        "es": "Su usuario se ha registrado correctamente. Pruebe a iniciar sesión con sus nuevos credenciales a continuación.",
+        "en": "Your user has been successfully registered. Please try logging in with your new credentials now."
+    },
+    {
+        "id": "misc02",
+        "es": "No se puede validar los datos ingresados en el servidor remoto.",
+        "en": "Data entered on the remote server cannot be validated."
+    },
+    {
+        "id": "misc03",
+        "es": "No se puede registrar el usuario ingresado porque el correo utilizado se encuentra asociado a otra cuenta ya existente.",
+        "en": "It is not possible to register the user entered because the e-mail address used is associated to another existing account."
+    },
+    {
+        "id": "misc04",
+        "es": "Solicitud de recuperación de contraseña",
+        "en": "Password recovery request"
+    },
+    {
+        "id": "misc05",
+        "es": "Si usted solicitó el cambio de su contraseña, presione el siguiente enlace",
+        "en": "If you have requested to change your password, click on the following link"
+    },
+    {
+        "id": "misc06",
+        "es": "Si no solicitó esto, solamente ignore este mensaje",
+        "en": "If you did not request this, just ignore this message"
+    },
+    {
+        "id": "misc07",
+        "es": "Si el correo electrónico que usted proporcionó existe en nuestro sistema, se le enviará un mensaje con instrucciones de recuperación",
+        "en": "If the email address you provided exists in our system, you will be sent a message with recovery instructions"
+    },
+    {
+        "id": "misc08",
+        "es": "El token proporcionado es invalido para este contexto",
+        "en": "The provided token is invalid for this context"
+    },
+    {
+        "id": "misc09",
+        "es": "No se puede cambiar la contraseña en este contexto",
+        "en": "Password cannot be changed in this context"
+    },
+    {
+        "id": "misc10",
+        "es": "Las contraseñas no coinciden",
+        "en": "Passwords do not match"
+    },
+    {
+        "id": "misc11",
+        "es": "Se ha cambiado con éxito la contraseña. Intente acceder",
+        "en": "Password has been successfully changed. Please try to access."
+    },
+    {
+        "id": "misc12",
+        "es": "Piano Interactivo",
+        "en": "Interactive Piano"
+    },
+    {
+        "id": "misc13",
+        "es": "Teclado Interactivo",
+        "en": "Interactive Keypad"
+    },
+    {
+        "id": "misc14",
+        "es": "El formulario solo puede ser subido al servidor una única vez por usuario",
+        "en": "The form can only be uploaded to the server once per user"
+    },
+    {
+        "id": "misc15",
+        "es": "No se supone que pueda acceder al piano directamente, sino que debe seleccionar su tipo primero",
+        "en": "You are not supposed to be able to access the piano directly, but you have to select its type first"
+    },
+    {
+        "id": "misc16",
+        "es": "No se seleccionó ninguna nota",
+        "en": "No note was selected"
+    },
+    {
+        "id": "misc17",
+        "es": "El token especificado no es valido en este contexto",
+        "en": "The specified token is not valid in this context"
+    },
+    {
+        "id": "misc18",
+        "es": "Solo administradores o el dueño pueden visualizar esta prueba",
+        "en": "Only administrators or the owner can view this test"
+    },
+    {
+        "id": "misc19",
+        "es": "El token proporcionado no corresponde a ninguna prueba en el sistema",
+        "en": "The provided token does not correspond to any test in our system"
+    },
+    {
+        "id": "misc20",
+        "es": "Se ha cambiado el rol del usuario exitosamente",
+        "en": "User role has been changed successfully"
+    },
+    {
+        "id": "misc21",
+        "es": "No se puede cambiar el rol de este usuario",
+        "en": "You cannot change the role of this user"
+    },
+    {
+        "id": "misc22",
+        "es": "Algo ha salido mal, contacte al administrator",
+        "en": "Something has gone wrong, contact the administrator"
+    },
+    {
+        "id": "misc23",
+        "es": "Algo ha salido mal, contacte al administrator",
+        "en": "Something has gone wrong, contact the admin"
+    },
+    {
+        "id": "misc24",
+        "es": "Este usuario no ha completado el cuestionario",
+        "en": "This user has not completed the questionnaire"
+    },
+    {
+        "id": "misc25",
+        "es": "Nombre completo",
+        "en": "Full name"
+    },
+    {
+        "id": "misc26",
+        "es": "Solo administradores o el dueño pueden visualizar esta prueba",
+        "en": "Only administrators or the owner can view this test"
+    },
+    {
+        "id": "misc27",
+        "es": "Nombre completo: ",
+        "en": "Full name: "
+    },
+    {
+        "id": "misc28",
+        "es": "Número de intento: ",
+        "en": "Attempt number: "
+    },
+    {
+        "id": "misc29",
+        "es": "Fecha de subida: ",
+        "en": "Upload date: "
+    },
+    {
+        "id": "misc30",
+        "es": "Modo de visualización: ",
+        "en": "Display mode: "
+    },
+    {
+        "id": "misc31",
+        "es": "Tiempo total transcurrido: ",
+        "en": "Total elapsed time: "
+    },
+    {
+        "id": "misc32",
+        "es": "Nota Reproducida",
+        "en": "Played note "
+    },
+    {
+        "id": "misc33",
+        "es": "Nota Presionada",
+        "en": "Pressed Note"
+    },
+    {
+        "id": "misc34",
+        "es": "Tiempo de reacción (ms)",
+        "en": "Reaction time (ms)"
+    },
+    {
+        "id": "misc35",
+        "es": "Octava Reproducida",
+        "en": "Played Octave"
+    },
+    {
+        "id": "misc36",
+        "es": "Tipo Reproducido",
+        "en": "Played Type"
+    },
+    {
+        "id": "misc37",
+        "es": "Tipo Presionado",
+        "en": "Pressed Type"
+    },
+    {
+        "id": "misc38",
+        "es": "Clasificación",
+        "en": "Kind"
+    },
+    {
+        "id": "misc39",
+        "es": "Sostenido",
+        "en": "Sharp"
+    },
+    {
+        "id": "misc40",
+        "es": "Natural",
+        "en": "Natural"
+    },
+    {
+        "id": "misc41",
+        "es": "Pregunta",
+        "en": "Question"
+    },
+    {
+        "id": "misc42",
+        "es": "Respuesta",
+        "en": "Reply"
+    },
+    {
+        "id": "misc43",
+        "es": "Sin respuesta / No aplica",
+        "en": "No answer / Not applicable"
+    },
+    {
+        "id": "pianocomp00",
+        "es": "1/2 (Piano) Tonos reales",
+        "en": "1/2 (Piano) Real tones"
+    },
+    {
+        "id": "pianocomp01",
+        "es": "2/2 (Puros) Tonos artificiales",
+        "en": "2/2 (Pure) Artificial tones"
+    },
+    {
+        "id": "pianocomp02",
+        "es": "No se seleccionó ninguna nota",
+        "en": "No note was selected"
+    },
+    {
+        "id": "pianocomp03",
+        "es": "Cargando audios en memoria...",
+        "en": "Loading audios in memory..."
+    },
+    {
+        "id": "pianocomp04",
+        "es": "Inicializar la prueba",
+        "en": "Start test"
+    },
+    {
+        "id": "pianocomp05",
+        "es": "Prueba en proceso...",
+        "en": "Test in progress..."
+    },
+    {
+        "id": "pianocomp06",
+        "es": "Continuar con la segunda parte",
+        "en": "Continue with the second part"
+    },
+    {
+        "id": "paginator00",
+        "es": "Página anterior",
+        "en": "Previous page"
+    },
+    {
+        "id": "paginator01",
+        "es": "Página siguiente",
+        "en": "Next page"
+    },
+    {
+        "id": "paginator02",
+        "es": "Finalizar",
+        "en": "Upload"
+    },
+    {
+        "id": "languageselect",
+        "es": "Idioma",
+        "en": "Language"
+    }
+]

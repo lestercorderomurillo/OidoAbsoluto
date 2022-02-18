@@ -384,7 +384,7 @@
     },
     {
         "id": 47,
-        "subject": "¿Ha sido diagnosticado usted o algún familiar con algún desorden del espectro de autismo, como autismo o síndrome de Asperger?",
+        "subject": "¿Ha sido diagnosticado usted o algún familiar con algún desorden del espectro autista (incluyendo lo que anteriormente se conocía como Asperger)?",
         "type": "singleChoice",
         "choices": [
             "Sí",

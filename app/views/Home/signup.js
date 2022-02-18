@@ -1,11 +1,12 @@
 $('#signupForm').submit(function (event) {
 
-    if (!Validator.validateDate("birthDay")) {
+    let lang = document.documentElement.lang.toLowerCase();
+    if (!Validator.validateDate(lang, "birthDay")) {
         event.preventDefault();
         return false;
     }
 
-    if(!$('#signupForm').valid()){
+    if (!$('#signupForm').valid()) {
         event.preventDefault();
         return false;
     }
@@ -13,8 +14,8 @@ $('#signupForm').submit(function (event) {
     Validator.disableDateSubComponents("birthDay");
 
     $('#submit').prop("disabled", true);
-    $('#submit').html("Subiendo formulario...");
-    
+    $('#submit').html("...");
+
 });
 
 $("#signupForm").validate({
@@ -53,43 +54,6 @@ $("#signupForm").validate({
         },
         country: {
             required: true
-        }
-    },
-    messages: {
-        firstName: {
-            required: "El campo del nombre no puede estar vacio",
-            minlength: "El nombre debe de ser al menos de 3 carácteres"
-        },
-        lastName: {
-            required: "El campo del apellido no puede estar vacio",
-            minlength: "El nombre debe de ser al menos de 3 carácteres"
-        },
-        email: {
-            required: "El campo del email no puede estar vacio",
-            email: "El formato correcto es: abc@domain.com"
-        },
-        password: {
-            required: "La contraseña no puede estar vacio",
-            minlength: "La contraseña debe ser de al menos de 7 carácteres",
-            maxlength: "Demasiada extenso"
-        },
-        confirmPassword: {
-            required: "La contraseña no puede estar vacio",
-            equalTo: "Ambas contraseñas deben coincidir",
-            minlength: "La contraseña debe ser de al menos de 7 carácteres",
-            maxlength: "Demasiada extenso"
-        },
-        phone: {
-            required: "El campo de teléfono no puede estar vacio",
-            number: "Debe ser un valor numérico",
-            minlength: "Demasiado corto",
-            maxlength: "Demasiado extenso"
-        },
-        gender: {
-            required: "Debe seleccionar una opción"
-        },
-        country: {
-            required: "Debe seleccionar una opción"
         }
     }
 });

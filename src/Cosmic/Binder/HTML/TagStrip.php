@@ -77,19 +77,17 @@ class TagStrip
                             setInterval($value, 16);
                         });
                         JS;
-                        
                     } else {
 
                         if ($event == "load") {
                             $id = "window";
-
                         } else {
 
                             $id = '"#' . strtr($id, ["#" => "\\\#"]) . '"';
+                        }
 
-                            if (!str_ends_with($value, ";")) {
-                                $value .= ";";
-                            }
+                        if (!str_ends_with($value, ";")) {
+                            $value .= ";";
                         }
 
                         $handleCode = <<<JS
@@ -100,7 +98,6 @@ class TagStrip
                     }
 
                     app()->get(DOM::class)->registerJavascriptSourceCode($handleCode);
-
                 } else if (Text::contains($key, ["id", "name", "for", "key"])) {
 
                     if (strlen($value) > 0) {

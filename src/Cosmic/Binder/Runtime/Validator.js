@@ -38,19 +38,19 @@ class Validator {
      * 
      * @returns {boolean} Return true if is valid, false otherwise.
      */
-    static validateDate(domID) {
+    static validateDate(lang, domID) {
 
         Validator.resetError(domID);
 
-        var errorReason = Validator.isDateValid(domID);
+        var errorReason = Validator.isDateValid(lang, domID);
 
         if (Validator.isBlank(errorReason)) {
             $(`#${domID}`).val(Validator.getComposedDate(domID));
             return true;
         }
-        
+
         $(`#error_${domID}`).html(errorReason);
-        
+
         delay(() => $(`#error_${domID}`).show(), 1);
 
         return false;
@@ -63,8 +63,7 @@ class Validator {
      * 
      * @returns {string} The date string, that can be parsed later on.
      */
-    static getComposedDate(domID) 
-    {
+    static getComposedDate(domID) {
         var year = $(`#${domID}_yy`).val();
         var month = $(`#${domID}_mm`).val();
         var days = $(`#${domID}_dd`).val();
@@ -81,7 +80,7 @@ class Validator {
      * 
      * @returns {string} Return the reason for the failure, if not, the empty string.
      */
-    static isDateValid(domID, minYear = 1940, minimunAge = 12) {
+    static isDateValid(lang, domID, minYear = 1940, minimunAge = 12) {
 
         var maxYear = new Date().getFullYear();
         var year = $(`#${domID}_yy`).val();
@@ -91,15 +90,18 @@ class Validator {
         var dateObject = Date.parse(dateString);
 
         if (!Validator.isDateInRange(dateObject, year, month, days, minYear, maxYear)) {
-            return `La fecha no está en el rango admitido.`;
+            if (lang == 'es') { return `La fecha no está en el rango admitido.`; }
+            if (lang == 'en') { return `Wrong date values.`; }
         }
 
         if (!Validator.isRealDate(year, month, days)) {
-            return `No es una fecha real. Verifique.`;
+            if (lang == 'es') { return `No es una fecha real. Verifique.`; }
+            if (lang == 'en') { return `Not a valid date.`; }
         }
 
         if (maxYear - year < minimunAge) {
-            return `Se requiere de minimo ${minimunAge} años de edad.`;
+            if (lang == 'es') { return `Se requiere de minimo ${minimunAge} años de edad.`; }
+            if (lang == 'en') { return `Requires to be at least ${minimunAge} years old.`; }
         }
 
         return "";

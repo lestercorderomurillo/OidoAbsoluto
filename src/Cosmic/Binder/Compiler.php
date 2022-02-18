@@ -5,6 +5,8 @@ namespace Cosmic\Binder;
 use Cosmic\Binder\Exceptions\CompileException;
 use Cosmic\Binder\HTML\Beautifier;
 use Cosmic\Binder\HTML\TagStrip;
+use Cosmic\Bundle\Common\Language;
+use Cosmic\Core\Types\JSON;
 use Cosmic\FileSystem\FileSystem;
 use Cosmic\FileSystem\Paths\File;
 use Cosmic\FileSystem\Paths\Folder;
@@ -25,12 +27,15 @@ class Compiler
      */
     private Beautifier $beatifier;
 
+    protected $translations;
+
     /**
      * Constructor. 
      */
     public function __construct()
     {
         $this->beatifier = new Beautifier();
+        $this->translations = JSON::from(new File("app/Translations.json"))->toArray();
     }
 
     /**
@@ -97,6 +102,18 @@ class Compiler
         return $preSelectionString . $replaceString . $postSelectionString;
     }
 
+    public function compileTranslations(string $html)
+    {
+        $currentLang = Language::getLanguage();
+
+        foreach ($this->translations as $traslation) {
+            $id = $traslation['id'];
+            $html = str_replace("%%$id%%", $traslation["$currentLang"], $html);
+        }
+
+        return $html;
+    }
+
     /**
      * Compile a raw cosmic string to a valid compiled HTML string.
      * 
@@ -111,7 +128,6 @@ class Compiler
         $offset = 0;
 
         $html = $this->beatifier->prefixIndent($html);
-
         $html = $this->compileServerSideTokens($html, $tokens);
         $html = $this->compileMathExpression($html);
 
@@ -190,6 +206,7 @@ class Compiler
 
         if ($depth == 0) {
             $html = "<!DOCTYPE html>\n" . $this->beatifier->beautifyString($html);
+            $html = $this->compileTranslations($html);
         }
 
         return $html;

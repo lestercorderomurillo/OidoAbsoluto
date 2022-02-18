@@ -1,11 +1,11 @@
-<View title="Registro de usuario en el proyecto">
+<View title="%%signuptitle%%">
     <Container>
         <Row>
             <Column>
                 <Card size="8" maxWidth="600px">
                     <Form id="signupForm" route="signup/submit">
                         <IconifiedTitle source="signup.png">
-                            Registro de usuario
+                            %%signuptitle%%
                         </IconifiedTitle>
                         <Spacing>
                         <PersistentMessage>
@@ -13,66 +13,66 @@
                             <Row>
                                 <Column smallSize="12" mediumSize="6" size="6" padding="0" textPosition="left">
                                     <Label for="firstName">
-                                        Nombre
+                                        %%firstName%%
                                     </Label>
                                     <Textfield id="firstName">
                                 </Column>
                                 <Column smallSize="12" mediumSize="6" size="6" padding="0" textPosition="left">
                                     <Label for="lastName">
-                                        Apellidos
+                                        %%lastName%%
                                     </Label>
                                     <Textfield id="lastName">
                                 </Column>
                             </Row>
                         </Container>
                         <Label for="email">
-                            Correo Electrónico (Nombre de la cuenta)
+                            %%email%%
                         </Label>
                         <Textfield id="email">
                         <Label for="password">
-                            Contraseña
+                            %%password%%
                         </Label>
                         <Passfield id="password">
                         <Hint>
-                            La contraseña solo puede contener letras, números y los siguientes simbolos: # @ . -
+                            %%passhintfull%%
                         </Hint>
                         <Spacing>
                         <Label for="confirmPassword">
-                            Confirmar contraseña
+                            %%confirmpass%%
                         </Label>
                         <Passfield id="confirmPassword">
                         <Label for="country">
-                            País de nacimiento
+                            %%country%%
                         </Label> 
                         <Select id="country" from="{countries}">
                         <Container>
                             <Row>
                                 <Column smallSize="6" mediumSize="6" size="6" textPosition="left">
                                     <Label for="birthDay">
-                                        Fecha de nacimiento
+                                        %%birthDay%%
                                     </Label>
                                     <Date id="birthDay">
                                     <ErrorContainer id="birthDay">
                                 </Column>
                                 <Column smallSize="6" mediumSize="6" size="6" textPosition="right">
                                     <Label for="phone">
-                                        Teléfono
+                                        %%phone%%
                                     </Label>
                                     <Textfield id="phone">
                                 </Column>
                             </Row>
                         </Container>
                         <Label for="gender">
-                            Seleccione su Género
+                            %%selectGender%%
                         </Label>
                         <Spacing>
-                        <Radio id="gender" option="0" text="Masculino" value="M">
-                        <Radio id="gender" option="1" text="Femenino" value="F">
-                        <Radio id="gender" option="2" text="Otro" value="O">
-                        <Radio id="gender" option="3" text="No responder" value="-">
+                        <Radio id="gender" option="0" text="%%male%%" value="M">
+                        <Radio id="gender" option="1" text="%%female%%" value="F">
+                        <Radio id="gender" option="2" text="%%other%%" value="O">
+                        <Radio id="gender" option="3" text="%%notanswer%%" value="-">
                         <ErrorContainer id="gender">
                         <SubmitButton id="submit">
-                            Registrarse
+                            %%signup%%
                         </SubmitButton>
                     </Form>
                 </Card>

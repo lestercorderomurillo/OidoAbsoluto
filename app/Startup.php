@@ -25,7 +25,6 @@ class WebApplication extends MVCApplication
     protected function onConfiguration(): void
     {
         parent::onConfiguration();
-
         $this->connectionString = new SQLConnectionString();
     }
 
