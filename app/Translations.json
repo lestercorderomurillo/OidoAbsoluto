@@ -72,7 +72,7 @@
     {
         "id": "confirmpass",
         "es": "Confirme la contraseña",
-        "en": "Rewrite the same password"
+        "en": "Confirm password"
     },
     {
         "id": "updatepass",
