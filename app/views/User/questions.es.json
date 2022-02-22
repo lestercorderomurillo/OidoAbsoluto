@@ -47,7 +47,7 @@
     },
     {
         "id": 7,
-        "subject": "¿Por qué motivo? (decisión de los padres, decisión propia, etc)",
+        "subject": "¿Por qué motivo? (decisión de los padres, decisión propia)",
         "type": "text",
         "requiredID": 6,
         "requiredValue": "Sí"
@@ -123,7 +123,8 @@
         "type": "singleChoice",
         "choices": [
             "Do, Re, Mi, Fa, Sol, La, Si",
-            "C, D, E, F, G, A, B"
+            "C, D, E, F, G, A, B",
+            "Ambas"
         ]
     },
     {

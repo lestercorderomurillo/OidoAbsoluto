@@ -15,7 +15,7 @@
     },
     {
         "id": 3,
-        "subject": "Write the other languages you speak and at what age you started learning them",
+        "subject": "Name the other languages you speak and the age at which you started learning them",
         "type": "text",
         "requiredID": 2,
         "requiredValue": "Yes"
@@ -38,7 +38,7 @@
     },
     {
         "id": 6,
-        "subject": "Have you received formal music education?",
+        "subject": "¿Has recibido formación musical formal? (Cualquier tipo de clases de música)",
         "type": "singleChoice",
         "choices": [
             "Yes",
@@ -47,7 +47,7 @@
     },
     {
         "id": 7,
-        "subject": "For what reason? (parent's decision, own decision, etc.)",
+        "subject": "For what reason? (parent's decision, own decision)",
         "type": "text",
         "requiredID": 6,
         "requiredValue": "Yes"
@@ -123,12 +123,13 @@
         "type": "singleChoice",
         "choices": [
             "Do, Re, Mi, Fa, Sol, La, Si",
-            "C, D, E, F, G, A, B"
+            "C, D, E, F, G, A, B",
+            "Both"
         ]
     },
     {
         "id": 18,
-        "subject": "Have you tried training to develop absolute hearing?",
+        "subject": "Have you tried training to develop absolute pitch?",
         "type": "singleChoice",
         "choices": [
             "Yes",
@@ -154,7 +155,7 @@
     },
     {
         "id": 21,
-        "subject": "Indicate your profession in music",
+        "subject": "Name your profession in music",
         "type": "text",
         "requiredID": 20,
         "requiredValue": "Yes"
@@ -177,7 +178,7 @@
     },
     {
         "id": 24,
-        "subject": "Do you have absolute hearing? (or believe)",
+        "subject": "Do you have absolute pitch? (or think it's a possibility)",
         "type": "singleChoice",
         "choices": [
             "Yes",
@@ -199,7 +200,7 @@
     },
     {
         "id": 26,
-        "subject": "Explain (Example: Absolute hearing for piano only)",
+        "subject": "Explain (Example: Absolute pitch for piano only)",
         "type": "text",
         "requiredID": 25,
         "requiredValue": "Yes"
@@ -239,13 +240,13 @@
     },
     {
         "id": 30,
-        "subject": "At what age did you realize (or do you believe) that you had absolute hearing?",
+        "subject": "At what age did you realize (or do you believe) that you had absolute pitch?",
         "requiredID": 24,
         "type": "number"
     },
     {
         "id": 31,
-        "subject": "How did you realize that you had absolute hearing?",
+        "subject": "How did you realize that you had absolute pitch?",
         "requiredID": 24,
         "type": "text"
     },
@@ -335,7 +336,7 @@
     },
     {
         "id": 42,
-        "subject": "Do you have a relative with absolute hearing? (or do you believe)",
+        "subject": "Do you have a relative with absolute pitch? (or think it's a possibility)",
         "type": "singleChoice",
         "choices": [
             "Yes",
@@ -362,7 +363,7 @@
     },
     {
         "id": 45,
-        "subject": "With which hand do you write?",
+        "subject": "Which hand do you write with?",
         "type": "singleChoice",
         "choices": [
             "Right",

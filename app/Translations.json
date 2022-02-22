@@ -2,12 +2,12 @@
     {
         "id": "logintitle",
         "es": "Oido Absoluto",
-        "en": "Absolute Hearing"
+        "en": "Absolute Pitch"
     },
     {
         "id": "welcome",
         "es": "Sírvase de acceder al servicio para realizar nuevas pruebas o consultar su historial",
-        "en": "Feel free to access the service to perform new tests or consult your test history!"
+        "en": "Feel free to access the service to perform new tests or check your test history!"
     },
     {
         "id": "email",
@@ -172,7 +172,7 @@
     {
         "id": "notanswer",
         "es": "No responder",
-        "en": "Do not answer"
+        "en": "Prefer not to say"
     },
     {
         "id": "signuptitle",
@@ -202,7 +202,7 @@
     {
         "id": "about4",
         "es": "La prueba de oído absoluto tiene dos partes, una con notas de piano y otra con tonos puros. En cada parte de la prueba escuchará 30 tonos con un segundo de duración y luego tendrá tres segundos para identificar la nota que escuchó. Al concluir la prueba podrá saber cuántas notas identificó correctamente. Como parte de la prueba se le solicita inicialmente información de contacto e información acerca del instrumentos que toca, la edad de inicio de su formación musical, etc.",
-        "en": "The absolute hearing test has two parts, one with piano notes and one with pure tones. In each part of the test you will hear 30 one-second long tones and then you will have about three seconds to identify the note you think you heard. At the end of the test you will be able to tell how many notes you identified correctly. As part of the test you are initially asked for contact information and information about the instruments you play, the age at which you began your musical training, etc."
+        "en": "The absolute pitch test has two parts, one with piano notes and one with pure tones. In each part of the test you will hear 30 one-second long tones and then you will have about three seconds to identify the note you think you heard. At the end of the test you will be able to tell how many notes you identified correctly. As part of the test you are initially asked for contact information and information about the instruments you play, the age at which you began your musical training, etc."
     },
     {
         "id": "termstitle",
@@ -647,12 +647,12 @@
     {
         "id": "survey00",
         "es": "Recolección de información",
-        "en": "Information gathering"
+        "en": "Information"
     },
     {
         "id": "survey01",
         "es": "Se le pedirá que conteste el siguiente formulario antes de poder utilizar el resto de la aplicación",
-        "en": "You will be asked to answer the following form before you can use the rest of the application"
+        "en": "You will be asked to fill the following form before you can use the rest of the application"
     },
     {
         "id": "survey02",
