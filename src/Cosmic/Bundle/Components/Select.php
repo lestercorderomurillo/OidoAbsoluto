@@ -15,7 +15,7 @@ class Select extends InlineComponent
     public function render()
     {
         return <<<HTML
-            <select {events} id&name="{id}" class="form-control Field">
+            <select {events} id&name="{id}" class="form-control Field required">
                 <option value="">%%selectOne%%</option>
                 <Foreach using="item" from="{from}">
                     <option value="{parent.item}">{parent.item}</option>

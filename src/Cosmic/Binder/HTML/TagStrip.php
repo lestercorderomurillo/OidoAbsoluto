@@ -54,6 +54,7 @@ class TagStrip
             if (is_int($key)) {
 
                 $attributesString .= " $value";
+
             } else {
 
                 if (str_starts_with($key, "(") && str_ends_with($key, ")")) {
@@ -98,11 +99,17 @@ class TagStrip
                     }
 
                     app()->get(DOM::class)->registerJavascriptSourceCode($handleCode);
+
+                } else if (Text::contains($key, ["selected", "required", "disabled"])) {
+
+                    $attributesString .= " $key";
+
                 } else if (Text::contains($key, ["id", "name", "for", "key"])) {
 
                     if (strlen($value) > 0) {
                         $attributesString .= " $key=\"$value\"";
                     }
+
                 } else {
                     $attributesString .= " $key=\"$value\"";
                 }

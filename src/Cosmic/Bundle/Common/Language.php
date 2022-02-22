@@ -13,7 +13,7 @@ class Language
     {
         Language::$translations = JSON::from(new File("app/Translations.json"))->toArray();
         if (session("lang") == "") {
-            session("lang", "en");
+            session("lang", "es");
         }
     }
 

@@ -152,6 +152,7 @@ class Compiler
                         $data = $this->extractRawData($elementString);
                         $strip = new TagStrip($data[0], $data[1]);
                         $html = $this->compileSelection($html, $selection, $strip);
+                        
                     } else {
 
                         $element = $this->createElementFromString($elementString);

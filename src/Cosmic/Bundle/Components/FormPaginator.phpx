@@ -24,6 +24,7 @@ class FormPaginator extends Component
         function awake(){
             component.currentPage = 0;
             component.currentPageUI = 1;
+            $('#$this->form input').not([type="submit"]).addClass('required');
             component.update();
         }
         function goBack(){
@@ -31,9 +32,18 @@ class FormPaginator extends Component
             component.update();
         }
         function goNext(){
-            component.currentPage++;
-            component.update();
-            window.scrollTo({top: 0, behavior: 'smooth'});
+
+            $("#$this->form").validate(
+                {
+                    ignore:":disabled, :hidden"
+                }
+            );
+
+            if($("#$this->form").valid()){
+                component.currentPage++;
+                component.update();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
         }
         function update(){
             if(component.currentPage == $this->numberOfPages){
