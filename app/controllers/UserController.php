@@ -471,6 +471,10 @@ class UserController extends Controller
 
         $books = [
             ["*", Language::getString("misc25") . " " . $userInfo->firstName . " " . $userInfo->lastName],
+            ["*", Language::getString("birthDay") . " " . $userInfo->birthDay],
+            ["*", Language::getString("country") . " " . $userInfo->country],
+            ["*", Language::getString("phone") . " " . $userInfo->phone],
+            ["*", Language::getString("lookup012") . " " . $userInfo->gender],
             [],
         ];
 
