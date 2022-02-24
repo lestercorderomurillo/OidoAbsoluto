@@ -555,7 +555,7 @@ class UserController extends Controller
 
             foreach ($answers as $answer) {
                 if ($answer->question == ($count + 1)) {
-                    $parsedAnswer = (strlen($answer->value > 0)) ? $answer->value : Language::getString("misc43");
+                    $parsedAnswer = (strlen($answer->value) > 0) ? $answer->value : Language::getString("misc43");
                 }
             }
 
