@@ -38,7 +38,7 @@
     },
     {
         "id": 6,
-        "subject": "¿Ha recibido usted educación musical formal?",
+        "subject": "¿Ha recibido usted educación musical formal? (Clase de música)",
         "type": "singleChoice",
         "choices": [
             "Sí",

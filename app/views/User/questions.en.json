@@ -38,7 +38,7 @@
     },
     {
         "id": 6,
-        "subject": "¿Has recibido formación musical formal? (Cualquier tipo de clases de música)",
+        "subject": "Have you received formal musical training? (Music class)",
         "type": "singleChoice",
         "choices": [
             "Yes",
