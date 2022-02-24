@@ -475,6 +475,7 @@ class UserController extends Controller
             ["*", Language::getString("country") . ": " . $userInfo->country],
             ["*", Language::getString("phone") . ": " . $userInfo->phone],
             ["*", Language::getString("lookup012") . ": " . $userInfo->gender],
+            ["*", Language::getString("email") . ": " . $user->email],
             [],
         ];
 
