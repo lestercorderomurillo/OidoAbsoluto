@@ -19,6 +19,30 @@ $('#signupForm').submit(function (event) {
 
 });
 
+$('#birthDay_dd').change(function (event) {
+
+    let lang = $('html').prop("lang");
+
+    Validator.validateDate(lang, "birthDay");
+
+});
+
+$('#birthDay_mm').change(function (event) {
+
+    let lang = $('html').prop("lang");
+
+    Validator.validateDate(lang, "birthDay");
+
+});
+
+$('#birthDay_yy').change(function (event) {
+
+    let lang = $('html').prop("lang");
+
+    Validator.validateDate(lang, "birthDay");
+
+});
+
 $("#signupForm").validate({
     rules: {
         firstName: {
