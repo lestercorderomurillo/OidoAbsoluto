@@ -9,3 +9,4 @@ La prueba de oído absoluto tiene dos partes, una con notas de piano y otra con 
 
 Para cualquier consulta puede escribir al correo gabriela.chavarriasoley@ucr.ac.cr
                     
+TODO: Migrar al motor Radiant (con soporte para iOS)
